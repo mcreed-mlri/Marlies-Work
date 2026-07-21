@@ -137,15 +137,18 @@
     .fade{animation:none}
     .opt,.opt-mark{transition:none}
   }
-  #print-root{display:none}
+  /* Off-screen (not display:none) so the signature image can decode before print. */
+  #print-root{position:fixed;left:-10000px;top:0;width:8.5in;pointer-events:none}
   @media print{
     @page{margin:0}
     .no-print{display:none !important}
     body{background:#fff !important}
     /* When printing the generated form, show only it. */
     body.printing-form > *{display:none !important}
-    body.printing-form > #print-root{display:block !important}
-    #print-root{padding:0.6in}
+    body.printing-form > #print-root{
+      display:block !important;position:static !important;left:auto !important;
+      width:auto !important;pointer-events:auto;padding:0.6in;
+    }
     #print-root img{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   }
 </style>
@@ -729,6 +732,21 @@ function clearSignature(){
   if(sigHint) sigHint.style.display = '';
 }
 
+/* Export signature as a white-backed PNG so print/PDF keeps the ink. */
+function captureSignatureDataURL(){
+  if(!sigDrawn || !sigCanvas) return '';
+  try{
+    const out = document.createElement('canvas');
+    out.width = sigCanvas.width;
+    out.height = sigCanvas.height;
+    const ctx = out.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, out.width, out.height);
+    ctx.drawImage(sigCanvas, 0, 0);
+    return out.toDataURL('image/png');
+  }catch(_){ return ''; }
+}
+
 /* ---- Printable / downloadable "Statement to DTA" form ----
  * Builds a clean, standalone document from the person's answers,
  * typed explanation, and drawn signature. Marked SAMPLE for now. */
@@ -739,8 +757,7 @@ function statementInnerHTML(){
   const rs = reasons();
   const gcText = GC_TEXT[state.answers.goodcause] || '';
 
-  let sigImg = '';
-  if(sigDrawn && sigCanvas){ try{ sigImg = sigCanvas.toDataURL('image/png'); }catch(_){} }
+  const sigImg = captureSignatureDataURL();
 
   let today = '';
   try{ today = new Date().toLocaleDateString('en-US', {year:'numeric', month:'long', day:'numeric'}); }catch(_){}
@@ -803,8 +820,12 @@ function printForm(){
   const cleanup = () => document.body.classList.remove('printing-form');
   window.addEventListener('afterprint', cleanup, { once:true });
   document.body.classList.add('printing-form');
-  window.print();
-  setTimeout(cleanup, 2000); // fallback for browsers that don't fire afterprint
+  // Wait a frame so the signature <img> can decode before the print snapshot.
+  // Do not clear printing-form on a short timer — Chrome returns from print()
+  // immediately, and a 2s cleanup was wiping the form mid Save-as-PDF.
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => { window.print(); });
+  });
 }
 
 function downloadDoc(){
