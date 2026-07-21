@@ -12,7 +12,7 @@
   'use strict';
 
   const NONE = '__none';
-  const QUICK_EXIT_URL = 'https://www.weather.com/';
+  const QUICK_EXIT_URL = 'snap-screening.html';
 
   /* ---- Work-rule thresholds (MA ABAWD) ---- */
   const WORK_INCOME_THRESHOLD = 217.5;

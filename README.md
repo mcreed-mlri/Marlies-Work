@@ -113,7 +113,7 @@ Before go-live:
 - [ ] Compare exemption categories to [Mass Legal Help ABAWD article](https://www.masslegalhelp.org/public-benefits-ssi/snap-food-benefits/snap-3-month-time-limit-abawd-work-rules)
 - [ ] Compare income/hour thresholds to current Mass.gov ABAWD flyer
 - [ ] Walk through personas: pregnant, homeless+GED, student, DV, tribal member, 25 hrs at $12/hr, disability benefits
-- [ ] Confirm "Quick exit" destination is acceptable for safety planning
+- [ ] Confirm "Quick exit" returns to the screening hub as expected
 - [ ] Confirm printable "Tell DTA" statement is acceptable to DTA / MLRI
 
 ## Privacy & data retention
@@ -147,7 +147,7 @@ then.
 - Keyboard navigable, with visible focus rings.
 - Question options expose ARIA roles (`radio` / `checkbox`) and the progress bar
   is announced to screen readers.
-- "Quick exit" navigates to a neutral external site (weather.com) for safety.
+- "Quick exit" returns to the screening hub (`snap-screening.html`).
 
 ## Editing the questions
 
