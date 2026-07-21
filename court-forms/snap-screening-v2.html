@@ -76,11 +76,10 @@
   .opt-mark.square{border-radius:7px}
   .opt-selected .opt-mark{border-color:var(--blue);background:var(--blue)}
   .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-  .topbar-inner,.strip-inner{
+  .topbar-inner{
     max-width:920px;margin:0 auto;padding:14px 24px;
     display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
   }
-  .strip-inner{max-width:760px;padding:8px 24px;font-size:14px;color:#2c3644}
   .brand{display:flex;align-items:center;gap:12px;min-width:0}
   .brand-text{min-width:0}
   .brand-title{font-size:19px;font-weight:700;line-height:1.1}
@@ -117,7 +116,6 @@
     .brand-sub{display:none}
     .btn-exit{padding:10px 12px;font-size:13px}
     .btn-exit .icon-inline{width:18px;height:18px}
-    .strip-inner{padding:8px 16px;gap:8px;font-size:13px}
     #stage{padding:16px max(14px, env(safe-area-inset-right)) 56px max(14px, env(safe-area-inset-left))}
     .card-box{padding:22px 18px;border-radius:16px}
     .facts-grid{grid-template-columns:1fr;gap:10px;margin-bottom:20px}
@@ -166,14 +164,6 @@
       </div>
     </div>
     <button type="button" class="btn-exit" data-action="quick-exit" title="Leave this site quickly">Quick exit <i data-lucide="x" class="icon-inline" aria-hidden="true"></i></button>
-  </div>
-</div>
-
-<!-- ===== COMPARE STRIP ===== -->
-<div class="no-print" style="background:var(--green-bg);border-bottom:1px solid var(--green-bd)">
-  <div class="strip-inner">
-    <span style="font-weight:700;color:var(--green)">✓ Accessible redesign preview</span>
-    <span><a href="snap-abawd.html" style="font-weight:700">See the current version</a> · <a href="index.html" style="font-weight:700">All previews</a></span>
   </div>
 </div>
 
@@ -838,7 +828,7 @@ document.addEventListener('click', (e) => {
     case 'restart':
       state.view = 'intro'; state.step = 0; state.gc = false; state.helpOpen = {}; state.answers = {}; renderWithMotion(); break;
     case 'delete-answers': deleteAnswers(); break;
-    case 'quick-exit': window.location.replace('https://www.google.com'); break;
+    case 'quick-exit': window.location.replace('snap-screening.html'); break;
     case 'print': printForm(); break;
     case 'sig-clear': clearSignature(); break;
   }

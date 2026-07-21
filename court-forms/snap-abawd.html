@@ -70,11 +70,6 @@
     flex:none;font-size:13px;font-weight:700;color:var(--accent);background:#fff;border:none;
     border-radius:999px;padding:10px 14px;cursor:pointer;min-height:44px;
   }
-  .strip-inner{
-    max-width:660px;margin:0 auto;padding:8px max(16px, env(safe-area-inset-right)) 8px max(16px, env(safe-area-inset-left));
-    display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
-    font-size:13.5px;color:#3a424e;
-  }
   #stage{
     max-width:660px;margin:0 auto;
     padding:22px max(16px, env(safe-area-inset-right)) 60px max(16px, env(safe-area-inset-left));
@@ -87,7 +82,6 @@
   input,textarea,select{font-size:16px;max-width:100%}
   @media (max-width:640px){
     .topbar-sub{display:none}
-    .strip-inner{font-size:13px}
     #stage{padding:16px max(14px, env(safe-area-inset-right)) 48px max(14px, env(safe-area-inset-left))}
     .form-row{grid-template-columns:1fr}
     .opt{font-size:16px;padding:15px 14px}
@@ -120,14 +114,6 @@
     </div>
   </div>
   <button type="button" class="btn-exit" data-action="quick-exit" title="Leave this site quickly">Quick exit ✕</button>
-</div>
-
-<!-- Preview compare strip -->
-<div class="no-print" style="background:var(--soft);border-bottom:1px solid #c7d6f0">
-  <div class="strip-inner">
-    <span style="font-weight:700;color:var(--accent-dark)">Current version</span>
-    <span><a href="snap-screening-v2.html" style="font-weight:700">See the accessible redesign</a> · <a href="index.html" style="font-weight:700">All previews</a></span>
-  </div>
 </div>
 
 <!-- Progress -->
@@ -729,7 +715,7 @@ document.addEventListener('click', (e) => {
     case 'restart':
       state.view = 'intro'; state.step = 0; state.gc = false; state.helpOpen = {}; state.answers = {}; renderWithMotion(); break;
     case 'delete-answers': deleteAnswers(); break;
-    case 'quick-exit': window.location.replace('https://www.google.com'); break;
+    case 'quick-exit': window.location.replace('snap-screening.html'); break;
     case 'print': printForm(); break;
     case 'sig-clear': clearSignature(); break;
   }
