@@ -139,7 +139,15 @@
     .fade{animation:none}
     .opt,.opt-mark{transition:none}
   }
-  @media print{.no-print{display:none !important}body{background:#fff !important}}
+  #print-root{display:none}
+  @media print{
+    .no-print{display:none !important}
+    body{background:#fff !important}
+    /* When printing the generated form, show only it. */
+    body.printing-form > *{display:none !important}
+    body.printing-form > #print-root{display:block !important}
+    #print-root img{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
 </style>
 <script src="https://unpkg.com/lucide@0.525.0"></script>
 </head>
@@ -687,6 +695,82 @@ function clearSignature(){
   if(sigHint) sigHint.style.display = '';
 }
 
+/* ---- Printable "Statement to DTA" form ----
+ * Builds a clean, standalone document (not the whole page) from the
+ * person's answers, typed explanation, and drawn signature, then prints
+ * only that. Marked SAMPLE for now. */
+function buildPrintRoot(){
+  let root = document.getElementById('print-root');
+  if(!root){ root = document.createElement('div'); root.id = 'print-root'; document.body.appendChild(root); }
+
+  const val = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
+  const name = val('f-name'), agency = val('f-agency'), explain = val('f-explain');
+  const rt = resultType();
+  const rs = reasons();
+  const gcText = GC_TEXT[state.answers.goodcause] || '';
+
+  let sigImg = '';
+  if(sigDrawn && sigCanvas){ try{ sigImg = sigCanvas.toDataURL('image/png'); }catch(_){} }
+
+  let today = '';
+  try{ today = new Date().toLocaleDateString('en-US', {year:'numeric', month:'long', day:'numeric'}); }catch(_){}
+
+  const field = (label, v) => `<div style="margin:0 0 10px"><span style="font-weight:700">${label}:</span> <span style="border-bottom:1px solid #000;display:inline-block;min-width:240px;padding:0 4px">${esc(v) || '&nbsp;'}</span></div>`;
+
+  let body;
+  if(rt === 'exempt'){
+    const items = rs.map(r => `<li style="margin:0 0 5px">${esc(r)}</li>`).join('');
+    body = `<p style="margin:0 0 10px">I am writing about the SNAP work rules (the ABAWD rules). <strong>I should not have to meet these work rules</strong> for the following reason(s):</p>
+      <ul style="margin:0 0 16px;padding-left:22px">${items}</ul>`;
+  } else if(rt === 'goodcause'){
+    body = `<p style="margin:0 0 10px">I am writing about the SNAP work rules (the ABAWD rules). <strong>I was not able to meet the work rules for one or more months</strong> because of the following good-cause reason:</p>
+      <p style="margin:0 0 16px;padding-left:10px">• ${esc(gcText)}</p>`;
+  } else {
+    body = `<p style="margin:0 0 16px">I am writing about the SNAP work rules (the ABAWD rules).</p>`;
+  }
+
+  const explainBlock = `<div style="margin:0 0 18px">
+      <div style="font-weight:700;margin:0 0 5px">In my own words:</div>
+      <div style="border:1px solid #000;padding:10px;min-height:64px;white-space:pre-wrap">${esc(explain)}</div>
+    </div>`;
+
+  const sigBlock = `<div style="margin:28px 0 0">
+      <div style="font-weight:700;margin:0 0 6px">Signature</div>
+      ${sigImg
+        ? `<img src="${sigImg}" alt="Signature" style="display:block;height:80px;max-width:100%;border-bottom:1px solid #000">`
+        : `<div style="border-bottom:1px solid #000;height:60px"></div>`}
+      <div style="display:flex;justify-content:space-between;gap:16px;margin:6px 0 0;font-size:13px">
+        <span>${esc(name) ? 'Signed by ' + esc(name) : 'Print name: ____________________'}</span>
+        <span>Date: ${esc(today) || '________________'}</span>
+      </div>
+    </div>`;
+
+  root.innerHTML = `<div style="font-family:'Atkinson Hyperlegible',Georgia,serif;color:#000;max-width:640px;margin:0 auto;padding:24px;font-size:15px;line-height:1.55">
+    <div style="text-align:center;border-bottom:2px solid #000;padding-bottom:12px;margin-bottom:20px">
+      <div style="font-size:13px;letter-spacing:.05em;text-transform:uppercase">Massachusetts Department of Transitional Assistance</div>
+      <div style="font-size:21px;font-weight:700;margin-top:4px">SNAP Work Rules — Statement</div>
+      <div style="font-size:12px;margin-top:5px;color:#555">SAMPLE — draft for review</div>
+    </div>
+    ${field('Name', name)}
+    ${field('Agency ID (if you have one)', agency)}
+    ${field('Date', today)}
+    <div style="height:12px"></div>
+    ${body}
+    ${explainBlock}
+    ${sigBlock}
+    <p style="font-size:11.5px;color:#444;margin:30px 0 0;border-top:1px solid #999;padding-top:8px">Prepared with the Court Forms Online SNAP work-rules screening. Based on the answers given; general information, not legal advice.</p>
+  </div>`;
+}
+
+function printForm(){
+  buildPrintRoot();
+  const cleanup = () => document.body.classList.remove('printing-form');
+  window.addEventListener('afterprint', cleanup, { once:true });
+  document.body.classList.add('printing-form');
+  window.print();
+  setTimeout(cleanup, 2000); // fallback for browsers that don't fire afterprint
+}
+
 function render(){
   renderProgress();
   const stage = document.getElementById('stage');
@@ -755,7 +839,7 @@ document.addEventListener('click', (e) => {
       state.view = 'intro'; state.step = 0; state.gc = false; state.helpOpen = {}; state.answers = {}; renderWithMotion(); break;
     case 'delete-answers': deleteAnswers(); break;
     case 'quick-exit': window.location.replace('https://www.google.com'); break;
-    case 'print': window.print(); break;
+    case 'print': printForm(); break;
     case 'sig-clear': clearSignature(); break;
   }
 });
