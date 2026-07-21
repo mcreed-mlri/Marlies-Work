@@ -38,7 +38,7 @@
   a:hover{color:var(--navy)}
   button{font-family:inherit}
   :focus-visible{outline:3px solid var(--navy);outline-offset:2px;border-radius:6px}
-  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  @keyframes fadeUp{from{opacity:0}to{opacity:1}}
   .fade{animation:fadeUp .35s ease both}
   .opt{
     font-family:inherit;font-weight:700;cursor:pointer;color:var(--ink);
@@ -157,12 +157,17 @@
   .hint-tip--icon{display:inline-flex;vertical-align:middle;width:auto}
   .hint-tip-btn--icon{min-height:28px;padding:2px;text-decoration:none;gap:0}
   .hint-tip-btn--icon .hint-tip-icon{width:20px;height:20px;font-size:13px}
-  @media (max-width:640px),(hover:none){
-    .hint-tip:not(.hint-tip--icon){display:block;width:100%}
-    .hint-tip--icon.is-open{display:block;width:100%}
+  .hint-tip-wrap{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  @media (max-width:640px),(hover:none),(pointer:coarse){
+    .hint-tip:not(.hint-tip--icon){display:block;width:100%;max-width:100%}
+    .hint-tip-wrap .hint-tip--icon.is-open{
+      flex:1 1 100%;display:flex;flex-direction:column;align-items:stretch;
+      max-width:100%;min-width:0;
+    }
+    .hint-tip-wrap .hint-tip--icon.is-open .hint-tip-btn{align-self:flex-start}
     .hint-tip-btn--icon{min-height:44px;min-width:44px;justify-content:center}
     .hint-tip-panel{
-      position:static;width:100%;max-width:none;box-shadow:none;
+      display:block;position:static;width:100%;max-width:100%;box-sizing:border-box;box-shadow:none;
       max-height:0;overflow:hidden;padding:0 14px;margin:0;opacity:1;
     }
     .hint-tip.is-open .hint-tip-panel{
@@ -170,7 +175,7 @@
       padding:12px 14px;margin-top:8px;
     }
   }
-  @media (hover:hover) and (min-width:641px){
+  @media (hover:hover) and (min-width:641px) and (pointer:fine){
     .hint-tip-btn{min-height:auto;padding:4px 2px}
     .hint-tip-panel{position:fixed;width:min(300px,calc(100vw - 32px))}
     .hint-tip:hover .hint-tip-panel,.hint-tip:focus-within .hint-tip-panel,.hint-tip.is-open .hint-tip-panel{
@@ -313,6 +318,7 @@ function loadPersisted(){
 
 function deleteAnswers(){
   try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+  SAMPLE_MODE = false; // leaving any sample preview back into a real (savable) session
   state.view = 'intro'; state.step = 0; state.gc = false;
   state.helpOpen = {}; state.answers = {};
   renderWithMotion();
@@ -362,7 +368,7 @@ function reasons(){
     }
   }
   if(housingUnableExempt()){
-    r.push('No regular place to sleep, with other factors that make it hard to work');
+    r.push('No regular place to sleep, and DTA’s unable-to-work factors apply');
   }
   return r;
 }
@@ -372,11 +378,6 @@ function resultType(){
   const g = state.answers.goodcause;
   if(g && g !== NONE) return 'goodcause';
   return 'notexempt';
-}
-
-function isAnswered(q){
-  const a = state.answers[q.id];
-  return Array.isArray(a) ? a.length > 0 : !!a;
 }
 
 function advance(){
@@ -425,26 +426,29 @@ function hintTip(id, label, bodyHtml, iconOnly){
 }
 
 function hintTipUsesInlinePanel(){
-  return window.matchMedia('(max-width: 640px), (hover: none)').matches;
+  return window.matchMedia('(max-width: 640px), (hover: none), (pointer: coarse)').matches;
 }
 
 function hintTipUsesFloatingPanel(){
-  return window.matchMedia('(hover: hover) and (min-width: 641px)').matches;
+  return window.matchMedia('(hover: hover) and (min-width: 641px) and (pointer: fine)').matches;
+}
+
+function clearHintPanelPosition(panel){
+  panel.style.top = panel.style.left = panel.style.width = panel.style.display = panel.style.visibility = '';
 }
 
 function setHintTipOpen(tip, open){
   const btn = tip.querySelector('.hint-tip-btn');
+  const panel = tip.querySelector('.hint-tip-panel');
   if(open){
+    if(panel && hintTipUsesInlinePanel()) clearHintPanelPosition(panel);
     if(hintTipUsesFloatingPanel()) positionHintPanel(tip);
     tip.classList.add('is-open');
     if(btn) btn.setAttribute('aria-expanded', 'true');
   } else {
     tip.classList.remove('is-open');
     if(btn) btn.setAttribute('aria-expanded', 'false');
-    const panel = tip.querySelector('.hint-tip-panel');
-    if(panel && hintTipUsesFloatingPanel()){
-      panel.style.top = panel.style.left = panel.style.width = '';
-    }
+    if(panel) clearHintPanelPosition(panel);
   }
 }
 
@@ -461,7 +465,7 @@ function positionHintPanel(tip){
 
   panel.style.width = maxW + 'px';
   panel.style.left = '-9999px';
-  panel.style.top = '0';
+  panel.style.top = '-9999px';
   panel.style.visibility = 'hidden';
   panel.style.display = 'block';
 
@@ -479,6 +483,9 @@ function positionHintPanel(tip){
 }
 
 function repositionVisibleHintPanels(){
+  document.querySelectorAll('.hint-tip-panel').forEach(panel => {
+    if(hintTipUsesInlinePanel()) clearHintPanelPosition(panel);
+  });
   document.querySelectorAll('.hint-tip.is-open').forEach(positionHintPanel);
   if(hintTipUsesFloatingPanel()){
     document.querySelectorAll('.hint-tip:hover').forEach(positionHintPanel);
@@ -486,11 +493,13 @@ function repositionVisibleHintPanels(){
 }
 
 function initHintTips(){
-  document.addEventListener('mouseenter', (e) => {
+  document.addEventListener('mouseover', (e) => {
     if(!hintTipUsesFloatingPanel()) return;
     const tip = e.target.closest && e.target.closest('.hint-tip');
-    if(tip) positionHintPanel(tip);
-  }, true);
+    if(!tip) return;
+    if(e.relatedTarget && tip.contains(e.relatedTarget)) return;
+    positionHintPanel(tip);
+  });
 
   document.addEventListener('focusin', (e) => {
     const tip = e.target.closest && e.target.closest('.hint-tip');
@@ -720,7 +729,7 @@ function renderResults(){
         </div>
       </div>
       <div class="result-body">
-        <p style="font-size:17px;line-height:1.6;color:#37414f;margin:0 0 16px">You can keep your SNAP without meeting the work rules, because you:</p>
+        <p style="font-size:17px;line-height:1.6;color:#37414f;margin:0 0 16px">You can keep your SNAP without doing anything more for the work rules, because you:</p>
         <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px">${items}</ul>
         ${learnMore}
       </div></div>`;
@@ -779,7 +788,7 @@ function renderResults(){
         <div><label for="f-agency" style="display:block;font-size:15px;font-weight:700;margin:0 0 6px">Agency ID</label><input id="f-agency" inputmode="text" style="${inputStyle}"></div>
       </div>
       <div style="margin:16px 0 0">
-        <div style="display:flex;align-items:center;gap:8px;margin:0 0 6px">
+        <div class="hint-tip-wrap" style="margin:0 0 6px">
           <label id="sig-label" style="font-size:15px;font-weight:700;margin:0">Signature</label>
           ${hintTip('sig', 'About signatures', 'Sign with your finger on a touch screen, or with your mouse. A typed signature won\u2019t be accepted \u2014 this captures your real one.', true)}
         </div>
@@ -914,9 +923,18 @@ function statementInnerHTML(sigSrc){
 
   let body;
   if(rt === 'exempt'){
-    const items = rs.map(r => `<li style="margin:0 0 5px">${esc(r)}</li>`).join('');
-    body = `<p style="margin:0 0 10px">I am writing about the SNAP work rules (the ABAWD rules). <strong>I should not have to meet these work rules</strong> for the following reason(s):</p>
+    const WORKING_REASON = 'Working enough hours to meet the work rules';
+    const exemptReasons = rs.filter(r => r !== WORKING_REASON);
+    let inner = `<p style="margin:0 0 10px">I am writing about the SNAP work rules (the ABAWD rules).</p>`;
+    if(exemptReasons.length){
+      const items = exemptReasons.map(r => `<li style="margin:0 0 5px">${esc(r)}</li>`).join('');
+      inner += `<p style="margin:0 0 10px"><strong>I should not have to meet these work rules</strong> for the following reason(s):</p>
       <ul style="margin:0 0 16px;padding-left:22px">${items}</ul>`;
+    }
+    if(rs.includes(WORKING_REASON)){
+      inner += `<p style="margin:0 0 16px"><strong>I am already meeting the work rules</strong> by working enough hours.</p>`;
+    }
+    body = inner;
   } else if(rt === 'goodcause'){
     body = `<p style="margin:0 0 10px">I am writing about the SNAP work rules (the ABAWD rules). <strong>I was not able to meet the work rules for one or more months</strong> because of the following good-cause reason:</p>
       <p style="margin:0 0 16px;padding-left:10px">• ${esc(gcText)}</p>`;
@@ -1089,6 +1107,7 @@ document.addEventListener('click', (e) => {
   switch(action){
     case 'start':
       if(!state.agreed) return;
+      SAMPLE_MODE = false; // a real screening starting from a sample preview must save again
       state.view = 'question'; state.step = 0; state.gc = false; state.helpOpen = {}; renderWithMotion(); break;
     case 'back': back(); break;
     case 'next': advance(); break;
@@ -1107,6 +1126,7 @@ document.addEventListener('click', (e) => {
       break;
     }
     case 'restart':
+      SAMPLE_MODE = false; // leaving the sample preview into a real (savable) session
       state.view = 'intro'; state.step = 0; state.gc = false; state.helpOpen = {}; state.answers = {}; renderWithMotion(); break;
     case 'delete-answers': deleteAnswers(); break;
     case 'quick-exit': window.location.replace('snap-screening.html'); break;
@@ -1159,6 +1179,18 @@ function sampleBanner(){
     <span style="display:flex;gap:14px"><a href="snap-screening.html" style="font-weight:700">← All samples</a><a href="snap-screening-v2.html" style="font-weight:700">Try it for real →</a></span>
   </div>`;
 }
+
+/* Re-fit the signature canvas when the viewport changes (e.g. phone rotation).
+ * The bitmap is sized from clientWidth at draw time, so a later resize would
+ * otherwise leave pointer coordinates misaligned. Re-init clears any ink. */
+let sigResizeTimer = null;
+function refitSignatureOnResize(){
+  if(!document.getElementById('sig-pad')) return;
+  clearTimeout(sigResizeTimer);
+  sigResizeTimer = setTimeout(() => { if(document.getElementById('sig-pad')) initSignaturePad(); }, 200);
+}
+window.addEventListener('resize', refitSignatureOnResize, { passive: true });
+window.addEventListener('orientationchange', refitSignatureOnResize);
 
 if(!applySampleFromURL()){ loadPersisted(); }
 initHintTips();
