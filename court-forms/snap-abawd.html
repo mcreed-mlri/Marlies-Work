@@ -98,9 +98,13 @@
     .card-in{animation:none}
     .opt,.opt-mark{transition:none}
   }
+  #print-root{display:none}
   @media print{
     .no-print{display:none !important}
     body{background:#fff !important}
+    body.printing-form > *{display:none !important}
+    body.printing-form > #print-root{display:block !important}
+    #print-root img{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   }
 </style>
 </head>
@@ -191,6 +195,7 @@ const state = { view:'intro', step:0, gc:false, helpOpen:{}, agreed:false, answe
  * ------------------------------------------------------------------ */
 const STORAGE_KEY = 'cfo-abawd-screening-v1';
 const RETENTION_MS = 24 * 60 * 60 * 1000; // 1 day
+let sigCanvas = null, sigCtx = null, sigHint = null, sigDrawn = false; // finger/mouse signature pad
 
 function persist(){
   try{
@@ -491,9 +496,15 @@ function renderResults(){
         <div><label for="f-agency" style="display:block;font-size:14px;font-weight:700;margin:0 0 6px">Agency ID</label><input id="f-agency" style="${inputStyle}"></div>
       </div>
       <div style="margin:14px 0 0">
-        <label style="display:block;font-size:14px;font-weight:700;margin:0 0 6px">Signature</label>
-        <div style="border-bottom:1.5px solid #9aa2ad;height:34px"></div>
-        <p style="font-size:12.5px;color:#8a919c;margin:5px 0 0">DTA needs your actual signature, not a typed one — sign after printing.</p>
+        <label id="sig-label" style="display:block;font-size:14px;font-weight:700;margin:0 0 6px">Signature</label>
+        <div style="position:relative;border:1.5px solid #cdd3dc;border-radius:calc(var(--radius) - 3px);background:#fff">
+          <canvas id="sig-pad" role="img" aria-labelledby="sig-label" style="display:block;width:100%;height:140px;border-radius:calc(var(--radius) - 3px);cursor:crosshair;touch-action:none;-webkit-print-color-adjust:exact;print-color-adjust:exact"></canvas>
+          <span id="sig-hint" class="no-print" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#aeb4bd;font-size:14.5px;pointer-events:none">Sign here with your finger or mouse</span>
+        </div>
+        <div class="no-print" style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin:7px 0 0">
+          <p style="font-size:12.5px;color:#8a919c;margin:0;max-width:44ch">Sign with your finger on a touch screen, or with your mouse. A typed signature won't be accepted — this captures your real one.</p>
+          <button type="button" data-action="sig-clear" style="flex:none;font-family:inherit;font-size:13.5px;font-weight:700;color:var(--accent);background:none;border:2px solid var(--accent);border-radius:calc(var(--radius) - 3px);padding:8px 14px;cursor:pointer">Clear</button>
+        </div>
       </div>
       <div class="no-print" style="display:flex;gap:12px;margin:20px 0 0;flex-wrap:wrap">
         <button type="button" data-action="print" style="${nextBtn}">Print this form</button>
@@ -520,6 +531,136 @@ function renderResults(){
   </div>`;
 }
 
+/* ---- Finger / mouse signature pad (canvas) ----
+ * Drawn locally and never saved or uploaded. Prints as a real image, so
+ * DTA gets a genuine handwritten mark rather than a typed cursive font. */
+function initSignaturePad(){
+  const canvas = document.getElementById('sig-pad');
+  if(!canvas){ sigCanvas = sigCtx = sigHint = null; return; }
+  sigCanvas = canvas;
+  sigHint = document.getElementById('sig-hint');
+  sigDrawn = false;
+
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.clientWidth || 300;
+  const h = canvas.clientHeight || 140;
+  canvas.width = Math.round(w * dpr);
+  canvas.height = Math.round(h * dpr);
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.lineWidth = 2.2; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  ctx.strokeStyle = '#1b1f27'; ctx.fillStyle = '#1b1f27';
+  sigCtx = ctx;
+
+  let drawing = false, lastX = 0, lastY = 0;
+  const at = (e) => { const r = canvas.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+  const start = (e) => {
+    drawing = true;
+    const p = at(e); lastX = p.x; lastY = p.y;
+    if(!sigDrawn){ sigDrawn = true; if(sigHint) sigHint.style.display = 'none'; }
+    ctx.beginPath(); ctx.arc(lastX, lastY, ctx.lineWidth / 2, 0, Math.PI * 2); ctx.fill();
+    if(canvas.setPointerCapture && e.pointerId != null){ try{ canvas.setPointerCapture(e.pointerId); }catch(_){} }
+    e.preventDefault();
+  };
+  const move = (e) => {
+    if(!drawing) return;
+    const p = at(e);
+    ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(p.x, p.y); ctx.stroke();
+    lastX = p.x; lastY = p.y;
+    e.preventDefault();
+  };
+  const end = () => { drawing = false; };
+  canvas.addEventListener('pointerdown', start);
+  canvas.addEventListener('pointermove', move);
+  canvas.addEventListener('pointerup', end);
+  canvas.addEventListener('pointerleave', end);
+  canvas.addEventListener('pointercancel', end);
+}
+
+function clearSignature(){
+  if(!sigCtx || !sigCanvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  sigCtx.clearRect(0, 0, sigCanvas.width / dpr, sigCanvas.height / dpr);
+  sigDrawn = false;
+  if(sigHint) sigHint.style.display = '';
+}
+
+/* ---- Printable "Statement to DTA" form ----
+ * Builds a clean, standalone document (not the whole page) from the
+ * person's answers, typed explanation, and drawn signature, then prints
+ * only that. Marked SAMPLE for now. */
+function buildPrintRoot(){
+  let root = document.getElementById('print-root');
+  if(!root){ root = document.createElement('div'); root.id = 'print-root'; document.body.appendChild(root); }
+
+  const val = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
+  const name = val('f-name'), agency = val('f-agency'), explain = val('f-explain');
+  const rt = resultType();
+  const rs = reasons();
+  const gcText = GC_TEXT[state.answers.goodcause] || '';
+
+  let sigImg = '';
+  if(sigDrawn && sigCanvas){ try{ sigImg = sigCanvas.toDataURL('image/png'); }catch(_){} }
+
+  let today = '';
+  try{ today = new Date().toLocaleDateString('en-US', {year:'numeric', month:'long', day:'numeric'}); }catch(_){}
+
+  const field = (label, v) => `<div style="margin:0 0 10px"><span style="font-weight:700">${label}:</span> <span style="border-bottom:1px solid #000;display:inline-block;min-width:240px;padding:0 4px">${esc(v) || '&nbsp;'}</span></div>`;
+
+  let body;
+  if(rt === 'exempt'){
+    const items = rs.map(r => `<li style="margin:0 0 5px">${esc(r)}</li>`).join('');
+    body = `<p style="margin:0 0 10px">I am writing about the SNAP work rules (the ABAWD rules). <strong>I should not have to meet these work rules</strong> for the following reason(s):</p>
+      <ul style="margin:0 0 16px;padding-left:22px">${items}</ul>`;
+  } else if(rt === 'goodcause'){
+    body = `<p style="margin:0 0 10px">I am writing about the SNAP work rules (the ABAWD rules). <strong>I was not able to meet the work rules for one or more months</strong> because of the following good-cause reason:</p>
+      <p style="margin:0 0 16px;padding-left:10px">• ${esc(gcText)}</p>`;
+  } else {
+    body = `<p style="margin:0 0 16px">I am writing about the SNAP work rules (the ABAWD rules).</p>`;
+  }
+
+  const explainBlock = `<div style="margin:0 0 18px">
+      <div style="font-weight:700;margin:0 0 5px">In my own words:</div>
+      <div style="border:1px solid #000;padding:10px;min-height:64px;white-space:pre-wrap">${esc(explain)}</div>
+    </div>`;
+
+  const sigBlock = `<div style="margin:28px 0 0">
+      <div style="font-weight:700;margin:0 0 6px">Signature</div>
+      ${sigImg
+        ? `<img src="${sigImg}" alt="Signature" style="display:block;height:80px;max-width:100%;border-bottom:1px solid #000">`
+        : `<div style="border-bottom:1px solid #000;height:60px"></div>`}
+      <div style="display:flex;justify-content:space-between;gap:16px;margin:6px 0 0;font-size:13px">
+        <span>${esc(name) ? 'Signed by ' + esc(name) : 'Print name: ____________________'}</span>
+        <span>Date: ${esc(today) || '________________'}</span>
+      </div>
+    </div>`;
+
+  root.innerHTML = `<div style="font-family:'Atkinson Hyperlegible',Georgia,serif;color:#000;max-width:640px;margin:0 auto;padding:24px;font-size:15px;line-height:1.55">
+    <div style="text-align:center;border-bottom:2px solid #000;padding-bottom:12px;margin-bottom:20px">
+      <div style="font-size:13px;letter-spacing:.05em;text-transform:uppercase">Massachusetts Department of Transitional Assistance</div>
+      <div style="font-size:21px;font-weight:700;margin-top:4px">SNAP Work Rules — Statement</div>
+      <div style="font-size:12px;margin-top:5px;color:#555">SAMPLE — draft for review</div>
+    </div>
+    ${field('Name', name)}
+    ${field('Agency ID (if you have one)', agency)}
+    ${field('Date', today)}
+    <div style="height:12px"></div>
+    ${body}
+    ${explainBlock}
+    ${sigBlock}
+    <p style="font-size:11.5px;color:#444;margin:30px 0 0;border-top:1px solid #999;padding-top:8px">Prepared with the Court Forms Online SNAP work-rules screening. Based on the answers given; general information, not legal advice.</p>
+  </div>`;
+}
+
+function printForm(){
+  buildPrintRoot();
+  const cleanup = () => document.body.classList.remove('printing-form');
+  window.addEventListener('afterprint', cleanup, { once:true });
+  document.body.classList.add('printing-form');
+  window.print();
+  setTimeout(cleanup, 2000); // fallback for browsers that don't fire afterprint
+}
+
 function render(){
   renderProgress();
   const stage = document.getElementById('stage');
@@ -532,6 +673,7 @@ function render(){
   if(heading){ heading.setAttribute('tabindex', '-1'); }
 
   state.animate = false;
+  initSignaturePad();
   persist();
 }
 
@@ -588,7 +730,8 @@ document.addEventListener('click', (e) => {
       state.view = 'intro'; state.step = 0; state.gc = false; state.helpOpen = {}; state.answers = {}; renderWithMotion(); break;
     case 'delete-answers': deleteAnswers(); break;
     case 'quick-exit': window.location.replace('https://www.google.com'); break;
-    case 'print': window.print(); break;
+    case 'print': printForm(); break;
+    case 'sig-clear': clearSignature(); break;
   }
 });
 
