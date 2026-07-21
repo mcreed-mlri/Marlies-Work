@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C /c/dev/snap-calculator branch -a)",
+      "Bash(git -C /c/dev/snap-calculator log --oneline -10)",
+      "Bash(git -C /c/dev/snap-calculator remote -v)",
+      "Bash(git -C /c/dev/snap-calculator status --short)",
+      "Bash(git -C /c/dev/snap-calculator rev-list --count --all)",
+      "Bash(node --check assets/gate.js)",
+      "PowerShell($n = \\(Get-Command node -ErrorAction SilentlyContinue\\); if \\($n\\) { & node --check assets/gate.js; if \\($?\\) { \"gate.js syntax OK\" } } else { \"node not installed; skipping syntax check\" })",
+      "PowerShell($node = \\(Get-Command node -ErrorAction SilentlyContinue\\); if \\($node\\) { $node.Source } else { \"no node\" })",
+      "Bash(git remote *)",
+      "Bash(git ls-remote *)",
+      "Bash(git commit -q -m ' *)",
+      "Bash(git branch *)"
+    ]
+  }
+}

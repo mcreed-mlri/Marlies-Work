@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Do you have to meet the SNAP work rules? · Court Forms Online</title>
+<meta name="description" content="A short, private screening to check whether the SNAP ABAWD work rules apply to you. Plain language, easy to read.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0a2b52;
+    --blue:#134a8e;
+    --soft:#eaf1fb;
+    --yellow:#f4bd3f;
+    --green:#1e7a45;
+    --green-bg:#eaf6ee;
+    --green-bd:#cfe6d6;
+    --red:#b23b2e;
+    --red-bg:#fbeeeb;
+    --red-bd:#edd3cf;
+    --amber-bg:#fff8e8;
+    --amber-bd:#f0dca6;
+    --amber-ink:#5c4a1f;
+    --bg:#eef1f6;
+    --ink:#16202e;
+    --muted:#5b6675;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  html,body{margin:0}
+  body{
+    font-family:'Atkinson Hyperlegible',system-ui,-apple-system,sans-serif;
+    color:var(--ink);background:var(--bg);min-height:100vh;overflow-x:hidden;
+  }
+  a{color:var(--blue);text-decoration:underline;text-underline-offset:3px}
+  a:hover{color:var(--navy)}
+  button{font-family:inherit}
+  :focus-visible{outline:3px solid var(--navy);outline-offset:2px;border-radius:6px}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .fade{animation:fadeUp .35s ease both}
+  .opt{
+    font-family:inherit;font-weight:700;cursor:pointer;color:var(--ink);
+    background:#fff;border:2.5px solid #d3d9e2;
+    box-shadow:0 0 0 4px transparent;
+    transition:background .15s ease,border-color .15s ease,box-shadow .15s ease;
+    -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  }
+  .opt:hover{border-color:#a8b4c8;background:#f7f9fc}
+  .opt:active{background:var(--soft)}
+  .opt-selected{
+    border-color:var(--blue);background:var(--soft);
+    box-shadow:inset 0 0 0 1px var(--blue),0 0 0 4px rgba(19,74,142,.16);
+  }
+  .opt-selected:hover{border-color:var(--blue);background:var(--soft)}
+  .opt-yn{
+    flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:8px;
+    font-size:22px;padding:24px 18px;line-height:1.2;border-width:3px;border-radius:16px;
+    min-height:96px;
+  }
+  .opt-yn .lucide{width:28px;height:28px;stroke-width:2.25}
+  .icon-inline{width:22px;height:22px;flex:none;stroke-width:2.25}
+  .icon-result{width:28px;height:28px;stroke-width:2.5;color:#fff}
+  .opt-row{
+    display:flex;align-items:center;gap:14px;width:100%;
+    font-size:18px;text-align:left;padding:17px 18px;line-height:1.35;border-radius:14px;
+    min-height:56px;
+  }
+  .opt-mark{
+    width:26px;height:26px;flex:none;border-radius:50%;
+    border:2.5px solid #b9c1cd;background:#fff;color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-size:15px;font-weight:700;transition:border-color .15s ease,background .15s ease;
+  }
+  .opt-mark.square{border-radius:7px}
+  .opt-selected .opt-mark{border-color:var(--blue);background:var(--blue)}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  .topbar-inner,.strip-inner{
+    max-width:920px;margin:0 auto;padding:14px 24px;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  }
+  .strip-inner{max-width:760px;padding:8px 24px;font-size:14px;color:#2c3644}
+  .brand{display:flex;align-items:center;gap:12px;min-width:0}
+  .brand-text{min-width:0}
+  .brand-title{font-size:19px;font-weight:700;line-height:1.1}
+  .brand-sub{font-size:12.5px;opacity:.85;line-height:1.3}
+  .btn-exit{
+    flex:none;display:inline-flex;align-items:center;gap:7px;
+    font-size:14px;font-weight:700;color:var(--navy);background:#fff;border:none;
+    border-radius:999px;padding:11px 16px;cursor:pointer;min-height:44px;touch-action:manipulation;
+  }
+  #stage{
+    max-width:760px;margin:0 auto;
+    padding:24px max(16px, env(safe-area-inset-right)) 72px max(16px, env(safe-area-inset-left));
+  }
+  .card-box{
+    background:#fff;border-radius:20px;padding:30px 34px;
+    box-shadow:0 1px 3px rgba(16,32,56,.08);border:1px solid #e3e8f0;
+  }
+  .facts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+  .fact-cell{background:#f4f7fc;border-radius:14px;padding:16px 18px}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0 0}
+  .yn-group{display:flex;gap:12px;margin:26px 0 0}
+  .q-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:22px 0 0;flex-wrap:wrap}
+  .result-head{display:flex;gap:16px;align-items:center;padding:26px 28px}
+  .result-body{padding:24px 28px;background:#fff}
+  .h-hero{font-size:clamp(26px,6.5vw,34px);line-height:1.2;margin:0 0 16px;letter-spacing:-.01em;max-width:22ch}
+  .h-q{font-size:clamp(22px,5.8vw,28px);line-height:1.25;margin:0;letter-spacing:-.01em}
+  .h-result{font-size:clamp(22px,5.5vw,27px);line-height:1.2;margin:4px 0 0}
+  .lead{font-size:clamp(17px,4.2vw,19px);line-height:1.55;color:#37414f}
+  .btn-block{touch-action:manipulation}
+  input,textarea,select{font-size:16px;max-width:100%}
+  @media (max-width:640px){
+    .topbar-inner{padding:12px 16px;gap:10px;flex-wrap:nowrap}
+    .brand-title{font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .brand-sub{display:none}
+    .btn-exit{padding:10px 12px;font-size:13px}
+    .btn-exit .icon-inline{width:18px;height:18px}
+    .strip-inner{padding:8px 16px;gap:8px;font-size:13px}
+    #stage{padding:16px max(14px, env(safe-area-inset-right)) 56px max(14px, env(safe-area-inset-left))}
+    .card-box{padding:22px 18px;border-radius:16px}
+    .facts-grid{grid-template-columns:1fr;gap:10px;margin-bottom:20px}
+    .fact-cell{padding:14px 16px}
+    .form-row{grid-template-columns:1fr}
+    .opt-yn{font-size:20px;padding:20px 14px;border-radius:14px}
+    .opt-row{font-size:17px;padding:16px;gap:12px}
+    .result-head{flex-direction:column;align-items:flex-start;padding:20px 18px;gap:12px}
+    .result-body{padding:18px}
+    .q-nav{margin-top:18px}
+    .q-nav .btn-block{flex:1 1 auto;min-width:min(100%,160px);text-align:center}
+    #start-btn,.btn-full{width:100%}
+  }
+  @media (max-width:380px){
+    .yn-group{flex-direction:column}
+    .opt-yn{width:100%}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .fade{animation:none}
+    .opt,.opt-mark{transition:none}
+  }
+  @media print{.no-print{display:none !important}body{background:#fff !important}}
+</style>
+<script src="https://unpkg.com/lucide@0.525.0"></script>
+</head>
+<body>
+<script src="assets/gate.js"></script>
+
+<!-- ===== TOP NAV ===== -->
+<div class="no-print" style="background:var(--navy);color:#fff">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div style="width:26px;height:34px;border-radius:5px 5px 3px 3px;background:linear-gradient(var(--yellow),#e79a1f);position:relative;flex:none">
+        <div style="position:absolute;left:50%;top:6px;transform:translateX(-50%);width:4px;height:20px;background:var(--navy);border-radius:2px"></div>
+      </div>
+      <div class="brand-text">
+        <div class="brand-title">Court Forms Online</div>
+        <div class="brand-sub">SNAP work rules · Free check</div>
+      </div>
+    </div>
+    <button type="button" class="btn-exit" data-action="quick-exit" title="Leave this site quickly">Quick exit <i data-lucide="x" class="icon-inline" aria-hidden="true"></i></button>
+  </div>
+</div>
+
+<!-- ===== COMPARE STRIP ===== -->
+<div class="no-print" style="background:var(--green-bg);border-bottom:1px solid var(--green-bd)">
+  <div class="strip-inner">
+    <span style="font-weight:700;color:var(--green)">✓ Accessible redesign preview</span>
+    <span><a href="snap-abawd.html" style="font-weight:700">See the current version</a> · <a href="index.html" style="font-weight:700">All previews</a></span>
+  </div>
+</div>
+
+<!-- ===== PROGRESS ===== -->
+<div id="progress" class="no-print"></div>
+
+<!-- ===== STAGE ===== -->
+<main id="stage"></main>
+
+<script>
+"use strict";
+
+/* ------------------------------------------------------------------ *
+ * Accessible v2 of the SNAP ABAWD screening.
+ * Same questions, logic, and privacy behavior as index.html — rebuilt
+ * with plain language and big touch targets for adults who are new
+ * readers or reading in a second language.
+ * Nothing here is sent anywhere; all state lives in this page only.
+ * ------------------------------------------------------------------ */
+
+const QUESTIONS = [
+  {id:'child14', type:'yn', text:'Do you live with a child under 14 years old?', help:'If you live with a child under 14 who should be part of your SNAP household — even if they are not eligible (for example, because of immigration status or if they are a foster child) — choose "Yes."', exemptOn:'yes', reason:'Live with a child under 14 years old'},
+  {id:'health', type:'yn', text:'Is it hard to work 30 hours a week because of your health or a disability?', exemptOn:'yes', reason:'Have a health reason that makes it hard to work 30 or more hours a week'},
+  {id:'child6', type:'yn', text:'Do you take care of a child under 6 years old?', help:'You do not need to be related to them, live with them, or provide care full-time.', exemptOn:'yes', reason:'Take care of a child under 6 years old'},
+  {id:'caretaker', type:'yn', text:'Do you take care of a child or adult who cannot care for themselves?', help:'You do not need to be related to them, live with them, or provide care full-time.', exemptOn:'yes', reason:'Take care of a child or adult who cannot care for themselves'},
+  {id:'pregnant', type:'yn', text:'Are you pregnant?', exemptOn:'yes', reason:'Pregnant'},
+  {id:'housing', type:'yn', text:'Do you have a regular place to sleep at night?', help:'Choose "No" if you do not have stable housing, or you are staying in a shelter, a car, or with different people.', exemptOn:'no', reason:'Experiencing homelessness or unstable housing'},
+  {id:'dv', type:'yn', text:'Has a safety problem at home made it hard for you to work?', help:'DTA has domestic violence specialists in each local office who can help. Your answer stays private.', exemptOn:'yes', reason:'A domestic violence or safety situation'},
+  {id:'tribe', type:'yn', text:'Are you an Alaska Native, or a member of an American Indian, Urban Indian, or California Indian tribe?', help:'Choose "Yes" if you have a parent or grandparent who is a member of one of these tribes.', exemptOn:'yes', reason:'Alaska Native or member of a Tribe'},
+  {id:'tafdc', type:'yn', text:'Do you get, or are you applying for, TAFDC cash assistance?', exemptOn:'yes', reason:'Get or applying for TAFDC cash assistance'},
+  {id:'disability', type:'multi', text:'Do you get any of these disability benefits?', help:'Pick every one that is true for you. If none are, choose "None of these."', options:['EAEDC','Veteran’s disability benefit','Workers’ compensation','Paid Family Medical Leave','Short-term disability','SSI or SSDI','Other'], noneLabel:'None of these', exemptIfAny:true, reason:'Get disability benefits'},
+  {id:'unemployment', type:'yn', text:'Do you get, or are you applying for, unemployment benefits?', exemptOn:'yes', reason:'Get unemployment benefits'},
+  {id:'stateagency', type:'yn', text:'Do you get services from a Massachusetts state agency?', help:'For example: MassAbility, Dept. of Mental Health, Dept. of Developmental Services, MA Commission for the Blind, or MA Commission for the Deaf and Hard of Hearing.', exemptOn:'yes', reason:'Get services from a state agency'},
+  {id:'school', type:'yn', text:'Are you in school half-time or more?', help:'This includes high school, vocational/technical school, college, or any education and training program.', exemptOn:'yes', reason:'Enrolled in school half-time or more'},
+  {id:'working', type:'single', text:'Are you working for pay right now?', help:'Pick the one that is true for you.', options:['I make $217.50 a week or more (before taxes)','I work at least 14.5 hours a week at $15+ an hour','I work 30 hours or more a week (I make less than minimum wage)'], noneLabel:'None of these', exemptIfAny:true, reason:'Working enough hours to meet the work rules'},
+];
+
+const GOODCAUSE = {id:'goodcause', type:'single', text:'Is something making it hard to work, go to school, or volunteer right now?', help:'These are situations where you missed work, school, or volunteering hours for one or more months because of an unexpected life event.', options:['Yes — my ride or transportation broke down','Yes — a family or personal emergency','Yes — an unfair or unreasonable job situation'], noneLabel:'No / I’m not sure'};
+
+const GC_TEXT = {
+  'Yes — my ride or transportation broke down':'No transportation — a temporary loss of transportation, such as a broken-down car or a public transit shutdown.',
+  'Yes — a family or personal emergency':'Emergency — any family or personal crisis, or a situation where you need to give care or support to others.',
+  'Yes — an unfair or unreasonable job situation':'Employment issues — for example, a workplace that discriminates, or unreasonable job conditions.'
+};
+
+const NONE = '__none';
+
+/* Questions are shown a few at a time, grouped by theme. Each group is
+ * one page; the good-cause question is a final step on its own. */
+const GROUPS = [
+  {title:'Children and people you care for', ids:['child14','child6','caretaker','pregnant']},
+  {title:'Your health, housing, and safety', ids:['health','housing','dv']},
+  {title:'Benefits and cash assistance', ids:['tafdc','disability','unemployment','stateagency']},
+  {title:'School, work, and background', ids:['school','working','tribe']},
+];
+const Q_BY_ID = {};
+for(const q of QUESTIONS){ Q_BY_ID[q.id] = q; }
+
+/* ------------------------------------------------------------------ *
+ * State + logic
+ * ------------------------------------------------------------------ */
+
+const state = { view:'intro', step:0, gc:false, helpOpen:{}, agreed:false, answers:{}, animate:true };
+
+const STORAGE_KEY = 'cfo-abawd-screening-v2';
+const RETENTION_MS = 24 * 60 * 60 * 1000; // 1 day
+
+function persist(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      view:state.view, step:state.step, gc:state.gc,
+      agreed:state.agreed, answers:state.answers, savedAt:Date.now()
+    }));
+  }catch(e){ /* storage unavailable / full — fail quietly */ }
+}
+
+function loadPersisted(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return;
+    const d = JSON.parse(raw);
+    if(!d || typeof d.savedAt !== 'number' || (Date.now() - d.savedAt) > RETENTION_MS){
+      localStorage.removeItem(STORAGE_KEY);
+      return;
+    }
+    state.view = d.view || 'intro';
+    state.step = typeof d.step === 'number' ? d.step : 0;
+    // Clamp in case saved data predates the themed grouping (step used to index questions).
+    state.step = Math.max(0, Math.min(state.step, GROUPS.length - 1));
+    state.gc = !!d.gc;
+    state.agreed = !!d.agreed;
+    state.answers = (d.answers && typeof d.answers === 'object') ? d.answers : {};
+  }catch(e){
+    try{ localStorage.removeItem(STORAGE_KEY); }catch(_){}
+  }
+}
+
+function deleteAnswers(){
+  try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+  state.view = 'intro'; state.step = 0; state.gc = false;
+  state.helpOpen = {}; state.answers = {};
+  renderWithMotion();
+}
+
+function qById(id){ return id === 'goodcause' ? GOODCAUSE : Q_BY_ID[id]; }
+function curGroup(){ return GROUPS[state.step]; }
+function pageQuestions(){ return state.gc ? [GOODCAUSE] : curGroup().ids.map(id => Q_BY_ID[id]); }
+function setAns(id, val){ state.answers[id] = val; }
+
+function reasons(){
+  const r = [];
+  for(const q of QUESTIONS){
+    const v = state.answers[q.id];
+    if(q.exemptOn && v === q.exemptOn) r.push(q.reason);
+    else if(q.exemptIfAny){
+      if(Array.isArray(v)){ if(v.length) r.push(q.reason); }
+      else if(v && v !== NONE) r.push(q.reason);
+    }
+  }
+  return r;
+}
+
+function resultType(){
+  if(reasons().length) return 'exempt';
+  const g = state.answers.goodcause;
+  if(g && g !== NONE) return 'goodcause';
+  return 'notexempt';
+}
+
+function isAnswered(q){
+  const a = state.answers[q.id];
+  return Array.isArray(a) ? a.length > 0 : !!a;
+}
+
+function advance(){
+  if(state.gc){ state.view = 'results'; renderWithMotion(); return; }
+  if(state.step < GROUPS.length - 1){ state.step++; renderWithMotion(); return; }
+  // finished the themed groups
+  if(reasons().length){ state.view = 'results'; }
+  else { state.gc = true; }
+  renderWithMotion();
+}
+
+function back(){
+  if(state.gc){ state.gc = false; state.step = GROUPS.length - 1; renderWithMotion(); return; }
+  if(state.step > 0){ state.step--; }
+  else { state.view = 'intro'; }
+  renderWithMotion();
+}
+
+/* ------------------------------------------------------------------ *
+ * Rendering
+ * ------------------------------------------------------------------ */
+
+function esc(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+const primaryBtn = "font-family:inherit;font-size:20px;font-weight:700;color:#fff;background:var(--blue);border:none;border-radius:12px;padding:17px 34px;cursor:pointer;box-shadow:0 2px 0 var(--navy);min-height:52px;touch-action:manipulation";
+const nextBtn    = "font-family:inherit;font-size:18px;font-weight:700;color:#fff;background:var(--blue);border:none;border-radius:12px;padding:14px 28px;cursor:pointer;box-shadow:0 2px 0 var(--navy);min-height:48px;touch-action:manipulation";
+const ghostBtn   = "font-family:inherit;font-size:16px;font-weight:700;color:var(--blue);background:none;border:2px solid var(--blue);border-radius:12px;padding:12px 22px;cursor:pointer;min-height:48px;touch-action:manipulation";
+const inputStyle = "width:100%;font-family:inherit;font-size:16px;padding:12px 14px;border:1.5px solid #cdd3dc;border-radius:10px;min-height:48px";
+
+/* ---- Question option buttons ---- */
+
+// Big Yes / No pair.
+function ynButtons(q){
+  const a = state.answers[q.id];
+  const one = (val, label, lucideName) => {
+    const sel = a === val;
+    return `<button type="button" class="opt opt-yn${sel ? ' opt-selected' : ''}" role="radio" aria-checked="${sel}" data-q-id="${q.id}" data-opt-kind="yn" data-opt-val="${val}">
+      <i data-lucide="${lucideName}" aria-hidden="true"></i>
+      <span>${label}</span>
+    </button>`;
+  };
+  return `<div role="radiogroup" aria-label="${esc(q.text)}" class="yn-group">
+    ${one('yes','Yes','check')}
+    ${one('no','No','x')}
+  </div>`;
+}
+
+// Multi / single choice list with big rows.
+function choiceButtons(q){
+  const a = state.answers[q.id];
+  const rows = [];
+
+  if(q.type === 'multi'){
+    const arr = Array.isArray(a) ? a : [];
+    q.options.forEach((o, i) => {
+      const sel = arr.includes(o);
+      rows.push(`<button type="button" class="opt opt-row${sel ? ' opt-selected' : ''}" role="checkbox" aria-checked="${sel}" data-q-id="${q.id}" data-opt-kind="multi" data-opt-idx="${i}">
+        <span aria-hidden="true" class="opt-mark square">${sel ? '✓' : ''}</span>
+        <span style="flex:1">${esc(o)}</span>
+      </button>`);
+    });
+    const selNone = a === NONE;
+    rows.push(`<button type="button" class="opt opt-row${selNone ? ' opt-selected' : ''}" role="checkbox" aria-checked="${selNone}" data-q-id="${q.id}" data-opt-kind="multi-none">
+      <span aria-hidden="true" class="opt-mark square">${selNone ? '✓' : ''}</span>
+      <span style="flex:1">${esc(q.noneLabel)}</span>
+    </button>`);
+  } else { // single
+    q.options.forEach((o, i) => {
+      const sel = a === o;
+      rows.push(`<button type="button" class="opt opt-row${sel ? ' opt-selected' : ''}" role="radio" aria-checked="${sel}" data-q-id="${q.id}" data-opt-kind="single" data-opt-idx="${i}">
+        <span aria-hidden="true" class="opt-mark">${sel ? '●' : ''}</span>
+        <span style="flex:1">${esc(o)}</span>
+      </button>`);
+    });
+    const selNone = a === NONE;
+    rows.push(`<button type="button" class="opt opt-row${selNone ? ' opt-selected' : ''}" role="radio" aria-checked="${selNone}" data-q-id="${q.id}" data-opt-kind="single-none">
+      <span aria-hidden="true" class="opt-mark">${selNone ? '●' : ''}</span>
+      <span style="flex:1">${esc(q.noneLabel)}</span>
+    </button>`);
+  }
+  const groupRole = q.type === 'multi' ? 'group' : 'radiogroup';
+  return `<div role="${groupRole}" aria-label="${esc(q.text)}" style="display:flex;flex-direction:column;gap:12px;margin:24px 0 0">${rows.join('')}</div>`;
+}
+
+function renderProgress(){
+  const el = document.getElementById('progress');
+  if(state.view !== 'question'){ el.innerHTML = ''; return; }
+  const total = GROUPS.length;
+  let pct, label;
+  if(state.gc){ pct = 100; label = 'Last question'; }
+  else { const cur = state.step + 1; pct = Math.round((cur / total) * 100); label = `Section ${cur} of ${total}`; }
+  el.innerHTML =
+    `<div style="height:10px;background:#dbe3ef" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}" aria-label="How far you are">`
+    + `<div style="height:100%;width:${pct}%;background:var(--blue);transition:width .3s ease"></div></div>`
+    + `<div style="max-width:760px;margin:0 auto;padding:12px max(16px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left));font-size:15px;color:var(--muted);font-weight:700">${label}</div>`;
+}
+
+function animClass(){ return state.animate ? 'fade' : ''; }
+
+function renderIntro(){
+  return `<div class="${animClass()}">
+    <div style="font-size:14px;color:var(--muted);margin-bottom:20px">
+      <a href="#" style="text-decoration:none">Home</a> <span style="opacity:.5">/</span>
+      <a href="#" style="text-decoration:none">Massachusetts</a> <span style="opacity:.5">/</span>
+      <a href="#" style="text-decoration:none">SNAP</a>
+    </div>
+
+    <div class="card-box">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:var(--soft);color:var(--blue);font-size:13.5px;font-weight:700;padding:6px 13px;border-radius:999px;margin-bottom:18px">
+        <span style="width:8px;height:8px;border-radius:50%;background:var(--blue);display:inline-block"></span>
+        SNAP · Free check
+      </div>
+      <h1 class="h-hero">Do you have to meet the SNAP work rules?</h1>
+      <p class="lead" style="margin:0 0 12px;max-width:54ch">Did DTA tell you that you need to meet the <strong>work rules</strong> to keep your SNAP?</p>
+      <p class="lead" style="margin:0 0 26px;max-width:54ch"><strong>Many people do not have to meet them.</strong> Answer a few easy questions to find out. We will show you what to do next.</p>
+
+      <div class="facts-grid">
+        <div class="fact-cell">
+          <div style="font-size:15px;color:var(--muted);font-weight:700;margin-bottom:3px">Takes about</div>
+          <div style="font-size:22px;font-weight:700;color:var(--navy)">3 minutes</div>
+        </div>
+        <div class="fact-cell">
+          <div style="font-size:15px;color:var(--muted);font-weight:700;margin-bottom:3px">Cost</div>
+          <div style="font-size:22px;font-weight:700;color:var(--navy)">Free</div>
+        </div>
+        <div class="fact-cell">
+          <div style="font-size:15px;color:var(--muted);font-weight:700;margin-bottom:3px">You get</div>
+          <div style="font-size:22px;font-weight:700;color:var(--navy)">What to do next</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:12px;align-items:flex-start;background:var(--green-bg);border:1px solid var(--green-bd);border-radius:14px;padding:15px 18px;margin-bottom:22px">
+        <i data-lucide="lock" class="icon-inline" style="margin-top:2px;color:var(--green)" aria-hidden="true"></i>
+        <p style="font-size:16px;line-height:1.5;color:#2c3644;margin:0">Your answers stay on this device. We never see them. They are erased after 1 day, and you can erase them yourself any time.</p>
+      </div>
+
+      <details style="margin:0 0 20px;border:1px solid #dfe3ea;border-radius:14px;background:#fff">
+        <summary style="cursor:pointer;padding:14px 18px;font-size:16px;font-weight:700;color:var(--blue)">Terms of Use</summary>
+        <div style="padding:0 18px 16px;font-size:15px;line-height:1.6;color:#3a424e">
+          <p style="margin:0 0 10px">This tool gives general information only. It is <strong>not legal advice</strong> and does not make you a client of a lawyer. The result is based only on your answers and may not fit your whole situation.</p>
+          <p style="margin:0 0 10px">For advice about your case, contact a legal aid program or a lawyer, and always check with DTA before you act.</p>
+          <p style="margin:0">Your answers are kept only on this device, are never sent to us, and are erased after 1 day.</p>
+        </div>
+      </details>
+
+      <label style="display:flex;gap:12px;align-items:flex-start;margin:0 0 24px;font-size:17px;line-height:1.5;color:#2c3644;cursor:pointer">
+        <input type="checkbox" id="agree" ${state.agreed ? 'checked' : ''} style="width:24px;height:24px;flex:none;margin-top:1px;accent-color:var(--blue);cursor:pointer">
+        <span>I read and agree to the Terms of Use above.</span>
+      </label>
+
+      <button type="button" id="start-btn" class="btn-full" data-action="start" ${state.agreed ? '' : 'aria-disabled="true"'} style="${primaryBtn}${state.agreed ? '' : ';opacity:.5;cursor:not-allowed'}">Start now →</button>
+    </div>
+
+    <p style="font-size:16px;margin:20px 0 0;text-align:center"><a href="#">Learn more about the SNAP work rules</a></p>
+  </div>`;
+}
+
+// Help disclosure for one question.
+function renderHelp(q){
+  if(!q.help) return '';
+  const open = !!state.helpOpen[q.id];
+  let help = `<div style="margin:16px 0 0">
+    <button type="button" data-action="toggle-help" data-q-id="${q.id}" aria-expanded="${open}" style="display:inline-flex;align-items:center;gap:8px;font-size:16px;font-weight:700;color:var(--blue);background:none;border:none;padding:0;cursor:pointer">
+      <span aria-hidden="true" style="width:22px;height:22px;border-radius:50%;border:2px solid var(--blue);display:inline-flex;align-items:center;justify-content:center;font-size:14px;flex:none">i</span>
+      ${open ? 'Hide help' : 'What does this mean?'}
+    </button>`;
+  if(open){
+    help += `<p style="font-size:16.5px;line-height:1.6;color:#2c3644;margin:12px 0 0;padding:15px 17px;background:var(--soft);border-radius:14px;border-left:5px solid var(--blue)">${esc(q.help)}</p>`;
+  }
+  help += `</div>`;
+  return help;
+}
+
+// One question, as its own card.
+function renderQBlock(q){
+  const isGC = q.id === 'goodcause';
+  const options = q.type !== 'yn' ? choiceButtons(q) : ynButtons(q);
+  const head = isGC
+    ? `<h2 class="h-q">${esc(q.text)}</h2>`
+    : `<h3 style="font-size:clamp(19px,4.6vw,22px);line-height:1.3;margin:0;letter-spacing:-.01em">${esc(q.text)}</h3>`;
+  return `<div class="card-box">
+    ${head}
+    ${renderHelp(q)}
+    ${options}
+  </div>`;
+}
+
+function renderPage(){
+  const lastGroup = !state.gc && state.step === GROUPS.length - 1;
+  const nextLabel = (lastGroup || state.gc) ? 'See my answer →' : 'Next →';
+
+  const header = state.gc ? '' : `<div style="margin:0 0 18px">
+    <h2 class="h-q">${esc(curGroup().title)}</h2>
+    <p class="lead" style="margin:8px 0 0">Answer any that apply to you — every question is optional.</p>
+  </div>`;
+
+  const blocks = pageQuestions().map(renderQBlock).join('');
+
+  return `<div class="${animClass()}">
+    ${header}
+    <div style="display:flex;flex-direction:column;gap:16px">${blocks}</div>
+    <div class="q-nav">
+      <button type="button" class="btn-block" data-action="back" style="${ghostBtn}">← Back</button>
+      <button type="button" class="btn-block" data-action="next" style="${nextBtn}">${nextLabel}</button>
+    </div>
+  </div>`;
+}
+
+function renderResults(){
+  const rt = resultType();
+  const rs = reasons();
+  const gcSel = state.answers.goodcause;
+  const goodCauseText = GC_TEXT[gcSel] || '';
+
+  let formPrompt = 'Explain your reasons in your own words';
+  if(rs.includes('Have a health reason that makes it hard to work 30 or more hours a week')) formPrompt = 'Explain the health reason that makes it hard for you to work 30 or more hours a week';
+  else if(rs.includes('Take care of a child or adult who cannot care for themselves')) formPrompt = 'Explain your caretaking responsibilities or arrangement';
+  if(rt === 'goodcause') formPrompt = 'Explain why you had to miss work, school, or volunteer hours';
+
+  let card = '';
+  if(rt === 'exempt'){
+    const items = rs.map(r => `<li style="display:flex;align-items:flex-start;gap:12px;font-size:17px;line-height:1.5;color:var(--ink)">
+      <span aria-hidden="true" style="width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;display:inline-flex;align-items:center;justify-content:center;flex:none;margin-top:1px"><i data-lucide="check" style="width:14px;height:14px;stroke-width:3"></i></span>
+      <span>${esc(r)}</span></li>`).join('');
+    card = `<div style="border-radius:20px;overflow:hidden;border:1px solid var(--green-bd);box-shadow:0 1px 3px rgba(16,32,56,.08)">
+      <div class="result-head" style="background:var(--green-bg);border-bottom:1px solid var(--green-bd)">
+        <span aria-hidden="true" style="width:52px;height:52px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;flex:none"><i data-lucide="check" class="icon-result"></i></span>
+        <div>
+          <div style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--green)">Your answer</div>
+          <h2 class="h-result" style="color:#14532d">Good news — you do not have to meet the work rules</h2>
+        </div>
+      </div>
+      <div class="result-body">
+        <p style="font-size:17px;line-height:1.6;color:#37414f;margin:0 0 16px">You can keep your SNAP without meeting the work rules, because:</p>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px">${items}</ul>
+      </div></div>`;
+  } else if(rt === 'goodcause'){
+    card = `<div style="border-radius:20px;overflow:hidden;border:1px solid #c7d6f0;box-shadow:0 1px 3px rgba(16,32,56,.08)">
+      <div class="result-head" style="background:var(--soft);border-bottom:1px solid #c7d6f0">
+        <span aria-hidden="true" style="width:52px;height:52px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;flex:none"><i data-lucide="calendar" class="icon-result"></i></span>
+        <div>
+          <div style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--blue)">Your answer</div>
+          <h2 class="h-result" style="color:var(--navy)">You may have a good reason for missing hours</h2>
+        </div>
+      </div>
+      <div class="result-body">
+        <p style="font-size:17px;line-height:1.6;color:#37414f;margin:0 0 16px">Tell DTA as soon as you can if you could not meet the work rules for one or more months because of a hard life event, like:</p>
+        <div style="display:flex;align-items:flex-start;gap:12px;padding:16px 18px;background:var(--soft);border-radius:14px">
+          <span aria-hidden="true" style="font-size:20px;flex:none">•</span>
+          <span style="font-size:17px;line-height:1.55;overflow-wrap:anywhere">${esc(goodCauseText)}</span>
+        </div>
+      </div></div>`;
+  } else {
+    card = `<div style="border-radius:20px;overflow:hidden;border:1px solid var(--amber-bd);box-shadow:0 1px 3px rgba(16,32,56,.08)">
+      <div class="result-head" style="background:var(--amber-bg);border-bottom:1px solid var(--amber-bd)">
+        <span aria-hidden="true" style="width:52px;height:52px;border-radius:50%;background:#9a6a00;color:#fff;display:flex;align-items:center;justify-content:center;flex:none"><i data-lucide="clipboard-list" class="icon-result"></i></span>
+        <div>
+          <div style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#9a6a00">Your answer</div>
+          <h2 class="h-result" style="color:#7a4a00">You may need to meet the work rules</h2>
+        </div>
+      </div>
+      <div class="result-body">
+        <p style="font-size:17px;line-height:1.6;color:#37414f;margin:0 0 18px">You did not pick a reason to be exempt. You can meet the work rules by doing <strong>one</strong> of these:</p>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;gap:14px;align-items:flex-start;padding:18px 18px;border:1px solid #eee2c4;border-radius:16px;background:#fffdf7">
+            <span aria-hidden="true" style="width:30px;height:30px;border-radius:50%;background:#9a6a00;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none">1</span>
+            <p style="margin:0;font-size:16.5px;line-height:1.55"><strong>Work or train 20 hours a week</strong> (80 hours a month). This can be paid work, unpaid work, or a DTA training program. Unpaid work can include internships or caring for family or friends who are not disabled or under age 6.</p>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;padding:18px 18px;border:1px solid #eee2c4;border-radius:16px;background:#fffdf7">
+            <span aria-hidden="true" style="width:30px;height:30px;border-radius:50%;background:#9a6a00;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none">2</span>
+            <p style="margin:0;font-size:16.5px;line-height:1.55"><strong>Volunteer</strong> a set number of hours each month. The number depends on how much SNAP you get — DTA will tell you how many hours.</p>
+          </div>
+        </div>
+        <p style="font-size:16px;line-height:1.6;color:#37414f;margin:20px 0 0;overflow-wrap:anywhere">Already lost your SNAP because of the work rules? You can apply again any time. Email <a href="mailto:info@masslegalservices.org">info@masslegalservices.org</a> if you lost or are about to lose SNAP because of these rules.</p>
+      </div></div>`;
+  }
+
+  let form = '';
+  if(rt === 'exempt' || rt === 'goodcause'){
+    form = `<div class="card-box" style="margin:22px 0 0">
+      <h3 style="font-size:21px;margin:0 0 6px">Tell DTA — fill this out and send it</h3>
+      <p style="font-size:16px;line-height:1.55;color:var(--muted);margin:0 0 18px">Fill in the blanks, then save or print this page and send it to DTA. <em>What you type here is not saved — print or save the page to keep a copy.</em></p>
+      <label for="f-explain" style="display:block;font-size:16px;font-weight:700;margin:0 0 8px">${esc(formPrompt)}</label>
+      <textarea id="f-explain" rows="4" placeholder="Type here…" style="width:100%;font-family:inherit;font-size:16px;line-height:1.5;padding:12px 14px;border:1.5px solid #cdd3dc;border-radius:10px;resize:vertical"></textarea>
+      <div class="form-row">
+        <div><label for="f-name" style="display:block;font-size:15px;font-weight:700;margin:0 0 6px">Name</label><input id="f-name" autocomplete="name" style="${inputStyle}"></div>
+        <div><label for="f-agency" style="display:block;font-size:15px;font-weight:700;margin:0 0 6px">Agency ID</label><input id="f-agency" inputmode="text" style="${inputStyle}"></div>
+      </div>
+      <div style="margin:16px 0 0">
+        <label style="display:block;font-size:15px;font-weight:700;margin:0 0 6px">Signature</label>
+        <div style="border-bottom:1.5px solid #9aa2ad;height:36px"></div>
+        <p style="font-size:13.5px;color:#8a919c;margin:6px 0 0">DTA needs your real signature, not a typed one — sign after you print.</p>
+      </div>
+      <div class="no-print q-nav" style="margin-top:22px">
+        <button type="button" class="btn-block btn-full" data-action="print" style="${nextBtn}">Print this form</button>
+        <button type="button" class="btn-block" data-action="print" style="${ghostBtn}">Save as PDF</button>
+      </div>
+    </div>`;
+  }
+
+  const nextSteps = `<div class="card-box" style="margin:22px 0 0;background:var(--soft);box-shadow:none">
+    <h3 style="font-size:19px;margin:0 0 12px">Other ways to reach DTA</h3>
+    <ul style="margin:0;padding-left:22px;font-size:16.5px;line-height:1.8;color:#37414f;overflow-wrap:anywhere">
+      <li>Upload on <a href="https://dtaconnect.eohhs.mass.gov/" target="_blank" rel="noopener">DTAConnect</a></li>
+      <li>Call the DTA Assistance Line at <a href="tel:8773822363">(877) 382-2363</a></li>
+      <li>Mail: DTA Document Processing Center, P.O. Box 4406, Taunton, MA 02780-0420</li>
+      <li>Fax: (617) 887-8765, or visit a local DTA office</li>
+    </ul>
+  </div>`;
+
+  return `<div class="${animClass()}">${card}${form}${nextSteps}
+    <div class="no-print q-nav" style="margin-top:22px">
+      <button type="button" class="btn-block" data-action="restart" style="${ghostBtn};display:inline-flex;align-items:center;justify-content:center;gap:8px"><i data-lucide="rotate-ccw" class="icon-inline" aria-hidden="true"></i> Start over</button>
+      <button type="button" class="btn-block" data-action="delete-answers" style="font-family:inherit;font-size:16px;font-weight:700;color:#a12b2b;background:none;border:2px solid #d8a2a2;border-radius:12px;padding:12px 20px;cursor:pointer;min-height:48px;touch-action:manipulation">Delete my answers</button>
+    </div>
+  </div>`;
+}
+
+function renderIcons(){
+  if(typeof lucide !== 'undefined' && lucide.createIcons){
+    lucide.createIcons({ attrs: { 'aria-hidden': 'true' } });
+  }
+}
+
+function render(){
+  renderProgress();
+  const stage = document.getElementById('stage');
+  if(state.view === 'intro') stage.innerHTML = renderIntro();
+  else if(state.view === 'question') stage.innerHTML = renderPage();
+  else stage.innerHTML = renderResults();
+
+  const heading = stage.querySelector('h1, h2');
+  if(heading){ heading.setAttribute('tabindex', '-1'); }
+
+  state.animate = false;
+  renderIcons();
+  persist();
+}
+
+function renderWithMotion(){
+  state.animate = true;
+  render();
+}
+
+/* ------------------------------------------------------------------ *
+ * Event handling (delegation)
+ * ------------------------------------------------------------------ */
+
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('button');
+  if(!btn) return;
+
+  const kind = btn.getAttribute('data-opt-kind');
+  if(kind){
+    const q = qById(btn.getAttribute('data-q-id'));
+    if(!q) return;
+    // Selecting an answer no longer moves you forward — use Next when ready.
+    if(kind === 'yn'){
+      setAns(q.id, btn.getAttribute('data-opt-val'));
+      render();
+    } else if(kind === 'multi'){
+      const o = q.options[+btn.getAttribute('data-opt-idx')];
+      const cur = Array.isArray(state.answers[q.id]) ? state.answers[q.id] : [];
+      state.answers[q.id] = cur.includes(o) ? cur.filter(x => x !== o) : [...cur, o];
+      render();
+    } else if(kind === 'multi-none'){
+      setAns(q.id, NONE);
+      render();
+    } else if(kind === 'single'){
+      setAns(q.id, q.options[+btn.getAttribute('data-opt-idx')]);
+      render();
+    } else if(kind === 'single-none'){
+      setAns(q.id, NONE);
+      render();
+    }
+    return;
+  }
+
+  const action = btn.getAttribute('data-action');
+  if(!action) return;
+  switch(action){
+    case 'start':
+      if(!state.agreed) return;
+      state.view = 'question'; state.step = 0; state.gc = false; state.helpOpen = {}; renderWithMotion(); break;
+    case 'back': back(); break;
+    case 'next': advance(); break;
+    case 'toggle-help': { const id = btn.getAttribute('data-q-id'); if(id){ state.helpOpen[id] = !state.helpOpen[id]; render(); } break; }
+    case 'restart':
+      state.view = 'intro'; state.step = 0; state.gc = false; state.helpOpen = {}; state.answers = {}; renderWithMotion(); break;
+    case 'delete-answers': deleteAnswers(); break;
+    case 'quick-exit': window.location.replace('https://www.google.com'); break;
+    case 'print': window.print(); break;
+  }
+});
+
+document.addEventListener('change', (e) => {
+  if(e.target && e.target.id === 'agree'){
+    state.agreed = e.target.checked;
+    persist();
+    const btn = document.getElementById('start-btn');
+    if(btn){
+      if(state.agreed){
+        btn.style.opacity = ''; btn.style.cursor = 'pointer'; btn.removeAttribute('aria-disabled');
+      } else {
+        btn.style.opacity = '.5'; btn.style.cursor = 'not-allowed'; btn.setAttribute('aria-disabled', 'true');
+      }
+    }
+  }
+});
+
+loadPersisted();
+state.animate = true;
+render();
+</script>
+</body>
+</html>

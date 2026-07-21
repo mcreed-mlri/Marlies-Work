@@ -1,0 +1,10 @@
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+
+# Claude Code local overrides (keep shared settings.json tracked)
+.claude/settings.local.json
+
+# Vercel
+.vercel
