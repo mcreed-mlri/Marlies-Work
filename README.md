@@ -12,8 +12,9 @@ the homepage lists them.
 | `court-forms/` | The **Court Forms Online** project folder → `/court-forms/`. |
 | `court-forms/index.html` | Minimal project page — links to the SNAP screening hub. |
 | `court-forms/snap-screening.html` | SNAP screening **hub** — links to the tool, sample results, and how-it-works. |
+| `court-forms/snap-screening-logic.js` | Shared screening logic (questions, thresholds, result engine) used by both tools. |
 | `court-forms/snap-abawd.html` | SNAP ABAWD work-rules screening (classic). |
-| `court-forms/snap-screening-v2.html` | SNAP screening — accessible / plain-language redesign. Supports `?sample=exempt\|goodcause\|notexempt` to jump straight to a sample result screen (demo only; nothing saved). |
+| `court-forms/snap-screening-v2.html` | SNAP screening — accessible / plain-language redesign. Supports `?sample=exempt\|goodcause\|notexempt\|meeting` to jump straight to a sample result screen (demo only; nothing saved). |
 | `court-forms/snap-how-it-works.html` | Plain-language explainer of the screening. |
 | `court-forms/immigration-court-landing.html` | Landing-page demo for the guided EOIR-28 form. _(Unlinked — kept in the repo but not shown in site nav.)_ |
 | `functions/_middleware.js` | Cloudflare Pages Function enforcing the site-wide password (see below). |
@@ -63,40 +64,57 @@ picked up automatically as Pages Functions — no extra config.
 
 ---
 
-# SNAP ABAWD Work Rules Screening (`snap-abawd.html`)
+# SNAP ABAWD Work Rules Screening
 
 A short, private screening tool that helps someone on SNAP check whether the
 Massachusetts DTA **ABAWD work rules** apply to them — or whether they're
 exempt or already meeting the rules. Built for Court Forms Online / MLRI.
 
-It walks through up to 14 questions plus a "good cause" follow-up and shows one
-of three results:
+Two UIs share one logic module ([`court-forms/snap-screening-logic.js`](court-forms/snap-screening-logic.js)):
 
-- **Exempt** — the person qualifies for one or more exemptions, with a
-  printable "Tell DTA" form listing their reasons.
-- **Good cause** — no exemption, but a temporary situation (transportation,
-  emergency, unreasonable employment) may excuse missed hours, also with a form.
-- **May need to meet the work rules** — no exemption or good cause; explains the
-  work / community-service options.
+- [`court-forms/snap-abawd.html`](court-forms/snap-abawd.html) — classic design
+- [`court-forms/snap-screening-v2.html`](court-forms/snap-screening-v2.html) — accessible redesign
+
+It walks through up to 14 questions plus a "good cause" follow-up and shows one
+of these results:
+
+- **Exempt** — qualifies for one or more exemptions (including income-based work exemption), with a printable "Tell DTA" form.
+- **Already meeting the rules** — working 30+ hours/week; distinct from a true exemption.
+- **Good cause** — no exemption, but a temporary hardship may excuse missed hours.
+- **May need to meet the work rules** — no exemption or good cause; explains work/volunteer options.
+- **Age may not apply** — if the person is not 18–64, shown before question flow.
 
 ## How to run it
 
-It's a self-contained file — **no build step, no dependencies, no server.**
-Open `index.html` (the gallery) in any browser, or open `snap-abawd.html`
-directly.
+Open [`court-forms/snap-screening.html`](court-forms/snap-screening.html) in any browser, or either tool file directly. **No build step** is required for the tools themselves.
+
+For automated tests:
+
+```bash
+npm install
+npm test          # unit tests for snap-screening-logic.js
+npm run test:e2e  # Playwright browser tests (starts a local static server)
+```
 
 ## Deployment to production
 
-Intended to be deployed on **CourtFormsOnline.org**. Upload `snap-abawd.html` to
-any static host (the CourtFormsOnline web server, GitHub Pages, Netlify, an S3
-bucket, etc.). Nothing else is required. Remove the `assets/gate.js` script tag
-first — the password gate is only for the internal preview.
+Intended for **CourtFormsOnline.org**. Deploy the entire `court-forms/` folder (including `snap-screening-logic.js`, `fonts/`, and `vendor/`) to any static host.
 
-Before go-live, confirm the **Terms of Use** wording in the intro matches the
-hosting organization's real terms.
+The internal MLRI preview site uses Cloudflare Pages with password protection via [`functions/_middleware.js`](functions/_middleware.js) — that middleware is **not** needed on the public Court Forms Online site.
 
-The **"Learn more about the SNAP work rules"** links point to the Massachusetts
-Legal Help article on the ABAWD work rules.
+Before go-live:
+
+- Confirm **Terms of Use** wording matches the hosting organization.
+- Verify DTA contact info (phone, fax, mail) against current Mass.gov guidance.
+- Have an SME spot-check thresholds in `snap-screening-logic.js` (last verified Nov 2025: $217.50/week, 14.5×$15, 30 hrs/week, 20 hrs/month requirement).
+
+### SME verification checklist
+
+- [ ] Compare exemption categories to [Mass Legal Help ABAWD article](https://www.masslegalhelp.org/public-benefits-ssi/snap-food-benefits/snap-3-month-time-limit-abawd-work-rules)
+- [ ] Compare income/hour thresholds to current Mass.gov ABAWD flyer
+- [ ] Walk through personas: pregnant, homeless+GED, student, DV, tribal member, 25 hrs at $12/hr, disability benefits
+- [ ] Confirm "Quick exit" destination is acceptable for safety planning
+- [ ] Confirm printable "Tell DTA" statement is acceptable to DTA / MLRI
 
 ## Privacy & data retention
 
@@ -110,9 +128,7 @@ and answers are never transmitted anywhere.**
 - **Delete my answers.** The results screen has an explicit button that clears
   the stored answers immediately and returns to the start.
 - **"Tell DTA" form fields** (name, agency ID, free text) are *not* stored on the device — the visitor prints or downloads to keep a copy.
-- The only outbound request is for the Atkinson Hyperlegible web font (Google
-  Fonts). For zero third-party requests, self-host the font and update the
-  `<link>` in `snap-abawd.html`.
+- Fonts and icons are **self-hosted** under `court-forms/fonts/` and `court-forms/vendor/` (no Google Fonts or unpkg in production tools).
 
 > Note: because screening answers (which can include health, pregnancy, or
 > safety-related responses) persist for up to a day on the device, the intro
@@ -131,23 +147,21 @@ then.
 - Keyboard navigable, with visible focus rings.
 - Question options expose ARIA roles (`radio` / `checkbox`) and the progress bar
   is announced to screen readers.
-- "Quick exit" button leaves the site immediately for safety.
+- "Quick exit" navigates to a neutral external site (weather.com) for safety.
 
 ## Editing the questions
 
-All content lives in the `<script>` block at the bottom of `snap-abawd.html`:
+Screening rules and question text live in [`court-forms/snap-screening-logic.js`](court-forms/snap-screening-logic.js):
 
-- `QUESTIONS` — the main question list. Each has an `id`, a `type`
-  (`yn` / `multi` / `single`), the exemption rule (`exemptOn` or `exemptIfAny`),
-  and the `reason` shown on the exempt result.
-- `GOODCAUSE` / `GC_TEXT` — the good-cause follow-up question and its result text.
+- `QUESTION_COPY` — classic vs v2 wording (same logic IDs)
+- `WORK_OPTION_DEFS`, `HOUSING_OPTION_DEFS`, `DISABILITY_OPTION_DEFS` — stable option IDs
+- `resultTypeFor`, `exemptReasonsFor`, `housingUnableExempt` — decision engine
 
-No tooling is needed to edit — change the text, save, and refresh the browser.
+UI/rendering stays in each HTML file. After logic changes, run `npm test`.
 
 ## Development notes
 
-Ported from the Claude Design comp `ABAWD Screening Tool.dc.html` into plain
-HTML + vanilla JS. The full user flow — all three result paths, back navigation,
-help toggles, multi-select, the Terms of Use gate, 1-day retention/restore, and
-the delete button — is exercised by a Playwright script kept outside the repo
-during development.
+Automated tests live in [`tests/`](tests/):
+
+- `snap-screening-logic.test.js` — pure logic unit tests
+- `snap-screening.spec.js` — Playwright end-to-end tests for both HTML tools

@@ -5,9 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SNAP ABAWD Work Rules Screening · Court Forms Online</title>
 <meta name="description" content="A short, private screening to check whether the SNAP ABAWD work rules apply to you, or whether you are exempt or already meeting them.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="fonts/atkinson.css">
 <style>
   :root{
     --accent:#1a5fb4;
@@ -172,52 +170,16 @@
 <!-- Stage -->
 <main id="stage"></main>
 
+<script src="snap-screening-logic.js"></script>
 <script>
 "use strict";
 
-/* ------------------------------------------------------------------ *
- * Screening content — faithful port of the ABAWD Screening design.
- * Nothing here is sent anywhere; all state lives in this page only.
- * ------------------------------------------------------------------ */
-
-const QUESTIONS = [
-  {id:'child14', type:'yn', text:'Do you live with a child under 14 years old?', help:'If you live with a child under 14 who should be part of your SNAP household — even if they are not eligible (for example, because of immigration status or if they are a foster child) — select "Yes."', exemptOn:'yes', reason:'Live with a child under 14 years old'},
-  {id:'health', type:'yn', text:'Do you have a health reason or disability that makes it hard to work at least 30 hours a week?', exemptOn:'yes', reason:'Have a health reason that makes it hard to work 30 or more hours a week'},
-  {id:'child6', type:'yn', text:'Do you take care of a child under 6 years old?', help:'You do not need to be related to them, live with them, or provide care full-time.', exemptOn:'yes', reason:'Take care of a child under 6 years old'},
-  {id:'caretaker', type:'yn', text:'Do you take care of a child or adult who cannot care for themselves?', help:'You do not need to be related to them, live with them, or provide care full-time.', exemptOn:'yes', reason:'Take care of a child or adult who cannot care for themselves'},
-  {id:'pregnant', type:'yn', text:'Are you pregnant?', exemptOn:'yes', reason:'Pregnant'},
-  {id:'housing', type:'yn', text:'Do you have a regular place to sleep at night?', help:'Choose "No" if you are experiencing homelessness or unstable housing.'},
-  {id:'housingFollowup', type:'multi', text:'Please choose all that apply:', help:'DTA looks at these when you do not have a regular place to sleep. They help decide whether you are unable to work under the ABAWD screening.', options:['I have a high school diploma (including GED or HiSet)','I regularly see a health care provider for an ongoing illness, like a dentist, therapist, psychiatrist, or doctor for ongoing treatment','I have had a steady job for at least 6 months in the last year','I have been a full-time student for at least 6 months in the last year','I have been hospitalized in the last 6 months'], noneLabel:'None of the above', showIf:{id:'housing', val:'no'}},
-  {id:'dv', type:'yn', text:'Has a domestic violence or safety situation made it hard for you to work?', help:'DTA has domestic violence specialists in each local office who can help. Your answer stays private.', exemptOn:'yes', reason:'A domestic violence or safety situation'},
-  {id:'tribe', type:'yn', text:'Are you an Alaska Native or a member of an American Indian, Urban Indian, or California Indian tribe?', help:'Choose "Yes" if you have a parent or grandparent who is a member of one of these tribes.', exemptOn:'yes', reason:'Alaska Native or member of a Tribe'},
-  {id:'tafdc', type:'yn', text:'Do you get, or are you applying for, TAFDC cash assistance benefits?', exemptOn:'yes', reason:'Get or applying for TAFDC cash assistance'},
-  {id:'disability', type:'multi', text:'Do you get any of these disability benefits?', options:['EAEDC','Veteran’s disability benefit','Workers’ compensation','Paid Family Medical Leave','Short-term disability','SSI or SSDI','Other'], noneLabel:'None of the above', exemptIfAny:true, reason:'Get disability benefits'},
-  {id:'unemployment', type:'yn', text:'Do you get, or are you applying for, unemployment benefits?', exemptOn:'yes', reason:'Get unemployment benefits'},
-  {id:'stateagency', type:'yn', text:'Do you get services from any of these state agencies?', help:'MassAbility, Dept. of Mental Health, Dept. of Developmental Services, MA Commission for the Blind, or MA Commission for the Deaf and Hard of Hearing.', exemptOn:'yes', reason:'Get services from a state agency'},
-  {id:'school', type:'yn', text:'Are you enrolled in school half-time or more?', help:'This includes high school, vocational/technical school, college, or any education and training program.', exemptOn:'yes', reason:'Enrolled in school half-time or more'},
-  {id:'working', type:'single', text:'Are you currently working for pay?', help:'Choose the option that applies to you.', options:['I make $217.50 a week or more (before taxes)','I work at least 14.5 hours a week at $15+ an hour','I work 30 hours or more a week (I make less than minimum wage)'], noneLabel:'None of the above', exemptIfAny:true, reason:'Working enough hours to meet the work rules'},
-];
-
-const GOODCAUSE = {id:'goodcause', type:'single', text:'Are there other reasons it’s hard for you to work, go to school, or do community service right now?', help:'These are situations where you missed work, school, or volunteering hours for one or more months because of an unexpected life event.', options:['Yes, I have temporary transportation issues','Yes, I have a family or personal emergency','Yes, I’m dealing with an unreasonable employment situation'], noneLabel:'This doesn’t apply to me / I’m not sure'};
-
-const GC_TEXT = {
-  'Yes, I have temporary transportation issues':'No transportation — a temporary loss of transportation, such as a broken-down car or a public transit shutdown.',
-  'Yes, I have a family or personal emergency':'Emergency — any family or personal crisis, or a situation where you need to give care or support to others.',
-  'Yes, I’m dealing with an unreasonable employment situation':'Employment issues — for example, a workplace that discriminates, or unreasonable job conditions.'
-};
-
-const NONE = '__none';
-
-/* Questions are shown a few at a time, grouped by theme. Each group is
- * one page; the good-cause question is a final step on its own. */
-const GROUPS = [
-  {title:'Children and people you care for', ids:['child14','child6','caretaker','pregnant']},
-  {title:'Your health, housing, and safety', ids:['health','housing','housingFollowup','dv']},
-  {title:'Benefits and cash assistance', ids:['tafdc','disability','unemployment','stateagency']},
-  {title:'School, work, and background', ids:['school','working','tribe']},
-];
-const Q_BY_ID = {};
-for(const q of QUESTIONS){ Q_BY_ID[q.id] = q; }
+/* Shared screening logic — see snap-screening-logic.js */
+const S = SnapScreening.create('classic');
+const {
+  QUESTIONS, GOODCAUSE, GC_TEXT, GROUPS, Q_BY_ID, NONE,
+  QUICK_EXIT_URL, WORK_REASON_INCOME, WORK_REASON_MEETING
+} = S;
 
 /* ------------------------------------------------------------------ *
  * State + logic (ports the DCLogic Component)
@@ -259,7 +221,7 @@ function loadPersisted(){
     state.step = Math.max(0, Math.min(state.step, GROUPS.length - 1));
     state.gc = !!d.gc;
     state.agreed = !!d.agreed;
-    state.answers = (d.answers && typeof d.answers === 'object') ? d.answers : {};
+    state.answers = (d.answers && typeof d.answers === 'object') ? S.migrateAnswers(d.answers) : {};
   }catch(e){
     try{ localStorage.removeItem(STORAGE_KEY); }catch(_){}
   }
@@ -272,68 +234,17 @@ function deleteAnswers(){
   renderWithMotion();
 }
 
-function qById(id){ return id === 'goodcause' ? GOODCAUSE : Q_BY_ID[id]; }
+function qById(id){ return S.qById(id); }
 function curGroup(){ return GROUPS[state.step]; }
-function pageQuestions(){
-  if(state.gc) return [GOODCAUSE];
-  return curGroup().ids.map(id => Q_BY_ID[id]).filter(q => {
-    if(!q || !q.showIf) return !!q;
-    return state.answers[q.showIf.id] === q.showIf.val;
-  });
-}
-
+function pageQuestions(){ return S.pageQuestions(state.answers, state.step, state.gc); }
 function setAns(id, val){ state.answers[id] = val; }
-
-/* Homelessness is not an automatic exemption. When someone says they do not
- * have a regular place to sleep, DTA's ABAWD Unable to Work screen asks about
- * diploma, health care, work/school history, and recent hospitalization.
- * Exempt if those answers show a barrier (aligned with that screen + KYR). */
-function housingUnableExempt(){
-  if(state.answers.housing !== 'no') return false;
-  const v = state.answers.housingFollowup;
-  if(v == null) return false;
-  if(v === NONE) return true;
-  const arr = Array.isArray(v) ? v : [];
-  if(!arr.length) return false;
-  const has = (part) => arr.some(x => x.includes(part));
-  const hasDiploma = has('high school diploma');
-  const hasJobOrSchool = has('steady job') || has('full-time student');
-  const ongoingCare = has('health care provider');
-  const hospitalized = has('hospitalized');
-  if(hospitalized || ongoingCare) return true;
-  if(!hasDiploma || !hasJobOrSchool) return true;
-  return false;
-}
-
-function reasons(){
-  const r = [];
-  for(const q of QUESTIONS){
-    if(q.id === 'housing' || q.id === 'housingFollowup') continue;
-    const v = state.answers[q.id];
-    if(q.exemptOn && v === q.exemptOn) r.push(q.reason);
-    else if(q.exemptIfAny){
-      if(Array.isArray(v)){ if(v.length) r.push(q.reason); }
-      else if(v && v !== NONE) r.push(q.reason);
-    }
-  }
-  if(housingUnableExempt()){
-    r.push('No regular place to sleep, and DTA’s unable-to-work factors apply');
-  }
-  return r;
-}
-
-function resultType(){
-  if(reasons().length) return 'exempt';
-  const g = state.answers.goodcause;
-  if(g && g !== NONE) return 'goodcause';
-  return 'notexempt';
-}
+function reasons(){ return S.exemptReasons(state.answers); }
+function resultType(){ return S.resultType(state.answers); }
 
 function advance(){
   if(state.gc){ state.view = 'results'; renderWithMotion(); return; }
   if(state.step < GROUPS.length - 1){ state.step++; renderWithMotion(); return; }
-  // finished the themed groups
-  if(reasons().length){ state.view = 'results'; }
+  if(S.shouldSkipGoodCause(state.answers)){ state.view = 'results'; }
   else { state.gc = true; }
   renderWithMotion();
 }
@@ -346,8 +257,13 @@ function back(){
 }
 
 function skipToEnd(){
-  state.gc = false;
-  state.view = 'results';
+  if(S.shouldSkipGoodCause(state.answers)){
+    state.gc = false;
+    state.view = 'results';
+  } else {
+    state.gc = true;
+    state.view = 'question';
+  }
   renderWithMotion();
 }
 
@@ -478,10 +394,10 @@ function buildOptions(q){
     out.push({label:'No',  selected:a === 'no',  mark:a === 'no'  ? '●' : '', shape:'round', kind:'yn', val:'no'});
   } else if(q.type === 'multi'){
     const arr = Array.isArray(a) ? a : [];
-    q.options.forEach((o, i) => out.push({label:o, selected:arr.includes(o), mark:arr.includes(o) ? '✓' : '', shape:'square', kind:'multi', idx:i}));
+    q.options.forEach((o, i) => out.push({label:o.label, selected:arr.includes(o.id), mark:arr.includes(o.id) ? '✓' : '', shape:'square', kind:'multi', idx:i}));
     out.push({label:q.noneLabel, selected:a === NONE, mark:a === NONE ? '✓' : '', shape:'square', kind:'multi-none'});
   } else if(q.type === 'single'){
-    q.options.forEach((o, i) => out.push({label:o, selected:a === o, mark:a === o ? '●' : '', shape:'round', kind:'single', idx:i}));
+    q.options.forEach((o, i) => out.push({label:o.label, selected:a === o.id, mark:a === o.id ? '●' : '', shape:'round', kind:'single', idx:i}));
     out.push({label:q.noneLabel, selected:a === NONE, mark:a === NONE ? '●' : '', shape:'round', kind:'single-none'});
   }
   return out;
@@ -505,7 +421,8 @@ function animClass(){ return state.animate ? 'card-in' : ''; }
 function renderIntro(){
   return `<div class="${animClass()}">
     <h1 class="h1">Did DTA tell you that you need to meet ABAWD Work Rules to keep getting SNAP?</h1>
-    <p style="font-size:16.5px;line-height:1.6;color:#3a424e;margin:0 0 14px">Some adults on SNAP ages 18 through 64 have to meet ABAWD work rules to get SNAP for more than 3 months. <strong>Many adults are exempt</strong> — meaning you don't have to meet the work rules to keep getting SNAP.</p>
+    <p style="font-size:16.5px;line-height:1.6;color:#3a424e;margin:0 0 14px">Some adults on SNAP ages 18 through 64 may have to meet ABAWD work rules to get SNAP for more than 3 months (federal rules may apply through December 2026). <strong>Many adults are exempt</strong> — meaning you don't have to meet the work rules to keep getting SNAP.</p>
+    <p style="font-size:15px;line-height:1.6;color:#5b6470;margin:0 0 18px">These rules usually apply to adults ages 18–64. If you are outside this age group, talk to DTA or a legal aid program before relying on this screening.</p>
     <p style="font-size:16.5px;line-height:1.6;color:#3a424e;margin:0 0 22px">This short screening asks a few questions to check whether the work rules apply to you, or whether you're exempt or already meeting them. It takes about 3 minutes.</p>
     <div style="display:flex;align-items:flex-start;gap:12px;background:var(--soft);border-radius:var(--radius);padding:15px 17px;margin-bottom:22px">
       <div style="font-size:18px;line-height:1.4;flex:none" aria-hidden="true">\u{1F512}</div>
@@ -521,12 +438,21 @@ function renderIntro(){
       </div>
     </details>
 
+    <fieldset style="border:1px solid #dfe3ea;border-radius:var(--radius);padding:15px 17px;margin:0 0 18px;background:#fff">
+      <legend style="font-size:15px;font-weight:700;padding:0 6px">Before you start</legend>
+      <p style="font-size:15px;line-height:1.55;color:#3a424e;margin:0 0 12px">Are you between 18 and 64 years old?</p>
+      <div role="radiogroup" aria-label="Are you between 18 and 64 years old?" style="display:flex;flex-direction:column;gap:10px">
+        <label style="display:flex;gap:10px;align-items:center;font-size:15px;cursor:pointer"><input type="radio" name="ageRange" value="yes" ${state.answers.ageRange === 'yes' ? 'checked' : ''} style="width:18px;height:18px;accent-color:var(--accent)"> Yes</label>
+        <label style="display:flex;gap:10px;align-items:center;font-size:15px;cursor:pointer"><input type="radio" name="ageRange" value="no" ${state.answers.ageRange === 'no' ? 'checked' : ''} style="width:18px;height:18px;accent-color:var(--accent)"> No</label>
+      </div>
+    </fieldset>
+
     <label style="display:flex;gap:11px;align-items:flex-start;margin:0 0 22px;font-size:15px;line-height:1.5;color:#3a424e;cursor:pointer">
       <input type="checkbox" id="agree" ${state.agreed ? 'checked' : ''} style="width:20px;height:20px;flex:none;margin-top:1px;accent-color:var(--accent);cursor:pointer">
       <span>I have read and agree to the Terms of Use above.</span>
     </label>
 
-    <button type="button" id="start-btn" data-action="start" ${state.agreed ? '' : 'aria-disabled="true"'} style="${primaryBtn}${state.agreed ? '' : ';opacity:.5;cursor:not-allowed'}">Start the screening →</button>
+    <button type="button" id="start-btn" data-action="start" ${canStart() ? '' : 'aria-disabled="true"'} style="${primaryBtn}${canStart() ? '' : ';opacity:.5;cursor:not-allowed'}">Start the screening →</button>
     <p style="font-size:14px;margin:18px 0 0"><a href="${MLH_ABAWD_URL}" target="_blank" rel="noopener">Learn more about the SNAP ABAWD work rules</a></p>
   </div>`;
 }
@@ -578,9 +504,14 @@ function renderQBlock(q){
   </div>`;
 }
 
+function canStart(){ return state.agreed && (state.answers.ageRange === 'yes' || state.answers.ageRange === 'no'); }
+
 function renderPage(){
   const lastGroup = !state.gc && state.step === GROUPS.length - 1;
   const nextLabel = (lastGroup || state.gc) ? 'See my results →' : 'Next →';
+  const skipWarn = lastGroup && !state.gc && reasons().length === 0 && resultType() !== 'meeting'
+    ? `<p style="font-size:14.5px;line-height:1.55;color:#7a4a00;margin:16px 0 0;padding:12px 14px;background:#fff8e8;border:1px solid #ecd9a8;border-radius:var(--radius)">If you skipped questions, you may not see exemptions that apply to you.</p>`
+    : '';
 
   const header = state.gc ? '' : `<div style="margin:0 0 18px">
     <h2 class="h2">${esc(curGroup().title)}</h2>
@@ -597,7 +528,8 @@ function renderPage(){
       <button type="button" data-action="next" style="${nextBtn}">${nextLabel}</button>
     </div>
     <div style="text-align:center;margin-top:14px">
-      <button type="button" data-action="skip-end" style="font-family:inherit;font-size:14.5px;font-weight:700;color:#5b6470;background:none;border:none;padding:6px 8px;cursor:pointer;text-decoration:underline;text-underline-offset:3px">Skip to the end</button>
+      ${skipWarn}
+      <button type="button" data-action="skip-end" style="font-family:inherit;font-size:14.5px;font-weight:700;color:#5b6470;background:none;border:none;padding:6px 8px;cursor:pointer;text-decoration:underline;text-underline-offset:3px">Skip questions — go to results</button>
     </div>
   </div>`;
 }
@@ -606,17 +538,41 @@ function renderResults(){
   const rt = resultType();
   const rs = reasons();
   const gcSel = state.answers.goodcause;
-  const goodCauseText = GC_TEXT[gcSel] || '';
+  const goodCauseText = S.goodCauseText(state.answers);
 
   let formPrompt = 'Explain your reasons in your own words';
   if(rs.includes('Have a health reason that makes it hard to work 30 or more hours a week')) formPrompt = 'Explain the health reason that makes it hard for you to work 30 or more hours a week';
   else if(rs.includes('Take care of a child or adult who cannot care for themselves')) formPrompt = 'Explain your caretaking responsibilities or arrangement';
+  else if(rt === 'meeting') formPrompt = 'Explain your work hours and how you are meeting the work rules';
   if(rt === 'goodcause') formPrompt = 'Explain why you had to miss work, school, or volunteer hours';
 
   const learnMore = `<p style="font-size:14.5px;margin:14px 0 0"><a href="${MLH_ABAWD_URL}" target="_blank" rel="noopener">Learn more about the SNAP ABAWD work rules</a></p>`;
 
   let card = '';
-  if(rt === 'exempt'){
+  if(rt === 'ageinfo'){
+    card = `<div style="border-radius:var(--radius);overflow:hidden;border:1px solid #c7d6f0">
+      <div style="background:var(--soft);padding:20px 22px;border-bottom:1px solid #c7d6f0">
+        <div style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)">Screening result</div>
+        <h2 class="h-result" style="color:var(--accent-dark)">These work rules may not apply to your age group</h2>
+      </div>
+      <div style="padding:20px 22px;background:#fff">
+        <p style="font-size:16px;line-height:1.6;color:#3a424e;margin:0 0 14px">You said you are not between 18 and 64. The ABAWD work rules usually apply to adults in that age range. You may still have other SNAP rights — contact DTA or a legal aid program to check your situation.</p>
+        ${learnMore}
+      </div></div>`;
+  } else if(rt === 'meeting'){
+    card = `<div style="border-radius:var(--radius);overflow:hidden;border:1px solid #cbe4d5">
+      <div style="background:#e6f4ec;padding:20px 22px;border-bottom:1px solid #cbe4d5">
+        <div style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#1f7a4d">Screening result</div>
+        <h2 class="h-result" style="color:#14532d">You appear to already be meeting the work rules</h2>
+      </div>
+      <div style="padding:20px 22px;background:#fff">
+        <p style="font-size:16px;line-height:1.6;color:#3a424e;margin:0 0 14px">Based on your answers, you are working enough hours to meet the ABAWD work rules. Keep reporting your work to DTA so your SNAP stays active.</p>
+        <ul style="list-style:none;padding:0;margin:0"><li style="display:flex;align-items:flex-start;gap:11px;font-size:16px;line-height:1.5;color:#1b1f27">
+          <span aria-hidden="true" style="width:22px;height:22px;border-radius:50%;background:#1f7a4d;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex:none;margin-top:1px">✓</span>
+          <span>${esc(WORK_REASON_MEETING)}</span></li></ul>
+        ${learnMore}
+      </div></div>`;
+  } else if(rt === 'exempt'){
     const items = rs.map(r => `<li style="display:flex;align-items:flex-start;gap:11px;font-size:16px;line-height:1.5;color:#1b1f27">
       <span aria-hidden="true" style="width:22px;height:22px;border-radius:50%;background:#1f7a4d;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex:none;margin-top:1px">✓</span>
       <span>${esc(r)}</span></li>`).join('');
@@ -668,15 +624,16 @@ function renderResults(){
   }
 
   let form = '';
-  if(rt === 'exempt' || rt === 'goodcause'){
+  if(rt === 'exempt' || rt === 'goodcause' || rt === 'meeting'){
     form = `<div style="margin:26px 0 0;padding:22px;background:#fff;border:1px solid #dfe3ea;border-radius:var(--radius)">
-      <h3 style="font-size:19px;margin:0 0 6px">Tell DTA — fill this out and send it in</h3>
-      <p style="font-size:14.5px;line-height:1.55;color:#5b6470;margin:0 0 18px">Fill in the blanks below, then print, save as PDF, or download a Word file you can edit. <em>What you type here is not saved on this device — print or download to keep a copy.</em></p>
-      <label for="f-explain" style="display:block;font-size:14.5px;font-weight:700;margin:0 0 7px">${esc(formPrompt)}</label>
+      <h3 style="font-size:19px;margin:0 0 6px">Send a statement to DTA</h3>
+      <p style="font-size:14.5px;line-height:1.55;color:#5b6470;margin:0 0 18px">Fill in the blanks below. When you print or download, you will get a signed letter you can mail, fax, or upload to DTA. <em>What you type here is not saved on this device — print or download to keep a copy.</em></p>
+      <label for="f-explain" style="display:block;font-size:14.5px;font-weight:700;margin:0 0 7px">Additional information (in your own words)</label>
+      <p style="font-size:14px;line-height:1.5;color:#5b6470;margin:0 0 8px">${esc(formPrompt)}</p>
       <textarea id="f-explain" rows="4" placeholder="Type here…" style="width:100%;font-family:inherit;font-size:16px;line-height:1.5;padding:11px 13px;border:1.5px solid #cdd3dc;border-radius:calc(var(--radius) - 3px);resize:vertical"></textarea>
       <div class="form-row">
-        <div><label for="f-name" style="display:block;font-size:14px;font-weight:700;margin:0 0 6px">Name</label><input id="f-name" autocomplete="name" style="${inputStyle}"></div>
-        <div><label for="f-agency" style="display:block;font-size:14px;font-weight:700;margin:0 0 6px">Agency ID</label><input id="f-agency" style="${inputStyle}"></div>
+        <div><label for="f-name" style="display:block;font-size:14px;font-weight:700;margin:0 0 6px">Your name</label><input id="f-name" autocomplete="name" style="${inputStyle}"></div>
+        <div><label for="f-agency" style="display:block;font-size:14px;font-weight:700;margin:0 0 6px">Client / Agency ID (if you have one)</label><input id="f-agency" style="${inputStyle}"></div>
       </div>
       <div style="margin:14px 0 0">
         <div class="hint-tip-wrap" style="margin:0 0 6px">
@@ -692,7 +649,7 @@ function renderResults(){
         </div>
       </div>
       <div class="no-print" style="display:flex;gap:12px;margin:20px 0 0;flex-wrap:wrap">
-        <button type="button" data-action="print" style="${nextBtn}">Print this form</button>
+        <button type="button" data-action="print" style="${nextBtn}">Print letter</button>
         <button type="button" data-action="print" style="${ghostBtn}">Save as PDF</button>
         <button type="button" data-action="download-doc" style="${ghostBtn}">Download as Word</button>
         <div style="width:100%;margin-top:2px">${hintTip('pdf-save', 'Tips for saving as PDF', 'Save as PDF opens your browser\u2019s print menu \u2014 use your usual printer or PDF option. If the dialog is slow to open, try Download as Word.')}</div>
@@ -787,77 +744,22 @@ function captureSignatureDataURL(){
   }catch(_){ return ''; }
 }
 
-/* ---- Printable / downloadable "Statement to DTA" form ----
- * Builds a clean, standalone document from the person's answers,
- * typed explanation, and drawn signature. Marked SAMPLE for now.
- * Pass sigSrc to override the signature image URL (Word download uses a
- * file part name; print uses an inlined data URL). */
+/* ---- Printable / downloadable "Statement to DTA" letter ---- */
 function statementInnerHTML(sigSrc){
   const val = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
-  const name = val('f-name'), agency = val('f-agency'), explain = val('f-explain');
-  const rt = resultType();
-  const rs = reasons();
-  const gcText = GC_TEXT[state.answers.goodcause] || '';
-
   const sigImg = (sigSrc === undefined) ? captureSignatureDataURL() : sigSrc;
-
   let today = '';
   try{ today = new Date().toLocaleDateString('en-US', {year:'numeric', month:'long', day:'numeric'}); }catch(_){}
-
-  const field = (label, v) => `<div style="margin:0 0 10px"><span style="font-weight:700">${label}:</span> <span style="border-bottom:1px solid #000;display:inline-block;min-width:240px;padding:0 4px">${esc(v) || '&nbsp;'}</span></div>`;
-
-  let body;
-  if(rt === 'exempt'){
-    const WORKING_REASON = 'Working enough hours to meet the work rules';
-    const exemptReasons = rs.filter(r => r !== WORKING_REASON);
-    let inner = `<p style="margin:0 0 10px">I am writing about the SNAP work rules (the ABAWD rules).</p>`;
-    if(exemptReasons.length){
-      const items = exemptReasons.map(r => `<li style="margin:0 0 5px">${esc(r)}</li>`).join('');
-      inner += `<p style="margin:0 0 10px"><strong>I should not have to meet these work rules</strong> for the following reason(s):</p>
-      <ul style="margin:0 0 16px;padding-left:22px">${items}</ul>`;
-    }
-    if(rs.includes(WORKING_REASON)){
-      inner += `<p style="margin:0 0 16px"><strong>I am already meeting the work rules</strong> by working enough hours.</p>`;
-    }
-    body = inner;
-  } else if(rt === 'goodcause'){
-    body = `<p style="margin:0 0 10px">I am writing about the SNAP work rules (the ABAWD rules). <strong>I was not able to meet the work rules for one or more months</strong> because of the following good-cause reason:</p>
-      <p style="margin:0 0 16px;padding-left:10px">• ${esc(gcText)}</p>`;
-  } else {
-    body = `<p style="margin:0 0 16px">I am writing about the SNAP work rules (the ABAWD rules).</p>`;
-  }
-
-  const explainBlock = `<div style="margin:0 0 18px">
-      <div style="font-weight:700;margin:0 0 5px">In my own words:</div>
-      <div style="border:1px solid #000;padding:10px;min-height:64px;white-space:pre-wrap">${esc(explain)}</div>
-    </div>`;
-
-  const sigBlock = `<div style="margin:28px 0 0">
-      <div style="font-weight:700;margin:0 0 6px">Signature</div>
-      ${sigImg
-        ? `<img src="${sigImg}" alt="Signature" width="420" height="80" style="display:block;width:420px;height:80px;max-width:100%;border-bottom:1px solid #000">`
-        : `<div style="border-bottom:1px solid #000;height:60px"></div>`}
-      <div style="display:flex;justify-content:space-between;gap:16px;margin:6px 0 0;font-size:13px">
-        <span>${esc(name) ? 'Signed by ' + esc(name) : 'Print name: ____________________'}</span>
-        <span>Date: ${esc(today) || '________________'}</span>
-      </div>
-    </div>`;
-
-  return `<div style="font-family:Georgia,serif;color:#000;max-width:640px;margin:0 auto;padding:24px;font-size:15px;line-height:1.55">
-    <div style="text-align:center;border-bottom:2px solid #000;padding-bottom:12px;margin-bottom:20px">
-      <div style="font-size:13px;letter-spacing:.05em;text-transform:uppercase">Massachusetts Department of Transitional Assistance</div>
-      <div style="font-size:21px;font-weight:700;margin-top:4px">SNAP Work Rules Statement</div>
-      <div style="font-size:12px;margin-top:5px;color:#555">SAMPLE - draft for review</div>
-    </div>
-    ${field('Name', name)}
-    ${field('Agency ID (if you have one)', agency)}
-    ${field('Date', today)}
-    <div style="height:12px"></div>
-    ${body}
-    ${explainBlock}
-    ${sigBlock}
-    <p style="font-size:11.5px;color:#444;margin:30px 0 0;border-top:1px solid #999;padding-top:8px">Prepared with the Court Forms Online SNAP work-rules screening. Based on the answers given; general information, not legal advice.</p>
-  </div>`;
+  return SnapScreening.buildStatementHTML({
+    name: val('f-name'),
+    agency: val('f-agency'),
+    explain: val('f-explain'),
+    sigImg: sigImg || '',
+    rt: resultType(),
+    rs: reasons(),
+    gcText: S.goodCauseText(state.answers),
+    today
+  });
 }
 
 function buildPrintRoot(){
@@ -973,13 +875,13 @@ document.addEventListener('click', (e) => {
     } else if(kind === 'multi'){
       const o = q.options[+btn.getAttribute('data-opt-idx')];
       const cur = Array.isArray(state.answers[q.id]) ? state.answers[q.id] : [];
-      state.answers[q.id] = cur.includes(o) ? cur.filter(x => x !== o) : [...cur, o];
+      state.answers[q.id] = cur.includes(o.id) ? cur.filter(x => x !== o.id) : [...cur, o.id];
       render();
     } else if(kind === 'multi-none'){
       setAns(q.id, NONE);
       render();
     } else if(kind === 'single'){
-      setAns(q.id, q.options[+btn.getAttribute('data-opt-idx')]);
+      setAns(q.id, q.options[+btn.getAttribute('data-opt-idx')].id);
       render();
     } else if(kind === 'single-none'){
       setAns(q.id, NONE);
@@ -992,7 +894,8 @@ document.addEventListener('click', (e) => {
   if(!action) return;
   switch(action){
     case 'start':
-      if(!state.agreed) return; // gated on Terms of Use acceptance
+      if(!canStart()) return;
+      if(state.answers.ageRange === 'no'){ state.view = 'results'; renderWithMotion(); return; }
       state.view = 'question'; state.step = 0; state.gc = false; state.helpOpen = {}; renderWithMotion(); break;
     case 'back': back(); break;
     case 'next': advance(); break;
@@ -1013,7 +916,7 @@ document.addEventListener('click', (e) => {
     case 'restart':
       state.view = 'intro'; state.step = 0; state.gc = false; state.helpOpen = {}; state.answers = {}; renderWithMotion(); break;
     case 'delete-answers': deleteAnswers(); break;
-    case 'quick-exit': window.location.replace('snap-screening.html'); break;
+    case 'quick-exit': window.location.replace(QUICK_EXIT_URL); break;
     case 'print': printForm(); break;
     case 'download-doc': downloadDoc(); break;
     case 'sig-clear': clearSignature(); break;
@@ -1026,16 +929,25 @@ document.addEventListener('change', (e) => {
   if(e.target && e.target.id === 'agree'){
     state.agreed = e.target.checked;
     persist();
-    const btn = document.getElementById('start-btn');
-    if(btn){
-      if(state.agreed){
-        btn.style.opacity = ''; btn.style.cursor = 'pointer'; btn.removeAttribute('aria-disabled');
-      } else {
-        btn.style.opacity = '.5'; btn.style.cursor = 'not-allowed'; btn.setAttribute('aria-disabled', 'true');
-      }
-    }
+    updateStartBtn();
+  }
+  if(e.target && e.target.name === 'ageRange'){
+    state.answers.ageRange = e.target.value;
+    persist();
+    updateStartBtn();
   }
 });
+
+function updateStartBtn(){
+  const btn = document.getElementById('start-btn');
+  if(btn){
+    if(canStart()){
+      btn.style.opacity = ''; btn.style.cursor = 'pointer'; btn.removeAttribute('aria-disabled');
+    } else {
+      btn.style.opacity = '.5'; btn.style.cursor = 'not-allowed'; btn.setAttribute('aria-disabled', 'true');
+    }
+  }
+}
 
 /* Re-fit the signature canvas when the viewport changes (e.g. phone rotation).
  * The bitmap is sized from clientWidth at draw time, so a later resize would

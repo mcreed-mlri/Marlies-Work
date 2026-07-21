@@ -5,9 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>How the SNAP screening works · Court Forms Online</title>
 <meta name="description" content="A plain-language explainer of the SNAP ABAWD work-rules screening: the rules, the three outcomes, and how the tool decides.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="fonts/atkinson.css">
 <style>
   :root{
     --navy:#0a2b52;--blue:#134a8e;--soft:#eaf1fb;--yellow:#f4bd3f;
@@ -54,18 +52,26 @@
 <div class="page">
 
   <h1>How the SNAP screening works</h1>
-  <p class="lead">This screening helps someone on SNAP figure out whether the <strong>ABAWD work rules</strong> apply to them. It asks a few plain-language questions and, based only on the answers, shows one of three outcomes. Nothing is sent anywhere — the answers stay on the person's own device.</p>
+  <p class="lead">This screening helps someone on SNAP figure out whether the <strong>ABAWD work rules</strong> apply to them. It asks a few plain-language questions and, based only on the answers, shows one of several outcomes. Nothing is sent anywhere — the answers stay on the person's own device.</p>
 
   <h2>What are the "ABAWD work rules"?</h2>
   <p>ABAWD stands for "Able-Bodied Adult Without Dependents." Federal rules can require some SNAP recipients in this group to work, train, or volunteer a set number of hours each month to keep their benefits. But <strong>many people are exempt</strong>, and others have a good reason for months they couldn't meet the hours. The screening exists because a lot of people are told they must meet the rules when they actually don't have to.</p>
 
-  <h2>The three possible outcomes</h2>
+  <h2>The possible outcomes</h2>
 
   <div class="outcome">
     <span class="pill" style="background:var(--green-bg);color:var(--green)">✓</span>
     <div>
       <div class="t">Exempt — you do not have to meet the work rules</div>
-      <div class="d">The person picked at least one reason that makes them exempt. The result lists those reasons and gives a short "Tell DTA" form to send.</div>
+      <div class="d">The person picked at least one reason that makes them exempt (for example, living with a child under 14, a health reason, or earning enough income). The result lists those reasons and gives a short "Tell DTA" form to send.</div>
+    </div>
+  </div>
+
+  <div class="outcome">
+    <span class="pill" style="background:var(--green-bg);color:var(--green)">✓</span>
+    <div>
+      <div class="t">Already meeting the work rules</div>
+      <div class="d">The person is working enough hours (30+ per week) to meet the rules even if their pay is below the income exemption. They should keep reporting work to DTA.</div>
     </div>
   </div>
 
@@ -85,11 +91,21 @@
     </div>
   </div>
 
+  <div class="outcome">
+    <span class="pill" style="background:var(--soft);color:var(--blue)">ℹ️</span>
+    <div>
+      <div class="t">Age may not apply</div>
+      <div class="d">If the person is not between 18 and 64, the screening explains that these rules may not apply and suggests contacting DTA or legal aid.</div>
+    </div>
+  </div>
+
   <h2>How the tool decides</h2>
   <p>The logic is simple and runs entirely in the browser:</p>
   <ul>
-    <li><strong>Any exemption answer → Exempt.</strong> The questions cover things like living with a child under 14, a health reason, caretaking, pregnancy, a safety situation, Tribal membership, certain benefits (TAFDC, disability benefits, unemployment, state-agency services), being in school, or already working enough hours. If someone does not have a regular place to sleep, a follow-up asks about diploma, health care, work or school history, and recent hospitalization — those answers can also show an exemption.</li>
+    <li><strong>Exemption answer → Exempt.</strong> The questions cover things like living with a child under 14, a health reason, caretaking, pregnancy, a safety situation, Tribal membership, certain benefits (TAFDC, disability benefits, unemployment, state-agency services), being in school, or earning enough income ($217.50/week or 14.5 hours at $15+/hour). If someone does not have a regular place to sleep, a follow-up asks about diploma, health care, work or school history, and recent hospitalization — those answers can also show an exemption. Selecting only "Other" on the disability list does <em>not</em> count as an exemption.</li>
+    <li><strong>Working 30+ hours/week → Already meeting the rules.</strong> This is different from an exemption — the person is complying with the hours requirement.</li>
     <li><strong>No exemption, but a hardship → Good cause.</strong> A final question asks whether something recently made it hard to work, go to school, or volunteer.</li>
+    <li><strong>Not age 18–64 → Age may not apply.</strong> The intro asks age before the screening starts.</li>
     <li><strong>Neither → May need to meet the rules.</strong></li>
   </ul>
 
