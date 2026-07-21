@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Court Forms Online · Marlie's MLRI Work</title>
+<meta name="description" content="Preview gallery of Court Forms Online tools — including an accessible, low-literacy-friendly redesign of the SNAP work rules screening.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0a2b52;
+    --blue:#134a8e;
+    --soft:#eaf1fb;
+    --yellow:#f4bd3f;
+    --green:#1e7a45;
+    --green-bg:#eaf6ee;
+    --green-bd:#cfe6d6;
+    --bg:#eef1f6;
+    --ink:#16202e;
+    --muted:#5b6675;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  html,body{margin:0}
+  body{font-family:'Atkinson Hyperlegible',system-ui,-apple-system,sans-serif;color:var(--ink);background:var(--bg);min-height:100vh;overflow-x:hidden}
+  a{color:var(--blue);text-decoration:underline;text-underline-offset:3px}
+  a:hover{color:var(--navy)}
+  :focus-visible{outline:3px solid var(--navy);outline-offset:2px;border-radius:6px}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .fade{animation:fadeUp .35s ease both}
+  .card{background:#fff;border:1px solid #e3e8f0;border-radius:20px;overflow:hidden;box-shadow:0 1px 3px rgba(16,32,56,.08);display:flex;flex-direction:column}
+  .card a.open{display:inline-block;font-size:16px;font-weight:700;color:#fff;background:var(--blue);border-radius:10px;padding:12px 20px;text-decoration:none;box-shadow:0 2px 0 var(--navy);min-height:44px;touch-action:manipulation}
+  .card a.open:hover{background:var(--navy)}
+  .badge{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;padding:5px 11px;border-radius:999px}
+  .page{max-width:1040px;margin:0 auto;padding:34px max(16px, env(safe-area-inset-right)) 72px max(16px, env(safe-area-inset-left))}
+  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .h1{font-size:clamp(28px,7vw,36px);line-height:1.18;margin:0 0 14px;letter-spacing:-.01em}
+  @media (max-width:720px){
+    .page{padding:24px 16px 56px}
+    .grid-2,.grid-3{grid-template-columns:1fr}
+    .card a.open{width:100%;text-align:center}
+  }
+</style>
+</head>
+<body>
+<script src="assets/gate.js"></script>
+
+<!-- ===== TOP NAV ===== -->
+<div style="background:var(--navy);color:#fff">
+  <div style="max-width:1040px;margin:0 auto;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:26px;height:34px;border-radius:5px 5px 3px 3px;background:linear-gradient(var(--yellow),#e79a1f);position:relative;flex:none">
+        <div style="position:absolute;left:50%;top:6px;transform:translateX(-50%);width:4px;height:20px;background:var(--navy);border-radius:2px"></div>
+      </div>
+      <div style="font-size:20px;font-weight:700;letter-spacing:.2px">Court Forms Online</div>
+    </div>
+    <a href="index.html" style="font-size:15px;color:#cfe0f5;text-decoration:none">← Marlie's MLRI Work</a>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- ===== HEADER ===== -->
+  <div class="fade" style="max-width:64ch">
+    <span class="badge" style="background:var(--soft);color:var(--blue);margin-bottom:16px">
+      <span style="width:8px;height:8px;border-radius:50%;background:var(--blue);display:inline-block"></span>
+      Internal preview · shared for feedback
+    </span>
+    <h1 class="h1">Making court forms easier to read and use</h1>
+    <p style="font-size:clamp(17px,4.2vw,19px);line-height:1.55;color:#37414f;margin:0">A few working previews that show how we can make these tools more scannable and easier for adults — especially people who are new readers or reading in a second language. Each link below is a real, clickable page. Click around and tell us what you think.</p>
+  </div>
+
+  <!-- ===== SNAP COMPARE ===== -->
+  <h2 style="font-size:clamp(20px,5vw,24px);margin:44px 0 6px;letter-spacing:-.01em">SNAP work rules screening — before &amp; after</h2>
+  <p style="font-size:17px;color:var(--muted);margin:0 0 20px">Same questions, same logic, same privacy. The difference is how it reads and how it feels to use. Open both and compare.</p>
+
+  <div class="grid-2">
+
+    <!-- CURRENT -->
+    <div class="card fade">
+      <div style="background:#f4f7fc;border-bottom:1px solid #e3e8f0;padding:22px 24px 20px">
+        <span class="badge" style="background:#e7ebf2;color:#5b6675;margin-bottom:14px">Current version</span>
+        <div style="font-size:15px;color:#8a94a2;font-weight:700;margin-bottom:10px">A a — standard type · one question per screen</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="height:9px;width:70%;background:#c9d3e0;border-radius:4px"></div>
+          <div style="height:9px;width:52%;background:#dbe3ee;border-radius:4px"></div>
+          <div style="height:34px;width:46%;background:var(--blue);border-radius:7px;margin-top:6px"></div>
+        </div>
+      </div>
+      <div style="padding:20px 24px 24px;display:flex;flex-direction:column;gap:12px;flex:1">
+        <div style="font-size:20px;font-weight:700">SNAP ABAWD Work Rules Screening</div>
+        <p style="font-size:16px;line-height:1.5;color:var(--muted);margin:0;flex:1">The tool as it exists today. Faithful to the DTA rules, keyboard-accessible, and private.</p>
+        <div><a class="open" href="snap-abawd.html">Open current version →</a></div>
+      </div>
+    </div>
+
+    <!-- V2 -->
+    <div class="card fade" style="border-color:var(--green-bd)">
+      <div style="background:var(--green-bg);border-bottom:1px solid var(--green-bd);padding:22px 24px 20px">
+        <span class="badge" style="background:#d6ecdd;color:var(--green);margin-bottom:14px">✓ Accessible redesign</span>
+        <div style="font-size:15px;color:#4f7a5f;font-weight:700;margin-bottom:10px">A a — bigger type · picture cues · plain words</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:40px;height:40px;border-radius:11px;background:#fff;border:1px solid var(--green-bd);display:flex;align-items:center;justify-content:center;font-size:22px">🏠</div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:8px">
+            <div style="height:11px;width:80%;background:#bcd9c6;border-radius:5px"></div>
+            <div style="height:38px;width:60%;background:var(--blue);border-radius:9px;margin-top:2px"></div>
+          </div>
+        </div>
+      </div>
+      <div style="padding:20px 24px 24px;display:flex;flex-direction:column;gap:12px;flex:1">
+        <div style="font-size:20px;font-weight:700">Do you have to meet the SNAP work rules?</div>
+        <p style="font-size:16px;line-height:1.5;color:var(--muted);margin:0;flex:1">The same screening, rewritten in plain language with a picture on every question, big Yes / No tiles, and a friendly result card.</p>
+        <div><a class="open" href="snap-screening-v2.html">Open accessible version →</a></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- what changed -->
+  <div class="fade" style="margin-top:20px;background:#fff;border:1px solid #e3e8f0;border-radius:20px;padding:22px 20px">
+    <div style="font-size:19px;font-weight:700;margin-bottom:16px">What changed in the redesign</div>
+    <div class="grid-3">
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <span style="font-size:24px;flex:none" aria-hidden="true">🗣️</span>
+        <div><div style="font-weight:700;font-size:16.5px;margin-bottom:3px">Plainer words</div><div style="font-size:15.5px;color:var(--muted);line-height:1.45">Shorter sentences. "Good news — you don't have to meet the work rules" instead of "You appear to be exempt."</div></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <span style="font-size:24px;flex:none" aria-hidden="true">🖼️</span>
+        <div><div style="font-weight:700;font-size:16.5px;margin-bottom:3px">A picture on every question</div><div style="font-size:15.5px;color:var(--muted);line-height:1.45">Icons carry the meaning before the words do, which helps new readers.</div></div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <span style="font-size:24px;flex:none" aria-hidden="true">👆</span>
+        <div><div style="font-weight:700;font-size:16.5px;margin-bottom:3px">Bigger targets</div><div style="font-size:15.5px;color:var(--muted);line-height:1.45">Large Yes / No tiles and chunky answer rows, easier to read and tap.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== IMMIGRATION ===== -->
+  <h2 style="font-size:24px;margin:44px 0 6px;letter-spacing:-.01em">A landing page in the same style</h2>
+  <p style="font-size:17px;color:var(--muted);margin:0 0 20px">How a form's intro page can look when it leads with plain language, quick facts, and clear "use this / don't use this" guidance.</p>
+
+  <div class="grid-2">
+    <div class="card fade">
+      <div style="background:var(--navy);padding:26px 24px;display:flex;flex-direction:column;gap:12px">
+        <span class="badge" style="background:rgba(255,255,255,.14);color:#cfe0f5;align-self:flex-start">Immigration Court · Free tool</span>
+        <div style="font-size:20px;font-weight:700;color:#fff;line-height:1.25">Tell the court that you are someone's representative</div>
+        <div style="display:flex;gap:8px;margin-top:4px">
+          <div style="background:rgba(255,255,255,.1);border-radius:10px;padding:8px 12px;font-size:13px;color:#cfe0f5;font-weight:700">15 min</div>
+          <div style="background:rgba(255,255,255,.1);border-radius:10px;padding:8px 12px;font-size:13px;color:#cfe0f5;font-weight:700">Free</div>
+          <div style="background:rgba(255,255,255,.1);border-radius:10px;padding:8px 12px;font-size:13px;color:#cfe0f5;font-weight:700">A ready form</div>
+        </div>
+      </div>
+      <div style="padding:20px 24px 24px;display:flex;flex-direction:column;gap:12px;flex:1">
+        <div style="font-size:20px;font-weight:700">Immigration Court Form landing (EOIR-28)</div>
+        <p style="font-size:16px;line-height:1.5;color:var(--muted);margin:0;flex:1">A landing page for the guided EOIR-28 tool. Visual preview — the Start button and links are demo stubs.</p>
+        <div><a class="open" href="immigration-court-landing.html">Open landing page →</a></div>
+      </div>
+    </div>
+
+    <div class="fade" style="display:flex;flex-direction:column;justify-content:center;gap:14px;padding:26px 30px;background:var(--soft);border-radius:20px">
+      <div style="font-size:19px;font-weight:700">The same design ideas, reused</div>
+      <ul style="margin:0;padding-left:20px;font-size:16px;line-height:1.7;color:#37414f">
+        <li>One clear "what is this / is it for me" up top</li>
+        <li>Green ✓ "use this" and red ✕ "don't use this" cards</li>
+        <li>Numbered "what you need before you start" list</li>
+        <li>Atkinson Hyperlegible type, designed for low-vision readers</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <div class="fade" style="margin-top:40px;border-top:1px solid #dbe1ea;padding-top:24px">
+    <p style="font-size:16px;color:#37414f;margin:0 0 6px"><strong>Questions or ideas?</strong> Email <a href="mailto:mcreed@mlri.org">mcreed@mlri.org</a> — all feedback is welcome.</p>
+    <p style="font-size:14.5px;color:#8a94a2;margin:14px 0 0">These are previews for discussion. Placeholder links (nav, footer, "learn more") point to <code>#</code>, and the immigration Start button is a demo stub. Nothing entered on any page is sent anywhere.</p>
+  </div>
+
+</div>
+
+</body>
+</html>

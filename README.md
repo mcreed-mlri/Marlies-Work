@@ -7,11 +7,12 @@ the team for feedback behind a light password gate.
 
 | File | What it is |
 |------|------------|
-| `index.html` | Password-gated landing gallery that links to every preview below. **Start here.** |
+| `index.html` | Top-level landing — **"Marlie's MLRI Work"** — lists projects. **Start here.** |
+| `court-forms.html` | The **Court Forms Online** project page; links to the pages below. |
 | `snap-abawd.html` | The current SNAP ABAWD Work Rules screening tool. |
 | `snap-screening-v2.html` | The accessible / plain-language redesign of that screening. |
 | `immigration-court-landing.html` | Landing-page demo for the guided EOIR-28 form. |
-| `assets/gate.js` | Shared password gate included by every page (see below). |
+| `assets/gate.js` | Shared client-side password gate included by every page (interim; see below). |
 
 ## The password gate
 
@@ -29,19 +30,18 @@ re-prompt.
 - **To remove the gate** before shipping a page to production: delete its
   `<script src="assets/gate.js"></script>` line (first element in `<body>`).
 
-## Deploying to Vercel (GitHub auto-deploy)
+## Hosting: Cloudflare Pages + Access
 
-One-time setup, then every `git push` auto-deploys:
+Hosted on **Cloudflare Pages**, connected to the GitHub repo
+(`mcreed-mlri/Marlies-Work`). It's plain static files, so the Pages build
+settings are: Framework preset **None**, no build command, output directory
+`/`. Every `git push` to `main` auto-deploys.
 
-```bash
-git add -A && git commit -m "Add password-gated preview gallery + Vercel setup"
-git branch -M main
-gh repo create snap-calculator --private --source=. --push   # or create on github.com and push
-```
-
-Then in the Vercel dashboard: **Add New → Project → import this GitHub repo →
-Deploy**. No build settings needed — it's plain static files. Vercel serves the
-folder as-is; a `vercel.json` is not required.
+Access is (or will be) locked down with **Cloudflare Access** (Zero Trust free
+tier): a self-hosted application on the `*.pages.dev` hostname with an Allow
+policy for `@mlri.org` emails plus an allowlist of specific external reviewers.
+This is real, edge-enforced auth — once it's confirmed working, the interim
+`assets/gate.js` script tags can be removed so reviewers see only one login.
 
 ---
 
