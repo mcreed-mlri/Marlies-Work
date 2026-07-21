@@ -14,7 +14,8 @@
       "Bash(git commit -q -m ' *)",
       "Bash(git branch *)",
       "Bash(rm assets/gate.js)",
-      "Bash(rmdir assets *)"
+      "Bash(rmdir assets *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }
