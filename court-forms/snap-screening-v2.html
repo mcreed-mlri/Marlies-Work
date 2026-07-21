@@ -233,6 +233,7 @@ const state = { view:'intro', step:0, gc:false, helpOpen:{}, agreed:false, answe
 const STORAGE_KEY = 'cfo-abawd-screening-v2';
 const RETENTION_MS = 24 * 60 * 60 * 1000; // 1 day
 let SAMPLE_MODE = false; // true when showing a ?sample= preview result
+let sigCanvas = null, sigCtx = null, sigHint = null, sigDrawn = false; // finger/mouse signature pad
 
 function persist(){
   if(SAMPLE_MODE) return; // a sample preview must never overwrite a real saved session
@@ -591,9 +592,15 @@ function renderResults(){
         <div><label for="f-agency" style="display:block;font-size:15px;font-weight:700;margin:0 0 6px">Agency ID</label><input id="f-agency" inputmode="text" style="${inputStyle}"></div>
       </div>
       <div style="margin:16px 0 0">
-        <label style="display:block;font-size:15px;font-weight:700;margin:0 0 6px">Signature</label>
-        <div style="border-bottom:1.5px solid #9aa2ad;height:36px"></div>
-        <p style="font-size:13.5px;color:#8a919c;margin:6px 0 0">DTA needs your real signature, not a typed one — sign after you print.</p>
+        <label id="sig-label" style="display:block;font-size:15px;font-weight:700;margin:0 0 6px">Signature</label>
+        <div style="position:relative;border:1.5px solid #cdd3dc;border-radius:10px;background:#fff">
+          <canvas id="sig-pad" role="img" aria-labelledby="sig-label" style="display:block;width:100%;height:150px;border-radius:10px;cursor:crosshair;touch-action:none;-webkit-print-color-adjust:exact;print-color-adjust:exact"></canvas>
+          <span id="sig-hint" class="no-print" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);color:#aeb4bd;font-size:15px;pointer-events:none">Sign here with your finger or mouse</span>
+        </div>
+        <div class="no-print" style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin:8px 0 0">
+          <p style="font-size:13.5px;color:#8a919c;margin:0;max-width:44ch">Sign with your finger on a touch screen, or with your mouse. A typed signature won't be accepted — this captures your real one.</p>
+          <button type="button" data-action="sig-clear" style="flex:none;font-family:inherit;font-size:14px;font-weight:700;color:var(--blue);background:none;border:2px solid var(--blue);border-radius:10px;padding:9px 16px;cursor:pointer;min-height:42px">Clear</button>
+        </div>
       </div>
       <div class="no-print q-nav" style="margin-top:22px">
         <button type="button" class="btn-block btn-full" data-action="print" style="${nextBtn}">Print this form</button>
@@ -626,6 +633,60 @@ function renderIcons(){
   }
 }
 
+/* ---- Finger / mouse signature pad (canvas) ----
+ * Drawn locally and never saved or uploaded. Prints as a real image, so
+ * DTA gets a genuine handwritten mark rather than a typed cursive font. */
+function initSignaturePad(){
+  const canvas = document.getElementById('sig-pad');
+  if(!canvas){ sigCanvas = sigCtx = sigHint = null; return; }
+  sigCanvas = canvas;
+  sigHint = document.getElementById('sig-hint');
+  sigDrawn = false;
+
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.clientWidth || 300;
+  const h = canvas.clientHeight || 150;
+  canvas.width = Math.round(w * dpr);
+  canvas.height = Math.round(h * dpr);
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.lineWidth = 2.2; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  ctx.strokeStyle = '#16202e'; ctx.fillStyle = '#16202e';
+  sigCtx = ctx;
+
+  let drawing = false, lastX = 0, lastY = 0;
+  const at = (e) => { const r = canvas.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+  const start = (e) => {
+    drawing = true;
+    const p = at(e); lastX = p.x; lastY = p.y;
+    if(!sigDrawn){ sigDrawn = true; if(sigHint) sigHint.style.display = 'none'; }
+    ctx.beginPath(); ctx.arc(lastX, lastY, ctx.lineWidth / 2, 0, Math.PI * 2); ctx.fill();
+    if(canvas.setPointerCapture && e.pointerId != null){ try{ canvas.setPointerCapture(e.pointerId); }catch(_){} }
+    e.preventDefault();
+  };
+  const move = (e) => {
+    if(!drawing) return;
+    const p = at(e);
+    ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(p.x, p.y); ctx.stroke();
+    lastX = p.x; lastY = p.y;
+    e.preventDefault();
+  };
+  const end = () => { drawing = false; };
+  canvas.addEventListener('pointerdown', start);
+  canvas.addEventListener('pointermove', move);
+  canvas.addEventListener('pointerup', end);
+  canvas.addEventListener('pointerleave', end);
+  canvas.addEventListener('pointercancel', end);
+}
+
+function clearSignature(){
+  if(!sigCtx || !sigCanvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  sigCtx.clearRect(0, 0, sigCanvas.width / dpr, sigCanvas.height / dpr);
+  sigDrawn = false;
+  if(sigHint) sigHint.style.display = '';
+}
+
 function render(){
   renderProgress();
   const stage = document.getElementById('stage');
@@ -638,6 +699,7 @@ function render(){
 
   state.animate = false;
   renderIcons();
+  initSignaturePad();
   persist();
 }
 
@@ -694,6 +756,7 @@ document.addEventListener('click', (e) => {
     case 'delete-answers': deleteAnswers(); break;
     case 'quick-exit': window.location.replace('https://www.google.com'); break;
     case 'print': window.print(); break;
+    case 'sig-clear': clearSignature(); break;
   }
 });
 
