@@ -107,13 +107,23 @@ Before go-live:
 - Confirm **Terms of Use** wording matches the hosting organization.
 - Verify DTA contact info (phone, fax, mail) against current Mass.gov guidance.
 - Have an SME spot-check thresholds in `snap-screening-logic.js` (last verified Nov 2025: $217.50/week, 14.5×$15, 30 hrs/week, 20 hrs/month requirement).
+- **Restore Quick exit on production** — this preview uses a **← Back** button to `snap-screening.html`. On the live Court Forms Online site, replace it with **Quick exit** that jumps to a neutral external URL (see `PRODUCTION_QUICK_EXIT_URL` in `snap-screening-logic.js` and the deploy note below).
+
+### Preview vs production top bar
+
+| Environment | Top-bar control | Destination |
+|-------------|-----------------|-------------|
+| **This preview repo** | ← Back | `snap-screening.html` (screening hub) |
+| **Production deploy** | Quick exit | Neutral external site (default: `https://www.weather.com/`) |
+
+**TODO when deploying:** In `snap-abawd.html` and `snap-screening-v2.html`, change the top-bar button from `data-action="go-back"` / “← Back” to `data-action="quick-exit"` / “Quick exit”, and handle `quick-exit` with `window.location.replace(PRODUCTION_QUICK_EXIT_URL)` instead of `go-back`. Update intro/privacy copy if it still says “Back.”
 
 ### SME verification checklist
 
 - [ ] Compare exemption categories to [Mass Legal Help ABAWD article](https://www.masslegalhelp.org/public-benefits-ssi/snap-food-benefits/snap-3-month-time-limit-abawd-work-rules)
 - [ ] Compare income/hour thresholds to current Mass.gov ABAWD flyer
 - [ ] Walk through personas: pregnant, homeless+GED, student, DV, tribal member, 25 hrs at $12/hr, disability benefits
-- [ ] Confirm "Quick exit" returns to the screening hub as expected
+- [ ] Confirm **Quick exit** (production only) jumps to a neutral external URL — not needed for this preview, which uses **← Back** to the hub
 - [ ] Confirm printable "Tell DTA" statement is acceptable to DTA / MLRI
 
 ## Privacy & data retention
@@ -132,8 +142,7 @@ and answers are never transmitted anywhere.**
 
 > Note: because screening answers (which can include health, pregnancy, or
 > safety-related responses) persist for up to a day on the device, the intro
-> discloses this and offers **Quick exit** and **Delete my answers** for people
-> on shared or monitored devices.
+> discloses this and offers **Delete my answers** for people on shared or monitored devices. (Production should also offer **Quick exit** to a neutral external site — see deploy note above.)
 
 ## Terms of Use gate
 
@@ -147,7 +156,7 @@ then.
 - Keyboard navigable, with visible focus rings.
 - Question options expose ARIA roles (`radio` / `checkbox`) and the progress bar
   is announced to screen readers.
-- "Quick exit" returns to the screening hub (`snap-screening.html`).
+- Preview tools use a **← Back** button to return to the screening hub. Production should use **Quick exit** to a neutral external site instead (see **Preview vs production top bar** above).
 
 ## Editing the questions
 

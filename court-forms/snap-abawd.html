@@ -161,7 +161,7 @@
       <div class="topbar-sub">SNAP · ABAWD Work Rules Screening</div>
     </div>
   </div>
-  <button type="button" class="btn-exit" data-action="quick-exit" title="Return to the screening home page">Quick exit ✕</button>
+  <button type="button" class="btn-exit" data-action="go-back" title="Back to the screening home page">← Back</button>
 </div>
 
 <!-- Progress -->
@@ -178,7 +178,7 @@
 const S = SnapScreening.create('classic');
 const {
   QUESTIONS, GOODCAUSE, GC_TEXT, GROUPS, Q_BY_ID, NONE,
-  QUICK_EXIT_URL, WORK_REASON_INCOME, WORK_REASON_MEETING
+  SCREENING_HUB_URL, WORK_REASON_INCOME, WORK_REASON_MEETING
 } = S;
 
 /* ------------------------------------------------------------------ *
@@ -916,7 +916,7 @@ document.addEventListener('click', (e) => {
     case 'restart':
       state.view = 'intro'; state.step = 0; state.gc = false; state.helpOpen = {}; state.answers = {}; renderWithMotion(); break;
     case 'delete-answers': deleteAnswers(); break;
-    case 'quick-exit': window.location.replace(QUICK_EXIT_URL); break;
+    case 'go-back': window.location.href = SCREENING_HUB_URL; break;
     case 'print': printForm(); break;
     case 'download-doc': downloadDoc(); break;
     case 'sig-clear': clearSignature(); break;

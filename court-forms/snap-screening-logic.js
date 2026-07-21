@@ -12,7 +12,9 @@
   'use strict';
 
   const NONE = '__none';
-  const QUICK_EXIT_URL = 'snap-screening.html';
+  const SCREENING_HUB_URL = 'snap-screening.html';
+  /** Production deploy: swap the top-bar Back button for Quick exit using this URL (neutral external site). See README. */
+  const PRODUCTION_QUICK_EXIT_URL = 'https://www.weather.com/';
 
   /* ---- Work-rule thresholds (MA ABAWD) ---- */
   const WORK_INCOME_THRESHOLD = 217.5;
@@ -461,7 +463,8 @@
 
     return {
       NONE,
-      QUICK_EXIT_URL,
+      SCREENING_HUB_URL,
+      PRODUCTION_QUICK_EXIT_URL,
       WORK_INCOME_THRESHOLD,
       MA_MIN_WAGE,
       WORK_HOURS_AT_MIN_WAGE,
@@ -491,7 +494,8 @@
 
   return {
     NONE,
-    QUICK_EXIT_URL,
+    SCREENING_HUB_URL,
+    PRODUCTION_QUICK_EXIT_URL,
     WORK_INCOME_THRESHOLD,
     MA_MIN_WAGE,
     WORK_HOURS_AT_MIN_WAGE,
