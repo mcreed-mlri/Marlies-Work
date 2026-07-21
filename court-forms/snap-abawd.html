@@ -138,7 +138,8 @@ const QUESTIONS = [
   {id:'child6', type:'yn', text:'Do you take care of a child under 6 years old?', help:'You do not need to be related to them, live with them, or provide care full-time.', exemptOn:'yes', reason:'Take care of a child under 6 years old'},
   {id:'caretaker', type:'yn', text:'Do you take care of a child or adult who cannot care for themselves?', help:'You do not need to be related to them, live with them, or provide care full-time.', exemptOn:'yes', reason:'Take care of a child or adult who cannot care for themselves'},
   {id:'pregnant', type:'yn', text:'Are you pregnant?', exemptOn:'yes', reason:'Pregnant'},
-  {id:'housing', type:'yn', text:'Do you have a regular place to sleep at night?', help:'Choose "No" if you are experiencing homelessness or unstable housing.', exemptOn:'no', reason:'Experiencing homelessness or unstable housing'},
+  {id:'housing', type:'yn', text:'Do you have a regular place to sleep at night?', help:'Choose "No" if you are experiencing homelessness or unstable housing.'},
+  {id:'housingFollowup', type:'multi', text:'Please choose all that apply:', help:'DTA looks at these when you do not have a regular place to sleep. They help decide whether you are unable to work under the ABAWD screening.', options:['I have a high school diploma (including GED or HiSet)','I regularly see a health care provider for an ongoing illness, like a dentist, therapist, psychiatrist, or doctor for ongoing treatment','I have had a steady job for at least 6 months in the last year','I have been a full-time student for at least 6 months in the last year','I have been hospitalized in the last 6 months'], noneLabel:'None of the above', showIf:{id:'housing', val:'no'}},
   {id:'dv', type:'yn', text:'Has a domestic violence or safety situation made it hard for you to work?', help:'DTA has domestic violence specialists in each local office who can help. Your answer stays private.', exemptOn:'yes', reason:'A domestic violence or safety situation'},
   {id:'tribe', type:'yn', text:'Are you an Alaska Native or a member of an American Indian, Urban Indian, or California Indian tribe?', help:'Choose "Yes" if you have a parent or grandparent who is a member of one of these tribes.', exemptOn:'yes', reason:'Alaska Native or member of a Tribe'},
   {id:'tafdc', type:'yn', text:'Do you get, or are you applying for, TAFDC cash assistance benefits?', exemptOn:'yes', reason:'Get or applying for TAFDC cash assistance'},
@@ -163,7 +164,7 @@ const NONE = '__none';
  * one page; the good-cause question is a final step on its own. */
 const GROUPS = [
   {title:'Children and people you care for', ids:['child14','child6','caretaker','pregnant']},
-  {title:'Your health, housing, and safety', ids:['health','housing','dv']},
+  {title:'Your health, housing, and safety', ids:['health','housing','housingFollowup','dv']},
   {title:'Benefits and cash assistance', ids:['tafdc','disability','unemployment','stateagency']},
   {title:'School, work, and background', ids:['school','working','tribe']},
 ];
@@ -224,19 +225,50 @@ function deleteAnswers(){
 
 function qById(id){ return id === 'goodcause' ? GOODCAUSE : Q_BY_ID[id]; }
 function curGroup(){ return GROUPS[state.step]; }
-function pageQuestions(){ return state.gc ? [GOODCAUSE] : curGroup().ids.map(id => Q_BY_ID[id]); }
+function pageQuestions(){
+  if(state.gc) return [GOODCAUSE];
+  return curGroup().ids.map(id => Q_BY_ID[id]).filter(q => {
+    if(!q || !q.showIf) return !!q;
+    return state.answers[q.showIf.id] === q.showIf.val;
+  });
+}
 
 function setAns(id, val){ state.answers[id] = val; }
+
+/* Homelessness is not an automatic exemption. When someone says they do not
+ * have a regular place to sleep, DTA's ABAWD Unable to Work screen asks about
+ * diploma, health care, work/school history, and recent hospitalization.
+ * Exempt if those answers show a barrier (aligned with that screen + KYR). */
+function housingUnableExempt(){
+  if(state.answers.housing !== 'no') return false;
+  const v = state.answers.housingFollowup;
+  if(v == null) return false;
+  if(v === NONE) return true;
+  const arr = Array.isArray(v) ? v : [];
+  if(!arr.length) return false;
+  const has = (part) => arr.some(x => x.includes(part));
+  const hasDiploma = has('high school diploma');
+  const hasJobOrSchool = has('steady job') || has('full-time student');
+  const ongoingCare = has('health care provider');
+  const hospitalized = has('hospitalized');
+  if(hospitalized || ongoingCare) return true;
+  if(!hasDiploma || !hasJobOrSchool) return true;
+  return false;
+}
 
 function reasons(){
   const r = [];
   for(const q of QUESTIONS){
+    if(q.id === 'housing' || q.id === 'housingFollowup') continue;
     const v = state.answers[q.id];
     if(q.exemptOn && v === q.exemptOn) r.push(q.reason);
     else if(q.exemptIfAny){
       if(Array.isArray(v)){ if(v.length) r.push(q.reason); }
       else if(v && v !== NONE) r.push(q.reason);
     }
+  }
+  if(housingUnableExempt()){
+    r.push('No regular place to sleep, with other factors that make it hard to work');
   }
   return r;
 }
@@ -695,6 +727,9 @@ document.addEventListener('click', (e) => {
     // Selecting an answer no longer moves you forward — use Next when ready.
     if(kind === 'yn'){
       setAns(q.id, btn.getAttribute('data-opt-val'));
+      if(q.id === 'housing' && btn.getAttribute('data-opt-val') !== 'no'){
+        delete state.answers.housingFollowup;
+      }
       render();
     } else if(kind === 'multi'){
       const o = q.options[+btn.getAttribute('data-opt-idx')];
