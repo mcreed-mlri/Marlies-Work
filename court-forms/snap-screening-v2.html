@@ -749,15 +749,17 @@ function captureSignatureDataURL(){
 
 /* ---- Printable / downloadable "Statement to DTA" form ----
  * Builds a clean, standalone document from the person's answers,
- * typed explanation, and drawn signature. Marked SAMPLE for now. */
-function statementInnerHTML(){
+ * typed explanation, and drawn signature. Marked SAMPLE for now.
+ * Pass sigSrc to override the signature image URL (Word download uses a
+ * file part name; print uses an inlined data URL). */
+function statementInnerHTML(sigSrc){
   const val = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
   const name = val('f-name'), agency = val('f-agency'), explain = val('f-explain');
   const rt = resultType();
   const rs = reasons();
   const gcText = GC_TEXT[state.answers.goodcause] || '';
 
-  const sigImg = captureSignatureDataURL();
+  const sigImg = (sigSrc === undefined) ? captureSignatureDataURL() : sigSrc;
 
   let today = '';
   try{ today = new Date().toLocaleDateString('en-US', {year:'numeric', month:'long', day:'numeric'}); }catch(_){}
@@ -784,7 +786,7 @@ function statementInnerHTML(){
   const sigBlock = `<div style="margin:28px 0 0">
       <div style="font-weight:700;margin:0 0 6px">Signature</div>
       ${sigImg
-        ? `<img src="${sigImg}" alt="Signature" style="display:block;height:80px;max-width:100%;border-bottom:1px solid #000">`
+        ? `<img src="${sigImg}" alt="Signature" width="420" height="80" style="display:block;width:420px;height:80px;max-width:100%;border-bottom:1px solid #000">`
         : `<div style="border-bottom:1px solid #000;height:60px"></div>`}
       <div style="display:flex;justify-content:space-between;gap:16px;margin:6px 0 0;font-size:13px">
         <span>${esc(name) ? 'Signed by ' + esc(name) : 'Print name: ____________________'}</span>
@@ -829,14 +831,45 @@ function printForm(){
 }
 
 function downloadDoc(){
-  const html = `<!DOCTYPE html>
-<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+  // Word ignores data: URLs in HTML .doc files. Package as MHTML so the
+  // signature PNG is a real related image part Word can display.
+  const dataUrl = captureSignatureDataURL();
+  const boundary = '----=_NextPart_CFO_SNAP_STMT';
+  const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
 <head><meta charset="utf-8"><title>SNAP Work Rules Statement</title>
 <!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom></w:WordDocument></xml><![endif]-->
 </head>
-<body>${statementInnerHTML()}</body>
+<body>${statementInnerHTML(dataUrl ? 'signature.png' : '')}</body>
 </html>`;
-  const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+
+  const wrap76 = (s) => (s.match(/.{1,76}/g) || []).join('\r\n');
+  const htmlB64 = wrap76(btoa(unescape(encodeURIComponent(html))));
+
+  const parts = [
+    'MIME-Version: 1.0',
+    'Content-Type: multipart/related; boundary="' + boundary + '"',
+    '',
+    '--' + boundary,
+    'Content-Type: text/html; charset="utf-8"',
+    'Content-Transfer-Encoding: base64',
+    'Content-Location: statement.htm',
+    '',
+    htmlB64
+  ];
+  if(dataUrl){
+    const pngB64 = dataUrl.replace(/^data:image\/png;base64,/, '');
+    parts.push(
+      '--' + boundary,
+      'Content-Type: image/png',
+      'Content-Transfer-Encoding: base64',
+      'Content-Location: signature.png',
+      '',
+      wrap76(pngB64)
+    );
+  }
+  parts.push('--' + boundary + '--', '');
+
+  const blob = new Blob([parts.join('\r\n')], { type: 'application/msword' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
