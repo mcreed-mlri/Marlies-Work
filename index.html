@@ -74,13 +74,21 @@
   .kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;
     color:var(--house);margin:0 0 10px}
   h1{font-family:'Fraunces',Georgia,serif;font-weight:600;
-    font-size:clamp(26px,6vw,32px);letter-spacing:-.02em;margin:0 0 6px;line-height:1.15}
+    font-size:clamp(26px,6vw,32px);letter-spacing:-.02em;margin:0 0 8px;line-height:1.15}
   .lead{font-size:16px;line-height:1.45;color:var(--muted);margin:0}
 
   .list{margin-top:28px;display:flex;flex-direction:column;gap:14px}
   .entry{display:flex;gap:16px;padding:18px;background:var(--card);
     border:1px solid var(--rule);border-radius:14px;
-    transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+    transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+    animation:rise .45s ease both}
+  .list .entry:nth-child(1){animation-delay:.04s}
+  .list .entry:nth-child(2){animation-delay:.1s}
+  .foot{animation:rise .45s ease .16s both}
+  @keyframes rise{
+    from{opacity:0;transform:translateY(8px)}
+    to{opacity:1;transform:none}
+  }
   .entry:hover{transform:translateY(-2px);border-color:var(--accent);
     box-shadow:0 8px 22px -14px rgba(58,90,64,.45)}
   .entry.court{--accent:#a85a32}
@@ -111,8 +119,8 @@
   .go:hover{text-decoration:underline;text-underline-offset:3px}
   .go:hover::after{transform:translateX(4px)}
 
-  .tool{margin-top:16px;padding-top:16px;border-top:1px solid var(--rule)}
-  .tool:first-of-type{margin-top:12px}
+  .tool{margin-top:0;padding-top:0}
+  .tool + .tool{margin-top:14px;padding-top:14px;border-top:1px solid var(--rule)}
   .tool h3{font-family:'Atkinson Hyperlegible',system-ui,-apple-system,sans-serif;font-weight:700;
     font-size:16px;margin:0;line-height:1.3}
   .tool p{font-size:14px;line-height:1.45;color:var(--muted);margin:0 0 8px}
@@ -139,19 +147,15 @@
   }
 
   @media (prefers-reduced-motion:reduce){
-    .go::after,.entry,.theme-toggle{transition:none}
+    .go::after,.entry,.theme-toggle,.btn{transition:none}
     .go:hover::after{transform:none}
-    .entry:hover,.theme-toggle:hover{transform:none}
+    .entry:hover,.theme-toggle:hover,.btn:hover{transform:none}
+    .entry,.foot{animation:none}
   }
 
   .foot{
-    --house:#5c4554;
     margin-top:28px;padding:20px;
     border:1px solid var(--rule);border-radius:14px;background:var(--card);
-  }
-  :root[data-theme="dark"] .foot{--house:#c4a9b4}
-  @media (prefers-color-scheme:dark){
-    :root:not([data-theme="light"]) .foot{--house:#c4a9b4}
   }
   .foot h2{font-family:'Fraunces',Georgia,serif;font-weight:600;
     font-size:19px;letter-spacing:-.01em;margin:0 0 6px;line-height:1.2}
@@ -160,18 +164,13 @@
   .btn{
     display:inline-flex;align-items:center;gap:7px;
     font-size:14px;font-weight:700;text-decoration:none;
+    color:var(--ink);background:transparent;border:1px solid var(--rule);
     padding:9px 15px;border-radius:10px;
     transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease,background .18s ease;
   }
   .btn svg{width:16px;height:16px;display:block}
-  .btn-primary{color:var(--paper);background:var(--house);border:1px solid var(--house)}
-  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 18px -10px rgba(92,69,84,.55)}
-  .btn-ghost{color:var(--house);background:transparent;border:1px solid var(--rule)}
-  .btn-ghost:hover{transform:translateY(-1px);border-color:var(--house)}
-
-  @media (prefers-reduced-motion:reduce){
-    .btn:hover{transform:none}
-  }
+  .btn:hover{transform:translateY(-1px);border-color:var(--house);
+    box-shadow:0 6px 16px -10px rgba(61,90,128,.4)}
 </style>
 </head>
 <body>
@@ -184,7 +183,8 @@
 <div class="wrap">
   <header>
     <p class="kicker mono">Marlie · MLRI</p>
-    <h1>Work in progress</h1>
+    <h1>Things I'm building</h1>
+    <p class="lead">Draft prototypes for feedback.</p>
   </header>
 
   <div class="list">
@@ -199,11 +199,11 @@
         <a class="go" href="court-forms/">Open project</a>
       </div>
     </div>
-    <div class="entry">
+    <div class="entry" aria-label="LACE Project">
       <div class="badge" aria-hidden="true">L</div>
       <div class="body">
-        <div class="titlerow">
-          <h2>LACE Project</h2>
+        <div class="titlerow" style="min-height:auto;margin-bottom:10px">
+          <span class="tag">LACE</span>
         </div>
         <div class="tool">
           <div class="titlerow">
@@ -229,13 +229,17 @@
     <h2>Reach out</h2>
     <p>Comments, suggestions, or feedback are always welcome. Email me, ping me on Slack, or grab a time on my calendar.</p>
     <div class="actions">
-      <a class="btn btn-primary" href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ2bYVNRYjKk-yjhIa_RImzjSawuy-3_JTguN8uObW2zjinTu-51dU-VczuNGhVtEM2cGypcg4En" target="_blank" rel="noopener noreferrer">
+      <a class="btn" href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ2bYVNRYjKk-yjhIa_RImzjSawuy-3_JTguN8uObW2zjinTu-51dU-VczuNGhVtEM2cGypcg4En" target="_blank" rel="noopener noreferrer">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
         Schedule a meeting
       </a>
-      <a class="btn btn-ghost" href="mailto:mcreed@mlri.org">
+      <a class="btn" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=mcreed@mlri.org" target="_blank" rel="noopener noreferrer">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
-        Email me
+        Gmail
+      </a>
+      <a class="btn" href="https://outlook.office.com/mail/deeplink/compose?to=mcreed%40mlri.org" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v12H4z"/><path d="m4 8 8 5 8-5"/></svg>
+        Outlook
       </a>
     </div>
   </div>
