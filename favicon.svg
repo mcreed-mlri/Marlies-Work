@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Marlie's MLRI Work">
+  <rect width="32" height="32" rx="7" fill="#3a5a40"/>
+  <path d="M9.2 10.4 5.1 16l4.1 5.6" fill="none" stroke="#fbf8f1" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M22.8 10.4 26.9 16l-4.1 5.6" fill="none" stroke="#fbf8f1" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M18.2 8.8 13.8 23.2" fill="none" stroke="#d4e0d6" stroke-width="2.4" stroke-linecap="round"/>
+</svg>
