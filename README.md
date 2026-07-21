@@ -11,8 +11,10 @@ the homepage lists them.
 | `index.html` | Homepage — **"Marlie's MLRI Work"** — lists projects. **Start here.** |
 | `court-forms/` | The **Court Forms Online** project folder → `/court-forms/`. |
 | `court-forms/index.html` | Project page; links to the tools below. |
+| `court-forms/snap-screening.html` | SNAP screening **hub** — links to the tool, sample results, and how-it-works. |
 | `court-forms/snap-abawd.html` | SNAP ABAWD work-rules screening (classic). |
-| `court-forms/snap-screening-v2.html` | SNAP screening — accessible / plain-language redesign. |
+| `court-forms/snap-screening-v2.html` | SNAP screening — accessible / plain-language redesign. Supports `?sample=exempt\|goodcause\|notexempt` to jump straight to a sample result screen (demo only; nothing saved). |
+| `court-forms/snap-how-it-works.html` | Plain-language explainer of the screening. |
 | `court-forms/immigration-court-landing.html` | Landing-page demo for the guided EOIR-28 form. |
 | `functions/_middleware.js` | Cloudflare Pages Function enforcing the site-wide password (see below). |
 

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How the SNAP screening works · Court Forms Online</title>
+<meta name="description" content="A plain-language explainer of the SNAP ABAWD work-rules screening: the rules, the three outcomes, and how the tool decides.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0a2b52;--blue:#134a8e;--soft:#eaf1fb;--yellow:#f4bd3f;
+    --green:#1e7a45;--green-bg:#eaf6ee;--green-bd:#cfe6d6;
+    --amber-bg:#fff8e8;--amber-bd:#f0dca6;
+    --bg:#eef1f6;--ink:#16202e;--muted:#5b6675;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  html,body{margin:0}
+  body{font-family:'Atkinson Hyperlegible',system-ui,-apple-system,sans-serif;color:var(--ink);background:var(--bg);min-height:100vh;overflow-x:hidden}
+  a{color:var(--blue);text-underline-offset:3px}
+  a:hover{color:var(--navy)}
+  :focus-visible{outline:3px solid var(--navy);outline-offset:2px;border-radius:6px}
+  .page{max-width:660px;margin:0 auto;padding:34px max(16px,env(safe-area-inset-right)) 72px max(16px,env(safe-area-inset-left))}
+  h1{font-size:clamp(26px,6.5vw,34px);line-height:1.18;margin:0 0 14px;letter-spacing:-.01em}
+  h2{font-size:clamp(20px,5vw,24px);line-height:1.25;margin:38px 0 10px;letter-spacing:-.01em}
+  p{font-size:17px;line-height:1.6;color:#37414f;margin:0 0 14px}
+  ul{font-size:17px;line-height:1.6;color:#37414f;margin:0 0 14px;padding-left:22px}
+  li{margin:0 0 6px}
+  .lead{font-size:clamp(17px,4.2vw,19px)}
+  .outcome{display:flex;gap:14px;align-items:flex-start;border:1px solid #e3e8f0;border-radius:14px;padding:16px 18px;margin:0 0 12px;background:#fff}
+  .pill{width:34px;height:34px;border-radius:9px;flex:none;display:flex;align-items:center;justify-content:center;font-weight:700}
+  .outcome .t{font-weight:700;font-size:17px;margin-bottom:2px}
+  .outcome .d{font-size:15.5px;color:var(--muted);line-height:1.5}
+  .note{background:var(--soft);border-radius:14px;padding:16px 18px;font-size:15.5px;line-height:1.55;color:#2c3644;margin:22px 0 0}
+</style>
+</head>
+<body>
+
+<!-- ===== TOP NAV ===== -->
+<div style="background:var(--navy);color:#fff">
+  <div style="max-width:660px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="width:24px;height:31px;border-radius:5px 5px 3px 3px;background:linear-gradient(var(--yellow),#e79a1f);position:relative;flex:none">
+        <div style="position:absolute;left:50%;top:6px;transform:translateX(-50%);width:4px;height:18px;background:var(--navy);border-radius:2px"></div>
+      </div>
+      <div style="font-size:18px;font-weight:700">Court Forms Online</div>
+    </div>
+    <a href="snap-screening.html" style="font-size:15px;color:#cfe0f5;text-decoration:none">← SNAP screening</a>
+  </div>
+</div>
+
+<div class="page">
+
+  <h1>How the SNAP screening works</h1>
+  <p class="lead">This screening helps someone on SNAP figure out whether the <strong>ABAWD work rules</strong> apply to them. It asks a few plain-language questions and, based only on the answers, shows one of three outcomes. Nothing is sent anywhere — the answers stay on the person's own device.</p>
+
+  <h2>What are the "ABAWD work rules"?</h2>
+  <p>ABAWD stands for "Able-Bodied Adult Without Dependents." Federal rules can require some SNAP recipients in this group to work, train, or volunteer a set number of hours each month to keep their benefits. But <strong>many people are exempt</strong>, and others have a good reason for months they couldn't meet the hours. The screening exists because a lot of people are told they must meet the rules when they actually don't have to.</p>
+
+  <h2>The three possible outcomes</h2>
+
+  <div class="outcome">
+    <span class="pill" style="background:var(--green-bg);color:var(--green)">✓</span>
+    <div>
+      <div class="t">Exempt — you do not have to meet the work rules</div>
+      <div class="d">The person picked at least one reason that makes them exempt. The result lists those reasons and gives a short "Tell DTA" form to send.</div>
+    </div>
+  </div>
+
+  <div class="outcome">
+    <span class="pill" style="background:var(--soft);color:var(--blue)">🗓️</span>
+    <div>
+      <div class="t">Good cause — you may have a good reason for missing hours</div>
+      <div class="d">No exemption, but a temporary hardship (like losing transportation, a family emergency, or an unfair job situation) may excuse months of missed hours.</div>
+    </div>
+  </div>
+
+  <div class="outcome">
+    <span class="pill" style="background:var(--amber-bg);color:#9a6a00">📋</span>
+    <div>
+      <div class="t">May need to meet the work rules</div>
+      <div class="d">No exemption and no good cause came up. The result explains the ways to meet the rules — working/training 20 hours a week, or volunteering a set number of hours.</div>
+    </div>
+  </div>
+
+  <h2>How the tool decides</h2>
+  <p>The logic is simple and runs entirely in the browser:</p>
+  <ul>
+    <li><strong>Any exemption answer → Exempt.</strong> The questions cover things like living with a child under 14, a health reason, caretaking, pregnancy, unstable housing, a safety situation, Tribal membership, certain benefits (TAFDC, disability benefits, unemployment, state-agency services), being in school, or already working enough hours.</li>
+    <li><strong>No exemption, but a hardship → Good cause.</strong> A final question asks whether something recently made it hard to work, go to school, or volunteer.</li>
+    <li><strong>Neither → May need to meet the rules.</strong></li>
+  </ul>
+
+  <h2>Privacy</h2>
+  <p>There is no backend and no analytics. Answers are kept only on the person's device (in browser storage), are automatically erased after one day, and can be deleted at any time with a button on the results screen. The "Tell DTA" form fields aren't stored at all — the person prints or saves the page to keep a copy.</p>
+
+  <div class="note">This tool gives general information only. It is <strong>not legal advice</strong>, and results are based only on the answers given. People should always check with DTA before acting, and can reach a legal aid program for advice.</div>
+
+</div>
+
+</body>
+</html>

@@ -232,8 +232,10 @@ const state = { view:'intro', step:0, gc:false, helpOpen:{}, agreed:false, answe
 
 const STORAGE_KEY = 'cfo-abawd-screening-v2';
 const RETENTION_MS = 24 * 60 * 60 * 1000; // 1 day
+let SAMPLE_MODE = false; // true when showing a ?sample= preview result
 
 function persist(){
+  if(SAMPLE_MODE) return; // a sample preview must never overwrite a real saved session
   try{
     localStorage.setItem(STORAGE_KEY, JSON.stringify({
       view:state.view, step:state.step, gc:state.gc,
@@ -629,7 +631,7 @@ function render(){
   const stage = document.getElementById('stage');
   if(state.view === 'intro') stage.innerHTML = renderIntro();
   else if(state.view === 'question') stage.innerHTML = renderPage();
-  else stage.innerHTML = renderResults();
+  else stage.innerHTML = (SAMPLE_MODE ? sampleBanner() : '') + renderResults();
 
   const heading = stage.querySelector('h1, h2');
   if(heading){ heading.setAttribute('tabindex', '-1'); }
@@ -710,7 +712,36 @@ document.addEventListener('change', (e) => {
   }
 });
 
-loadPersisted();
+/* ------------------------------------------------------------------ *
+ * Sample previews (demo only)
+ * ?sample=exempt | goodcause | notexempt jumps straight to a sample
+ * result screen, reusing the real result rendering so a sample can
+ * never drift from the tool. Nothing is saved in this mode.
+ * ------------------------------------------------------------------ */
+function applySampleFromURL(){
+  let p = '';
+  try{ p = (new URLSearchParams(location.search).get('sample') || '').toLowerCase(); }catch(e){}
+  if(!p) return false;
+  if(p === 'exempt') state.answers = { child14:'yes', health:'yes' };
+  else if(p === 'goodcause') state.answers = { goodcause:'Yes — my ride or transportation broke down' };
+  else if(p === 'notexempt') state.answers = { goodcause: NONE };
+  else return false;
+  SAMPLE_MODE = true;
+  state.view = 'results';
+  state.gc = false;
+  state.agreed = true;
+  return true;
+}
+
+function sampleBanner(){
+  return `<div class="no-print" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:14px;padding:14px 18px;margin:0 0 18px">
+    <span style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#7a5a12">Sample result</span>
+    <span style="font-size:16px;line-height:1.5;color:var(--amber-ink);flex:1;min-width:200px">An example of one outcome — no questions were answered, and nothing is saved.</span>
+    <span style="display:flex;gap:14px"><a href="snap-screening.html" style="font-weight:700">← All samples</a><a href="snap-screening-v2.html" style="font-weight:700">Try it for real →</a></span>
+  </div>`;
+}
+
+if(!applySampleFromURL()){ loadPersisted(); }
 state.animate = true;
 render();
 </script>
