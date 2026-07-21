@@ -40,6 +40,17 @@
   .matrix td:first-child{font-weight:700;color:var(--ink);white-space:nowrap}
   .matrix .yes{color:var(--green);font-weight:700}
   .matrix .no{color:var(--muted)}
+  .decision-step{display:flex;gap:14px;align-items:flex-start;border:1px solid #e3e8f0;border-radius:14px;padding:16px 18px;margin:0 0 10px;background:#fff}
+  .decision-num{width:32px;height:32px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex:none}
+  .decision-step .t{font-weight:700;font-size:16px;margin:0 0 4px}
+  .decision-step .d{font-size:15px;color:var(--muted);line-height:1.5;margin:0}
+  .decision-arrow{text-align:center;color:var(--muted);font-size:14px;margin:0 0 10px}
+  .exempt-grid{display:grid;grid-template-columns:1fr;gap:12px;margin:16px 0 0}
+  @media (min-width:560px){.exempt-grid{grid-template-columns:1fr 1fr}}
+  .exempt-card{background:#fff;border:1px solid #e3e8f0;border-radius:14px;padding:14px 16px}
+  .exempt-card h3{font-size:15px;font-weight:700;margin:0 0 8px;color:var(--navy)}
+  .exempt-card ul{margin:0;padding-left:18px;font-size:15px;line-height:1.5;color:#37414f}
+  .exempt-card li{margin:0 0 5px}
 </style>
 </head>
 <body>
@@ -163,14 +174,94 @@
   </div>
 
   <h2>How the tool decides</h2>
-  <p>The logic is simple and runs entirely in the browser:</p>
-  <ul>
-    <li><strong>Exemption answer → Exempt.</strong> The questions cover things like living with a child under 14, a health reason, caretaking, pregnancy, a safety situation, Tribal membership, certain benefits (TAFDC, disability benefits, unemployment, state-agency services), being in school, or earning enough income ($217.50/week or 14.5 hours at $15+/hour). If someone does not have a regular place to sleep, a follow-up asks about diploma, health care, work or school history, and recent hospitalization — those answers can also show an exemption. Selecting only "Other" on the disability list does <em>not</em> count as an exemption.</li>
-    <li><strong>Working 30+ hours/week → Already meeting the rules.</strong> This is different from an exemption — the person is complying with the hours requirement.</li>
-    <li><strong>No exemption, but a hardship → Good cause.</strong> A final question asks whether something recently made it hard to work, go to school, or volunteer.</li>
-    <li><strong>Not age 18–64 → Age may not apply.</strong> The intro asks age before the screening starts.</li>
-    <li><strong>Neither → May need to meet the rules.</strong></li>
-  </ul>
+  <p>The screening runs entirely in the browser. It checks answers <strong>in this order</strong> and stops at the first result that fits:</p>
+
+  <div class="decision-step">
+    <span class="decision-num">1</span>
+    <div>
+      <div class="t">Age check (intro)</div>
+      <p class="d">If the person is <strong>not</strong> 18–64 → <strong>Age may not apply</strong>. The question flow stops here.</p>
+    </div>
+  </div>
+  <div class="decision-arrow">↓ if age 18–64</div>
+
+  <div class="decision-step">
+    <span class="decision-num">2</span>
+    <div>
+      <div class="t">Any exemption?</div>
+      <p class="d">If any exemption answer is selected → <strong>Exempt</strong>. See the list below.</p>
+    </div>
+  </div>
+  <div class="decision-arrow">↓ if no exemption</div>
+
+  <div class="decision-step">
+    <span class="decision-num">3</span>
+    <div>
+      <div class="t">Already working 30+ hours/week?</div>
+      <p class="d">If that work answer is selected → <strong>Already meeting the rules</strong>. This is not an exemption — the person still needs to report work to DTA.</p>
+    </div>
+  </div>
+  <div class="decision-arrow">↓ if not already meeting via hours</div>
+
+  <div class="decision-step">
+    <span class="decision-num">4</span>
+    <div>
+      <div class="t">Good cause hardship?</div>
+      <p class="d">A final question asks about transportation, an emergency, or an unfair job. If yes → <strong>Good cause</strong>.</p>
+    </div>
+  </div>
+  <div class="decision-arrow">↓ if no good cause</div>
+
+  <div class="decision-step">
+    <span class="decision-num">5</span>
+    <div>
+      <div class="t">Nothing above applies</div>
+      <p class="d">→ <strong>May need to meet the work rules</strong>.</p>
+    </div>
+  </div>
+
+  <h2 style="margin-top:34px">What counts as an exemption?</h2>
+  <p>Answering <strong>yes</strong> to any of these (in the question flow) can lead to an <strong>Exempt</strong> result. The tool groups them like this:</p>
+
+  <div class="exempt-grid">
+    <div class="exempt-card">
+      <h3>Children and care</h3>
+      <ul>
+        <li>Live with a child under 14</li>
+        <li>Take care of a child under 6</li>
+        <li>Take care of someone who cannot care for themselves</li>
+        <li>Pregnant</li>
+      </ul>
+    </div>
+    <div class="exempt-card">
+      <h3>Health and safety</h3>
+      <ul>
+        <li>Health reason that makes 30+ hrs/week hard</li>
+        <li>Domestic violence or safety situation</li>
+        <li>No regular place to sleep, plus follow-up answers that show a barrier</li>
+      </ul>
+    </div>
+    <div class="exempt-card">
+      <h3>Benefits and programs</h3>
+      <ul>
+        <li>Getting or applying for TAFDC</li>
+        <li>Getting or applying for unemployment</li>
+        <li>Disability benefits listed (not <em>Other</em> alone)</li>
+        <li>Services from certain state agencies</li>
+      </ul>
+    </div>
+    <div class="exempt-card">
+      <h3>School, work, and background</h3>
+      <ul>
+        <li>Enrolled in school half-time or more</li>
+        <li>Tribal membership (as described in the tool)</li>
+        <li>Earn $217.50+/week, or 14.5 hrs/week at $15+/hour</li>
+      </ul>
+    </div>
+  </div>
+
+  <p style="margin-top:16px;font-size:15.5px;color:var(--muted)"><strong>Note on housing:</strong> Saying “no regular place to sleep” is not automatic. A follow-up asks about diploma, health care, work or school history, and recent hospitalization — those answers can still show an exemption.</p>
+  <p style="font-size:15.5px;color:var(--muted)"><strong>Note on disability:</strong> Selecting only “Other” does <em>not</em> count as an exemption.</p>
 
   <h2>Privacy</h2>
   <p>There is no backend and no analytics. Answers are kept only on the person's device (in browser storage), are automatically erased after one day, and can be deleted at any time with a button on the results screen. The "Tell DTA" form fields are not saved on the device — the person prints or downloads to keep a copy.</p>
