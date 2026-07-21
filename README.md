@@ -1,7 +1,7 @@
 # Court Forms Online — preview gallery
 
 A small set of static prototype pages for Court Forms Online / MLRI, shared with
-the team for feedback behind a light password gate.
+the team for feedback behind a server-side password.
 
 ## What's in here
 
@@ -12,36 +12,41 @@ the team for feedback behind a light password gate.
 | `snap-abawd.html` | The current SNAP ABAWD Work Rules screening tool. |
 | `snap-screening-v2.html` | The accessible / plain-language redesign of that screening. |
 | `immigration-court-landing.html` | Landing-page demo for the guided EOIR-28 form. |
-| `assets/gate.js` | Shared client-side password gate included by every page (interim; see below). |
+| `functions/_middleware.js` | Cloudflare Pages Function enforcing the site-wide password (see below). |
 
-## The password gate
+## The password gate (server-side)
 
-Every page includes `assets/gate.js`, which shows a password overlay until the
-visitor enters the shared password. Once entered, it's remembered for the
-browser session (via `sessionStorage`), so navigation between pages doesn't
-re-prompt.
+Access is protected by a **Cloudflare Pages Function** at
+[`functions/_middleware.js`](functions/_middleware.js). It runs on Cloudflare's
+edge for every request and returns HTTP Basic Auth (the browser's native
+username/password prompt) until the visitor supplies the right credentials.
 
-- **To set the password:** edit the single line `var PREVIEW_PASSWORD = "…";`
-  at the top of `assets/gate.js`, then commit + push.
-- **⚠️ This is not real security.** The password and page HTML are visible to
-  anyone who opens browser dev tools / "view source." It only keeps casual
-  visitors out of an internal prototype. For genuine privacy, use Vercel
-  Deployment Protection (paid) or Cloudflare Access instead.
-- **To remove the gate** before shipping a page to production: delete its
-  `<script src="assets/gate.js"></script>` line (first element in `<body>`).
+Unlike a client-side script, **the password never reaches the browser as
+source** — it's read from an encrypted environment variable. This is real,
+edge-enforced protection, and it needs no credit card (no Cloudflare Access /
+Zero Trust required).
 
-## Hosting: Cloudflare Pages + Access
+**To set or change the password** (no code change needed), in the Cloudflare
+Pages dashboard → **Settings → Variables and secrets**, add for **Production**:
+
+- `SITE_PASSWORD` = your password — click **Encrypt** to store it as a secret
+- `SITE_USER` = optional username (defaults to `mlri`)
+
+Then **redeploy** (Deployments → latest → Retry deployment, or push a commit) so
+the Function picks up the value. The gate **fails closed**: if `SITE_PASSWORD`
+is unset, the site returns 503 rather than serving unprotected.
+
+> Want per-person logins instead of one shared password (e.g. Google sign-in for
+> `@mlri.org` plus an external allowlist)? That's Cloudflare Access — a bigger
+> setup that requires a card on file (still $0 on the free tier).
+
+## Hosting: Cloudflare Pages
 
 Hosted on **Cloudflare Pages**, connected to the GitHub repo
 (`mcreed-mlri/Marlies-Work`). It's plain static files, so the Pages build
 settings are: Framework preset **None**, no build command, output directory
-`/`. Every `git push` to `main` auto-deploys.
-
-Access is (or will be) locked down with **Cloudflare Access** (Zero Trust free
-tier): a self-hosted application on the `*.pages.dev` hostname with an Allow
-policy for `@mlri.org` emails plus an allowlist of specific external reviewers.
-This is real, edge-enforced auth — once it's confirmed working, the interim
-`assets/gate.js` script tags can be removed so reviewers see only one login.
+`/`. Every `git push` to `main` auto-deploys. The `functions/` directory is
+picked up automatically as Pages Functions — no extra config.
 
 ---
 

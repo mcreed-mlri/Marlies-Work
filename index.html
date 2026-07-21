@@ -4,75 +4,158 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Marlie's MLRI Work</title>
-<meta name="description" content="Prototypes and tools in progress at MLRI — internal previews shared for feedback.">
+<meta name="description" content="A working file of prototypes and tools in progress at MLRI — drafts shared for feedback.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&display=swap" rel="stylesheet">
 <style>
-  :root{--navy:#0a2b52;--blue:#134a8e;--soft:#eaf1fb;--yellow:#f4bd3f;--bg:#eef1f6;--ink:#16202e;--muted:#5b6675}
+  :root{
+    --paper:#fbf8f1;
+    --paper-2:#f4efe4;
+    --ink:#221f1a;
+    --muted:#6b6255;
+    --faint:#a99f8d;
+    --mark:#f6c544;
+    --rule:#e4ddcd;
+    --accent:#3a5a40;
+  }
   *{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   html,body{margin:0}
-  body{font-family:'Atkinson Hyperlegible',system-ui,-apple-system,sans-serif;color:var(--ink);background:var(--bg);min-height:100vh;overflow-x:hidden}
-  a{color:var(--blue)}
-  :focus-visible{outline:3px solid var(--navy);outline-offset:2px;border-radius:6px}
-  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-  .fade{animation:fadeUp .35s ease both}
-  .page{max-width:820px;margin:0 auto;padding:44px max(16px,env(safe-area-inset-right)) 80px max(16px,env(safe-area-inset-left))}
-  .h1{font-size:clamp(30px,7vw,40px);line-height:1.15;margin:0 0 14px;letter-spacing:-.015em}
-  .badge{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;padding:5px 11px;border-radius:999px;background:var(--soft);color:var(--blue)}
-  .proj{display:block;text-decoration:none;color:inherit;background:#fff;border:1px solid #e3e8f0;border-radius:20px;padding:26px 28px;box-shadow:0 1px 3px rgba(16,32,56,.08);transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease}
-  .proj:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(16,32,56,.12);border-color:#cdd8ea}
-  .proj .eyebrow{font-size:13px;font-weight:700;color:var(--blue);letter-spacing:.02em;text-transform:uppercase;margin-bottom:8px}
-  .proj h3{font-size:22px;margin:0 0 8px;letter-spacing:-.01em}
-  .proj p{font-size:16px;line-height:1.5;color:var(--muted);margin:0}
-  .go{font-weight:700;color:var(--blue)}
-  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
-  .chip{font-size:13px;font-weight:700;color:#42506a;background:#eef2f8;border-radius:999px;padding:5px 11px}
-  .label{font-size:15px;font-weight:700;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;margin:0 0 16px}
-  @media (max-width:600px){.page{padding:30px 16px 60px}.proj{padding:22px 20px}}
+  body{
+    font-family:'Atkinson Hyperlegible',system-ui,-apple-system,sans-serif;
+    color:var(--ink);background:var(--paper);min-height:100vh;overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit}
+  :focus-visible{outline:2.5px solid var(--accent);outline-offset:3px;border-radius:3px}
+
+  .wrap{max-width:760px;margin:0 auto;padding:0 max(22px,env(safe-area-inset-left)) 90px max(22px,env(safe-area-inset-right))}
+
+  /* ---- running header ---- */
+  .top{display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding:22px 0 20px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+  .mark{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700;letter-spacing:.01em}
+  .glyph{width:22px;height:28px;border-radius:4px 4px 3px 3px;
+    background:linear-gradient(var(--mark),#e2a716);position:relative;flex:none;
+    box-shadow:0 1px 0 rgba(0,0,0,.12)}
+  .glyph::after{content:"";position:absolute;left:50%;top:6px;transform:translateX(-50%);
+    width:3px;height:15px;background:var(--ink);border-radius:2px;opacity:.75}
+  .status{font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+
+  /* ---- masthead ---- */
+  .mast{padding:56px 0 8px}
+  .kicker{font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);
+    font-weight:700;margin:0 0 22px}
+  h1{font-family:'Fraunces',Georgia,serif;font-weight:600;
+    font-size:clamp(44px,11vw,86px);line-height:.98;letter-spacing:-.02em;margin:0 0 26px}
+  h1 .hl{position:relative;white-space:nowrap;font-style:italic;font-weight:500}
+  h1 .hl::before{content:"";position:absolute;left:-.06em;right:-.06em;bottom:.1em;height:.44em;
+    background:var(--mark);z-index:-1;border-radius:2px 8px 4px 10px;
+    transform:rotate(-1.2deg);transform-origin:left center;
+    animation:swipe .6s .35s cubic-bezier(.2,.8,.2,1) both}
+  @keyframes swipe{from{transform:rotate(-1.2deg) scaleX(0)}to{transform:rotate(-1.2deg) scaleX(1)}}
+  .lead{font-size:clamp(18px,4.4vw,21px);line-height:1.55;color:#413b31;max-width:52ch;margin:0}
+  .lead a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+
+  /* ---- section label ---- */
+  .seclabel{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+    margin:64px 0 8px;padding-bottom:12px;border-bottom:2px solid var(--ink)}
+  .seclabel span:first-child{font-size:14px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+  .seclabel .count{font-family:'Fraunces',serif;font-size:15px;color:var(--muted);font-weight:500}
+
+  /* ---- index entry ---- */
+  .entry{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:start;
+    text-decoration:none;color:inherit;padding:30px 20px 30px 4px;
+    border-bottom:1px solid var(--rule);
+    transition:background .18s ease,padding .18s ease}
+  .entry:hover{background:var(--paper-2);padding-left:16px;padding-right:16px}
+  .num{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(30px,7vw,42px);
+    line-height:1;color:var(--faint);font-feature-settings:"tnum";
+    transition:color .18s ease}
+  .entry:hover .num{color:var(--mark)}
+  .eyebrow{font-size:12.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--accent);margin:2px 0 8px}
+  .entry h3{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(22px,5.2vw,28px);
+    line-height:1.15;letter-spacing:-.01em;margin:0 0 10px}
+  .entry p{font-size:16.5px;line-height:1.55;color:var(--muted);margin:0}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0}
+  .chip{font-size:12.5px;font-weight:700;color:#5a5344;background:transparent;
+    border:1px solid var(--rule);border-radius:999px;padding:5px 12px}
+  .go{display:inline-flex;align-items:center;gap:7px;margin:18px 0 0;
+    font-weight:700;font-size:15.5px;color:var(--ink)}
+  .go .arrow{transition:transform .18s ease}
+  .entry:hover .go .arrow{transform:translateX(4px)}
+
+  /* ---- footer ---- */
+  .foot{margin-top:44px;font-size:15px;line-height:1.6;color:var(--muted);max-width:52ch}
+  .foot a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+
+  @media (max-width:560px){
+    .mast{padding:40px 0 4px}
+    .entry{grid-template-columns:1fr;gap:6px;padding:24px 4px}
+    .entry:hover{padding-left:10px;padding-right:10px}
+    .num{font-size:26px;color:var(--faint)}
+  }
+  @media (prefers-reduced-motion:reduce){
+    h1 .hl::before{animation:none}
+    *{transition:none!important}
+  }
 </style>
 </head>
 <body>
-<script src="assets/gate.js"></script>
 
-<!-- ===== TOP NAV ===== -->
-<div style="background:var(--navy);color:#fff">
-  <div style="max-width:820px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;gap:12px">
-    <div style="width:24px;height:31px;border-radius:5px 5px 3px 3px;background:linear-gradient(var(--yellow),#e79a1f);position:relative;flex:none">
-      <div style="position:absolute;left:50%;top:6px;transform:translateX(-50%);width:4px;height:18px;background:var(--navy);border-radius:2px"></div>
-    </div>
-    <div style="font-size:18px;font-weight:700;letter-spacing:.2px">Marlie's MLRI Work</div>
-  </div>
-</div>
+<div class="wrap">
 
-<div class="page">
+  <!-- running header -->
+  <header class="top">
+    <div class="mark"><span class="glyph" aria-hidden="true"></span> Marlie's MLRI Work</div>
+    <div class="status">Working file · shared for feedback</div>
+  </header>
 
-  <!-- ===== HEADER ===== -->
-  <div class="fade" style="max-width:60ch;margin-bottom:38px">
-    <span class="badge" style="margin-bottom:16px"><span style="width:8px;height:8px;border-radius:50%;background:var(--blue);display:inline-block"></span> Internal · shared for feedback</span>
-    <h1 class="h1">Marlie's MLRI Work</h1>
-    <p style="font-size:clamp(17px,4.2vw,19px);line-height:1.55;color:#37414f;margin:0">Prototypes and tools I'm building at MLRI. Each project below links to working previews you can click through. Everything here is a draft for discussion.</p>
+  <!-- masthead -->
+  <div class="mast">
+    <p class="kicker">Massachusetts Law Reform Institute</p>
+    <h1>Marlie's<br>MLRI <span class="hl">Work</span></h1>
+    <p class="lead">Prototypes and tools I'm building at MLRI — each entry below links to a working preview you can click through. Everything here is a draft. Poke at it and tell me what you'd change: <a href="mailto:mcreed@mlri.org">mcreed@mlri.org</a>.</p>
   </div>
 
-  <!-- ===== PROJECTS ===== -->
-  <p class="label">Projects</p>
+  <!-- index -->
+  <div class="seclabel">
+    <span>Projects</span>
+    <span class="count">01 &mdash; 02</span>
+  </div>
 
-  <div class="fade" style="display:flex;flex-direction:column;gap:16px">
-    <a class="proj" href="court-forms.html">
-      <div class="eyebrow">Court Forms Online</div>
-      <h3>Making court forms easier to read and use</h3>
-      <p>Accessible, plain-language redesigns of court and benefits tools — including the SNAP work-rules screening and a guided immigration form landing page.</p>
+  <a class="entry" href="snap-abawd.html">
+    <div class="num">01</div>
+    <div>
+      <div class="eyebrow">Current version</div>
+      <h3>SNAP Screening v1</h3>
+      <p>The SNAP ABAWD work-rules screening as it exists today — faithful to the DTA rules, keyboard-accessible, and private.</p>
       <div class="chips">
         <span class="chip">SNAP screening</span>
-        <span class="chip">Accessible redesign</span>
-        <span class="chip">Immigration landing</span>
+        <span class="chip">Standard type</span>
       </div>
-      <p style="margin:16px 0 0"><span class="go">Open Court Forms previews →</span></p>
-    </a>
-  </div>
+      <div class="go">Open the preview <span class="arrow" aria-hidden="true">→</span></div>
+    </div>
+  </a>
 
-  <p style="font-size:14.5px;color:#8a94a2;margin:38px 0 0">More projects will show up here as they're ready. Questions or ideas? Email <a href="mailto:mcreed@mlri.org">mcreed@mlri.org</a>.</p>
+  <a class="entry" href="snap-screening-v2.html">
+    <div class="num">02</div>
+    <div>
+      <div class="eyebrow">Accessible redesign</div>
+      <h3>SNAP Screening v2</h3>
+      <p>The same screening, rewritten in plain language with a picture on every question, big Yes / No tiles, and a friendly result card.</p>
+      <div class="chips">
+        <span class="chip">Plain language</span>
+        <span class="chip">Picture cues</span>
+        <span class="chip">Bigger targets</span>
+      </div>
+      <div class="go">Open the preview <span class="arrow" aria-hidden="true">→</span></div>
+    </div>
+  </a>
+
+  <p class="foot">More projects will land here as they're ready. This is a working space, so expect rough edges — that's what the feedback is for.</p>
 
 </div>
 
