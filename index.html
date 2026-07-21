@@ -45,8 +45,6 @@
 
   /* ---- masthead ---- */
   .mast{padding:56px 0 8px}
-  .kicker{font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);
-    font-weight:700;margin:0 0 22px}
   h1{font-family:'Fraunces',Georgia,serif;font-weight:600;
     font-size:clamp(44px,11vw,86px);line-height:.98;letter-spacing:-.02em;margin:0 0 26px}
   h1 .hl{position:relative;white-space:nowrap;font-style:italic;font-weight:500}
@@ -66,26 +64,17 @@
 
   /* ---- index entry ---- */
   .entry{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:start;
-    text-decoration:none;color:inherit;padding:30px 20px 30px 4px;
-    border-bottom:1px solid var(--rule);
-    transition:background .18s ease,padding .18s ease}
-  .entry:hover{background:var(--paper-2);padding-left:16px;padding-right:16px}
+    padding:30px 4px;border-bottom:1px solid var(--rule)}
   .num{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(30px,7vw,42px);
-    line-height:1;color:var(--faint);font-feature-settings:"tnum";
-    transition:color .18s ease}
-  .entry:hover .num{color:var(--mark)}
-  .eyebrow{font-size:12.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-    color:var(--accent);margin:2px 0 8px}
+    line-height:1;color:var(--faint);font-feature-settings:"tnum"}
   .entry h3{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(22px,5.2vw,28px);
     line-height:1.15;letter-spacing:-.01em;margin:0 0 10px}
   .entry p{font-size:16.5px;line-height:1.55;color:var(--muted);margin:0}
-  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0}
-  .chip{font-size:12.5px;font-weight:700;color:#5a5344;background:transparent;
-    border:1px solid var(--rule);border-radius:999px;padding:5px 12px}
-  .go{display:inline-flex;align-items:center;gap:7px;margin:18px 0 0;
-    font-weight:700;font-size:15.5px;color:var(--ink)}
+  .links{display:flex;flex-direction:column;align-items:flex-start;gap:10px;margin-top:18px}
+  .go{display:inline-flex;align-items:center;gap:7px;
+    font-weight:700;font-size:15.5px;color:var(--ink);text-decoration:none}
   .go .arrow{transition:transform .18s ease}
-  .entry:hover .go .arrow{transform:translateX(4px)}
+  .go:hover .arrow{transform:translateX(4px)}
 
   /* ---- footer ---- */
   .foot{margin-top:44px;font-size:15px;line-height:1.6;color:var(--muted);max-width:52ch}
@@ -94,7 +83,6 @@
   @media (max-width:560px){
     .mast{padding:40px 0 4px}
     .entry{grid-template-columns:1fr;gap:6px;padding:24px 4px}
-    .entry:hover{padding-left:10px;padding-right:10px}
     .num{font-size:26px;color:var(--faint)}
   }
   @media (prefers-reduced-motion:reduce){
@@ -115,7 +103,6 @@
 
   <!-- masthead -->
   <div class="mast">
-    <p class="kicker">Massachusetts Law Reform Institute</p>
     <h1>Marlie's<br>MLRI <span class="hl">Work</span></h1>
     <p class="lead">Prototypes I'm building at MLRI. Each one links to a working preview. Everything here is a draft.</p>
   </div>
@@ -123,37 +110,19 @@
   <!-- index -->
   <div class="seclabel">
     <span>Projects</span>
-    <span class="count">01 / 02</span>
+    <span class="count">01</span>
   </div>
 
-  <a class="entry" href="snap-abawd.html">
+  <div class="entry">
     <div class="num">01</div>
     <div>
-      <div class="eyebrow">Current version</div>
-      <h3>SNAP Screening v1</h3>
-      <p>The SNAP ABAWD work-rules screening as it exists today.</p>
-      <div class="chips">
-        <span class="chip">SNAP screening</span>
-        <span class="chip">Standard type</span>
+      <h3>Court Forms Online</h3>
+      <p>Accessible, plain-language redesigns of court &amp; benefits tools — starting with the SNAP work-rules screening (classic and accessible versions) and a guided immigration form landing page.</p>
+      <div class="links">
+        <a class="go" href="court-forms/">Open project <span class="arrow" aria-hidden="true">→</span></a>
       </div>
-      <div class="go">Open the preview <span class="arrow" aria-hidden="true">→</span></div>
     </div>
-  </a>
-
-  <a class="entry" href="snap-screening-v2.html">
-    <div class="num">02</div>
-    <div>
-      <div class="eyebrow">Accessible redesign</div>
-      <h3>SNAP Screening v2</h3>
-      <p>The same screening in plain language, with a picture on every question and big Yes / No tiles.</p>
-      <div class="chips">
-        <span class="chip">Plain language</span>
-        <span class="chip">Picture cues</span>
-        <span class="chip">Bigger targets</span>
-      </div>
-      <div class="go">Open the preview <span class="arrow" aria-hidden="true">→</span></div>
-    </div>
-  </a>
+  </div>
 
   <p class="foot">More coming as it's ready. Message me on Google Chat or Slack anytime with requests or feedback.</p>
 

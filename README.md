@@ -1,18 +1,29 @@
-# Court Forms Online — preview gallery
+# Marlie's MLRI Work — preview site
 
-A small set of static prototype pages for Court Forms Online / MLRI, shared with
-the team for feedback behind a server-side password.
+A growing set of static prototype projects for MLRI, shared with the team for
+feedback behind a server-side password. Each project lives in its own folder;
+the homepage lists them.
 
 ## What's in here
 
-| File | What it is |
+| Path | What it is |
 |------|------------|
-| `index.html` | Top-level landing — **"Marlie's MLRI Work"** — lists projects. **Start here.** |
-| `court-forms.html` | The **Court Forms Online** project page; links to the pages below. |
-| `snap-abawd.html` | The current SNAP ABAWD Work Rules screening tool. |
-| `snap-screening-v2.html` | The accessible / plain-language redesign of that screening. |
-| `immigration-court-landing.html` | Landing-page demo for the guided EOIR-28 form. |
+| `index.html` | Homepage — **"Marlie's MLRI Work"** — lists projects. **Start here.** |
+| `court-forms/` | The **Court Forms Online** project folder → `/court-forms/`. |
+| `court-forms/index.html` | Project page; links to the tools below. |
+| `court-forms/snap-abawd.html` | SNAP ABAWD work-rules screening (classic). |
+| `court-forms/snap-screening-v2.html` | SNAP screening — accessible / plain-language redesign. |
+| `court-forms/immigration-court-landing.html` | Landing-page demo for the guided EOIR-28 form. |
 | `functions/_middleware.js` | Cloudflare Pages Function enforcing the site-wide password (see below). |
+
+## Adding a new project
+
+1. Create a new top-level folder (e.g. `housing/`) with an `index.html` and any
+   pages inside it. It's served at `/housing/`.
+2. Add an entry to the homepage `index.html` (copy an existing `.entry` block,
+   bump the number, and update the `.count` in the section label).
+3. Commit + push — Cloudflare Pages auto-deploys, and the password gate already
+   covers the new folder automatically (no extra config).
 
 ## The password gate (server-side)
 
