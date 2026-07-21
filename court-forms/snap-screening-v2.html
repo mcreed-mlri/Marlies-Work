@@ -625,7 +625,7 @@ function renderResults(){
   if(rt === 'exempt' || rt === 'goodcause'){
     form = `<div class="card-box" style="margin:22px 0 0">
       <h3 style="font-size:21px;margin:0 0 6px">Tell DTA — fill this out and send it</h3>
-      <p style="font-size:16px;line-height:1.55;color:var(--muted);margin:0 0 18px">Fill in the blanks, then save or print this page and send it to DTA. <em>What you type here is not saved — print or save the page to keep a copy.</em></p>
+      <p style="font-size:16px;line-height:1.55;color:var(--muted);margin:0 0 18px">Fill in the blanks, then print, save as PDF, or download a Word file you can edit. <em>What you type here is not saved. Save a copy to keep it.</em></p>
       <label for="f-explain" style="display:block;font-size:16px;font-weight:700;margin:0 0 8px">${esc(formPrompt)}</label>
       <textarea id="f-explain" rows="4" placeholder="Type here…" style="width:100%;font-family:inherit;font-size:16px;line-height:1.5;padding:12px 14px;border:1.5px solid #cdd3dc;border-radius:10px;resize:vertical"></textarea>
       <div class="form-row">
@@ -646,6 +646,7 @@ function renderResults(){
       <div class="no-print q-nav" style="margin-top:22px">
         <button type="button" class="btn-block btn-full" data-action="print" style="${nextBtn}">Print this form</button>
         <button type="button" class="btn-block" data-action="print" style="${ghostBtn}">Save as PDF</button>
+        <button type="button" class="btn-block" data-action="download-doc" style="${ghostBtn}">Download as Word</button>
       </div>
     </div>`;
   }
@@ -728,14 +729,10 @@ function clearSignature(){
   if(sigHint) sigHint.style.display = '';
 }
 
-/* ---- Printable "Statement to DTA" form ----
- * Builds a clean, standalone document (not the whole page) from the
- * person's answers, typed explanation, and drawn signature, then prints
- * only that. Marked SAMPLE for now. */
-function buildPrintRoot(){
-  let root = document.getElementById('print-root');
-  if(!root){ root = document.createElement('div'); root.id = 'print-root'; document.body.appendChild(root); }
-
+/* ---- Printable / downloadable "Statement to DTA" form ----
+ * Builds a clean, standalone document from the person's answers,
+ * typed explanation, and drawn signature. Marked SAMPLE for now. */
+function statementInnerHTML(){
   const val = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
   const name = val('f-name'), agency = val('f-agency'), explain = val('f-explain');
   const rt = resultType();
@@ -778,11 +775,11 @@ function buildPrintRoot(){
       </div>
     </div>`;
 
-  root.innerHTML = `<div style="font-family:'Atkinson Hyperlegible',Georgia,serif;color:#000;max-width:640px;margin:0 auto;padding:24px;font-size:15px;line-height:1.55">
+  return `<div style="font-family:Georgia,serif;color:#000;max-width:640px;margin:0 auto;padding:24px;font-size:15px;line-height:1.55">
     <div style="text-align:center;border-bottom:2px solid #000;padding-bottom:12px;margin-bottom:20px">
       <div style="font-size:13px;letter-spacing:.05em;text-transform:uppercase">Massachusetts Department of Transitional Assistance</div>
-      <div style="font-size:21px;font-weight:700;margin-top:4px">SNAP Work Rules — Statement</div>
-      <div style="font-size:12px;margin-top:5px;color:#555">SAMPLE — draft for review</div>
+      <div style="font-size:21px;font-weight:700;margin-top:4px">SNAP Work Rules Statement</div>
+      <div style="font-size:12px;margin-top:5px;color:#555">SAMPLE - draft for review</div>
     </div>
     ${field('Name', name)}
     ${field('Agency ID (if you have one)', agency)}
@@ -795,6 +792,12 @@ function buildPrintRoot(){
   </div>`;
 }
 
+function buildPrintRoot(){
+  let root = document.getElementById('print-root');
+  if(!root){ root = document.createElement('div'); root.id = 'print-root'; document.body.appendChild(root); }
+  root.innerHTML = statementInnerHTML();
+}
+
 function printForm(){
   buildPrintRoot();
   const cleanup = () => document.body.classList.remove('printing-form');
@@ -802,6 +805,25 @@ function printForm(){
   document.body.classList.add('printing-form');
   window.print();
   setTimeout(cleanup, 2000); // fallback for browsers that don't fire afterprint
+}
+
+function downloadDoc(){
+  const html = `<!DOCTYPE html>
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><title>SNAP Work Rules Statement</title>
+<!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom></w:WordDocument></xml><![endif]-->
+</head>
+<body>${statementInnerHTML()}</body>
+</html>`;
+  const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'SNAP-Work-Rules-Statement.doc';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
 }
 
 function render(){
@@ -877,6 +899,7 @@ document.addEventListener('click', (e) => {
     case 'delete-answers': deleteAnswers(); break;
     case 'quick-exit': window.location.replace('snap-screening.html'); break;
     case 'print': printForm(); break;
+    case 'download-doc': downloadDoc(); break;
     case 'sig-clear': clearSignature(); break;
   }
 });
