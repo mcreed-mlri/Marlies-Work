@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>How the SNAP screening works · Court Forms Online</title>
-<meta name="description" content="A plain-language explainer of the SNAP ABAWD work-rules screening: the rules, the three outcomes, and how the tool decides.">
+<meta name="description" content="A plain-language explainer of the SNAP ABAWD work-rules screening: the rules, the result screens, and how the tool decides.">
 <link rel="stylesheet" href="fonts/atkinson.css">
 <style>
   :root{
@@ -32,6 +32,14 @@
   .outcome .t{font-weight:700;font-size:17px;margin-bottom:2px}
   .outcome .d{font-size:15.5px;color:var(--muted);line-height:1.5}
   .note{background:var(--soft);border-radius:14px;padding:16px 18px;font-size:15.5px;line-height:1.55;color:#2c3644;margin:22px 0 0}
+  .matrix-wrap{overflow-x:auto;margin:16px 0 18px;border:1px solid #e3e8f0;border-radius:14px;background:#fff;box-shadow:0 1px 2px rgba(16,32,56,.06)}
+  .matrix{width:100%;border-collapse:collapse;font-size:15px;line-height:1.45;min-width:560px}
+  .matrix th,.matrix td{padding:12px 14px;text-align:left;vertical-align:top;border-bottom:1px solid #e8ebf0}
+  .matrix th{background:#f7f9fc;font-size:13px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--muted)}
+  .matrix tr:last-child th,.matrix tr:last-child td{border-bottom:none}
+  .matrix td:first-child{font-weight:700;color:var(--ink);white-space:nowrap}
+  .matrix .yes{color:var(--green);font-weight:700}
+  .matrix .no{color:var(--muted)}
 </style>
 </head>
 <body>
@@ -97,6 +105,61 @@
       <div class="t">Age may not apply</div>
       <div class="d">If the person is not between 18 and 64, the screening explains that these rules may not apply and suggests contacting DTA or legal aid.</div>
     </div>
+  </div>
+
+  <h2>Why four different result screens?</h2>
+  <p>At first glance, it looks like there should only be three answers: <strong>exempt</strong>, <strong>good cause</strong>, or <strong>must meet the rules</strong>. The tool adds a fourth main result — <strong>already meeting the rules</strong> — because the work question has more than one kind of “good news,” and mixing them up can hurt someone’s case.</p>
+  <p>The work question asks whether someone is working enough. Two answers mean <em>you do not have to meet the rules at all</em> (an exemption). One answer means <em>you do have to meet the rules, but you are already doing it</em> by working 30+ hours a week. Those are not the same thing at DTA:</p>
+  <ul>
+    <li><strong>Exempt (income)</strong> — earning $217.50+/week or 14.5 hours at $15+/hour. DTA should treat the person as exempt from ABAWD rules.</li>
+    <li><strong>Already meeting (hours)</strong> — working 30+ hours/week at lower pay. The person is not exempt, but they are complying. They still need to <strong>report work to DTA</strong> so benefits stay active.</li>
+  </ul>
+  <p>Showing “already meeting” as its own screen avoids telling someone they are “exempt” when they actually need to keep reporting hours. A fifth early result — <strong>age may not apply</strong> — appears if the person is not 18–64 and stops the screening before the questions.</p>
+
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <caption style="caption-side:top;text-align:left;padding:14px 14px 0;font-size:15px;font-weight:700;color:var(--ink)">Result screen comparison</caption>
+      <thead>
+        <tr>
+          <th scope="col">Result screen</th>
+          <th scope="col">What it means</th>
+          <th scope="col">Example trigger</th>
+          <th scope="col">Letter to DTA?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Exempt</td>
+          <td>Does not have to meet the ABAWD work rules</td>
+          <td>Child under 14, health barrier, enough income, pregnancy, certain benefits, etc.</td>
+          <td class="yes">Yes</td>
+        </tr>
+        <tr>
+          <td>Already meeting</td>
+          <td>Must meet the rules, but already working 30+ hrs/week — keep reporting work</td>
+          <td>Selected “I work 30 hours or more a week” on the work question</td>
+          <td class="yes">Yes</td>
+        </tr>
+        <tr>
+          <td>Good cause</td>
+          <td>No exemption, but a temporary hardship may excuse missed hours</td>
+          <td>Lost transportation, family emergency, unfair job situation</td>
+          <td class="yes">Yes</td>
+        </tr>
+        <tr>
+          <td>Must meet rules</td>
+          <td>May need to work, train, or volunteer to keep SNAP</td>
+          <td>No exemption and no good cause after all questions</td>
+          <td class="no">No</td>
+        </tr>
+        <tr>
+          <td>Age may not apply</td>
+          <td>ABAWD rules usually apply to adults 18–64; person should check with DTA or legal aid</td>
+          <td>Answered “No” to age question on the intro</td>
+          <td class="no">No</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
   <h2>How the tool decides</h2>
