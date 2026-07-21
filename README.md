@@ -92,12 +92,11 @@ any static host (the CourtFormsOnline web server, GitHub Pages, Netlify, an S3
 bucket, etc.). Nothing else is required. Remove the `assets/gate.js` script tag
 first — the password gate is only for the internal preview.
 
-Before go-live, fill in the two placeholders:
+Before go-live, confirm the **Terms of Use** wording in the intro matches the
+hosting organization's real terms.
 
-- The **"Learn more about the SNAP ABAWD work rules"** link on the intro
-  (currently `href="#"`) — point it at the explainer page.
-- Confirm the **Terms of Use** wording in the intro matches the hosting
-  organization's real terms.
+The **"Learn more about the SNAP work rules"** links point to the Massachusetts
+Legal Help article on the ABAWD work rules.
 
 ## Privacy & data retention
 
@@ -110,8 +109,7 @@ and answers are never transmitted anywhere.**
   the next visit. Tune the window via `RETENTION_MS` in `snap-abawd.html`.
 - **Delete my answers.** The results screen has an explicit button that clears
   the stored answers immediately and returns to the start.
-- **"Tell DTA" form fields** (name, agency ID, free text) are *not* stored at
-  all — the visitor saves or prints the page to keep a copy.
+- **"Tell DTA" form fields** (name, agency ID, free text) are *not* stored on the device — the visitor prints or downloads to keep a copy.
 - The only outbound request is for the Atkinson Hyperlegible web font (Google
   Fonts). For zero third-party requests, self-host the font and update the
   `<link>` in `snap-abawd.html`.

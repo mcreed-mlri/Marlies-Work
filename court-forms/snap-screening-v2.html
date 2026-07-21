@@ -137,6 +137,46 @@
     .fade{animation:none}
     .opt,.opt-mark{transition:none}
   }
+  .hint-tip{position:relative;display:inline-block;max-width:100%}
+  .hint-tip-btn{
+    display:inline-flex;align-items:center;gap:7px;font-family:inherit;font-size:13.5px;font-weight:700;
+    color:var(--muted);background:none;border:none;padding:8px 4px;cursor:help;min-height:44px;
+    text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;
+  }
+  .hint-tip-icon{
+    width:18px;height:18px;border-radius:50%;border:1.5px solid var(--blue);color:var(--blue);
+    display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:none;
+  }
+  .hint-tip-panel{
+    z-index:100;padding:12px 14px;font-size:13.5px;line-height:1.5;font-weight:400;
+    color:var(--ink);background:#fff;border:1px solid #cdd3dc;border-radius:12px;
+    box-shadow:0 8px 24px rgba(16,32,56,.12);text-align:left;overflow-wrap:anywhere;
+    opacity:0;visibility:hidden;pointer-events:none;
+    transition:opacity .15s ease,visibility .15s ease,max-height .2s ease,padding .2s ease,margin .2s ease;
+  }
+  .hint-tip--icon{display:inline-flex;vertical-align:middle;width:auto}
+  .hint-tip-btn--icon{min-height:28px;padding:2px;text-decoration:none;gap:0}
+  .hint-tip-btn--icon .hint-tip-icon{width:20px;height:20px;font-size:13px}
+  @media (max-width:640px),(hover:none){
+    .hint-tip:not(.hint-tip--icon){display:block;width:100%}
+    .hint-tip--icon.is-open{display:block;width:100%}
+    .hint-tip-btn--icon{min-height:44px;min-width:44px;justify-content:center}
+    .hint-tip-panel{
+      position:static;width:100%;max-width:none;box-shadow:none;
+      max-height:0;overflow:hidden;padding:0 14px;margin:0;opacity:1;
+    }
+    .hint-tip.is-open .hint-tip-panel{
+      visibility:visible;pointer-events:auto;max-height:400px;overflow:visible;
+      padding:12px 14px;margin-top:8px;
+    }
+  }
+  @media (hover:hover) and (min-width:641px){
+    .hint-tip-btn{min-height:auto;padding:4px 2px}
+    .hint-tip-panel{position:fixed;width:min(300px,calc(100vw - 32px))}
+    .hint-tip:hover .hint-tip-panel,.hint-tip:focus-within .hint-tip-panel,.hint-tip.is-open .hint-tip-panel{
+      opacity:1;visibility:visible;pointer-events:auto;
+    }
+  }
   /* Off-screen (not display:none) so the signature image can decode before print. */
   #print-root{position:fixed;left:-10000px;top:0;width:8.5in;pointer-events:none}
   @media print{
@@ -236,6 +276,7 @@ const state = { view:'intro', step:0, gc:false, helpOpen:{}, agreed:false, answe
 
 const STORAGE_KEY = 'cfo-abawd-screening-v2';
 const RETENTION_MS = 24 * 60 * 60 * 1000; // 1 day
+const MLH_ABAWD_URL = 'https://www.masslegalhelp.org/public-benefits-ssi/snap-food-benefits/snap-3-month-time-limit-abawd-work-rules';
 let SAMPLE_MODE = false; // true when showing a ?sample= preview result
 let sigCanvas = null, sigCtx = null, sigHint = null, sigDrawn = false; // finger/mouse signature pad
 
@@ -368,6 +409,103 @@ function esc(s){
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
+function hintTip(id, label, bodyHtml, iconOnly){
+  const tipClass = iconOnly ? 'hint-tip hint-tip--icon' : 'hint-tip';
+  const btnClass = iconOnly ? 'hint-tip-btn hint-tip-btn--icon' : 'hint-tip-btn';
+  const btnInner = iconOnly
+    ? `<span class="hint-tip-icon" aria-hidden="true">i</span>`
+    : `<span class="hint-tip-icon" aria-hidden="true">i</span><span>${esc(label)}</span>`;
+  const ariaLabel = iconOnly ? ` aria-label="${esc(label)}"` : '';
+  return `<span class="${tipClass}">
+    <button type="button" class="${btnClass}" aria-expanded="false" aria-controls="hint-${id}"${ariaLabel} data-action="toggle-hint" data-hint-id="${id}">
+      ${btnInner}
+    </button>
+    <span id="hint-${id}" class="hint-tip-panel" role="note">${bodyHtml}</span>
+  </span>`;
+}
+
+function hintTipUsesInlinePanel(){
+  return window.matchMedia('(max-width: 640px), (hover: none)').matches;
+}
+
+function hintTipUsesFloatingPanel(){
+  return window.matchMedia('(hover: hover) and (min-width: 641px)').matches;
+}
+
+function setHintTipOpen(tip, open){
+  const btn = tip.querySelector('.hint-tip-btn');
+  if(open){
+    if(hintTipUsesFloatingPanel()) positionHintPanel(tip);
+    tip.classList.add('is-open');
+    if(btn) btn.setAttribute('aria-expanded', 'true');
+  } else {
+    tip.classList.remove('is-open');
+    if(btn) btn.setAttribute('aria-expanded', 'false');
+    const panel = tip.querySelector('.hint-tip-panel');
+    if(panel && hintTipUsesFloatingPanel()){
+      panel.style.top = panel.style.left = panel.style.width = '';
+    }
+  }
+}
+
+function positionHintPanel(tip){
+  if(hintTipUsesInlinePanel()) return;
+  const btn = tip.querySelector('.hint-tip-btn');
+  const panel = tip.querySelector('.hint-tip-panel');
+  if(!btn || !panel) return;
+
+  const pad = 16;
+  const gap = 10;
+  const maxW = Math.min(300, window.innerWidth - pad * 2);
+  const rect = btn.getBoundingClientRect();
+
+  panel.style.width = maxW + 'px';
+  panel.style.left = '-9999px';
+  panel.style.top = '0';
+  panel.style.visibility = 'hidden';
+  panel.style.display = 'block';
+
+  const panelH = panel.offsetHeight;
+  let left = rect.left + (rect.width - maxW) / 2;
+  left = Math.max(pad, Math.min(left, window.innerWidth - maxW - pad));
+
+  let top = rect.bottom + gap;
+  if(top + panelH > window.innerHeight - pad) top = rect.top - panelH - gap;
+  if(top < pad) top = Math.max(pad, window.innerHeight - panelH - pad);
+
+  panel.style.left = left + 'px';
+  panel.style.top = top + 'px';
+  panel.style.visibility = '';
+}
+
+function repositionVisibleHintPanels(){
+  document.querySelectorAll('.hint-tip.is-open').forEach(positionHintPanel);
+  if(hintTipUsesFloatingPanel()){
+    document.querySelectorAll('.hint-tip:hover').forEach(positionHintPanel);
+  }
+}
+
+function initHintTips(){
+  document.addEventListener('mouseenter', (e) => {
+    if(!hintTipUsesFloatingPanel()) return;
+    const tip = e.target.closest && e.target.closest('.hint-tip');
+    if(tip) positionHintPanel(tip);
+  }, true);
+
+  document.addEventListener('focusin', (e) => {
+    const tip = e.target.closest && e.target.closest('.hint-tip');
+    if(tip && hintTipUsesFloatingPanel()) positionHintPanel(tip);
+  });
+
+  window.addEventListener('resize', repositionVisibleHintPanels, { passive: true });
+  window.addEventListener('scroll', repositionVisibleHintPanels, { passive: true, capture: true });
+
+  document.addEventListener('click', (e) => {
+    if(e.target.closest && e.target.closest('[data-action="toggle-hint"]')) return;
+    document.querySelectorAll('.hint-tip.is-open').forEach(t => setHintTipOpen(t, false));
+  });
+}
+
 const primaryBtn = "font-family:inherit;font-size:20px;font-weight:700;color:#fff;background:var(--blue);border:none;border-radius:12px;padding:17px 34px;cursor:pointer;box-shadow:0 2px 0 var(--navy);min-height:52px;touch-action:manipulation";
 const nextBtn    = "font-family:inherit;font-size:18px;font-weight:700;color:#fff;background:var(--blue);border:none;border-radius:12px;padding:14px 28px;cursor:pointer;box-shadow:0 2px 0 var(--navy);min-height:48px;touch-action:manipulation";
 const ghostBtn   = "font-family:inherit;font-size:16px;font-weight:700;color:var(--blue);background:none;border:2px solid var(--blue);border-radius:12px;padding:12px 22px;cursor:pointer;min-height:48px;touch-action:manipulation";
@@ -497,7 +635,7 @@ function renderIntro(){
       <button type="button" id="start-btn" class="btn-full" data-action="start" ${state.agreed ? '' : 'aria-disabled="true"'} style="${primaryBtn}${state.agreed ? '' : ';opacity:.5;cursor:not-allowed'}">Start now →</button>
     </div>
 
-    <p style="font-size:16px;margin:20px 0 0;text-align:center"><a href="#">Learn more about the SNAP work rules</a></p>
+    <p style="font-size:16px;margin:20px 0 0;text-align:center"><a href="${MLH_ABAWD_URL}" target="_blank" rel="noopener">Learn more about the SNAP work rules</a></p>
   </div>`;
 }
 
@@ -566,6 +704,8 @@ function renderResults(){
   else if(rs.includes('Take care of a child or adult who cannot care for themselves')) formPrompt = 'Explain your caretaking responsibilities or arrangement';
   if(rt === 'goodcause') formPrompt = 'Explain why you had to miss work, school, or volunteer hours';
 
+  const learnMore = `<p style="font-size:16px;margin:16px 0 0"><a href="${MLH_ABAWD_URL}" target="_blank" rel="noopener">Learn more about the SNAP work rules</a></p>`;
+
   let card = '';
   if(rt === 'exempt'){
     const items = rs.map(r => `<li style="display:flex;align-items:flex-start;gap:12px;font-size:17px;line-height:1.5;color:var(--ink)">
@@ -580,8 +720,9 @@ function renderResults(){
         </div>
       </div>
       <div class="result-body">
-        <p style="font-size:17px;line-height:1.6;color:#37414f;margin:0 0 16px">You can keep your SNAP without meeting the work rules, because:</p>
+        <p style="font-size:17px;line-height:1.6;color:#37414f;margin:0 0 16px">You can keep your SNAP without meeting the work rules, because you:</p>
         <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px">${items}</ul>
+        ${learnMore}
       </div></div>`;
   } else if(rt === 'goodcause'){
     card = `<div style="border-radius:20px;overflow:hidden;border:1px solid #c7d6f0;box-shadow:0 1px 3px rgba(16,32,56,.08)">
@@ -598,6 +739,7 @@ function renderResults(){
           <span aria-hidden="true" style="font-size:20px;flex:none">•</span>
           <span style="font-size:17px;line-height:1.55;overflow-wrap:anywhere">${esc(goodCauseText)}</span>
         </div>
+        ${learnMore}
       </div></div>`;
   } else {
     card = `<div style="border-radius:20px;overflow:hidden;border:1px solid var(--amber-bd);box-shadow:0 1px 3px rgba(16,32,56,.08)">
@@ -621,6 +763,7 @@ function renderResults(){
           </div>
         </div>
         <p style="font-size:16px;line-height:1.6;color:#37414f;margin:20px 0 0;overflow-wrap:anywhere">Already lost your SNAP because of the work rules? You can apply again any time. Email <a href="mailto:info@masslegalservices.org">info@masslegalservices.org</a> if you lost or are about to lose SNAP because of these rules.</p>
+        ${learnMore}
       </div></div>`;
   }
 
@@ -628,7 +771,7 @@ function renderResults(){
   if(rt === 'exempt' || rt === 'goodcause'){
     form = `<div class="card-box" style="margin:22px 0 0">
       <h3 style="font-size:21px;margin:0 0 6px">Tell DTA — fill this out and send it</h3>
-      <p style="font-size:16px;line-height:1.55;color:var(--muted);margin:0 0 18px">Fill in the blanks, then print, save as PDF, or download a Word file you can edit. <em>What you type here is not saved. Save a copy to keep it.</em></p>
+      <p style="font-size:16px;line-height:1.55;color:var(--muted);margin:0 0 18px">Fill in the blanks, then print, save as PDF, or download a Word file you can edit. <em>What you type here is not saved on this device — print or download to keep a copy.</em></p>
       <label for="f-explain" style="display:block;font-size:16px;font-weight:700;margin:0 0 8px">${esc(formPrompt)}</label>
       <textarea id="f-explain" rows="4" placeholder="Type here…" style="width:100%;font-family:inherit;font-size:16px;line-height:1.5;padding:12px 14px;border:1.5px solid #cdd3dc;border-radius:10px;resize:vertical"></textarea>
       <div class="form-row">
@@ -636,13 +779,15 @@ function renderResults(){
         <div><label for="f-agency" style="display:block;font-size:15px;font-weight:700;margin:0 0 6px">Agency ID</label><input id="f-agency" inputmode="text" style="${inputStyle}"></div>
       </div>
       <div style="margin:16px 0 0">
-        <label id="sig-label" style="display:block;font-size:15px;font-weight:700;margin:0 0 6px">Signature</label>
+        <div style="display:flex;align-items:center;gap:8px;margin:0 0 6px">
+          <label id="sig-label" style="font-size:15px;font-weight:700;margin:0">Signature</label>
+          ${hintTip('sig', 'About signatures', 'Sign with your finger on a touch screen, or with your mouse. A typed signature won\u2019t be accepted \u2014 this captures your real one.', true)}
+        </div>
         <div style="position:relative;border:1.5px solid #cdd3dc;border-radius:10px;background:#fff">
           <canvas id="sig-pad" role="img" aria-labelledby="sig-label" style="display:block;width:100%;height:150px;border-radius:10px;cursor:crosshair;touch-action:none;-webkit-print-color-adjust:exact;print-color-adjust:exact"></canvas>
           <span id="sig-hint" class="no-print" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);color:#aeb4bd;font-size:15px;pointer-events:none">Sign here with your finger or mouse</span>
         </div>
-        <div class="no-print" style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin:8px 0 0">
-          <p style="font-size:13.5px;color:#8a919c;margin:0;max-width:44ch">Sign with your finger on a touch screen, or with your mouse. A typed signature won't be accepted — this captures your real one.</p>
+        <div class="no-print" style="display:flex;justify-content:flex-end;margin:8px 0 0">
           <button type="button" data-action="sig-clear" style="flex:none;font-family:inherit;font-size:14px;font-weight:700;color:var(--blue);background:none;border:2px solid var(--blue);border-radius:10px;padding:9px 16px;cursor:pointer;min-height:42px">Clear</button>
         </div>
       </div>
@@ -650,6 +795,7 @@ function renderResults(){
         <button type="button" class="btn-block btn-full" data-action="print" style="${nextBtn}">Print this form</button>
         <button type="button" class="btn-block" data-action="print" style="${ghostBtn}">Save as PDF</button>
         <button type="button" class="btn-block" data-action="download-doc" style="${ghostBtn}">Download as Word</button>
+        <div style="grid-column:1/-1;margin-top:4px">${hintTip('pdf-save', 'Tips for saving as PDF', 'Save as PDF opens your browser\u2019s print menu \u2014 use your usual printer or PDF option. If the dialog is slow to open, try Download as Word.')}</div>
       </div>
     </div>`;
   }
@@ -948,6 +1094,18 @@ document.addEventListener('click', (e) => {
     case 'next': advance(); break;
     case 'skip-end': skipToEnd(); break;
     case 'toggle-help': { const id = btn.getAttribute('data-q-id'); if(id){ state.helpOpen[id] = !state.helpOpen[id]; render(); } break; }
+    case 'toggle-hint': {
+      const tip = btn.closest('.hint-tip');
+      if(!tip) break;
+      const willOpen = !tip.classList.contains('is-open');
+      if(willOpen){
+        document.querySelectorAll('.hint-tip.is-open').forEach(t => { if(t !== tip) setHintTipOpen(t, false); });
+        setHintTipOpen(tip, true);
+      } else {
+        setHintTipOpen(tip, false);
+      }
+      break;
+    }
     case 'restart':
       state.view = 'intro'; state.step = 0; state.gc = false; state.helpOpen = {}; state.answers = {}; renderWithMotion(); break;
     case 'delete-answers': deleteAnswers(); break;
@@ -1003,6 +1161,7 @@ function sampleBanner(){
 }
 
 if(!applySampleFromURL()){ loadPersisted(); }
+initHintTips();
 state.animate = true;
 render();
 </script>
