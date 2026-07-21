@@ -94,10 +94,12 @@
   }
   #print-root{display:none}
   @media print{
+    @page{margin:0}
     .no-print{display:none !important}
     body{background:#fff !important}
     body.printing-form > *{display:none !important}
     body.printing-form > #print-root{display:block !important}
+    #print-root{padding:0.6in}
     #print-root img{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   }
 </style>
@@ -267,6 +269,12 @@ function back(){
   renderWithMotion();
 }
 
+function skipToEnd(){
+  state.gc = false;
+  state.view = 'results';
+  renderWithMotion();
+}
+
 /* ------------------------------------------------------------------ *
  * Rendering
  * ------------------------------------------------------------------ */
@@ -406,6 +414,9 @@ function renderPage(){
     <div class="q-nav">
       <button type="button" data-action="back" style="${ghostBtn}">← Back</button>
       <button type="button" data-action="next" style="${nextBtn}">${nextLabel}</button>
+    </div>
+    <div style="text-align:center;margin-top:14px">
+      <button type="button" data-action="skip-end" style="font-family:inherit;font-size:14.5px;font-weight:700;color:#5b6470;background:none;border:none;padding:6px 8px;cursor:pointer;text-decoration:underline;text-underline-offset:3px">Skip to the end</button>
     </div>
   </div>`;
 }
@@ -711,6 +722,7 @@ document.addEventListener('click', (e) => {
       state.view = 'question'; state.step = 0; state.gc = false; state.helpOpen = {}; renderWithMotion(); break;
     case 'back': back(); break;
     case 'next': advance(); break;
+    case 'skip-end': skipToEnd(); break;
     case 'toggle-help': { const id = btn.getAttribute('data-q-id'); if(id){ state.helpOpen[id] = !state.helpOpen[id]; render(); } break; }
     case 'restart':
       state.view = 'intro'; state.step = 0; state.gc = false; state.helpOpen = {}; state.answers = {}; renderWithMotion(); break;
