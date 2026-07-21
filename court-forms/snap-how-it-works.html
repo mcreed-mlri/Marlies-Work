@@ -16,13 +16,14 @@
   *{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   html,body{margin:0}
+  html{scroll-behavior:smooth}
   body{font-family:'Atkinson Hyperlegible',system-ui,-apple-system,sans-serif;color:var(--ink);background:var(--bg);min-height:100vh;overflow-x:hidden}
   a{color:var(--blue);text-underline-offset:3px}
   a:hover{color:var(--navy)}
   :focus-visible{outline:3px solid var(--navy);outline-offset:2px;border-radius:6px}
   .page{max-width:660px;margin:0 auto;padding:34px max(16px,env(safe-area-inset-right)) 72px max(16px,env(safe-area-inset-left))}
   h1{font-size:clamp(26px,6.5vw,34px);line-height:1.18;margin:0 0 14px;letter-spacing:-.01em}
-  h2{font-size:clamp(20px,5vw,24px);line-height:1.25;margin:38px 0 10px;letter-spacing:-.01em}
+  h2{font-size:clamp(20px,5vw,24px);line-height:1.25;margin:38px 0 10px;letter-spacing:-.01em;scroll-margin-top:20px}
   p{font-size:17px;line-height:1.6;color:#37414f;margin:0 0 14px}
   ul{font-size:17px;line-height:1.6;color:#37414f;margin:0 0 14px;padding-left:22px}
   li{margin:0 0 6px}
@@ -51,6 +52,11 @@
   .exempt-card h3{font-size:15px;font-weight:700;margin:0 0 8px;color:var(--navy)}
   .exempt-card ul{margin:0;padding-left:18px;font-size:15px;line-height:1.5;color:#37414f}
   .exempt-card li{margin:0 0 5px}
+  .toc{background:#fff;border:1px solid #e3e8f0;border-radius:14px;padding:16px 18px;margin:22px 0 8px;box-shadow:0 1px 2px rgba(16,32,56,.06)}
+  .toc-title{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  .toc-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+  .toc-list a{display:block;font-size:16px;font-weight:700;color:var(--blue);text-decoration:none;padding:8px 10px;border-radius:10px;line-height:1.35}
+  .toc-list a:hover{background:var(--soft);color:var(--navy);text-decoration:none}
 </style>
 </head>
 <body>
@@ -73,10 +79,22 @@
   <h1>How the SNAP screening works</h1>
   <p class="lead">This screening helps someone on SNAP figure out whether the <strong>ABAWD work rules</strong> apply to them. It asks a few plain-language questions and, based only on the answers, shows one of several outcomes. Nothing is sent anywhere — the answers stay on the person's own device.</p>
 
-  <h2>What are the "ABAWD work rules"?</h2>
+  <nav class="toc" aria-label="On this page">
+    <div class="toc-title">On this page</div>
+    <ul class="toc-list">
+      <li><a href="#abawd-rules">What are the ABAWD work rules?</a></li>
+      <li><a href="#outcomes">The possible outcomes</a></li>
+      <li><a href="#why-four">Why four different result screens?</a></li>
+      <li><a href="#how-decides">How the tool decides</a></li>
+      <li><a href="#exemptions">What counts as an exemption?</a></li>
+      <li><a href="#privacy">Privacy</a></li>
+    </ul>
+  </nav>
+
+  <h2 id="abawd-rules">What are the "ABAWD work rules"?</h2>
   <p>ABAWD stands for "Able-Bodied Adult Without Dependents." Federal rules can require some SNAP recipients in this group to work, train, or volunteer a set number of hours each month to keep their benefits. But <strong>many people are exempt</strong>, and others have a good reason for months they couldn't meet the hours. The screening exists because a lot of people are told they must meet the rules when they actually don't have to.</p>
 
-  <h2>The possible outcomes</h2>
+  <h2 id="outcomes">The possible outcomes</h2>
 
   <div class="outcome">
     <span class="pill" style="background:var(--green-bg);color:var(--green)">✓</span>
@@ -118,7 +136,7 @@
     </div>
   </div>
 
-  <h2>Why four different result screens?</h2>
+  <h2 id="why-four">Why four different result screens?</h2>
   <p>At first glance, it looks like there should only be three answers: <strong>exempt</strong>, <strong>good cause</strong>, or <strong>must meet the rules</strong>. The tool adds a fourth main result — <strong>already meeting the rules</strong> — because the work question has more than one kind of “good news,” and mixing them up can hurt someone’s case.</p>
   <p>The work question asks whether someone is working enough. Two answers mean <em>you do not have to meet the rules at all</em> (an exemption). One answer means <em>you do have to meet the rules, but you are already doing it</em> by working 30+ hours a week. Those are not the same thing at DTA:</p>
   <ul>
@@ -173,7 +191,7 @@
     </table>
   </div>
 
-  <h2>How the tool decides</h2>
+  <h2 id="how-decides">How the tool decides</h2>
   <p>The screening runs entirely in the browser. It checks answers <strong>in this order</strong> and stops at the first result that fits:</p>
 
   <div class="decision-step">
@@ -220,7 +238,7 @@
     </div>
   </div>
 
-  <h2 style="margin-top:34px">What counts as an exemption?</h2>
+  <h2 id="exemptions" style="margin-top:34px">What counts as an exemption?</h2>
   <p>Answering <strong>yes</strong> to any of these (in the question flow) can lead to an <strong>Exempt</strong> result. The tool groups them like this:</p>
 
   <div class="exempt-grid">
@@ -263,7 +281,7 @@
   <p style="margin-top:16px;font-size:15.5px;color:var(--muted)"><strong>Note on housing:</strong> Saying “no regular place to sleep” is not automatic. A follow-up asks about diploma, health care, work or school history, and recent hospitalization — those answers can still show an exemption.</p>
   <p style="font-size:15.5px;color:var(--muted)"><strong>Note on disability:</strong> Selecting only “Other” does <em>not</em> count as an exemption.</p>
 
-  <h2>Privacy</h2>
+  <h2 id="privacy">Privacy</h2>
   <p>There is no backend and no analytics. Answers are kept only on the person's device (in browser storage), are automatically erased after one day, and can be deleted at any time with a button on the results screen. The "Tell DTA" form fields are not saved on the device — the person prints or downloads to keep a copy.</p>
 
   <div class="note">This tool gives general information only. It is <strong>not legal advice</strong>, and results are based only on the answers given. People should always check with DTA before acting, and can reach a legal aid program for advice.</div>
