@@ -15,7 +15,10 @@
       "Bash(git branch *)",
       "Bash(rm assets/gate.js)",
       "Bash(rmdir assets *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "PowerShell(node \"$env:TEMP\\\\claude\\\\c--dev-snap-calculator\\\\78de1e26-c36e-49ed-afb8-0616fa2b59bf\\\\scratchpad\\\\contrast.js\" 2>$null; if \\(-not $?\\) { \"trying inline\" })",
+      "Bash(node -e ' *)",
+      "PowerShell($ErrorActionPreference='Stop'; \\(Get-Command node\\).Source)"
     ]
   }
 }

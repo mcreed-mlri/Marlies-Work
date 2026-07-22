@@ -14,7 +14,7 @@ the homepage lists them.
 | `court-forms/snap-screening.html` | SNAP screening **hub** — links to the tool, sample results, and how-it-works. |
 | `court-forms/snap-screening-logic.js` | Shared screening logic (questions, thresholds, result engine) used by both tools. |
 | `court-forms/snap-abawd.html` | SNAP ABAWD work-rules screening (classic). |
-| `court-forms/snap-screening-v2.html` | SNAP screening — accessible / plain-language redesign. Supports `?sample=exempt\|goodcause\|notexempt\|meeting` to jump straight to a sample result screen (demo only; nothing saved). |
+| `court-forms/snap-screening-v2.html` | SNAP screening — accessible / plain-language redesign. Supports `?sample=exempt\|goodcause\|notexempt` to jump straight to a sample result screen (demo only; nothing saved). |
 | `court-forms/snap-how-it-works.html` | Plain-language explainer of the screening. |
 | `court-forms/immigration-court-landing.html` | Landing-page demo for the guided EOIR-28 form. _(Unlinked — kept in the repo but not shown in site nav.)_ |
 | `functions/_middleware.js` | Cloudflare Pages Function enforcing the site-wide password (see below). |
@@ -67,8 +67,8 @@ picked up automatically as Pages Functions — no extra config.
 # SNAP ABAWD Work Rules Screening
 
 A short, private screening tool that helps someone on SNAP check whether the
-Massachusetts DTA **ABAWD work rules** apply to them — or whether they're
-exempt or already meeting the rules. Built for Court Forms Online / MLRI.
+Massachusetts DTA **ABAWD work rules** apply to them — or whether they may be
+exempt or have good cause. Built for Court Forms Online / MLRI.
 
 Two UIs share one logic module ([`court-forms/snap-screening-logic.js`](court-forms/snap-screening-logic.js)):
 
@@ -78,8 +78,7 @@ Two UIs share one logic module ([`court-forms/snap-screening-logic.js`](court-fo
 It walks through up to 14 questions plus a "good cause" follow-up and shows one
 of these results:
 
-- **Exempt** — qualifies for one or more exemptions (including income-based work exemption), with a printable "Tell DTA" form.
-- **Already meeting the rules** — working 30+ hours/week; distinct from a true exemption.
+- **Exempt** — qualifies for one or more exemptions (including income/work-based exemptions), with a printable "Tell DTA" form.
 - **Good cause** — no exemption, but a temporary hardship may excuse missed hours.
 - **May need to meet the work rules** — no exemption or good cause; explains work/volunteer options.
 - **Age may not apply** — if the person is not 18–64, shown before question flow.
@@ -106,7 +105,7 @@ Before go-live:
 
 - Confirm **Terms of Use** wording matches the hosting organization.
 - Verify DTA contact info (phone, fax, mail) against current Mass.gov guidance.
-- Have an SME spot-check thresholds in `snap-screening-logic.js` (last verified Nov 2025: $217.50/week, 14.5×$15, 30 hrs/week, 20 hrs/month requirement).
+- Have an SME spot-check thresholds in `snap-screening-logic.js` (last verified Nov 2025: $217.50/week, 14.5×$15, 30 hrs/week below minimum wage, 20 hrs/week or 80 hrs/month requirement).
 - **Restore Quick exit on production** — this preview uses a **← Back** button to `snap-screening.html`. On the live Court Forms Online site, replace it with **Quick exit** that jumps to a neutral external URL (see `PRODUCTION_QUICK_EXIT_URL` in `snap-screening-logic.js` and the deploy note below).
 
 ### Preview vs production top bar
@@ -125,6 +124,15 @@ Before go-live:
 - [ ] Walk through personas: pregnant, homeless+GED, student, DV, tribal member, 25 hrs at $12/hr, disability benefits
 - [ ] Confirm **Quick exit** (production only) jumps to a neutral external URL — not needed for this preview, which uses **← Back** to the hub
 - [ ] Confirm printable "Tell DTA" statement is acceptable to DTA / MLRI
+
+### Questions to clarify before launch
+
+- Should working 30+ hours/week while earning less than minimum wage always route to the exempt result, and what proof should the statement ask for?
+- Should "Other disability benefit or payment" route to exempt as a cautious tell-DTA path, or ask a follow-up before showing an exemption result?
+- Is the housing result language right when DTA must review unable-to-work factors rather than treat housing status as automatic?
+- Should the substance use treatment question name specific treatment/program participation criteria?
+- Does the safety question cover the right categories: domestic violence, stalking, sexual harassment, sexual assault, and related safety concerns that affect work?
+- Should the not-exempt screen say more about how to prove unpaid, in-kind, training, or volunteer/community service hours?
 
 ## Privacy & data retention
 

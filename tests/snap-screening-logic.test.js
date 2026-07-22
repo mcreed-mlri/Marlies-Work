@@ -4,7 +4,7 @@ const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
 const SnapScreening = require('../court-forms/snap-screening-logic.js');
 
-const { NONE, WORK_REASON_INCOME, WORK_REASON_MEETING, create, migrateAnswers, resultTypeFor, exemptReasonsFor, housingUnableExempt, buildQuestions } = SnapScreening;
+const { NONE, WORK_REASON_INCOME, WORK_REASON_HOURS_30, DISABILITY_OTHER_REASON, create, migrateAnswers, resultTypeFor, exemptReasonsFor, housingUnableExempt, buildQuestions } = SnapScreening;
 
 describe('snap-screening-logic', () => {
   const classic = create('classic');
@@ -52,18 +52,20 @@ describe('snap-screening-logic', () => {
     assert.ok(exemptReasonsFor(answers, classic.QUESTIONS).includes(WORK_REASON_INCOME));
   });
 
-  it('30+ hours is meeting not exempt', () => {
+  it('30+ hours below minimum wage is exempt', () => {
     const answers = { working: 'hours_30' };
-    assert.equal(classic.resultType(answers), 'meeting');
-    assert.equal(exemptReasonsFor(answers, classic.QUESTIONS).length, 0);
+    assert.equal(classic.resultType(answers), 'exempt');
+    assert.ok(exemptReasonsFor(answers, classic.QUESTIONS).includes(WORK_REASON_HOURS_30));
   });
 
   it('good cause when no exemption', () => {
     assert.equal(classic.resultType({ goodcause: 'emergency' }), 'goodcause');
   });
 
-  it('disability Other alone is not exempt', () => {
-    assert.equal(classic.resultType({ disability: ['other'] }), 'notexempt');
+  it('other disability benefit routes to cautious exemption', () => {
+    const answers = { disability: ['other'] };
+    assert.equal(classic.resultType(answers), 'exempt');
+    assert.ok(exemptReasonsFor(answers, classic.QUESTIONS).includes(DISABILITY_OTHER_REASON));
   });
 
   it('disability SSI is exempt', () => {
@@ -74,7 +76,7 @@ describe('snap-screening-logic', () => {
     assert.equal(classic.resultType({ ageRange: 'no' }), 'ageinfo');
   });
 
-  it('exempt beats meeting when both apply', () => {
+  it('multiple exemption reasons can apply together', () => {
     assert.equal(classic.resultType({ child14: 'yes', working: 'hours_30' }), 'exempt');
   });
 
@@ -97,7 +99,19 @@ describe('snap-screening-logic', () => {
     assert.match(v2.goodCauseText(answers), /transportation/i);
   });
 
-  it('shouldSkipGoodCause for exempt and meeting', () => {
+  it('substance use treatment is exempt', () => {
+    assert.equal(classic.resultType({ substanceUse: 'yes' }), 'exempt');
+  });
+
+  it('dv and safety route remains exempt', () => {
+    assert.equal(classic.resultType({ dv: 'yes' }), 'exempt');
+  });
+
+  it('resultType no longer returns meeting', () => {
+    assert.notEqual(classic.resultType({ working: 'hours_30' }), 'meeting');
+  });
+
+  it('shouldSkipGoodCause for exempt paths', () => {
     assert.equal(classic.shouldSkipGoodCause({ child14: 'yes' }), true);
     assert.equal(classic.shouldSkipGoodCause({ working: 'hours_30' }), true);
     assert.equal(classic.shouldSkipGoodCause({}), false);

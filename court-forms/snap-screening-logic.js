@@ -23,8 +23,9 @@
   const WORK_HOURS_COMPLIANCE = 30;
 
   const WORK_REASON_INCOME = 'Earn enough income to be exempt from the work rules';
-  const WORK_REASON_MEETING = 'Already working enough hours to meet the work rules';
-  const HOUSING_EXEMPT_REASON = 'No regular place to sleep, and DTA\u2019s unable-to-work factors apply';
+  const WORK_REASON_HOURS_30 = 'Work 30 or more hours a week while earning less than minimum wage';
+  const DISABILITY_OTHER_REASON = 'Get another disability benefit or payment DTA should review';
+  const HOUSING_EXEMPT_REASON = 'No regular place to sleep, and DTA should review unable-to-work factors';
 
   const HOUSING_OPTION_DEFS = [
     { id: 'diploma', labelClassic: 'I have a high school diploma (including GED or HiSet)', labelV2: 'I have a high school diploma (including GED or HiSet)' },
@@ -37,7 +38,7 @@
   const WORK_OPTION_DEFS = [
     { id: 'income_weekly', kind: 'income', label: 'I make $217.50 a week or more (before taxes)' },
     { id: 'hours_min_wage', kind: 'income', label: 'I work at least 14.5 hours a week at $15+ an hour' },
-    { id: 'hours_30', kind: 'meeting', label: 'I work 30 hours or more a week (I make less than minimum wage)' }
+    { id: 'hours_30', kind: 'income', label: 'I work 30 hours or more a week (I make less than minimum wage)' }
   ];
 
   const DISABILITY_OPTION_DEFS = [
@@ -47,10 +48,10 @@
     { id: 'pfml', label: 'Paid Family Medical Leave', exempt: true },
     { id: 'std', label: 'Short-term disability', exempt: true },
     { id: 'ssi_ssdi', label: 'SSI or SSDI', exempt: true },
-    { id: 'other', label: 'Other', exempt: false }
+    { id: 'other', label: 'Other disability benefit or payment', exempt: true, other: true }
   ];
 
-  const DISABILITY_OTHER_HELP = 'Only choose Other if you receive a disability benefit that is not listed above. Other alone does not count as an exemption.';
+  const DISABILITY_OTHER_HELP = 'Choose Other only if you receive a disability benefit or payment that is not listed above. Tell DTA the name of the benefit or payment so they can review it.';
 
   const GOODCAUSE_DEFS = {
     classic: {
@@ -84,10 +85,11 @@
       pregnant: { text: 'Are you pregnant?' },
       housing: { text: 'Do you have a regular place to sleep at night?', help: 'Choose "No" if you are experiencing homelessness or unstable housing.' },
       housingFollowup: { text: 'Please choose all that apply:', help: 'DTA looks at these when you do not have a regular place to sleep. They help decide whether you are unable to work under the ABAWD screening.', noneLabel: 'None of the above' },
-      dv: { text: 'Has a domestic violence or safety situation made it hard for you to work?', help: 'DTA has domestic violence specialists in each local office who can help. Your answer stays private.' },
+      dv: { text: 'Has domestic violence, stalking, sexual harassment, sexual assault, or another safety situation made it hard for you to work?', help: 'DTA has domestic violence specialists in each local office who can help. Your answer stays private.' },
       tribe: { text: 'Are you an Alaska Native or a member of an American Indian, Urban Indian, or California Indian tribe?', help: 'Choose "Yes" if you have a parent or grandparent who is a member of one of these tribes.' },
       tafdc: { text: 'Do you get, or are you applying for, TAFDC cash assistance benefits?' },
       disability: { text: 'Do you get any of these disability benefits?', noneLabel: 'None of the above' },
+      substanceUse: { text: 'Are you participating in a substance use treatment program?' },
       unemployment: { text: 'Do you get, or are you applying for, unemployment benefits?' },
       stateagency: { text: 'Do you get services from any of these state agencies?', help: 'MassAbility, Dept. of Mental Health, Dept. of Developmental Services, MA Commission for the Blind, or MA Commission for the Deaf and Hard of Hearing.' },
       school: { text: 'Are you enrolled in school half-time or more?', help: 'This includes high school, vocational/technical school, college, or any education and training program.' },
@@ -101,10 +103,11 @@
       pregnant: { text: 'Are you pregnant?' },
       housing: { text: 'Do you have a regular place to sleep at night?', help: 'Choose "No" if you do not have stable housing, or you are staying in a shelter, a car, or with different people.' },
       housingFollowup: { text: 'Which of these are true for you?', help: 'Pick every one that is true. DTA uses these when you do not have a regular place to sleep, to see if you are unable to work.', noneLabel: 'None of these' },
-      dv: { text: 'Has a safety problem at home made it hard for you to work?', help: 'DTA has domestic violence specialists in each local office who can help. Your answer stays private.' },
+      dv: { text: 'Has abuse, stalking, harassment, assault, or another safety problem made it hard for you to work?', help: 'This can include domestic violence, sexual harassment, sexual assault, or stalking. DTA has domestic violence specialists in each local office who can help. Your answer stays private.' },
       tribe: { text: 'Are you an Alaska Native, or a member of an American Indian, Urban Indian, or California Indian tribe?', help: 'Choose "Yes" if you have a parent or grandparent who is a member of one of these tribes.' },
       tafdc: { text: 'Do you get, or are you applying for, TAFDC cash assistance?' },
       disability: { text: 'Do you get any of these disability benefits?', help: 'Pick every one that is true for you. If none are, choose "None of these."', noneLabel: 'None of these' },
+      substanceUse: { text: 'Are you in a substance use treatment program?' },
       unemployment: { text: 'Do you get, or are you applying for, unemployment benefits?' },
       stateagency: { text: 'Do you get services from a Massachusetts state agency?', help: 'For example: MassAbility, Dept. of Mental Health, Dept. of Developmental Services, MA Commission for the Blind, or MA Commission for the Deaf and Hard of Hearing.' },
       school: { text: 'Are you in school half-time or more?', help: 'This includes high school, vocational/technical school, college, or any education and training program.' },
@@ -118,10 +121,11 @@
     child6: 'Take care of a child under 6 years old',
     caretaker: 'Take care of a child or adult who cannot care for themselves',
     pregnant: 'Pregnant',
-    dv: 'A domestic violence or safety situation',
+    dv: 'Domestic violence, stalking, sexual harassment, sexual assault, or another safety situation that affects work',
     tribe: 'Alaska Native or member of a Tribe',
     tafdc: 'Get or applying for TAFDC cash assistance',
     disability: 'Get disability benefits',
+    substanceUse: 'Participating in a substance use treatment program',
     unemployment: 'Get or applying for unemployment benefits',
     stateagency: 'Get services from a state agency',
     school: 'Enrolled in school half-time or more'
@@ -130,7 +134,7 @@
   const GROUPS = [
     { title: 'Children and people you care for', ids: ['child14', 'child6', 'caretaker', 'pregnant'] },
     { title: 'Your health, housing, and safety', ids: ['health', 'housing', 'housingFollowup', 'dv'] },
-    { title: 'Benefits and cash assistance', ids: ['tafdc', 'disability', 'unemployment', 'stateagency'] },
+    { title: 'Benefits, programs, and cash assistance', ids: ['tafdc', 'disability', 'substanceUse', 'unemployment', 'stateagency'] },
     { title: 'School, work, and background', ids: ['school', 'working', 'tribe'] }
   ];
 
@@ -172,6 +176,7 @@
         help: copy.disability.help ? copy.disability.help + ' ' + DISABILITY_OTHER_HELP : DISABILITY_OTHER_HELP,
         options: disabilityOpts, noneLabel: copy.disability.noneLabel, reason: REASONS.disability
       },
+      { id: 'substanceUse', type: 'yn', text: copy.substanceUse.text, exemptOn: 'yes', reason: REASONS.substanceUse },
       { id: 'unemployment', type: 'yn', text: copy.unemployment.text, exemptOn: 'yes', reason: REASONS.unemployment },
       { id: 'stateagency', type: 'yn', text: copy.stateagency.text, help: copy.stateagency.help, exemptOn: 'yes', reason: REASONS.stateagency },
       { id: 'school', type: 'yn', text: copy.school.text, help: copy.school.help, exemptOn: 'yes', reason: REASONS.school },
@@ -282,12 +287,22 @@
     return v.some(id => exemptIds.includes(id));
   }
 
+  function disabilityReasons(answers) {
+    const v = answers.disability;
+    if (!Array.isArray(v) || !v.length) return [];
+    const hasStandardBenefit = DISABILITY_OPTION_DEFS.some(o => o.exempt && !o.other && v.includes(o.id));
+    const out = [];
+    if (hasStandardBenefit) out.push(REASONS.disability);
+    if (v.includes('other')) out.push(DISABILITY_OTHER_REASON);
+    return out;
+  }
+
   function isIncomeWorkExempt(answers) {
     const w = answers.working;
     return w === 'income_weekly' || w === 'hours_min_wage';
   }
 
-  function isMeetingWork(answers) {
+  function isHours30WorkExempt(answers) {
     return answers.working === 'hours_30';
   }
 
@@ -299,9 +314,10 @@
       const v = answers[q.id];
       if (q.exemptOn && v === q.exemptOn) r.push(q.reason);
     }
-    if (disabilityExempt(answers)) r.push(REASONS.disability);
+    disabilityReasons(answers).forEach(reason => r.push(reason));
     if (housingUnableExempt(answers)) r.push(HOUSING_EXEMPT_REASON);
     if (isIncomeWorkExempt(answers)) r.push(WORK_REASON_INCOME);
+    if (isHours30WorkExempt(answers)) r.push(WORK_REASON_HOURS_30);
     return r;
   }
 
@@ -309,7 +325,6 @@
     if (answers.ageRange === 'no') return 'ageinfo';
     const exempt = exemptReasonsFor(answers, questions);
     if (exempt.length) return 'exempt';
-    if (isMeetingWork(answers)) return 'meeting';
     const g = answers.goodcause;
     if (g && g !== NONE) return 'goodcause';
     return 'notexempt';
@@ -317,7 +332,7 @@
 
   function shouldSkipGoodCause(answers, questions) {
     const rt = resultTypeFor(answers, questions);
-    return rt === 'exempt' || rt === 'meeting' || rt === 'ageinfo';
+    return rt === 'exempt' || rt === 'ageinfo';
   }
 
   function goodCauseText(answers, gcText) {
@@ -379,7 +394,8 @@
 
     let body;
     if (rt === 'exempt') {
-      const exemptReasons = rs.filter(r => r !== WORK_REASON_INCOME);
+      const specialReasons = [WORK_REASON_INCOME, WORK_REASON_HOURS_30, DISABILITY_OTHER_REASON, HOUSING_EXEMPT_REASON];
+      const exemptReasons = rs.filter(r => !specialReasons.includes(r));
       let inner = `<p style="margin:0 0 14px">Dear DTA,</p>
         <p style="margin:0 0 14px">I am writing to tell you about my situation regarding the SNAP ABAWD work rules. <strong>I believe I should not have to meet these work rules</strong> for the reason(s) below.</p>`;
       if (exemptReasons.length) {
@@ -387,12 +403,18 @@
         inner += `<ul style="margin:0 0 16px;padding-left:22px">${items}</ul>`;
       }
       if (rs.includes(WORK_REASON_INCOME)) {
-        inner += `<p style="margin:0 0 14px">I earn enough income to be exempt from the ABAWD work rules.</p>`;
+        inner += `<p style="margin:0 0 14px">I earn enough income to be exempt from the ABAWD work rules. I can send proof of my income and hours, such as pay stubs or a letter from my employer.</p>`;
+      }
+      if (rs.includes(WORK_REASON_HOURS_30)) {
+        inner += `<p style="margin:0 0 14px">I work 30 or more hours per week while earning less than minimum wage. I can send proof of my hours and pay.</p>`;
+      }
+      if (rs.includes(DISABILITY_OTHER_REASON)) {
+        inner += `<p style="margin:0 0 14px">I receive a disability benefit or payment that is not listed above. Please review it as part of my exemption screening.</p>`;
+      }
+      if (rs.includes(HOUSING_EXEMPT_REASON)) {
+        inner += `<p style="margin:0 0 14px">I do not have a regular place to sleep. Please review the information I provide about my situation to decide whether I am unable to work under the ABAWD screening.</p>`;
       }
       body = inner;
-    } else if (rt === 'meeting') {
-      body = `<p style="margin:0 0 14px">Dear DTA,</p>
-        <p style="margin:0 0 14px">I am writing to tell you about my situation regarding the SNAP ABAWD work rules. <strong>I am already meeting the work rules</strong> by working enough hours each week. Please update my case accordingly.</p>`;
     } else if (rt === 'goodcause') {
       body = `<p style="margin:0 0 14px">Dear DTA,</p>
         <p style="margin:0 0 14px">I am writing to tell you about my situation regarding the SNAP ABAWD work rules. <strong>I was not able to meet the work rules for one or more months</strong> because of the following good-cause reason:</p>
@@ -470,7 +492,8 @@
       WORK_HOURS_AT_MIN_WAGE,
       WORK_HOURS_COMPLIANCE,
       WORK_REASON_INCOME,
-      WORK_REASON_MEETING,
+      WORK_REASON_HOURS_30,
+      DISABILITY_OTHER_REASON,
       HOUSING_EXEMPT_REASON,
       QUESTIONS,
       GOODCAUSE,
@@ -501,7 +524,8 @@
     WORK_HOURS_AT_MIN_WAGE,
     WORK_HOURS_COMPLIANCE,
     WORK_REASON_INCOME,
-    WORK_REASON_MEETING,
+    WORK_REASON_HOURS_30,
+    DISABILITY_OTHER_REASON,
     HOUSING_EXEMPT_REASON,
     HOUSING_OPTION_DEFS,
     WORK_OPTION_DEFS,
@@ -510,8 +534,9 @@
     migrateAnswers,
     housingUnableExempt,
     disabilityExempt,
+    disabilityReasons,
     isIncomeWorkExempt,
-    isMeetingWork,
+    isHours30WorkExempt,
     exemptReasonsFor,
     resultTypeFor,
     shouldSkipGoodCause,

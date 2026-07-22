@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SNAP ABAWD Work Rules Screening · Court Forms Online</title>
-<meta name="description" content="A short, private screening to check whether the SNAP ABAWD work rules apply to you, or whether you are exempt or already meeting them.">
+<meta name="description" content="A short, private screening to check whether the SNAP ABAWD work rules apply to you, or whether you may be exempt or have good cause.">
 <link rel="stylesheet" href="fonts/atkinson.css">
 <style>
   :root{
@@ -178,7 +178,8 @@
 const S = SnapScreening.create('classic');
 const {
   QUESTIONS, GOODCAUSE, GC_TEXT, GROUPS, Q_BY_ID, NONE,
-  SCREENING_HUB_URL, WORK_REASON_INCOME, WORK_REASON_MEETING
+  SCREENING_HUB_URL, WORK_REASON_INCOME, WORK_REASON_HOURS_30,
+  DISABILITY_OTHER_REASON, HOUSING_EXEMPT_REASON
 } = S;
 
 /* ------------------------------------------------------------------ *
@@ -423,7 +424,7 @@ function renderIntro(){
     <h1 class="h1">Did DTA tell you that you need to meet ABAWD Work Rules to keep getting SNAP?</h1>
     <p style="font-size:16.5px;line-height:1.6;color:#3a424e;margin:0 0 14px">Some adults on SNAP ages 18 through 64 may have to meet ABAWD work rules to get SNAP for more than 3 months (federal rules may apply through December 2026). <strong>Many adults are exempt</strong> — meaning you don't have to meet the work rules to keep getting SNAP.</p>
     <p style="font-size:15px;line-height:1.6;color:#5b6470;margin:0 0 18px">These rules usually apply to adults ages 18–64. If you are outside this age group, talk to DTA or a legal aid program before relying on this screening.</p>
-    <p style="font-size:16.5px;line-height:1.6;color:#3a424e;margin:0 0 22px">This short screening asks a few questions to check whether the work rules apply to you, or whether you're exempt or already meeting them. It takes about 3 minutes.</p>
+    <p style="font-size:16.5px;line-height:1.6;color:#3a424e;margin:0 0 22px">This short screening asks a few questions to check whether the work rules apply to you, or whether you may be exempt or have good cause. It takes about 3 minutes.</p>
     <div style="display:flex;align-items:flex-start;gap:12px;background:var(--soft);border-radius:var(--radius);padding:15px 17px;margin-bottom:22px">
       <div style="font-size:18px;line-height:1.4;flex:none" aria-hidden="true">\u{1F512}</div>
       <p style="font-size:14.5px;line-height:1.55;color:#3a424e;margin:0">Your answers stay in your browser and are never sent to us. They are automatically cleared after 1 day, and you can delete them yourself at any time.</p>
@@ -509,7 +510,7 @@ function canStart(){ return state.agreed && (state.answers.ageRange === 'yes' ||
 function renderPage(){
   const lastGroup = !state.gc && state.step === GROUPS.length - 1;
   const nextLabel = (lastGroup || state.gc) ? 'See my results →' : 'Next →';
-  const skipWarn = lastGroup && !state.gc && reasons().length === 0 && resultType() !== 'meeting'
+  const skipWarn = lastGroup && !state.gc && reasons().length === 0
     ? `<p style="font-size:14.5px;line-height:1.55;color:#7a4a00;margin:16px 0 0;padding:12px 14px;background:#fff8e8;border:1px solid #ecd9a8;border-radius:var(--radius)">If you skipped questions, you may not see exemptions that apply to you.</p>`
     : '';
 
@@ -543,7 +544,9 @@ function renderResults(){
   let formPrompt = 'Explain your reasons in your own words';
   if(rs.includes('Have a health reason that makes it hard to work 30 or more hours a week')) formPrompt = 'Explain the health reason that makes it hard for you to work 30 or more hours a week';
   else if(rs.includes('Take care of a child or adult who cannot care for themselves')) formPrompt = 'Explain your caretaking responsibilities or arrangement';
-  else if(rt === 'meeting') formPrompt = 'Explain your work hours and how you are meeting the work rules';
+  else if(rs.includes(WORK_REASON_INCOME) || rs.includes(WORK_REASON_HOURS_30)) formPrompt = 'Explain your work hours, pay, and what proof you can send to DTA';
+  else if(rs.includes(DISABILITY_OTHER_REASON)) formPrompt = 'Name the disability benefit or payment you receive';
+  else if(rs.includes(HOUSING_EXEMPT_REASON)) formPrompt = 'Explain where you sleep and any barriers that make it hard to work';
   if(rt === 'goodcause') formPrompt = 'Explain why you had to miss work, school, or volunteer hours';
 
   const learnMore = `<p style="font-size:14.5px;margin:14px 0 0"><a href="${MLH_ABAWD_URL}" target="_blank" rel="noopener">Learn more about the SNAP ABAWD work rules</a></p>`;
@@ -559,19 +562,6 @@ function renderResults(){
         <p style="font-size:16px;line-height:1.6;color:#3a424e;margin:0 0 14px">You said you are not between 18 and 64. The ABAWD work rules usually apply to adults in that age range. You may still have other SNAP rights — contact DTA or a legal aid program to check your situation.</p>
         ${learnMore}
       </div></div>`;
-  } else if(rt === 'meeting'){
-    card = `<div style="border-radius:var(--radius);overflow:hidden;border:1px solid #cbe4d5">
-      <div style="background:#e6f4ec;padding:20px 22px;border-bottom:1px solid #cbe4d5">
-        <div style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#1f7a4d">Screening result</div>
-        <h2 class="h-result" style="color:#14532d">You appear to already be meeting the work rules</h2>
-      </div>
-      <div style="padding:20px 22px;background:#fff">
-        <p style="font-size:16px;line-height:1.6;color:#3a424e;margin:0 0 14px">Based on your answers, you are working enough hours to meet the ABAWD work rules. Keep reporting your work to DTA so your SNAP stays active.</p>
-        <ul style="list-style:none;padding:0;margin:0"><li style="display:flex;align-items:flex-start;gap:11px;font-size:16px;line-height:1.5;color:#1b1f27">
-          <span aria-hidden="true" style="width:22px;height:22px;border-radius:50%;background:#1f7a4d;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex:none;margin-top:1px">✓</span>
-          <span>${esc(WORK_REASON_MEETING)}</span></li></ul>
-        ${learnMore}
-      </div></div>`;
   } else if(rt === 'exempt'){
     const items = rs.map(r => `<li style="display:flex;align-items:flex-start;gap:11px;font-size:16px;line-height:1.5;color:#1b1f27">
       <span aria-hidden="true" style="width:22px;height:22px;border-radius:50%;background:#1f7a4d;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex:none;margin-top:1px">✓</span>
@@ -582,8 +572,9 @@ function renderResults(){
         <h2 class="h-result" style="color:#14532d">You appear to be exempt from the ABAWD work rules</h2>
       </div>
       <div style="padding:20px 22px;background:#fff">
-        <p style="font-size:16px;line-height:1.6;color:#3a424e;margin:0 0 14px">Based on your answers, you can keep getting SNAP without doing anything more for the work rules, because you:</p>
+        <p style="font-size:16px;line-height:1.6;color:#3a424e;margin:0 0 14px">Based on your answers, you may not have to meet the work rules. Tell DTA as soon as possible if one of these is true:</p>
         <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px">${items}</ul>
+        <p style="font-size:14.5px;line-height:1.6;color:#3a424e;margin:14px 0 0">If this is based on work, send proof of your income and hours, such as pay stubs or a letter. If this is based on housing or another disability benefit, tell DTA the details so they can review your exemption.</p>
         ${learnMore}
       </div></div>`;
   } else if(rt === 'goodcause'){
@@ -618,13 +609,14 @@ function renderResults(){
             <p style="margin:0;font-size:15.5px;line-height:1.55"><strong>Community service or volunteering</strong> a certain number of hours per month. The number depends on how much SNAP you get — DTA will tell you how many hours you need.</p>
           </div>
         </div>
+        <p style="font-size:14.5px;line-height:1.6;color:#3a424e;margin:16px 0 0">For paid work, send DTA proof of income and hours, such as pay stubs or an employer letter. For unpaid or in-kind work, send a statement or letter that explains the arrangement and hours. If your work hours go below 80 hours in a month, report that to DTA by the 10th day of the next month.</p>
         <p style="font-size:14.5px;line-height:1.6;color:#3a424e;margin:18px 0 0">If you already lost your SNAP because of the work rules, you can reapply at any time. Email <a href="mailto:info@masslegalservices.org">info@masslegalservices.org</a> if you lost or are about to lose SNAP because of these rules.</p>
         ${learnMore}
       </div></div>`;
   }
 
   let form = '';
-  if(rt === 'exempt' || rt === 'goodcause' || rt === 'meeting'){
+  if(rt === 'exempt' || rt === 'goodcause'){
     form = `<div style="margin:26px 0 0;padding:22px;background:#fff;border:1px solid #dfe3ea;border-radius:var(--radius)">
       <h3 style="font-size:19px;margin:0 0 6px">Send a statement to DTA</h3>
       <p style="font-size:14.5px;line-height:1.55;color:#5b6470;margin:0 0 18px">Fill in the blanks below. When you print or download, you will get a signed letter you can mail, fax, or upload to DTA. <em>What you type here is not saved on this device — print or download to keep a copy.</em></p>

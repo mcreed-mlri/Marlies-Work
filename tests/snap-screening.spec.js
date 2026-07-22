@@ -29,17 +29,17 @@ test.describe('SNAP ABAWD screening — classic', () => {
   test('exempt path — child under 14', async ({ page }) => {
     await agreeAndStart(page);
     await clickYn(page, 'child under 14', 'Yes');
-    for (let i = 0; i < 3; i++) await clickNext(page);
+    for (let i = 0; i < 4; i++) await clickNext(page);
     await expect(page.getByRole('heading', { name: /exempt from the ABAWD work rules/i })).toBeVisible();
   });
 
-  test('meeting path — 30+ hours', async ({ page }) => {
+  test('30+ hours below minimum wage routes to exempt', async ({ page }) => {
     await agreeAndStart(page);
     for (let i = 0; i < 3; i++) await clickNext(page);
     await page.getByRole('radio', { name: /30 hours or more/i }).click();
     await clickNext(page);
-    await clickNext(page);
-    await expect(page.getByRole('heading', { name: /already be meeting the work rules/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /exempt from the ABAWD work rules/i })).toBeVisible();
+    await expect(page.getByText(/30 or more hours/i)).toBeVisible();
   });
 
   test('age outside range shows ageinfo', async ({ page }) => {
@@ -50,7 +50,7 @@ test.describe('SNAP ABAWD screening — classic', () => {
   test('delete answers clears storage', async ({ page }) => {
     await agreeAndStart(page);
     await clickYn(page, 'child under 14', 'Yes');
-    for (let i = 0; i < 3; i++) await clickNext(page);
+    for (let i = 0; i < 4; i++) await clickNext(page);
     await page.getByRole('button', { name: /Delete my answers/i }).click();
     await expect(page.getByRole('heading', { name: /ABAWD Work Rules/i })).toBeVisible();
     const stored = await page.evaluate(() => localStorage.getItem('cfo-abawd-screening-v1'));

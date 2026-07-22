@@ -228,7 +228,8 @@
 const S = SnapScreening.create('v2');
 const {
   QUESTIONS, GOODCAUSE, GC_TEXT, GROUPS, Q_BY_ID, NONE,
-  SCREENING_HUB_URL, WORK_REASON_INCOME, WORK_REASON_MEETING
+  SCREENING_HUB_URL, WORK_REASON_INCOME, WORK_REASON_HOURS_30,
+  DISABILITY_OTHER_REASON, HOUSING_EXEMPT_REASON
 } = S;
 
 /* ------------------------------------------------------------------ *
@@ -606,7 +607,7 @@ function renderQBlock(q){
 function renderPage(){
   const lastGroup = !state.gc && state.step === GROUPS.length - 1;
   const nextLabel = (lastGroup || state.gc) ? 'See my answer →' : 'Next →';
-  const skipWarn = lastGroup && !state.gc && reasons().length === 0 && resultType() !== 'meeting'
+  const skipWarn = lastGroup && !state.gc && reasons().length === 0
     ? `<p style="font-size:15px;line-height:1.55;color:#7a4a00;margin:16px 0 0;padding:14px 16px;background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:14px">If you skipped questions, you may not see exemptions that apply to you.</p>`
     : '';
 
@@ -639,7 +640,9 @@ function renderResults(){
   let formPrompt = 'Explain your reasons in your own words';
   if(rs.includes('Have a health reason that makes it hard to work 30 or more hours a week')) formPrompt = 'Explain the health reason that makes it hard for you to work 30 or more hours a week';
   else if(rs.includes('Take care of a child or adult who cannot care for themselves')) formPrompt = 'Explain your caretaking responsibilities or arrangement';
-  else if(rt === 'meeting') formPrompt = 'Explain your work hours and how you are meeting the work rules';
+  else if(rs.includes(WORK_REASON_INCOME) || rs.includes(WORK_REASON_HOURS_30)) formPrompt = 'Explain your work hours, pay, and what proof you can send to DTA';
+  else if(rs.includes(DISABILITY_OTHER_REASON)) formPrompt = 'Name the disability benefit or payment you receive';
+  else if(rs.includes(HOUSING_EXEMPT_REASON)) formPrompt = 'Explain where you sleep and any barriers that make it hard to work';
   if(rt === 'goodcause') formPrompt = 'Explain why you had to miss work, school, or volunteer hours';
 
   const learnMore = `<p style="font-size:16px;margin:16px 0 0"><a href="${MLH_ABAWD_URL}" target="_blank" rel="noopener">Learn more about the SNAP work rules</a></p>`;
@@ -658,22 +661,6 @@ function renderResults(){
         <p style="font-size:17px;line-height:1.6;color:#37414f;margin:0 0 16px">You said you are not between 18 and 64. The ABAWD work rules usually apply to adults in that age range. Contact DTA or a legal aid program to check your situation.</p>
         ${learnMore}
       </div></div>`;
-  } else if(rt === 'meeting'){
-    card = `<div style="border-radius:20px;overflow:hidden;border:1px solid var(--green-bd);box-shadow:0 1px 3px rgba(16,32,56,.08)">
-      <div class="result-head" style="background:var(--green-bg);border-bottom:1px solid var(--green-bd)">
-        <span aria-hidden="true" style="width:52px;height:52px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;flex:none"><i data-lucide="check" class="icon-result"></i></span>
-        <div>
-          <div style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--green)">Your answer</div>
-          <h2 class="h-result" style="color:#14532d">You already meet the work rules</h2>
-        </div>
-      </div>
-      <div class="result-body">
-        <p style="font-size:17px;line-height:1.6;color:#37414f;margin:0 0 16px">You are working enough hours to meet the ABAWD work rules. Keep reporting your work to DTA so your SNAP stays active.</p>
-        <ul style="list-style:none;padding:0;margin:0"><li style="display:flex;align-items:flex-start;gap:12px;font-size:17px;line-height:1.5;color:var(--ink)">
-          <span aria-hidden="true" style="width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;display:inline-flex;align-items:center;justify-content:center;flex:none;margin-top:1px"><i data-lucide="check" style="width:14px;height:14px;stroke-width:3"></i></span>
-          <span>${esc(WORK_REASON_MEETING)}</span></li></ul>
-        ${learnMore}
-      </div></div>`;
   } else if(rt === 'exempt'){
     const items = rs.map(r => `<li style="display:flex;align-items:flex-start;gap:12px;font-size:17px;line-height:1.5;color:var(--ink)">
       <span aria-hidden="true" style="width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;display:inline-flex;align-items:center;justify-content:center;flex:none;margin-top:1px"><i data-lucide="check" style="width:14px;height:14px;stroke-width:3"></i></span>
@@ -687,8 +674,9 @@ function renderResults(){
         </div>
       </div>
       <div class="result-body">
-        <p style="font-size:17px;line-height:1.6;color:#37414f;margin:0 0 16px">You can keep your SNAP without doing anything more for the work rules, because you:</p>
+        <p style="font-size:17px;line-height:1.6;color:#37414f;margin:0 0 16px">You may not have to meet the work rules. Tell DTA as soon as you can if one of these is true:</p>
         <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px">${items}</ul>
+        <p style="font-size:16px;line-height:1.6;color:#37414f;margin:16px 0 0">If this is based on work, send proof of your income and hours, such as pay stubs or a letter. If this is based on housing or another disability benefit, tell DTA the details so they can review your exemption.</p>
         ${learnMore}
       </div></div>`;
   } else if(rt === 'goodcause'){
@@ -729,13 +717,14 @@ function renderResults(){
             <p style="margin:0;font-size:16.5px;line-height:1.55"><strong>Volunteer</strong> a set number of hours each month. The number depends on how much SNAP you get — DTA will tell you how many hours.</p>
           </div>
         </div>
+        <p style="font-size:16px;line-height:1.6;color:#37414f;margin:18px 0 0">For paid work, send DTA proof of income and hours, such as pay stubs or an employer letter. For unpaid or in-kind work, send a statement or letter that explains the arrangement and hours. If your work hours go below 80 hours in a month, report that to DTA by the 10th day of the next month.</p>
         <p style="font-size:16px;line-height:1.6;color:#37414f;margin:20px 0 0;overflow-wrap:anywhere">Already lost your SNAP because of the work rules? You can apply again any time. Email <a href="mailto:info@masslegalservices.org">info@masslegalservices.org</a> if you lost or are about to lose SNAP because of these rules.</p>
         ${learnMore}
       </div></div>`;
   }
 
   let form = '';
-  if(rt === 'exempt' || rt === 'goodcause' || rt === 'meeting'){
+  if(rt === 'exempt' || rt === 'goodcause'){
     form = `<div class="card-box" style="margin:22px 0 0">
       <h3 style="font-size:21px;margin:0 0 6px">Send a statement to DTA</h3>
       <p style="font-size:16px;line-height:1.55;color:var(--muted);margin:0 0 18px">Fill in the blanks below. When you print or download, you will get a signed letter you can mail, fax, or upload to DTA. <em>What you type here is not saved on this device — print or download to keep a copy.</em></p>
@@ -1067,7 +1056,7 @@ function updateStartBtn(){
 
 /* ------------------------------------------------------------------ *
  * Sample previews (demo only)
- * ?sample=exempt | goodcause | notexempt | meeting jumps straight to a sample
+ * ?sample=exempt | goodcause | notexempt jumps straight to a sample
  * result screen, reusing the real result rendering so a sample can
  * never drift from the tool. Nothing is saved in this mode.
  * ------------------------------------------------------------------ */
@@ -1078,7 +1067,7 @@ function applySampleFromURL(){
   if(p === 'exempt') state.answers = { child14:'yes', health:'yes' };
   else if(p === 'goodcause') state.answers = { goodcause:'transport' };
   else if(p === 'notexempt') state.answers = { goodcause: NONE };
-  else if(p === 'meeting') state.answers = { working: 'hours_30' };
+  else if(p === 'meeting') state.answers = { working: 'hours_30' }; // legacy sample URL now shows the work-hours exemption.
   else return false;
   SAMPLE_MODE = true;
   state.view = 'results';
