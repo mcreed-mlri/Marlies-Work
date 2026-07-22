@@ -440,8 +440,8 @@ function renderIntro(){
     </details>
 
     <fieldset style="border:1px solid #dfe3ea;border-radius:var(--radius);padding:15px 17px;margin:0 0 18px;background:#fff">
-      <legend style="font-size:15px;font-weight:700;padding:0 6px">Before you start</legend>
-      <p style="font-size:15px;line-height:1.55;color:#3a424e;margin:0 0 12px">Are you between 18 and 64 years old?</p>
+      <legend style="display:block;float:left;width:100%;font-size:15px;font-weight:700;padding:0;margin:0 0 13px;color:var(--ink)">Before you start</legend>
+      <p style="clear:both;font-size:15px;line-height:1.55;color:#3a424e;margin:0 0 12px">Are you between 18 and 64 years old?</p>
       <div role="radiogroup" aria-label="Are you between 18 and 64 years old?" style="display:flex;flex-direction:column;gap:10px">
         <label style="display:flex;gap:10px;align-items:center;font-size:15px;cursor:pointer"><input type="radio" name="ageRange" value="yes" ${state.answers.ageRange === 'yes' ? 'checked' : ''} style="width:18px;height:18px;accent-color:var(--accent)"> Yes</label>
         <label style="display:flex;gap:10px;align-items:center;font-size:15px;cursor:pointer"><input type="radio" name="ageRange" value="no" ${state.answers.ageRange === 'no' ? 'checked' : ''} style="width:18px;height:18px;accent-color:var(--accent)"> No</label>
