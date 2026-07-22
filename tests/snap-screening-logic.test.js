@@ -138,7 +138,8 @@ describe('snap-screening-logic', () => {
     assert.match(html, /not an official DTA form/);
     assert.match(html, /Dear DTA,/);
     assert.match(html, /Jane Doe/);
-    assert.match(html, /How to send this statement/);
+    assert.match(html, /break-inside:avoid/);
+    assert.doesNotMatch(html, /How to send this statement/);
     assert.doesNotMatch(html, /SAMPLE - draft/);
   });
 });

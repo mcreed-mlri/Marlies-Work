@@ -433,13 +433,13 @@
       : `<div style="border-bottom:1px solid #111;height:56px;width:320px;max-width:100%;margin:0 0 4px"></div>`;
 
     return `<div style="font-family:'Atkinson Hyperlegible',Georgia,'Times New Roman',serif;color:#111;max-width:6.5in;margin:0 auto;font-size:11.5pt;line-height:1.55">
-      <div style="border-bottom:2px solid #111;padding-bottom:14px;margin-bottom:22px">
+      <div style="border-bottom:2px solid #111;padding-bottom:14px;margin-bottom:22px;break-inside:avoid;page-break-inside:avoid">
         <div style="font-size:10pt;letter-spacing:.04em;text-transform:uppercase;color:#444;margin-bottom:4px">Statement to DTA</div>
         <div style="font-size:17pt;font-weight:700;line-height:1.25;color:#111">SNAP ABAWD Work Rules — Client Statement</div>
         <div style="font-size:10pt;color:#555;margin-top:6px">Prepared by the SNAP recipient (not an official DTA form)</div>
       </div>
 
-      <table style="width:100%;border-collapse:collapse;margin:0 0 22px;font-size:11pt">
+      <table style="width:100%;border-collapse:collapse;margin:0 0 22px;font-size:11pt;break-inside:avoid;page-break-inside:avoid">
         ${addrRow('Date', today)}
         ${addrRow('To', 'Massachusetts Department of Transitional Assistance (DTA)')}
         ${addrRow('From', name)}
@@ -449,29 +449,19 @@
 
       ${body}
 
-      <div style="margin:20px 0 0">
+      <div style="margin:20px 0 0;break-inside:avoid;page-break-inside:avoid">
         <div style="font-weight:700;margin:0 0 8px;font-size:11pt">Additional information (in my own words)</div>
         <div style="border:1px solid #999;padding:12px 14px;min-height:72px;white-space:pre-wrap;background:#fff">${explainContent}</div>
       </div>
 
-      <div style="margin:28px 0 0">
+      <div style="margin:28px 0 0;break-inside:avoid;page-break-inside:avoid">
         <p style="margin:0 0 18px">Sincerely,</p>
         ${sigBlock}
         <div style="font-size:11pt;margin:0 0 2px">${name ? esc(name) : 'Printed name: _________________________________'}</div>
         <div style="font-size:10.5pt;color:#444">Date signed: ${today ? esc(today) : '________________'}</div>
       </div>
 
-      <div style="margin:28px 0 0;padding:14px 16px;border:1px solid #ccc;background:#f9f9f9;font-size:10pt;line-height:1.5">
-        <div style="font-weight:700;margin:0 0 8px;text-transform:uppercase;letter-spacing:.03em;font-size:9.5pt">How to send this statement</div>
-        <ul style="margin:0;padding-left:18px">
-          <li style="margin:0 0 4px">Upload at <span style="word-break:break-all">${esc(DTA_SUBMISSION.connectUrl)}</span></li>
-          <li style="margin:0 0 4px">Mail: ${esc(DTA_SUBMISSION.mail)}</li>
-          <li style="margin:0 0 4px">Fax: ${esc(DTA_SUBMISSION.fax)}</li>
-          <li style="margin:0">Call the DTA Assistance Line: ${esc(DTA_SUBMISSION.phone)}</li>
-        </ul>
-      </div>
-
-      <p style="font-size:9pt;color:#666;margin:20px 0 0;padding-top:10px;border-top:1px solid #ccc;line-height:1.45">Prepared with the Court Forms Online SNAP work-rules screening tool. This document is based on the answers provided and is general information, not legal advice.</p>
+      <p style="font-size:9pt;color:#666;margin:20px 0 0;padding-top:10px;border-top:1px solid #ccc;line-height:1.45;break-inside:avoid;page-break-inside:avoid">Prepared with the Court Forms Online SNAP work-rules screening tool. This document is based on the answers provided and is general information, not legal advice.</p>
     </div>`;
   }
 
