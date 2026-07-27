@@ -174,7 +174,7 @@
 <script>
 "use strict";
 
-/* Shared screening logic — see snap-screening-logic.js */
+/* Shared screening logic (see snap-screening-logic.js) */
 const S = SnapScreening.create('classic');
 const {
   QUESTIONS, GOODCAUSE, GC_TEXT, GROUPS, Q_BY_ID, NONE,
@@ -204,7 +204,7 @@ function persist(){
       view:state.view, step:state.step, gc:state.gc,
       agreed:state.agreed, answers:state.answers, savedAt:Date.now()
     }));
-  }catch(e){ /* storage unavailable / full — fail quietly */ }
+  }catch(e){ /* storage unavailable or full; fail quietly */ }
 }
 
 function loadPersisted(){
@@ -422,7 +422,7 @@ function animClass(){ return state.animate ? 'card-in' : ''; }
 function renderIntro(){
   return `<div class="${animClass()}">
     <h1 class="h1">Did DTA tell you that you need to meet ABAWD Work Rules to keep getting SNAP?</h1>
-    <p style="font-size:16.5px;line-height:1.6;color:#3a424e;margin:0 0 14px">Some adults on SNAP ages 18 through 64 may have to meet ABAWD work rules to get SNAP for more than 3 months (federal rules may apply through December 2026). <strong>Many adults are exempt</strong> — meaning you don't have to meet the work rules to keep getting SNAP.</p>
+    <p style="font-size:16.5px;line-height:1.6;color:#3a424e;margin:0 0 14px">Some adults on SNAP ages 18 through 64 may have to meet ABAWD work rules to get SNAP for more than 3 months (federal rules may apply through December 2026). <strong>Many adults are exempt.</strong> That means you don't have to meet the work rules to keep getting SNAP.</p>
     <p style="font-size:15px;line-height:1.6;color:#5b6470;margin:0 0 18px">These rules usually apply to adults ages 18–64. If you are outside this age group, talk to DTA or a legal aid program before relying on this screening.</p>
     <p style="font-size:16.5px;line-height:1.6;color:#3a424e;margin:0 0 22px">This short screening asks a few questions to check whether the work rules apply to you, or whether you may be exempt or have good cause. It takes about 3 minutes.</p>
     <div style="display:flex;align-items:flex-start;gap:12px;background:var(--soft);border-radius:var(--radius);padding:15px 17px;margin-bottom:22px">
@@ -516,7 +516,7 @@ function renderPage(){
 
   const header = state.gc ? '' : `<div style="margin:0 0 18px">
     <h2 class="h2">${esc(curGroup().title)}</h2>
-    <p style="font-size:15.5px;line-height:1.55;color:#3a424e;margin:8px 0 0">Answer any that apply to you — every question is optional.</p>
+    <p style="font-size:15.5px;line-height:1.55;color:#3a424e;margin:8px 0 0">Answer any that apply to you. Every question is optional.</p>
   </div>`;
 
   const blocks = pageQuestions().map(renderQBlock).join('');
@@ -530,7 +530,7 @@ function renderPage(){
     </div>
     <div style="text-align:center;margin-top:14px">
       ${skipWarn}
-      <button type="button" data-action="skip-end" style="font-family:inherit;font-size:14.5px;font-weight:700;color:#5b6470;background:none;border:none;padding:6px 8px;cursor:pointer;text-decoration:underline;text-underline-offset:3px">Skip questions — go to results</button>
+      <button type="button" data-action="skip-end" style="font-family:inherit;font-size:14.5px;font-weight:700;color:#5b6470;background:none;border:none;padding:6px 8px;cursor:pointer;text-decoration:underline;text-underline-offset:3px">Skip to results</button>
     </div>
   </div>`;
 }
@@ -559,7 +559,7 @@ function renderResults(){
         <h2 class="h-result" style="color:var(--accent-dark)">These work rules may not apply to your age group</h2>
       </div>
       <div style="padding:20px 22px;background:#fff">
-        <p style="font-size:16px;line-height:1.6;color:#3a424e;margin:0 0 14px">You said you are not between 18 and 64. The ABAWD work rules usually apply to adults in that age range. You may still have other SNAP rights — contact DTA or a legal aid program to check your situation.</p>
+        <p style="font-size:16px;line-height:1.6;color:#3a424e;margin:0 0 14px">You said you are not between 18 and 64. The ABAWD work rules usually apply to adults in that age range. You may still have other SNAP rights. Contact DTA or a legal aid program to check your situation.</p>
         ${learnMore}
       </div></div>`;
   } else if(rt === 'exempt'){
@@ -606,7 +606,7 @@ function renderResults(){
           </div>
           <div style="display:flex;gap:13px;align-items:flex-start;padding:15px 16px;border:1px solid #eee2c4;border-radius:var(--radius);background:#fffdf7">
             <span aria-hidden="true" style="width:26px;height:26px;border-radius:50%;background:#9a6a00;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none">2</span>
-            <p style="margin:0;font-size:15.5px;line-height:1.55"><strong>Community service or volunteering</strong> a certain number of hours per month. The number depends on how much SNAP you get — DTA will tell you how many hours you need.</p>
+            <p style="margin:0;font-size:15.5px;line-height:1.55"><strong>Community service or volunteering</strong> a certain number of hours per month. The number depends on how much SNAP you get. DTA will tell you how many hours you need.</p>
           </div>
         </div>
         <p style="font-size:14.5px;line-height:1.6;color:#3a424e;margin:16px 0 0">For paid work, send DTA proof of income and hours, such as pay stubs or an employer letter. For unpaid or in-kind work, send a statement or letter that explains the arrangement and hours. If your work hours go below 80 hours in a month, report that to DTA by the 10th day of the next month.</p>
@@ -619,7 +619,7 @@ function renderResults(){
   if(rt === 'exempt' || rt === 'goodcause'){
     form = `<div style="margin:26px 0 0;padding:22px;background:#fff;border:1px solid #dfe3ea;border-radius:var(--radius)">
       <h3 style="font-size:19px;margin:0 0 6px">Send a statement to DTA</h3>
-      <p style="font-size:14.5px;line-height:1.55;color:#5b6470;margin:0 0 18px">Fill in the blanks below. When you print or download, you will get a signed letter you can mail, fax, or upload to DTA. <em>What you type here is not saved on this device — print or download to keep a copy.</em></p>
+      <p style="font-size:14.5px;line-height:1.55;color:#5b6470;margin:0 0 18px">Fill in the blanks below. When you print or download, you will get a signed letter you can mail, fax, or upload to DTA. <em>What you type here is not saved on this device. Print or download to keep a copy.</em></p>
       <label for="f-explain" style="display:block;font-size:14.5px;font-weight:700;margin:0 0 7px">Additional information (in your own words)</label>
       <p style="font-size:14px;line-height:1.5;color:#5b6470;margin:0 0 8px">${esc(formPrompt)}</p>
       <textarea id="f-explain" rows="4" placeholder="Type here…" style="width:100%;font-family:inherit;font-size:16px;line-height:1.5;padding:11px 13px;border:1.5px solid #cdd3dc;border-radius:calc(var(--radius) - 3px);resize:vertical"></textarea>
@@ -766,7 +766,7 @@ function printForm(){
   window.addEventListener('afterprint', cleanup, { once:true });
   document.body.classList.add('printing-form');
   // Wait a frame so the signature <img> can decode before the print snapshot.
-  // Do not clear printing-form on a short timer — Chrome returns from print()
+  // Do not clear printing-form on a short timer. Chrome returns from print()
   // immediately, and a 2s cleanup was wiping the form mid Save-as-PDF.
   requestAnimationFrame(() => {
     requestAnimationFrame(() => { window.print(); });
@@ -857,7 +857,7 @@ document.addEventListener('click', (e) => {
   if(kind){
     const q = qById(btn.getAttribute('data-q-id'));
     if(!q) return;
-    // Selecting an answer no longer moves you forward — use Next when ready.
+    // Selecting an answer no longer moves you forward. Use Next when ready.
     if(kind === 'yn'){
       setAns(q.id, btn.getAttribute('data-opt-val'));
       if(q.id === 'housing' && btn.getAttribute('data-opt-val') !== 'no'){
@@ -915,7 +915,7 @@ document.addEventListener('click', (e) => {
   }
 });
 
-// Terms of Use consent toggle — enable/disable Start without a full re-render
+// Terms of Use consent toggle: enable/disable Start without a full re-render
 // so the checkbox keeps focus.
 document.addEventListener('change', (e) => {
   if(e.target && e.target.id === 'agree'){

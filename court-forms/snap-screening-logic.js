@@ -435,7 +435,7 @@
     return `<div style="font-family:'Atkinson Hyperlegible',Georgia,'Times New Roman',serif;color:#111;max-width:6.5in;margin:0 auto;font-size:11.5pt;line-height:1.55">
       <div style="border-bottom:2px solid #111;padding-bottom:14px;margin-bottom:22px;break-inside:avoid;page-break-inside:avoid">
         <div style="font-size:10pt;letter-spacing:.04em;text-transform:uppercase;color:#444;margin-bottom:4px">Statement to DTA</div>
-        <div style="font-size:17pt;font-weight:700;line-height:1.25;color:#111">SNAP ABAWD Work Rules — Client Statement</div>
+        <div style="font-size:17pt;font-weight:700;line-height:1.25;color:#111">SNAP ABAWD Work Rules: Client Statement</div>
         <div style="font-size:10pt;color:#555;margin-top:6px">Prepared by the SNAP recipient (not an official DTA form)</div>
       </div>
 

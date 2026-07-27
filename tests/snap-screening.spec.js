@@ -76,7 +76,7 @@ test.describe('SNAP ABAWD screening — v2', () => {
   test('skip questions routes to good-cause when no exemptions', async ({ page }) => {
     await page.goto(v2Url);
     await agreeAndStart(page);
-    await page.getByRole('button', { name: /Skip questions/i }).click();
+    await page.getByRole('button', { name: /Skip to results/i }).click();
     await expect(page.getByRole('heading', { name: /hard to work, go to school, or volunteer/i })).toBeVisible();
   });
 });

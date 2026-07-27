@@ -251,7 +251,7 @@ function persist(){
       view:state.view, step:state.step, gc:state.gc,
       agreed:state.agreed, answers:state.answers, savedAt:Date.now()
     }));
-  }catch(e){ /* storage unavailable / full — fail quietly */ }
+  }catch(e){ /* storage unavailable or full; fail quietly */ }
 }
 
 function loadPersisted(){
@@ -613,7 +613,7 @@ function renderPage(){
 
   const header = state.gc ? '' : `<div style="margin:0 0 18px">
     <h2 class="h-q">${esc(curGroup().title)}</h2>
-    <p class="lead" style="margin:8px 0 0">Answer any that apply to you — every question is optional.</p>
+    <p class="lead" style="margin:8px 0 0">Answer any that apply to you. Every question is optional.</p>
   </div>`;
 
   const blocks = pageQuestions().map(renderQBlock).join('');
@@ -627,7 +627,7 @@ function renderPage(){
     </div>
     <div style="text-align:center;margin-top:14px">
       ${skipWarn}
-      <button type="button" data-action="skip-end" style="font-family:inherit;font-size:15px;font-weight:700;color:var(--muted);background:none;border:none;padding:6px 8px;cursor:pointer;text-decoration:underline;text-underline-offset:3px">Skip questions — go to results</button>
+      <button type="button" data-action="skip-end" style="font-family:inherit;font-size:15px;font-weight:700;color:var(--muted);background:none;border:none;padding:6px 8px;cursor:pointer;text-decoration:underline;text-underline-offset:3px">Skip to results</button>
     </div>
   </div>`;
 }
@@ -670,7 +670,7 @@ function renderResults(){
         <span aria-hidden="true" style="width:52px;height:52px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;flex:none"><i data-lucide="check" class="icon-result"></i></span>
         <div>
           <div style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--green)">Your answer</div>
-          <h2 class="h-result" style="color:#14532d">Good news — you do not have to meet the work rules</h2>
+          <h2 class="h-result" style="color:#14532d">Good news: you do not have to meet the work rules</h2>
         </div>
       </div>
       <div class="result-body">
@@ -714,7 +714,7 @@ function renderResults(){
           </div>
           <div style="display:flex;gap:14px;align-items:flex-start;padding:18px 18px;border:1px solid #eee2c4;border-radius:16px;background:#fffdf7">
             <span aria-hidden="true" style="width:30px;height:30px;border-radius:50%;background:#9a6a00;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none">2</span>
-            <p style="margin:0;font-size:16.5px;line-height:1.55"><strong>Volunteer</strong> a set number of hours each month. The number depends on how much SNAP you get — DTA will tell you how many hours.</p>
+            <p style="margin:0;font-size:16.5px;line-height:1.55"><strong>Volunteer</strong> a set number of hours each month. The number depends on how much SNAP you get. DTA will tell you how many hours.</p>
           </div>
         </div>
         <p style="font-size:16px;line-height:1.6;color:#37414f;margin:18px 0 0">For paid work, send DTA proof of income and hours, such as pay stubs or an employer letter. For unpaid or in-kind work, send a statement or letter that explains the arrangement and hours. If your work hours go below 80 hours in a month, report that to DTA by the 10th day of the next month.</p>
@@ -727,7 +727,7 @@ function renderResults(){
   if(rt === 'exempt' || rt === 'goodcause'){
     form = `<div class="card-box" style="margin:22px 0 0">
       <h3 style="font-size:21px;margin:0 0 6px">Send a statement to DTA</h3>
-      <p style="font-size:16px;line-height:1.55;color:var(--muted);margin:0 0 18px">Fill in the blanks below. When you print or download, you will get a signed letter you can mail, fax, or upload to DTA. <em>What you type here is not saved on this device — print or download to keep a copy.</em></p>
+      <p style="font-size:16px;line-height:1.55;color:var(--muted);margin:0 0 18px">Fill in the blanks below. When you print or download, you will get a signed letter you can mail, fax, or upload to DTA. <em>What you type here is not saved on this device. Print or download to keep a copy.</em></p>
       <label for="f-explain" style="display:block;font-size:16px;font-weight:700;margin:0 0 8px">Additional information (in your own words)</label>
       <p style="font-size:15px;line-height:1.5;color:var(--muted);margin:0 0 10px">${esc(formPrompt)}</p>
       <textarea id="f-explain" rows="4" placeholder="Type here…" style="width:100%;font-family:inherit;font-size:16px;line-height:1.5;padding:12px 14px;border:1.5px solid #cdd3dc;border-radius:10px;resize:vertical"></textarea>
@@ -880,7 +880,7 @@ function printForm(){
   window.addEventListener('afterprint', cleanup, { once:true });
   document.body.classList.add('printing-form');
   // Wait a frame so the signature <img> can decode before the print snapshot.
-  // Do not clear printing-form on a short timer — Chrome returns from print()
+  // Do not clear printing-form on a short timer. Chrome returns from print()
   // immediately, and a 2s cleanup was wiping the form mid Save-as-PDF.
   requestAnimationFrame(() => {
     requestAnimationFrame(() => { window.print(); });
@@ -970,7 +970,7 @@ document.addEventListener('click', (e) => {
   if(kind){
     const q = qById(btn.getAttribute('data-q-id'));
     if(!q) return;
-    // Selecting an answer no longer moves you forward — use Next when ready.
+    // Selecting an answer no longer moves you forward. Use Next when ready.
     if(kind === 'yn'){
       setAns(q.id, btn.getAttribute('data-opt-val'));
       if(q.id === 'housing' && btn.getAttribute('data-opt-val') !== 'no'){
@@ -1079,7 +1079,7 @@ function applySampleFromURL(){
 function sampleBanner(){
   return `<div class="no-print" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:14px;padding:14px 18px;margin:0 0 18px">
     <span style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#7a5a12">Sample result</span>
-    <span style="font-size:16px;line-height:1.5;color:var(--amber-ink);flex:1;min-width:200px">An example of one outcome — no questions were answered, and nothing is saved.</span>
+    <span style="font-size:16px;line-height:1.5;color:var(--amber-ink);flex:1;min-width:200px">An example of one outcome. No questions were answered, and nothing is saved.</span>
     <span style="display:flex;gap:14px"><a href="snap-screening.html" style="font-weight:700">← All samples</a><a href="snap-screening-v2.html" style="font-weight:700">Try it for real →</a></span>
   </div>`;
 }
