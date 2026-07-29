@@ -4,7 +4,7 @@ const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
 const SnapScreening = require('../court-forms/snap-screening-logic.js');
 
-const { NONE, WORK_REASON_INCOME, WORK_REASON_HOURS_30, DISABILITY_OTHER_REASON, HOUSING_EXEMPT_REASON, LINKS, RESULT_COPY, buildDtaContactsHtml, create, migrateAnswers, resultTypeFor, exemptReasonsFor, housingUnableExempt, buildQuestions, statementPromptsFor, goodCauseCategories } = SnapScreening;
+const { NONE, WORK_REASON_INCOME, WORK_REASON_HOURS_30, DISABILITY_OTHER_REASON, HOUSING_EXEMPT_REASON, LINKS, RESULT_COPY, buildDtaContactsHtml, buildResultsEmailContent, create, migrateAnswers, resultTypeFor, exemptReasonsFor, housingUnableExempt, buildQuestions, statementPromptsFor, goodCauseCategories } = SnapScreening;
 
 describe('snap-screening-logic', () => {
   const classic = create('classic');
@@ -247,9 +247,24 @@ describe('snap-screening-logic', () => {
     assert.doesNotMatch(html, /No additional explanation provided/);
   });
 
+  it('buildResultsEmailContent summarizes exempt results for mailto', () => {
+    const { subject, body } = buildResultsEmailContent({
+      rt: 'exempt',
+      rs: ['Pregnant'],
+      name: 'Jane Doe',
+      explain: [{ prompt: 'Explain pregnancy', text: 'Due in March.' }]
+    });
+    assert.match(subject, /My SNAP ABAWD screening results/);
+    assert.match(body, /Pregnant/);
+    assert.match(body, /Jane Doe/);
+    assert.match(body, /Due in March/);
+    assert.match(body, /Print or Save this form/);
+  });
+
   it('RESULT_COPY and buildDtaContactsHtml carry the author results draft', () => {
     assert.match(RESULT_COPY.exemptHeading, /Good news: You are exempt/);
-    assert.match(RESULT_COPY.formTitleExempt, /^Send a statement to DTA$/);
+    assert.match(RESULT_COPY.formTitleExempt, /^Tell DTA that you are exempt as soon as you can\.$/);
+    assert.match(RESULT_COPY.emailSelfLabel, /Email these results to myself/);
     assert.match(RESULT_COPY.otherWaysHeading, /tell DTA/i);
     assert.match(RESULT_COPY.learnMoreLabel, /ABAWD work rules/);
     assert.doesNotMatch(RESULT_COPY.learnMoreLabel, /SNAP/);

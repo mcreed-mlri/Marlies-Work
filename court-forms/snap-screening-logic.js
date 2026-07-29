@@ -545,7 +545,6 @@
     printLead: 'When you click print or download, you will get a signed letter you can mail, fax, or upload to DTA Connect.',
     exemptHeading: 'Good news: You are exempt and do not have to meet the ABAWD work rules',
     exemptReasonsIntro: 'You may not have to meet the work rules because of these reasons:',
-    exemptTellDta: 'Tell DTA as soon as you can if one of these is true:',
     exemptProof: 'If this is based on work, send proof of your income and hours, such as pay stubs or a letter. If this is based on housing or another disability benefit, tell DTA the details so they can review your exemption.',
     goodCauseHeading: 'You may have a good reason for missing hours',
     goodCauseIntro: 'This includes missing hours before or after your start date.',
@@ -567,11 +566,13 @@
     goodCauseInNotExemptIntro: 'This includes missing hours before or after your start date.',
     goodCauseInNotExemptBody: 'Tell DTA as soon as possible if you couldn\u2019t meet the work rules for one or more months because of an unexpected life situation like temporary transportation issues, a personal or family emergency, or employment issues.',
     goodCauseInNotExemptLink: 'Learn more here',
-    formTitleExempt: 'Send a statement to DTA',
+    formTitleExempt: 'Tell DTA that you are exempt as soon as you can.',
     formTitleGoodCause: 'Tell DTA why you missed work hours as soon as you can.',
     formLeadExempt: 'To tell DTA you are exempt, you can fill in the blanks below with your results and send it to DTA.',
     formLeadGoodCause: 'To tell DTA the reason you missed hours, you can fill in the blanks below with your results and send it to DTA.',
     formExplainHeading: 'In a few sentences:',
+    emailSelfLabel: 'Email these results to myself',
+    emailSelfSubject: 'My SNAP ABAWD screening results',
     otherWaysHeading: 'Other ways to tell DTA',
     otherWaysExemptLead: 'Fill out and send in DTA\u2019s exemption form or explain the information to DTA in a written, signed statement (handwritten note is fine):',
     otherWaysGoodCauseLead: 'Explain the information to DTA in a written, signed statement (handwritten note is fine):',
@@ -695,6 +696,63 @@
     </div>`;
   }
 
+  /** Plain-text summary for "email these results to myself" (mailto). */
+  function buildResultsEmailContent(opts) {
+    const {
+      rt = 'exempt',
+      rs = [],
+      gcText = '',
+      name = '',
+      agency = '',
+      explain = '',
+      copy = RESULT_COPY
+    } = opts || {};
+    const lines = [];
+    lines.push(copy.emailSelfSubject);
+    lines.push('');
+    if (rt === 'exempt') {
+      lines.push('Result: ' + copy.exemptHeading);
+      if (rs.length) {
+        lines.push('');
+        lines.push('Reason(s):');
+        rs.forEach(r => { lines.push('- ' + r); });
+      }
+    } else if (rt === 'goodcause') {
+      lines.push('Result: ' + copy.goodCauseHeading);
+      if (gcText) {
+        lines.push('');
+        lines.push(gcText);
+      }
+    }
+    const explainEntries = Array.isArray(explain)
+      ? explain.filter(e => e && (e.prompt || e.text))
+      : [{ prompt: '', text: explain }];
+    const hasExplain = explainEntries.some(e => String(e.text || '').trim());
+    if (hasExplain) {
+      lines.push('');
+      lines.push(copy.formExplainHeading);
+      explainEntries.forEach(e => {
+        const text = String(e.text == null ? '' : e.text).trim();
+        if (!text) return;
+        if (e.prompt) lines.push(e.prompt);
+        lines.push(text);
+        lines.push('');
+      });
+    }
+    if (name || agency) {
+      lines.push('Contact information:');
+      if (name) lines.push('Name: ' + name);
+      if (agency) lines.push('Client / Agency ID: ' + agency);
+      lines.push('');
+    }
+    lines.push('---');
+    lines.push('To send a signed letter to DTA, use Print or Save this form in the screening tool and attach the PDF when you email or upload to DTA.');
+    return {
+      subject: copy.emailSelfSubject,
+      body: lines.join('\n').trim()
+    };
+  }
+
   function create(variant) {
     const v = normVariant(variant);
     const GROUPS_V = groupsForVariant(v);
@@ -776,6 +834,7 @@
     DTA_SUBMISSION,
     RESULT_COPY,
     buildDtaContactsHtml,
+    buildResultsEmailContent,
     escHtml
   };
 });

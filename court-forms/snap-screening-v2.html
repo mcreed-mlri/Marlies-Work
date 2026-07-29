@@ -231,7 +231,7 @@ const {
   SCREENING_HUB_URL, WORK_REASON_INCOME, WORK_REASON_HOURS_30,
   DISABILITY_OTHER_REASON, HOUSING_EXEMPT_REASON, LINKS
 } = S;
-const { RESULT_COPY, buildDtaContactsHtml, goodCauseCategories } = SnapScreening;
+const { RESULT_COPY, buildDtaContactsHtml, buildResultsEmailContent, goodCauseCategories } = SnapScreening;
 const RESULT_GC_CATEGORIES = goodCauseCategories('classic2');
 const WHY_INFO_HELP = 'DTA needs to know why the work rules should not apply to you before they can update your case. This form puts your answers in writing so you can print or save them and send them to DTA. MLRI never sees what you type.';
 
@@ -676,7 +676,6 @@ function renderResults(){
       <div class="result-body">
         <p style="font-size:17px;line-height:1.6;color:#37414f;margin:0 0 16px">${esc(C.exemptReasonsIntro)}</p>
         <ul style="list-style:none;padding:0;margin:0 0 16px;display:flex;flex-direction:column;gap:12px">${items}</ul>
-        <p style="font-size:17px;line-height:1.6;color:var(--ink);font-weight:700;margin:0 0 14px">${esc(C.exemptTellDta)}</p>
         <p style="font-size:16px;line-height:1.6;color:#37414f;margin:0 0 16px">${esc(C.exemptProof)}</p>
         ${learnMore}
       </div></div>`;
@@ -789,6 +788,7 @@ function renderResults(){
         <button type="button" class="btn-block btn-full" data-action="print" style="${nextBtn}">Print this form</button>
         <button type="button" class="btn-block" data-action="print" style="${ghostBtn}">Save this form</button>
         <button type="button" class="btn-block" data-action="download-doc" style="${ghostBtn}">Download as Word</button>
+        <button type="button" class="btn-block" data-action="email-self" style="${ghostBtn}">${esc(C.emailSelfLabel)}</button>
         <div style="grid-column:1/-1;margin-top:4px">${hintTip('pdf-save', 'Tips for saving this form', 'Save this form opens your browser\u2019s print menu \u2014 use your usual printer or PDF option. If the dialog is slow to open, try Download as Word.')}</div>
       </div>
     </div>`;
@@ -985,6 +985,21 @@ function downloadDoc(){
   setTimeout(() => URL.revokeObjectURL(url), 2000);
 }
 
+function emailResults(){
+  const val = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
+  const explain = Array.from(document.querySelectorAll('[data-explain-prompt]'))
+    .map(el => ({ prompt: el.getAttribute('data-explain-prompt'), text: el.value }));
+  const { subject, body } = buildResultsEmailContent({
+    rt: resultType(),
+    rs: reasons(),
+    gcText: S.goodCauseText(state.answers),
+    name: val('f-name'),
+    agency: val('f-agency'),
+    explain
+  });
+  window.location.href = 'mailto:?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+}
+
 function render(){
   renderProgress();
   const stage = document.getElementById('stage');
@@ -1074,6 +1089,7 @@ document.addEventListener('click', (e) => {
     case 'go-back': window.location.href = SCREENING_HUB_URL; break;
     case 'print': printForm(); break;
     case 'download-doc': downloadDoc(); break;
+    case 'email-self': emailResults(); break;
     case 'sig-clear': clearSignature(); break;
   }
 });
