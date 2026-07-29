@@ -142,7 +142,7 @@ never shares state with `snap-abawd.html`.
 
 ### Open items for the author
 
-- **"Why are we asking for more information?"** The draft marks this as help text but does not supply the wording. `WHY_INFO_HELP` in the HTML holds a placeholder pending review.
+- **"Why are we asking for more information?"** The reviewer supplied the lead sentence ("Telling DTA about your exemption can help them update your SNAP case more quickly"). It lives in `RESULT_COPY.whyInfoExempt` / `whyInfoGoodCause`; the sentences after it are still ours, pending review.
 - **Good-cause "More examples"** (Emergency, Employment issues) have no URL in the draft. Both currently point at the good-cause anchor the draft supplies on the not-exempt page.
 - **The safety question** is narrower here than in `snap-abawd.html`, which names stalking, sexual harassment, and sexual assault explicitly. This page follows the draft; see the launch question below.
 - **Housing follow-up labels** reuse the shared `HOUSING_OPTION_DEFS` text, which differs from the draft only in trailing punctuation.

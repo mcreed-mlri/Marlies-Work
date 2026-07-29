@@ -535,6 +535,20 @@
     fax: '(617) 887-8765'
   };
 
+  /* The reviewer's formatting markup bolds only "Good news:", "exempt", and
+   * "do not" in the exempt heading, so it is stored in segments. The plain
+   * `exemptHeading` string below is joined from these, which keeps the wording
+   * and the emphasis from drifting apart. */
+  const EXEMPT_HEADING_PARTS = [
+    { text: 'Good news:', bold: true },
+    { text: ' You are ' },
+    { text: 'exempt', bold: true },
+    { text: ' and ' },
+    { text: 'do not', bold: true },
+    { text: ' have to meet the ABAWD work rules' }
+  ];
+  const EXEMPT_HEADING_TEXT = EXEMPT_HEADING_PARTS.map(p => p.text).join('');
+
   /** Shared results-screen copy (author's website draft). Used by all UI variants. */
   const RESULT_COPY = {
     resultsHeadTitle: 'ABAWD Screening Tool Results',
@@ -542,26 +556,32 @@
     learnMoreLabel: 'Learn more about the ABAWD work rules',
     lostSnapIntro: 'If you lost your SNAP or are about to lose your SNAP because of the ABAWD rules, email us at',
     privacyNote: 'Note: Your information is private and will not automatically be saved on this device. MLRI does NOT have access to or save the information you type on this form. Print, download, or email these results to keep a copy.',
-    printLead: 'When you click print or download, you will get a signed letter you can mail, fax, or upload to DTA Connect.',
-    exemptHeading: 'Good news: You are exempt and do not have to meet the ABAWD work rules',
+    printLead: 'When you click print or download, you will get a signed letter you can mail, fax, or upload to DTA Connect. You can also email yourself these results.',
+    exemptHeading: EXEMPT_HEADING_TEXT,
     exemptReasonsIntro: 'You may not have to meet the work rules because of these reasons:',
-    exemptProof: 'If this is based on work, send proof of your income and hours, such as pay stubs or a letter. If this is based on housing or another disability benefit, tell DTA the details so they can review your exemption.',
+    exemptProofWork: 'Send DTA proof of your income and hours, such as pay stubs or a letter.',
+    exemptProofHousing: 'Tell DTA the details about your housing so they can review your exemption.',
+    exemptProofDisability: 'Tell DTA the details about your disability benefit so they can review your exemption.',
     goodCauseHeading: 'You may have a good reason for missing hours',
     goodCauseIntro: 'This includes missing hours before or after your start date.',
     goodCauseLead: 'Tell DTA as soon as you can if you could not meet the work rules for one or more months because of a hard life event, like:',
     notExemptHeading: 'You may need to meet the ABAWD work rules',
-    notExemptIntro: 'Based on your responses, you may not be exempt from the ABAWD work rules. You did not pick a reason to be exempt.',
-    notExemptReapply: 'If you already lost your SNAP because of the Work Rules, you can reapply at any time.',
+    notExemptIntro: 'Based on your responses, you may not be exempt from the ABAWD work rules.',
+    notExemptStartOver: 'Click here to start the form over',
+    notExemptReapplyLead: 'Already lost your SNAP because of the work rules? You can',
+    notExemptReapplyLink: 'reapply',
+    notExemptReapplyEnd: 'at any time.',
     notExemptSnapBack: 'See here for more information on how you may be able to get your SNAP back',
-    notExemptEmail: 'If you lost your SNAP or are about to lose your SNAP because of the ABAWD rules, email us at',
+    notExemptEmail: 'Email',
+    notExemptEmailSuffix: 'if you lost or are about to lose SNAP because of these rules.',
     workRulesHeading: 'To keep getting SNAP, you can meet the ABAWD work rules by doing one of these:',
     workOption1: 'Paid work, unpaid work, or training program for 20 hours a week (80 hours a month).',
-    workOption1Unpaid: 'Unpaid work can include internships or caring for family or friends who are not disabled or under age 6.',
+    workOption1Unpaid: 'Examples of unpaid work can include internships or caring for family or friends who are not disabled or under age 6.',
     workOption1Training: 'Find a DTA training program',
-    workOption2: 'Community service for a set number of hours each month. The number depends on how much SNAP you get. DTA will tell you how many hours.',
+    workOption2: 'Community service for a set number of hours each month. The number depends on how much SNAP you get. DTA will tell you how many hours to volunteer.',
     meetingDtaHeading: 'How to tell DTA you are meeting the work rules:',
     meetingDtaPaid: 'For paid work, send DTA proof of income and hours, such as pay stubs or an employer letter. For unpaid work, tell DTA how you are meeting the work rules and your hours.',
-    meetingDtaStatement: 'Upload a written, signed statement (handwritten note is fine):',
+    meetingDtaStatement: 'Upload a written, signed statement (handwritten note is fine) onto',
     goodCauseInNotExemptBold: 'You may have a good reason for missing work, school, or volunteer hours.',
     goodCauseInNotExemptIntro: 'This includes missing hours before or after your start date.',
     goodCauseInNotExemptBody: 'Tell DTA as soon as possible if you couldn\u2019t meet the work rules for one or more months because of an unexpected life situation like temporary transportation issues, a personal or family emergency, or employment issues.',
@@ -571,6 +591,13 @@
     formLeadExempt: 'To tell DTA you are exempt, you can fill in the blanks below with your results and send it to DTA.',
     formLeadGoodCause: 'To tell DTA the reason you missed hours, you can fill in the blanks below with your results and send it to DTA.',
     formExplainHeading: 'In a few sentences:',
+    whyInfoLabel: 'Why are we asking for more information?',
+    whyInfoExempt: 'Telling DTA about your exemption can help them update your SNAP case more quickly. DTA needs to know why the work rules should not apply to you, and this form puts your answers in writing so you can print or save them and send them to DTA. MLRI never sees what you type.',
+    whyInfoGoodCause: 'Telling DTA about your good reason can help them update your SNAP case more quickly. DTA needs to know why you could not meet the work rules, and this form puts your answers in writing so you can print or save them and send them to DTA. MLRI never sees what you type.',
+    printFormLabel: 'Print or save this form',
+    downloadWordLabel: 'Download as Word',
+    savingTipsTitle: 'Tips for printing or saving',
+    savingTipsBody: 'Print or save this form opens your browser’s print menu. Pick your printer, or choose "Save as PDF" to keep a copy on your device. If the menu is slow to open, use Download as Word instead.',
     emailSelfLabel: 'Email these results to myself',
     emailSelfSubject: 'My SNAP ABAWD screening results',
     otherWaysHeading: 'Other ways to tell DTA',
@@ -581,11 +608,51 @@
     waysToReachDta: 'Ways to reach DTA'
   };
 
-  /** HTML list of DTA contact options (author's draft order). */
-  function buildDtaContactsHtml(links) {
+  /**
+   * Proof-and-detail sentences to show under the exempt reasons, in draft order.
+   *
+   * The reviewer asked that these only appear when they are actually relevant to
+   * the person, so each is gated on the reason that makes it relevant rather
+   * than shown to everyone behind an "If this is based on..." clause. Someone
+   * exempt only because they live with a young child now gets none of them.
+   *
+   * A standard, named disability benefit (SSI and the like) does not get a
+   * sentence: it speaks for itself. Only the "Other" pick, which needs DTA to
+   * hear what the benefit is, does. This mirrors `statementPromptsFor`.
+   */
+  function exemptProofNotes(reasons, copy) {
+    const c = copy || RESULT_COPY;
+    const rs = Array.isArray(reasons) ? reasons : [];
+    const out = [];
+    if (rs.includes(WORK_REASON_INCOME) || rs.includes(WORK_REASON_HOURS_30)) out.push(c.exemptProofWork);
+    if (rs.includes(HOUSING_EXEMPT_REASON)) out.push(c.exemptProofHousing);
+    if (rs.includes(DISABILITY_OTHER_REASON)) out.push(c.exemptProofDisability);
+    return out;
+  }
+
+  /**
+   * Exempt heading as HTML, with only "Good news:", "exempt", and "do not"
+   * bolded. The element holding it must be set to normal weight, since headings
+   * are bold by default. Use `RESULT_COPY.exemptHeading` where plain text is
+   * needed (the email summary, the letter).
+   */
+  function exemptHeadingHtml() {
+    return EXEMPT_HEADING_PARTS
+      .map(p => (p.bold ? '<strong>' + escHtml(p.text) + '</strong>' : escHtml(p.text)))
+      .join('');
+  }
+
+  /**
+   * HTML list of DTA contact options (author's draft order).
+   * `opts.uploadPrefix` replaces the default "Upload on" lead-in of the first
+   * bullet, so the must-meet-the-rules screen can fold its "written, signed
+   * statement" sentence into the DTAConnect line.
+   */
+  function buildDtaContactsHtml(links, opts) {
     const L = links || LINKS;
+    const uploadPrefix = (opts && opts.uploadPrefix) || 'Upload on';
     return '<ul style="margin:0;padding-left:20px;font-size:15px;line-height:1.7;color:#3a424e">'
-      + '<li>Upload on <a href="' + L.dtaConnect + '" target="_blank" rel="noopener">DTAConnect</a></li>'
+      + '<li>' + uploadPrefix + ' <a href="' + L.dtaConnect + '" target="_blank" rel="noopener">DTAConnect</a></li>'
       + '<li>Mail: DTA Document Processing Center, P.O. Box 4406, Taunton, MA 02780-0420</li>'
       + '<li>Fax: (617) 887-8765</li>'
       + '<li>Call the DTA Assistance line at <a href="tel:8773822363">(877) 382-2363</a>'
@@ -746,7 +813,7 @@
       lines.push('');
     }
     lines.push('---');
-    lines.push('To send a signed letter to DTA, use Print or Save this form in the screening tool and attach the PDF when you email or upload to DTA.');
+    lines.push('To send a signed letter to DTA, use "' + copy.printFormLabel + '" in the screening tool and attach the PDF when you email or upload to DTA.');
     return {
       subject: copy.emailSelfSubject,
       body: lines.join('\n').trim()
@@ -833,6 +900,8 @@
     buildStatementHTML,
     DTA_SUBMISSION,
     RESULT_COPY,
+    exemptHeadingHtml,
+    exemptProofNotes,
     buildDtaContactsHtml,
     buildResultsEmailContent,
     escHtml

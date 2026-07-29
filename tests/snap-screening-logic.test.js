@@ -4,7 +4,7 @@ const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
 const SnapScreening = require('../court-forms/snap-screening-logic.js');
 
-const { NONE, WORK_REASON_INCOME, WORK_REASON_HOURS_30, DISABILITY_OTHER_REASON, HOUSING_EXEMPT_REASON, LINKS, RESULT_COPY, buildDtaContactsHtml, buildResultsEmailContent, create, migrateAnswers, resultTypeFor, exemptReasonsFor, housingUnableExempt, buildQuestions, statementPromptsFor, goodCauseCategories } = SnapScreening;
+const { NONE, WORK_REASON_INCOME, WORK_REASON_HOURS_30, DISABILITY_OTHER_REASON, HOUSING_EXEMPT_REASON, LINKS, RESULT_COPY, exemptHeadingHtml, exemptProofNotes, buildDtaContactsHtml, buildResultsEmailContent, create, migrateAnswers, resultTypeFor, exemptReasonsFor, housingUnableExempt, buildQuestions, statementPromptsFor, goodCauseCategories } = SnapScreening;
 
 describe('snap-screening-logic', () => {
   const classic = create('classic');
@@ -258,13 +258,28 @@ describe('snap-screening-logic', () => {
     assert.match(body, /Pregnant/);
     assert.match(body, /Jane Doe/);
     assert.match(body, /Due in March/);
-    assert.match(body, /Print or Save this form/);
+    assert.match(body, /Print or save this form/);
   });
 
   it('RESULT_COPY and buildDtaContactsHtml carry the author results draft', () => {
     assert.match(RESULT_COPY.exemptHeading, /Good news: You are exempt/);
+    // Only "Good news:", "exempt", and "do not" carry emphasis, and the plain
+    // string must stay in sync with the marked-up one.
+    const headingHtml = exemptHeadingHtml();
+    assert.equal(headingHtml.replace(/<\/?strong>/g, ''), RESULT_COPY.exemptHeading);
+    assert.equal(headingHtml.match(/<strong>/g).length, 3);
+    assert.match(headingHtml, /<strong>Good news:<\/strong> You are <strong>exempt<\/strong> and <strong>do not<\/strong> have to meet the ABAWD work rules/);
     assert.match(RESULT_COPY.formTitleExempt, /^Tell DTA that you are exempt as soon as you can\.$/);
     assert.match(RESULT_COPY.emailSelfLabel, /Email these results to myself/);
+    // Print and Save fired the same handler, so the two buttons are now one.
+    assert.match(RESULT_COPY.printFormLabel, /^Print or save this form$/);
+    assert.match(RESULT_COPY.downloadWordLabel, /^Download as Word$/);
+    assert.match(RESULT_COPY.savingTipsBody, /Save as PDF/);
+    assert.match(RESULT_COPY.printLead, /You can also email yourself these results\.$/);
+    assert.match(RESULT_COPY.whyInfoLabel, /^Why are we asking for more information\?$/);
+    // The pop-up wording is exemption-specific, so good cause gets its own.
+    assert.match(RESULT_COPY.whyInfoExempt, /^Telling DTA about your exemption can help them update your SNAP case more quickly\./);
+    assert.match(RESULT_COPY.whyInfoGoodCause, /^Telling DTA about your good reason can help them update your SNAP case more quickly\./);
     assert.match(RESULT_COPY.otherWaysHeading, /tell DTA/i);
     assert.match(RESULT_COPY.learnMoreLabel, /ABAWD work rules/);
     assert.doesNotMatch(RESULT_COPY.learnMoreLabel, /SNAP/);
@@ -272,6 +287,61 @@ describe('snap-screening-logic', () => {
     assert.match(contacts, /local DTA office/);
     assert.match(contacts, /Click here/);
     assert.match(contacts, /8773822363/);
+    assert.match(contacts, /Upload on <a/);
+  });
+
+  it('exempt proof notes only appear when the answers make them relevant', () => {
+    const notesFor = (answers) => exemptProofNotes(classic.exemptReasons(answers));
+
+    // Exempt for a reason that speaks for itself: no proof sentence at all.
+    assert.equal(classic.resultType({ child14: 'yes' }), 'exempt');
+    assert.deepEqual(notesFor({ child14: 'yes' }), []);
+    assert.deepEqual(notesFor({ pregnant: 'yes' }), []);
+    // A named disability benefit needs no detail; only the "Other" pick does.
+    // Assert the reason list is non-empty first, so a bad option id here cannot
+    // make the "no notes" expectation pass for the wrong reason.
+    assert.ok(classic.exemptReasons({ disability: ['ssi_ssdi'] }).length > 0);
+    assert.deepEqual(notesFor({ disability: ['ssi_ssdi'] }), []);
+    assert.deepEqual(notesFor({ disability: ['other'] }), [RESULT_COPY.exemptProofDisability]);
+
+    // Work-based exemptions ask for pay proof, either route in.
+    assert.deepEqual(notesFor({ working: 'income_weekly' }), [RESULT_COPY.exemptProofWork]);
+    assert.deepEqual(notesFor({ working: 'hours_30' }), [RESULT_COPY.exemptProofWork]);
+
+    assert.deepEqual(notesFor({ housing: 'no', housingFollowup: NONE }), [RESULT_COPY.exemptProofHousing]);
+
+    // Several at once: draft order, no duplicates.
+    assert.deepEqual(
+      notesFor({ child14: 'yes', working: 'income_weekly', housing: 'no', housingFollowup: NONE, disability: ['other'] }),
+      [RESULT_COPY.exemptProofWork, RESULT_COPY.exemptProofHousing, RESULT_COPY.exemptProofDisability]
+    );
+
+    // The two work reasons together still yield one sentence.
+    assert.deepEqual(exemptProofNotes([WORK_REASON_INCOME, WORK_REASON_HOURS_30]), [RESULT_COPY.exemptProofWork]);
+    // Tolerates junk input rather than throwing mid-render.
+    assert.deepEqual(exemptProofNotes(undefined), []);
+    assert.deepEqual(exemptProofNotes([HOUSING_EXEMPT_REASON, DISABILITY_OTHER_REASON]).length, 2);
+
+    // Every note stands on its own now, so none may keep the "If this is" framing.
+    [RESULT_COPY.exemptProofWork, RESULT_COPY.exemptProofHousing, RESULT_COPY.exemptProofDisability]
+      .forEach(s => assert.doesNotMatch(s, /^If this is based on/));
+  });
+
+  it('must-meet-the-rules copy matches the reviewed edits', () => {
+    assert.match(RESULT_COPY.notExemptHeading, /^You may need to meet the ABAWD work rules$/);
+    // The "You did not pick a reason to be exempt" sentence was cut.
+    assert.doesNotMatch(RESULT_COPY.notExemptIntro, /did not pick/);
+    assert.match(RESULT_COPY.notExemptStartOver, /start the form over/);
+    assert.match(RESULT_COPY.notExemptReapplyLead, /^Already lost your SNAP because of the work rules\? You can$/);
+    assert.match(RESULT_COPY.notExemptEmail, /^Email$/);
+    assert.match(RESULT_COPY.notExemptEmailSuffix, /^if you lost or are about to lose SNAP because of these rules\.$/);
+    assert.match(RESULT_COPY.workOption1Unpaid, /^Examples of unpaid work can include/);
+    assert.match(RESULT_COPY.workOption2, /how many hours to volunteer\.$/);
+    assert.match(RESULT_COPY.meetingDtaStatement, /\(handwritten note is fine\) onto$/);
+    // The statement sentence folds into the DTAConnect bullet on this screen.
+    const merged = buildDtaContactsHtml(LINKS, { uploadPrefix: 'Upload a statement onto' });
+    assert.match(merged, /<li>Upload a statement onto <a/);
+    assert.doesNotMatch(merged, /Upload on/);
   });
 
   it('every LINKS entry is an absolute URL or a bare email address', () => {

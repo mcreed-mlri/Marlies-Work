@@ -181,9 +181,8 @@ const {
   SCREENING_HUB_URL, WORK_REASON_INCOME, WORK_REASON_HOURS_30,
   DISABILITY_OTHER_REASON, HOUSING_EXEMPT_REASON, LINKS
 } = S;
-const { RESULT_COPY, buildDtaContactsHtml, buildResultsEmailContent, goodCauseCategories } = SnapScreening;
+const { RESULT_COPY, exemptHeadingHtml, exemptProofNotes, buildDtaContactsHtml, buildResultsEmailContent, goodCauseCategories } = SnapScreening;
 const RESULT_GC_CATEGORIES = goodCauseCategories('classic2');
-const WHY_INFO_HELP = 'DTA needs to know why the work rules should not apply to you before they can update your case. This form puts your answers in writing so you can print or save them and send them to DTA. MLRI never sees what you type.';
 
 /* ------------------------------------------------------------------ *
  * State + logic (ports the DCLogic Component)
@@ -386,6 +385,8 @@ function initHintTips(){
 const primaryBtn = "font-size:17px;font-weight:700;color:#fff;background:var(--accent);border:none;border-radius:var(--radius);padding:15px 26px;cursor:pointer;box-shadow:0 2px 0 var(--accent-dark);min-height:48px";
 const nextBtn    = "font-size:16px;font-weight:700;color:#fff;background:var(--accent);border:none;border-radius:var(--radius);padding:12px 22px;cursor:pointer;box-shadow:0 2px 0 var(--accent-dark);min-height:48px";
 const ghostBtn   = "font-size:15px;font-weight:700;color:var(--accent);background:none;border:2px solid var(--accent);border-radius:var(--radius);padding:10px 18px;cursor:pointer;min-height:48px";
+/* Inline text button that reads as a link (used inside result copy). */
+const linkBtn    = "font-family:inherit;font-size:inherit;font-weight:700;color:var(--accent);background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px";
 const inputStyle = "width:100%;font-family:inherit;font-size:16px;padding:12px;border:1.5px solid #cdd3dc;border-radius:calc(var(--radius) - 3px);min-height:48px";
 
 // Returns an array of option descriptors for the current question.
@@ -549,6 +550,9 @@ function renderResults(){
   const privacyNote = `<p style="font-size:14.5px;line-height:1.55;color:#5b6470;margin:0 0 6px"><em><strong>${esc(C.privacyNote)}</strong></em></p>`;
   const printLead = `<p style="font-size:14.5px;line-height:1.55;color:#5b6470;margin:0 0 18px">${esc(C.printLead)}</p>`;
   const dtaContacts = buildDtaContactsHtml(LINKS);
+  const dtaContactsUpload = buildDtaContactsHtml(LINKS, {
+    uploadPrefix: `Upload a <strong>written, signed statement</strong> (handwritten note is fine) onto`
+  });
 
   const resultsHead = `<h1 class="h1" style="text-align:center;margin:0 0 16px">${esc(C.resultsHeadTitle)}</h1>
     <p style="font-size:16.5px;line-height:1.6;color:#3a424e;margin:0 0 16px">${esc(C.resultsHeadLead)}</p>`;
@@ -568,12 +572,12 @@ function renderResults(){
       <span>${esc(r)}</span></li>`).join('');
     card = `<div style="border-radius:var(--radius);overflow:hidden;border:1px solid #cbe4d5">
       <div style="background:#e6f4ec;padding:20px 22px;border-bottom:1px solid #cbe4d5">
-        <h2 class="h-result" style="color:#14532d">${esc(C.exemptHeading)}</h2>
+        <h2 class="h-result" style="color:#14532d;font-weight:400">${exemptHeadingHtml()}</h2>
       </div>
       <div style="padding:20px 22px;background:#fff">
         <p style="font-size:16px;line-height:1.6;color:#3a424e;margin:0 0 14px">${esc(C.exemptReasonsIntro)}</p>
         <ul style="list-style:none;padding:0;margin:0 0 14px;display:flex;flex-direction:column;gap:9px">${items}</ul>
-        <p style="font-size:15.5px;line-height:1.6;color:#3a424e;margin:0 0 14px">${esc(C.exemptProof)}</p>
+        ${exemptProofNotes(rs).map(n => `<p style="font-size:15.5px;line-height:1.6;color:#3a424e;margin:0 0 14px">${esc(n)}</p>`).join('')}
         ${learnMore}
       </div></div>`;
   } else if(rt === 'goodcause'){
@@ -602,11 +606,12 @@ function renderResults(){
         <h2 class="h-result" style="color:#7a4a00">${esc(C.notExemptHeading)}</h2>
       </div>
       <div style="padding:20px 22px;background:#fff">
-        <p style="font-size:16px;line-height:1.6;color:#3a424e;margin:0 0 16px">${esc(C.notExemptIntro)}</p>
-        <p style="font-size:16px;line-height:1.6;color:#3a424e;margin:0 0 8px">→ If you already lost your SNAP because of the Work Rules, you can <a href="${LINKS.reapply}" target="_blank" rel="noopener">reapply</a> at any time.</p>
+        <p style="font-size:16px;line-height:1.6;color:#3a424e;margin:0 0 12px">${esc(C.notExemptIntro)}</p>
+        <p style="font-size:16px;line-height:1.6;color:#3a424e;margin:0 0 16px">→ <button type="button" data-action="restart" style="${linkBtn}">${esc(C.notExemptStartOver)}</button></p>
+        <p style="font-size:16px;line-height:1.6;color:#3a424e;margin:0 0 8px">→ ${esc(C.notExemptReapplyLead)} <a href="${LINKS.reapply}" target="_blank" rel="noopener">${esc(C.notExemptReapplyLink)}</a> ${esc(C.notExemptReapplyEnd)}</p>
         <ul style="margin:0 0 20px;padding-left:20px;font-size:15px;line-height:1.7;color:#3a424e">
           <li><a href="${LINKS.getSnapBack}" target="_blank" rel="noopener">${esc(C.notExemptSnapBack)}</a></li>
-          <li>${esc(C.notExemptEmail)} <a href="mailto:${email}">${email}</a>.</li>
+          <li>${esc(C.notExemptEmail)} <a href="mailto:${email}">${email}</a> ${esc(C.notExemptEmailSuffix)}</li>
         </ul>
         <div style="padding:18px 20px;background:#eef7f1;border:1px solid #cbe4d5;border-radius:var(--radius)">
           <h3 style="font-size:17px;margin:0 0 14px">To keep getting SNAP, you can meet the ABAWD work rules by doing <strong>one</strong> of these:</h3>
@@ -631,8 +636,7 @@ function renderResults(){
         <div style="margin:20px 0 0;padding:18px 20px;background:var(--soft);border-radius:var(--radius)">
           <h3 style="font-size:17px;margin:0 0 10px">${esc(C.meetingDtaHeading)}</h3>
           <p style="font-size:15px;line-height:1.6;color:#3a424e;margin:0 0 12px">For <strong>paid work</strong>, send DTA proof of income and hours, such as pay stubs or an employer letter. For <strong>unpaid work</strong>, tell DTA how you are meeting the work rules and your hours.</p>
-          <p style="font-size:15px;line-height:1.6;color:#3a424e;margin:0 0 12px">Upload a <strong>written, signed statement</strong> (handwritten note is fine):</p>
-          ${dtaContacts}
+          ${dtaContactsUpload}
           <hr style="border:none;border-top:1px solid #c7d6f0;margin:18px 0">
           <p style="font-size:15.5px;line-height:1.6;color:#1b1f27;margin:0 0 10px"><strong>${esc(C.goodCauseInNotExemptBold)}</strong> ${esc(C.goodCauseInNotExemptIntro)}</p>
           <p style="font-size:15px;line-height:1.6;color:#3a424e;margin:0">${esc(C.goodCauseInNotExemptBody)} <a href="${LINKS.goodCause}" target="_blank" rel="noopener">${esc(C.goodCauseInNotExemptLink)}</a>.</p>
@@ -645,6 +649,7 @@ function renderResults(){
   if(rt === 'exempt' || rt === 'goodcause'){
     const formTitle = rt === 'exempt' ? C.formTitleExempt : C.formTitleGoodCause;
     const formLead = rt === 'exempt' ? C.formLeadExempt : C.formLeadGoodCause;
+    const whyInfo = rt === 'exempt' ? C.whyInfoExempt : C.whyInfoGoodCause;
     const blanks = prompts.map((p, i) => `<div style="margin:0 0 16px">
       <label for="f-explain-${i}" style="display:block;font-size:14.5px;font-weight:700;margin:0 0 7px">${esc(p)}</label>
       <textarea id="f-explain-${i}" data-explain-prompt="${esc(p)}" rows="4" placeholder="Type here…" style="width:100%;font-family:inherit;font-size:16px;line-height:1.5;padding:11px 13px;border:1.5px solid #cdd3dc;border-radius:calc(var(--radius) - 3px);resize:vertical"></textarea>
@@ -653,7 +658,7 @@ function renderResults(){
       <h3 style="font-size:19px;margin:0 0 10px">${esc(formTitle)}</h3>
       <div class="hint-tip-wrap" style="margin:0 0 10px">
         <p style="font-size:15px;line-height:1.55;color:#3a424e;margin:0">${esc(formLead)}</p>
-        ${hintTip('why-info', 'Why are we asking for more information?', WHY_INFO_HELP, true)}
+        ${hintTip('why-info', C.whyInfoLabel, whyInfo, true)}
       </div>
       ${privacyNote}
       ${printLead}
@@ -677,12 +682,11 @@ function renderResults(){
         </div>
         <p style="font-size:14px;line-height:1.5;color:#5b6470;margin:8px 0 0;text-align:center">(DTA needs your actual signature, not a typed signature)</p>
       </div>
-      <div class="no-print" style="display:flex;gap:12px;margin:20px 0 0;flex-wrap:wrap">
-        <button type="button" data-action="print" style="${nextBtn}">Print this form</button>
-        <button type="button" data-action="print" style="${ghostBtn}">Save this form</button>
-        <button type="button" data-action="download-doc" style="${ghostBtn}">Download as Word</button>
+      <div class="no-print" style="display:flex;gap:12px;margin:20px 0 0;flex-wrap:wrap;align-items:center">
+        <button type="button" data-action="print" style="${nextBtn}">${esc(C.printFormLabel)}</button>
+        <button type="button" data-action="download-doc" style="${ghostBtn}">${esc(C.downloadWordLabel)}</button>
         <button type="button" data-action="email-self" style="${ghostBtn}">${esc(C.emailSelfLabel)}</button>
-        <div style="width:100%;margin-top:2px">${hintTip('pdf-save', 'Tips for saving this form', 'Save this form opens your browser\u2019s print menu \u2014 use your usual printer or PDF option. If the dialog is slow to open, try Download as Word.')}</div>
+        <div style="width:100%;margin-top:2px">${hintTip('pdf-save', C.savingTipsTitle, C.savingTipsBody)}</div>
       </div>
     </div>`;
   }
