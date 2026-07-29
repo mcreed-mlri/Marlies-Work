@@ -119,10 +119,12 @@ test.describe('SNAP ABAWD screening — classic v2 (author copy)', () => {
     await expect(page.getByRole('link', { name: 'More examples' })).toHaveCount(2);
   });
 
-  test('state agencies are listed in the question and school uses the long Yes label', async ({ page }) => {
+  test('state agencies appear in help and school uses the long Yes label', async ({ page }) => {
     await startClassicV2(page);
     for (let i = 0; i < 2; i++) await clickNext(page);   // group 3: benefits
-    await expect(page.getByText('MA Commission for Deaf and Hard of Hearing')).toBeVisible();
+    const stateAgencyBlock = page.locator('main').filter({ hasText: /receive services from any state agencies/i });
+    await stateAgencyBlock.getByRole('button', { name: /What does this mean/i }).click();
+    await expect(stateAgencyBlock.getByText('MA Commission for Deaf and Hard of Hearing')).toBeVisible();
     await clickNext(page);                               // group 4: school and work
     await expect(yn(page, 'school', 'yes')).toHaveText(/Yes, I am enrolled half-time or more in a school or program/);
   });
@@ -132,6 +134,29 @@ test.describe('SNAP ABAWD screening — classic v2 (author copy)', () => {
     const keys = await page.evaluate(() => Object.keys(localStorage));
     expect(keys).toContain('cfo-abawd-classic-v2-screening-v1');
     expect(keys).not.toContain('cfo-abawd-screening-v1');
+  });
+
+  test('reclicking a selected answer clears it', async ({ page }) => {
+    await startClassicV2(page);
+    const yesBtn = yn(page, 'child14', 'yes');
+    await yesBtn.click();
+    await expect(yesBtn).toHaveClass(/opt-selected/);
+    await yesBtn.click();
+    await expect(yesBtn).not.toHaveClass(/opt-selected/);
+
+    await yn(page, 'housing', 'no').click();
+    await choice(page, 'housingFollowup', 0).click();
+    await noneOf(page, 'housingFollowup').click();
+    await expect(noneOf(page, 'housingFollowup')).toHaveClass(/opt-selected/);
+    await noneOf(page, 'housingFollowup').click();
+    await expect(noneOf(page, 'housingFollowup')).not.toHaveClass(/opt-selected/);
+
+    for (let i = 0; i < 2; i++) await clickNext(page);
+    const workOpt = choice(page, 'working', 0);
+    await workOpt.click();
+    await expect(workOpt).toHaveClass(/opt-selected/);
+    await workOpt.click();
+    await expect(workOpt).not.toHaveClass(/opt-selected/);
   });
 });
 

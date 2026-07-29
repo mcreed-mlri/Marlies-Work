@@ -192,7 +192,7 @@
       },
       housingFollowup: { text: 'Please choose all that apply:', noneLabel: 'None of the above' },
       dv: {
-        text: 'Has a domestic violence, stalking, sexual harassment, sexual assault, or another safety situation made it hard for you to work?',
+        text: 'Has a domestic violence or safety situation made it hard for you to work?',
         helpHtml: 'This includes stalking, harassment, abuse, assault, or any health/safety concerns that make it hard for you to work. DTA has domestic violence specialists in each local office who can help. Find their <a href="' + LINKS.dvServices + '" target="_blank" rel="noopener">contact info here</a>. Your answer stays private.'
       },
       tribe: { text: 'Are you an Alaska native or a member of an American Indian, Urban Indian, or California Indian tribe?', help: 'Choose “Yes” if you have a parent or grandparent who is a member of one of these tribes.' },
@@ -201,8 +201,8 @@
       substanceUse: { text: 'Are you participating in a substance use treatment program?', help: 'It does not have to be a daily program.' },
       unemployment: { text: 'Do you get, or are you applying for unemployment benefits?' },
       stateagency: {
-        text: 'Do you get services from any of these state agencies?',
-        listItems: ['MassAbility', 'Dept. of Mental Health', 'Dept. of Developmental Services', 'MA Commission for the Blind', 'MA Commission for Deaf and Hard of Hearing']
+        text: 'Do you receive services from any state agencies?',
+        helpHtml: '<p style="margin:0 0 10px">This includes services from agencies such as:</p><ul style="margin:0;padding-left:22px"><li>MassAbility</li><li>Dept. of Mental Health</li><li>Dept. of Developmental Services</li><li>MA Commission for the Blind</li><li>MA Commission for Deaf and Hard of Hearing</li></ul>'
       },
       school: {
         text: 'Are you enrolled in school half-time or more?',

@@ -172,8 +172,9 @@ describe('snap-screening-logic', () => {
     assert.match(byId.dv.helpHtml, /contact info here/);
     assert.match(byId.health.help, /short- or long-term/);
     assert.match(byId.housing.help, /couch surfing/);
-    assert.equal(byId.stateagency.text, 'Do you get services from any of these state agencies?');
-    assert.equal(byId.stateagency.listItems.length, 5);
+    assert.equal(byId.stateagency.text, 'Do you receive services from any state agencies?');
+    assert.match(byId.stateagency.helpHtml, /MassAbility/);
+    assert.equal(byId.stateagency.listItems, undefined);
     assert.equal(classic2.GROUPS[0].title, 'Your Family and Household');
     assert.equal(classic2.GROUPS[2].title, 'Public Benefits and Participating in Programs');
     assert.match(classic2.GOODCAUSE.text, /Is something making it hard to work/);

@@ -237,6 +237,7 @@ function qById(id){ return S.qById(id); }
 function curGroup(){ return GROUPS[state.step]; }
 function pageQuestions(){ return S.pageQuestions(state.answers, state.step, state.gc); }
 function setAns(id, val){ state.answers[id] = val; }
+function clearAns(id){ delete state.answers[id]; }
 function reasons(){ return S.exemptReasons(state.answers); }
 function resultType(){ return S.resultType(state.answers); }
 
@@ -933,25 +934,36 @@ document.addEventListener('click', (e) => {
     const q = qById(btn.getAttribute('data-q-id'));
     if(!q) return;
     // Selecting an answer no longer moves you forward. Use Next when ready.
+    // Every question is optional — reclick a selected option to clear it.
     if(kind === 'yn'){
-      setAns(q.id, btn.getAttribute('data-opt-val'));
-      if(q.id === 'housing' && btn.getAttribute('data-opt-val') !== 'no'){
-        delete state.answers.housingFollowup;
+      const val = btn.getAttribute('data-opt-val');
+      if(state.answers[q.id] === val){
+        clearAns(q.id);
+        if(q.id === 'housing') clearAns('housingFollowup');
+      } else {
+        setAns(q.id, val);
+        if(q.id === 'housing' && val !== 'no') clearAns('housingFollowup');
       }
       render();
     } else if(kind === 'multi'){
       const o = q.options[+btn.getAttribute('data-opt-idx')];
       const cur = Array.isArray(state.answers[q.id]) ? state.answers[q.id] : [];
-      state.answers[q.id] = cur.includes(o.id) ? cur.filter(x => x !== o.id) : [...cur, o.id];
+      const next = cur.includes(o.id) ? cur.filter(x => x !== o.id) : [...cur, o.id];
+      if(next.length) setAns(q.id, next);
+      else clearAns(q.id);
       render();
     } else if(kind === 'multi-none'){
-      setAns(q.id, NONE);
+      if(state.answers[q.id] === NONE) clearAns(q.id);
+      else setAns(q.id, NONE);
       render();
     } else if(kind === 'single'){
-      setAns(q.id, q.options[+btn.getAttribute('data-opt-idx')].id);
+      const optId = q.options[+btn.getAttribute('data-opt-idx')].id;
+      if(state.answers[q.id] === optId) clearAns(q.id);
+      else setAns(q.id, optId);
       render();
     } else if(kind === 'single-none'){
-      setAns(q.id, NONE);
+      if(state.answers[q.id] === NONE) clearAns(q.id);
+      else setAns(q.id, NONE);
       render();
     }
     return;
