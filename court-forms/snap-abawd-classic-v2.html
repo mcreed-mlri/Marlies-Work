@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABAWD Screening Tool · Court Forms Online</title>
+<meta name="description" content="A short, private screening to check if you need to meet the SNAP ABAWD work rules or if you are exempt.">
+<link rel="stylesheet" href="fonts/atkinson.css">
+<style>
+  :root{
+    --accent:#1a5fb4;
+    --accent-dark:#124a8f;
+    --soft:#e8f0fb;
+    --bg:#eef2f7;
+    --ink:#1b1f27;
+    --radius:10px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  html,body{margin:0}
+  body{
+    font-family:'Atkinson Hyperlegible',system-ui,-apple-system,sans-serif;
+    color:var(--ink);
+    background:var(--bg);
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+  a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+  a:hover{color:var(--accent-dark)}
+  button{font-family:inherit;touch-action:manipulation}
+  :focus-visible{outline:3px solid var(--accent-dark);outline-offset:2px;border-radius:4px}
+  @keyframes cardIn{from{opacity:0}to{opacity:1}}
+  .card-in{animation:cardIn .3s ease both}
+  .opt{
+    display:flex;align-items:center;gap:13px;width:100%;
+    font-family:inherit;font-size:16.5px;font-weight:700;text-align:left;
+    padding:16px 18px;border:2px solid #d3d9e2;border-radius:var(--radius);
+    background:#fff;cursor:pointer;color:var(--ink);line-height:1.35;
+    box-shadow:0 0 0 3px transparent;min-height:52px;
+    transition:background .15s ease,border-color .15s ease,box-shadow .15s ease;
+    -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  }
+  .opt:hover{border-color:#a8b4c8;background:#f7f9fc}
+  .opt:active{background:var(--soft)}
+  .opt-selected{
+    border-color:var(--accent);background:var(--soft);
+    box-shadow:inset 0 0 0 1px var(--accent),0 0 0 3px rgba(26,95,180,.16);
+  }
+  .opt-selected:hover{border-color:var(--accent);background:var(--soft)}
+  .opt-mark{
+    width:24px;height:24px;flex:none;border-radius:50%;
+    border:2px solid #b9c1cd;background:#fff;color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-size:14px;font-weight:700;transition:border-color .15s ease,background .15s ease;
+  }
+  .opt-mark.square{border-radius:6px}
+  .opt-selected .opt-mark{border-color:var(--accent);background:var(--accent)}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:12px max(16px, env(safe-area-inset-right)) 12px max(16px, env(safe-area-inset-left));
+    background:var(--accent);color:#fff;
+  }
+  .topbar-brand{display:flex;align-items:center;gap:12px;min-width:0}
+  .topbar-title{font-size:15px;font-weight:700;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .topbar-sub{font-size:12px;opacity:.85;line-height:1.2}
+  .btn-exit{
+    flex:none;font-size:13px;font-weight:700;color:var(--accent);background:#fff;border:none;
+    border-radius:999px;padding:10px 14px;cursor:pointer;min-height:44px;
+  }
+  #stage{
+    max-width:660px;margin:0 auto;
+    padding:22px max(16px, env(safe-area-inset-right)) 60px max(16px, env(safe-area-inset-left));
+  }
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0 0}
+  .q-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:28px 0 0;flex-wrap:wrap}
+  .h1{font-size:clamp(24px,6vw,29px);line-height:1.2;margin:8px 0 16px;letter-spacing:-.01em}
+  .h2{font-size:clamp(21px,5.5vw,25px);line-height:1.25;margin:6px 0 0;letter-spacing:-.01em}
+  .h-result{font-size:clamp(21px,5.5vw,26px);line-height:1.25;margin:6px 0 0}
+  input,textarea,select{font-size:16px;max-width:100%}
+  @media (max-width:640px){
+    .topbar-sub{display:none}
+    #stage{padding:16px max(14px, env(safe-area-inset-right)) 48px max(14px, env(safe-area-inset-left))}
+    .form-row{grid-template-columns:1fr}
+    .opt{font-size:16px;padding:15px 14px}
+    .q-nav > button{flex:1 1 auto;min-width:min(100%,140px);text-align:center}
+    #start-btn{width:100%}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .card-in{animation:none}
+    .opt,.opt-mark{transition:none}
+  }
+  .hint-tip{position:relative;display:inline-block;max-width:100%}
+  .hint-tip-btn{
+    display:inline-flex;align-items:center;gap:7px;font-family:inherit;font-size:12.5px;font-weight:700;
+    color:#5b6470;background:none;border:none;padding:8px 4px;cursor:help;min-height:44px;
+    text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;
+  }
+  .hint-tip-icon{
+    width:18px;height:18px;border-radius:50%;border:1.5px solid var(--accent);color:var(--accent);
+    display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:none;
+  }
+  .hint-tip-panel{
+    z-index:100;padding:12px 14px;font-size:12.5px;line-height:1.5;font-weight:400;
+    color:var(--ink);background:#fff;border:1px solid #cdd3dc;border-radius:calc(var(--radius) + 2px);
+    box-shadow:0 8px 24px rgba(16,32,56,.12);text-align:left;overflow-wrap:anywhere;
+    opacity:0;visibility:hidden;pointer-events:none;
+    transition:opacity .15s ease,visibility .15s ease,max-height .2s ease,padding .2s ease,margin .2s ease;
+  }
+  .hint-tip--icon{display:inline-flex;vertical-align:middle;width:auto}
+  .hint-tip-btn--icon{min-height:28px;padding:2px;text-decoration:none;gap:0}
+  .hint-tip-btn--icon .hint-tip-icon{width:20px;height:20px;font-size:13px}
+  .hint-tip-wrap{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  @media (max-width:640px),(hover:none),(pointer:coarse){
+    .hint-tip:not(.hint-tip--icon){display:block;width:100%;max-width:100%}
+    .hint-tip-wrap .hint-tip--icon.is-open{
+      flex:1 1 100%;display:flex;flex-direction:column;align-items:stretch;
+      max-width:100%;min-width:0;
+    }
+    .hint-tip-wrap .hint-tip--icon.is-open .hint-tip-btn{align-self:flex-start}
+    .hint-tip-btn--icon{min-height:44px;min-width:44px;justify-content:center}
+    .hint-tip-panel{
+      display:block;position:static;width:100%;max-width:100%;box-sizing:border-box;box-shadow:none;
+      max-height:0;overflow:hidden;padding:0 14px;margin:0;opacity:1;
+    }
+    .hint-tip.is-open .hint-tip-panel{
+      visibility:visible;pointer-events:auto;max-height:400px;overflow:visible;
+      padding:12px 14px;margin-top:8px;
+    }
+  }
+  @media (hover:hover) and (min-width:641px) and (pointer:fine){
+    .hint-tip-btn{min-height:auto;padding:4px 2px}
+    .hint-tip-panel{position:fixed;width:min(300px,calc(100vw - 32px))}
+    .hint-tip:hover .hint-tip-panel,.hint-tip:focus-within .hint-tip-panel,.hint-tip.is-open .hint-tip-panel{
+      opacity:1;visibility:visible;pointer-events:auto;
+    }
+  }
+  /* Off-screen (not display:none) so the signature image can decode before print. */
+  #print-root{position:fixed;left:-10000px;top:0;width:8.5in;pointer-events:none}
+  @media print{
+    @page{margin:0}
+    .no-print{display:none !important}
+    body{background:#fff !important}
+    body.printing-form > *{display:none !important}
+    body.printing-form > #print-root{
+      display:block !important;position:static !important;left:auto !important;
+      width:auto !important;pointer-events:auto;padding:0.6in;
+    }
+    #print-root img{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="no-print topbar">
+  <div class="topbar-brand">
+    <div style="width:30px;height:30px;border-radius:7px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex:none">CF</div>
+    <div style="min-width:0">
+      <div class="topbar-title">Court Forms Online</div>
+      <div class="topbar-sub">SNAP · ABAWD Screening Tool</div>
+    </div>
+  </div>
+  <button type="button" class="btn-exit" data-action="go-back" title="Back to the screening home page">← Back</button>
+</div>
+
+<!-- Progress -->
+<div id="progress" class="no-print"></div>
+
+<!-- Stage -->
+<main id="stage"></main>
+
+<script src="snap-screening-logic.js"></script>
+<script>
+"use strict";
+
+/* Shared screening logic (see snap-screening-logic.js).
+ * 'classic2' is the author's website copy draft in the classic design. */
+const S = SnapScreening.create('classic2');
+const { GOODCAUSE_CATEGORIES, GROUPS, NONE, SCREENING_HUB_URL, LINKS } = S;
+
+/* ------------------------------------------------------------------ *
+ * State + logic (ports the DCLogic Component)
+ * ------------------------------------------------------------------ */
+
+const state = { view:'intro', step:0, gc:false, helpOpen:{}, agreed:false, answers:{}, animate:true };
+
+/* ---- Local, 1-day retention -------------------------------------- *
+ * Answers are kept only in this browser (never sent anywhere) and are
+ * discarded automatically after RETENTION_MS. The results screen also
+ * offers an explicit "Delete my answers" control.
+ * ------------------------------------------------------------------ */
+const STORAGE_KEY = 'cfo-abawd-classic-v2-screening-v1';
+const RETENTION_MS = 24 * 60 * 60 * 1000; // 1 day
+/* TODO(author): the copy draft marks this as help text but does not supply the
+ * wording. Draft below is pending review. */
+const WHY_INFO_HELP = 'DTA needs to know why the work rules should not apply to you before they can update your case. This form puts your answers in writing so you can print or save them and send them to DTA. MLRI never sees what you type.';
+let sigCanvas = null, sigCtx = null, sigHint = null, sigDrawn = false; // finger/mouse signature pad
+
+function persist(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      view:state.view, step:state.step, gc:state.gc,
+      agreed:state.agreed, answers:state.answers, savedAt:Date.now()
+    }));
+  }catch(e){ /* storage unavailable or full; fail quietly */ }
+}
+
+function loadPersisted(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return;
+    const d = JSON.parse(raw);
+    if(!d || typeof d.savedAt !== 'number' || (Date.now() - d.savedAt) > RETENTION_MS){
+      localStorage.removeItem(STORAGE_KEY);
+      return;
+    }
+    state.view = d.view || 'intro';
+    state.step = typeof d.step === 'number' ? d.step : 0;
+    // Clamp in case saved data predates the themed grouping (step used to index questions).
+    state.step = Math.max(0, Math.min(state.step, GROUPS.length - 1));
+    state.gc = !!d.gc;
+    state.agreed = !!d.agreed;
+    state.answers = (d.answers && typeof d.answers === 'object') ? S.migrateAnswers(d.answers) : {};
+  }catch(e){
+    try{ localStorage.removeItem(STORAGE_KEY); }catch(_){}
+  }
+}
+
+function deleteAnswers(){
+  try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+  state.view = 'intro'; state.step = 0; state.gc = false;
+  state.helpOpen = {}; state.answers = {};
+  renderWithMotion();
+}
+
+function qById(id){ return S.qById(id); }
+function curGroup(){ return GROUPS[state.step]; }
+function pageQuestions(){ return S.pageQuestions(state.answers, state.step, state.gc); }
+function setAns(id, val){ state.answers[id] = val; }
+function reasons(){ return S.exemptReasons(state.answers); }
+function resultType(){ return S.resultType(state.answers); }
+
+function advance(){
+  if(state.gc){ state.view = 'results'; renderWithMotion(); return; }
+  if(state.step < GROUPS.length - 1){ state.step++; renderWithMotion(); return; }
+  if(S.shouldSkipGoodCause(state.answers)){ state.view = 'results'; }
+  else { state.gc = true; }
+  renderWithMotion();
+}
+
+function back(){
+  if(state.gc){ state.gc = false; state.step = GROUPS.length - 1; renderWithMotion(); return; }
+  if(state.step > 0){ state.step--; }
+  else { state.view = 'intro'; }
+  renderWithMotion();
+}
+
+function skipToEnd(){
+  if(S.shouldSkipGoodCause(state.answers)){
+    state.gc = false;
+    state.view = 'results';
+  } else {
+    state.gc = true;
+    state.view = 'question';
+  }
+  renderWithMotion();
+}
+
+/* ------------------------------------------------------------------ *
+ * Rendering
+ * ------------------------------------------------------------------ */
+
+function esc(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function hintTip(id, label, bodyHtml, iconOnly){
+  const tipClass = iconOnly ? 'hint-tip hint-tip--icon' : 'hint-tip';
+  const btnClass = iconOnly ? 'hint-tip-btn hint-tip-btn--icon' : 'hint-tip-btn';
+  const btnInner = iconOnly
+    ? `<span class="hint-tip-icon" aria-hidden="true">i</span>`
+    : `<span class="hint-tip-icon" aria-hidden="true">i</span><span>${esc(label)}</span>`;
+  const ariaLabel = iconOnly ? ` aria-label="${esc(label)}"` : '';
+  return `<span class="${tipClass}">
+    <button type="button" class="${btnClass}" aria-expanded="false" aria-controls="hint-${id}"${ariaLabel} data-action="toggle-hint" data-hint-id="${id}">
+      ${btnInner}
+    </button>
+    <span id="hint-${id}" class="hint-tip-panel" role="note">${bodyHtml}</span>
+  </span>`;
+}
+
+function hintTipUsesInlinePanel(){
+  return window.matchMedia('(max-width: 640px), (hover: none), (pointer: coarse)').matches;
+}
+
+function hintTipUsesFloatingPanel(){
+  return window.matchMedia('(hover: hover) and (min-width: 641px) and (pointer: fine)').matches;
+}
+
+function clearHintPanelPosition(panel){
+  panel.style.top = panel.style.left = panel.style.width = panel.style.display = panel.style.visibility = '';
+}
+
+function setHintTipOpen(tip, open){
+  const btn = tip.querySelector('.hint-tip-btn');
+  const panel = tip.querySelector('.hint-tip-panel');
+  if(open){
+    if(panel && hintTipUsesInlinePanel()) clearHintPanelPosition(panel);
+    if(hintTipUsesFloatingPanel()) positionHintPanel(tip);
+    tip.classList.add('is-open');
+    if(btn) btn.setAttribute('aria-expanded', 'true');
+  } else {
+    tip.classList.remove('is-open');
+    if(btn) btn.setAttribute('aria-expanded', 'false');
+    if(panel) clearHintPanelPosition(panel);
+  }
+}
+
+function positionHintPanel(tip){
+  if(hintTipUsesInlinePanel()) return;
+  const btn = tip.querySelector('.hint-tip-btn');
+  const panel = tip.querySelector('.hint-tip-panel');
+  if(!btn || !panel) return;
+
+  const pad = 16;
+  const gap = 10;
+  const maxW = Math.min(300, window.innerWidth - pad * 2);
+  const rect = btn.getBoundingClientRect();
+
+  panel.style.width = maxW + 'px';
+  panel.style.left = '-9999px';
+  panel.style.top = '-9999px';
+  panel.style.visibility = 'hidden';
+  panel.style.display = 'block';
+
+  const panelH = panel.offsetHeight;
+  let left = rect.left + (rect.width - maxW) / 2;
+  left = Math.max(pad, Math.min(left, window.innerWidth - maxW - pad));
+
+  let top = rect.bottom + gap;
+  if(top + panelH > window.innerHeight - pad) top = rect.top - panelH - gap;
+  if(top < pad) top = Math.max(pad, window.innerHeight - panelH - pad);
+
+  panel.style.left = left + 'px';
+  panel.style.top = top + 'px';
+  panel.style.visibility = '';
+}
+
+function repositionVisibleHintPanels(){
+  document.querySelectorAll('.hint-tip-panel').forEach(panel => {
+    if(hintTipUsesInlinePanel()) clearHintPanelPosition(panel);
+  });
+  document.querySelectorAll('.hint-tip.is-open').forEach(positionHintPanel);
+  if(hintTipUsesFloatingPanel()){
+    document.querySelectorAll('.hint-tip:hover').forEach(positionHintPanel);
+  }
+}
+
+function initHintTips(){
+  document.addEventListener('mouseover', (e) => {
+    if(!hintTipUsesFloatingPanel()) return;
+    const tip = e.target.closest && e.target.closest('.hint-tip');
+    if(!tip) return;
+    if(e.relatedTarget && tip.contains(e.relatedTarget)) return;
+    positionHintPanel(tip);
+  });
+
+  document.addEventListener('focusin', (e) => {
+    const tip = e.target.closest && e.target.closest('.hint-tip');
+    if(tip && hintTipUsesFloatingPanel()) positionHintPanel(tip);
+  });
+
+  window.addEventListener('resize', repositionVisibleHintPanels, { passive: true });
+  window.addEventListener('scroll', repositionVisibleHintPanels, { passive: true, capture: true });
+
+  document.addEventListener('click', (e) => {
+    if(e.target.closest && e.target.closest('[data-action="toggle-hint"]')) return;
+    document.querySelectorAll('.hint-tip.is-open').forEach(t => setHintTipOpen(t, false));
+  });
+}
+
+const primaryBtn = "font-size:17px;font-weight:700;color:#fff;background:var(--accent);border:none;border-radius:var(--radius);padding:15px 26px;cursor:pointer;box-shadow:0 2px 0 var(--accent-dark);min-height:48px";
+const nextBtn    = "font-size:16px;font-weight:700;color:#fff;background:var(--accent);border:none;border-radius:var(--radius);padding:12px 22px;cursor:pointer;box-shadow:0 2px 0 var(--accent-dark);min-height:48px";
+const ghostBtn   = "font-size:15px;font-weight:700;color:var(--accent);background:none;border:2px solid var(--accent);border-radius:var(--radius);padding:10px 18px;cursor:pointer;min-height:48px";
+const inputStyle = "width:100%;font-family:inherit;font-size:16px;padding:12px;border:1.5px solid #cdd3dc;border-radius:calc(var(--radius) - 3px);min-height:48px";
+
+// Returns an array of option descriptors for the current question.
+function buildOptions(q){
+  const a = state.answers[q.id];
+  const out = [];
+  if(q.type === 'yn'){
+    out.push({label:q.yesLabel || 'Yes', selected:a === 'yes', mark:a === 'yes' ? '●' : '', shape:'round', kind:'yn', val:'yes'});
+    out.push({label:q.noLabel  || 'No',  selected:a === 'no',  mark:a === 'no'  ? '●' : '', shape:'round', kind:'yn', val:'no'});
+  } else if(q.type === 'multi'){
+    const arr = Array.isArray(a) ? a : [];
+    q.options.forEach((o, i) => out.push({label:o.label, selected:arr.includes(o.id), mark:arr.includes(o.id) ? '✓' : '', shape:'square', kind:'multi', idx:i}));
+    out.push({label:q.noneLabel, selected:a === NONE, mark:a === NONE ? '✓' : '', shape:'square', kind:'multi-none'});
+  } else if(q.type === 'single'){
+    q.options.forEach((o, i) => out.push({label:o.label, selected:a === o.id, mark:a === o.id ? '●' : '', shape:'round', kind:'single', idx:i}));
+    out.push({label:q.noneLabel, selected:a === NONE, mark:a === NONE ? '●' : '', shape:'round', kind:'single-none'});
+  }
+  return out;
+}
+
+function renderProgress(){
+  const el = document.getElementById('progress');
+  if(state.view !== 'question'){ el.innerHTML = ''; return; }
+  const total = GROUPS.length;
+  let pct, label;
+  if(state.gc){ pct = 100; label = 'Last question'; }
+  else { const cur = state.step + 1; pct = Math.round((cur / total) * 100); label = `Section ${cur} of ${total}`; }
+  el.innerHTML =
+    `<div style="height:6px;background:var(--soft)" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}" aria-label="Screening progress">`
+    + `<div style="height:100%;width:${pct}%;background:var(--accent);transition:width .3s ease"></div></div>`
+    + `<div style="max-width:660px;margin:0 auto;padding:10px max(16px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left));font-size:13px;color:#5b6470;font-weight:700">${label}</div>`;
+}
+
+function animClass(){ return state.animate ? 'card-in' : ''; }
+
+function renderIntro(){
+  return `<div class="${animClass()}">
+    <h1 class="h1">Did DTA tell you that you need to meet ABAWD Work Rules to keep getting SNAP?</h1>
+    <p style="font-size:16.5px;line-height:1.6;color:#3a424e;margin:0 0 14px">Some adults on SNAP <strong>ages 18 through 64</strong> have to meet ABAWD work rules to get SNAP for more than 3 months. <strong>Many adults are exempt</strong> from the work rules. Being "exempt" means that you don't have to meet the work rules to keep getting SNAP.</p>
+    <p style="font-size:16.5px;line-height:1.6;color:#3a424e;margin:0 0 14px">You only have to meet these rules, or tell DTA you are exempt, if DTA sends you a <a href="${LINKS.snapWorkNotice}" target="_blank" rel="noopener">SNAP and Work notice</a> that says you have to meet the ABAWD Work Rules. Check your mail and <a href="${LINKS.dtaConnect}" target="_blank" rel="noopener">DTAConnect</a> to see notes from DTA. DTA has to screen you for all exemptions <em>before</em> subjecting you to the rules.</p>
+    <p style="font-size:16.5px;line-height:1.6;color:#3a424e;margin:0 0 18px">If you lost your SNAP because of the work rules, you might be able to get back on if you have an exemption, or if you met or are currently meeting the work rules.</p>
+
+    <details style="margin:0 0 20px;border:1px solid #dfe3ea;border-radius:var(--radius);background:#fff">
+      <summary style="cursor:pointer;padding:13px 16px;font-size:15px;font-weight:700;color:var(--accent)">More on the SNAP ABAWD work rules</summary>
+      <div style="padding:0 16px 15px;font-size:15px;line-height:1.6;color:#3a424e">
+        <p style="margin:0 0 10px">Everyone has a different life situation. Many people have good reasons for why they aren't working, in school, or volunteering. During your application or recertification interview, DTA must ask you a list of questions to see if you're exempt, already meeting the work rules, or if you need to meet the work rules to keep getting SNAP.</p>
+        <p style="margin:0">To learn more about the ABAWD work rules, <a href="${LINKS.abawd}" target="_blank" rel="noopener">click here</a>.</p>
+      </div>
+    </details>
+
+    <p style="font-size:16.5px;line-height:1.6;color:#3a424e;margin:0 0 22px">This short screening asks a few questions to check if you need to meet the ABAWD work rules or if you are exempt. It takes about 3 minutes.</p>
+    <div style="display:flex;align-items:flex-start;gap:12px;background:var(--soft);border-radius:var(--radius);padding:15px 17px;margin-bottom:22px">
+      <div style="font-size:18px;line-height:1.4;flex:none" aria-hidden="true">\u{1F512}</div>
+      <p style="font-size:14.5px;line-height:1.55;color:#3a424e;margin:0">Your answers stay in your browser and are never sent to us. They are automatically cleared after 1 day, and you can delete them yourself at any time.</p>
+    </div>
+
+    <details style="margin:0 0 16px;border:1px solid #dfe3ea;border-radius:var(--radius);background:#fff">
+      <summary style="cursor:pointer;padding:13px 16px;font-size:15px;font-weight:700;color:var(--accent)">Terms of Use</summary>
+      <div style="padding:0 16px 15px;font-size:14px;line-height:1.6;color:#3a424e">
+        <p style="margin:0 0 10px">This screening tool provides general information only. It is <strong>not legal advice</strong> and does not create an attorney–client relationship. Results are based only on the answers you provide and may not reflect your full situation.</p>
+        <p style="margin:0 0 10px">For advice about your specific case, contact a legal aid program or an attorney, and always confirm requirements with DTA before acting.</p>
+        <p style="margin:0">Your answers are stored only in this browser, are never transmitted to us, and are cleared automatically after 1 day.</p>
+      </div>
+    </details>
+
+    <fieldset style="border:1px solid #dfe3ea;border-radius:var(--radius);padding:15px 17px;margin:0 0 18px;background:#fff">
+      <legend style="display:block;float:left;width:100%;font-size:15px;font-weight:700;padding:0;margin:0 0 13px;color:var(--ink)">Before you start</legend>
+      <p style="clear:both;font-size:15px;line-height:1.55;color:#3a424e;margin:0 0 12px">Are you between 18 and 64 years old?</p>
+      <div role="radiogroup" aria-label="Are you between 18 and 64 years old?" style="display:flex;flex-direction:column;gap:10px">
+        <label style="display:flex;gap:10px;align-items:center;font-size:15px;cursor:pointer"><input type="radio" name="ageRange" value="yes" ${state.answers.ageRange === 'yes' ? 'checked' : ''} style="width:18px;height:18px;accent-color:var(--accent)"> Yes</label>
+        <label style="display:flex;gap:10px;align-items:center;font-size:15px;cursor:pointer"><input type="radio" name="ageRange" value="no" ${state.answers.ageRange === 'no' ? 'checked' : ''} style="width:18px;height:18px;accent-color:var(--accent)"> No</label>
+      </div>
+    </fieldset>
+
+    <label style="display:flex;gap:11px;align-items:flex-start;margin:0 0 22px;font-size:15px;line-height:1.5;color:#3a424e;cursor:pointer">
+      <input type="checkbox" id="agree" ${state.agreed ? 'checked' : ''} style="width:20px;height:20px;flex:none;margin-top:1px;accent-color:var(--accent);cursor:pointer">
+      <span>I have read and agree to the Terms of Use above.</span>
+    </label>
+
+    <h2 class="h2" style="margin:0 0 14px">Check if the SNAP work rules apply to you.</h2>
+    <button type="button" id="start-btn" data-action="start" ${canStart() ? '' : 'aria-disabled="true"'} style="${primaryBtn}${canStart() ? '' : ';opacity:.5;cursor:not-allowed'}">Fill out the form →</button>
+    <p style="font-size:14px;margin:18px 0 0"><a href="${LINKS.abawd}" target="_blank" rel="noopener">Learn more about the SNAP ABAWD work rules</a></p>
+  </div>`;
+}
+
+// Help disclosure for one question. `helpHtml` allows links inside the help text.
+function renderHelp(q){
+  const body = q.helpHtml || (q.help ? esc(q.help) : '');
+  if(!body) return '';
+  const open = !!state.helpOpen[q.id];
+  let help = `<div style="margin:14px 0 0">
+    <button type="button" data-action="toggle-help" data-q-id="${q.id}" aria-expanded="${open}" style="display:inline-flex;align-items:center;gap:7px;font-size:14px;font-weight:700;color:var(--accent);background:none;border:none;padding:0;cursor:pointer">
+      <span aria-hidden="true" style="width:18px;height:18px;border-radius:50%;border:2px solid var(--accent);display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex:none">i</span>
+      ${open ? 'Hide help' : 'What does this mean?'}
+    </button>`;
+  if(open){
+    help += `<p style="font-size:15px;line-height:1.6;color:#3a424e;margin:10px 0 0;padding:13px 15px;background:var(--soft);border-radius:var(--radius);border-left:4px solid var(--accent)">${body}</p>`;
+  }
+  help += `</div>`;
+  return help;
+}
+
+// Bulleted list shown inside the question itself (e.g. the state agencies).
+function renderQList(q){
+  if(!Array.isArray(q.listItems) || !q.listItems.length) return '';
+  const items = q.listItems.map(t => `<li>${esc(t)}</li>`).join('');
+  return `<ul style="margin:13px 0 0;padding-left:22px;font-size:15.5px;line-height:1.7;color:#3a424e">${items}</ul>`;
+}
+
+// Footnote shown under the options (e.g. how to reach a DTA DV specialist).
+function renderQNote(q){
+  if(!q.note) return '';
+  return `<p style="font-size:14.5px;line-height:1.6;color:#3a424e;margin:14px 0 0">${q.note}</p>`;
+}
+
+// Option buttons for one question.
+function renderOptions(q){
+  const groupRole = q.type === 'multi' ? 'group' : 'radiogroup';
+  const buttons = buildOptions(q).map(o => {
+    const dataset = o.kind === 'yn' ? `data-opt-kind="yn" data-opt-val="${o.val}"`
+      : (o.kind === 'multi' || o.kind === 'single') ? `data-opt-kind="${o.kind}" data-opt-idx="${o.idx}"`
+      : `data-opt-kind="${o.kind}"`;
+    const role = q.type === 'multi' ? 'checkbox' : 'radio';
+    const markClass = o.shape === 'square' ? 'opt-mark square' : 'opt-mark';
+    return `<button type="button" class="opt${o.selected ? ' opt-selected' : ''}" data-q-id="${q.id}" ${dataset} role="${role}" aria-checked="${o.selected}">
+      <span aria-hidden="true" class="${markClass}">${o.mark}</span>
+      <span style="flex:1;text-align:left">${esc(o.label)}</span>
+    </button>`;
+  }).join('');
+  return `<div role="${groupRole}" aria-label="${esc(q.text)}" style="display:flex;flex-direction:column;gap:11px;margin:20px 0 0">${buttons}</div>`;
+}
+
+// One question, in its own bordered block (the good-cause question stands alone).
+function renderQBlock(q){
+  const isGC = q.id === 'goodcause';
+  const head = isGC
+    ? `<h2 class="h2">${esc(q.text)}</h2>`
+    : `<h3 style="font-size:clamp(18px,4.6vw,21px);line-height:1.3;margin:0;letter-spacing:-.01em">${esc(q.text)}</h3>`;
+  const wrap = isGC ? '' : 'background:#fff;border:1px solid #dfe3ea;border-radius:var(--radius);padding:18px';
+  return `<div style="${wrap}">
+    ${head}
+    ${renderQList(q)}
+    ${renderHelp(q)}
+    ${renderOptions(q)}
+    ${renderQNote(q)}
+  </div>`;
+}
+
+function canStart(){ return state.agreed && (state.answers.ageRange === 'yes' || state.answers.ageRange === 'no'); }
+
+function renderPage(){
+  const lastGroup = !state.gc && state.step === GROUPS.length - 1;
+  const nextLabel = (lastGroup || state.gc) ? 'See my results →' : 'Next →';
+  const skipWarn = lastGroup && !state.gc && reasons().length === 0
+    ? `<p style="font-size:14.5px;line-height:1.55;color:#7a4a00;margin:16px 0 0;padding:12px 14px;background:#fff8e8;border:1px solid #ecd9a8;border-radius:var(--radius)">If you skipped questions, you may not see exemptions that apply to you.</p>`
+    : '';
+
+  const header = state.gc ? '' : `<div style="margin:0 0 18px">
+    <h2 class="h2">${esc(curGroup().title)}</h2>
+    <p style="font-size:15.5px;line-height:1.55;color:#3a424e;margin:8px 0 0">Answer any that apply to you. Every question is optional.</p>
+  </div>`;
+
+  const blocks = pageQuestions().map(renderQBlock).join('');
+
+  return `<div class="${animClass()}">
+    ${header}
+    <div style="display:flex;flex-direction:column;gap:14px">${blocks}</div>
+    <div class="q-nav">
+      <button type="button" data-action="back" style="${ghostBtn}">← Back</button>
+      <button type="button" data-action="next" style="${nextBtn}">${nextLabel}</button>
+    </div>
+    <div style="text-align:center;margin-top:14px">
+      ${skipWarn}
+      <button type="button" data-action="skip-end" style="font-family:inherit;font-size:14.5px;font-weight:700;color:#5b6470;background:none;border:none;padding:6px 8px;cursor:pointer;text-decoration:underline;text-underline-offset:3px">Skip to results</button>
+    </div>
+  </div>`;
+}
+
+function renderResults(){
+  const rt = resultType();
+  const rs = reasons();
+  const prompts = S.statementPrompts(state.answers);
+  const email = LINKS.advocacyEmail;
+
+  /* Closing arrow lines, shown under every result screen. */
+  const learnMore = `<p style="font-size:15px;line-height:1.6;margin:0">→ To learn more about the ABAWD work rules, <a href="${LINKS.abawd}" target="_blank" rel="noopener">click here</a>.</p>`;
+  const lostSnap = `<p style="font-size:15px;line-height:1.6;margin:12px 0 0">→ If you lost your SNAP or are about to lose your SNAP because of the ABAWD rules, email us at <a href="mailto:${email}">${email}</a>.</p>`;
+
+  /* Ways to get a written, signed statement to DTA. Reused on several screens. */
+  const dtaContacts = `<ul style="margin:0;padding-left:20px;font-size:15px;line-height:1.7;color:#3a424e">
+    <li>Upload on <a href="${LINKS.dtaConnect}" target="_blank" rel="noopener">DTAConnect</a></li>
+    <li>Mail: DTA Document Processing Center, P.O. Box 4406, Taunton, MA 02780-0420</li>
+    <li>Fax: (617) 887-8765</li>
+    <li>Call the DTA Assistance line at <a href="tel:8773822363">(877) 382-2363</a>
+      <ul style="margin:4px 0 0;padding-left:20px"><li><a href="${LINKS.reachDtaWorker}" target="_blank" rel="noopener">Click here</a> to see how to get help if you can't reach DTA by phone</li></ul>
+    </li>
+    <li>Go to a <a href="${LINKS.dtaOffices}" target="_blank" rel="noopener">local DTA office</a> to speak with a SNAP worker</li>
+  </ul>`;
+
+  const resultsHead = `<h1 class="h1" style="text-align:center;margin:0 0 16px">ABAWD Screening Tool Results</h1>
+    <p style="font-size:16.5px;line-height:1.6;color:#3a424e;margin:0 0 16px">Based on your answers,</p>`;
+
+  let card = '';
+  if(rt === 'ageinfo'){
+    card = `<div style="border-radius:var(--radius);overflow:hidden;border:1px solid #c7d6f0">
+      <div style="background:var(--soft);padding:20px 22px;border-bottom:1px solid #c7d6f0">
+        <h2 class="h-result" style="color:var(--accent-dark)">These work rules may not apply to your age group</h2>
+      </div>
+      <div style="padding:20px 22px;background:#fff">
+        <p style="font-size:16px;line-height:1.6;color:#3a424e;margin:0">You said you are not between 18 and 64. The ABAWD work rules usually apply to adults in that age range. You may still have other SNAP rights. Contact DTA or a legal aid program to check your situation.</p>
+      </div></div>`;
+  } else if(rt === 'exempt'){
+    const items = rs.map(r => `<li style="display:flex;align-items:flex-start;gap:11px;font-size:16px;line-height:1.5;color:#1b1f27">
+      <span aria-hidden="true" style="width:22px;height:22px;border-radius:50%;background:#1f7a4d;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex:none;margin-top:1px">✓</span>
+      <span>${esc(r)}</span></li>`).join('');
+    card = `<div style="border-radius:var(--radius);overflow:hidden;border:1px solid #cbe4d5">
+      <div style="background:#e6f4ec;padding:20px 22px;border-bottom:1px solid #cbe4d5">
+        <h2 class="h-result" style="color:#14532d">You are exempt and do not need to meet the ABAWD work rules because of these reasons:</h2>
+      </div>
+      <div style="padding:20px 22px;background:#fff">
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px">${items}</ul>
+      </div></div>`;
+  } else if(rt === 'goodcause'){
+    const cats = GOODCAUSE_CATEGORIES.map(c => {
+      const detail = c.detail.map(d => `<li>${esc(d)}</li>`).join('');
+      const more = c.moreExamplesUrl
+        ? `<li><a href="${c.moreExamplesUrl}" target="_blank" rel="noopener">More examples</a></li>` : '';
+      return `<li style="margin:0 0 14px">
+        <div style="font-size:16px;font-weight:700;color:#1b1f27">${esc(c.title)}</div>
+        <ul style="margin:5px 0 0;padding-left:22px;font-size:15.5px;line-height:1.6;color:#3a424e">${detail}${more}</ul>
+      </li>`;
+    }).join('');
+    card = `<div style="border-radius:var(--radius);overflow:hidden;border:1px solid #c7d6f0">
+      <div style="background:var(--soft);padding:20px 22px;border-bottom:1px solid #c7d6f0">
+        <h2 class="h-result" style="color:var(--accent-dark)">You may have a good reason for missing work, school, or volunteer hours</h2>
+      </div>
+      <div style="padding:20px 22px;background:#fff">
+        <p style="font-size:16px;line-height:1.6;color:#3a424e;margin:0 0 14px">This includes missing hours before or after your start date.</p>
+        <p style="font-size:16px;line-height:1.6;color:#1b1f27;font-weight:700;margin:0 0 14px">Tell DTA as soon as possible if you couldn't meet the work rules for one or more months for any of the below reasons:</p>
+        <ul style="list-style:none;padding:0;margin:0">${cats}</ul>
+      </div></div>`;
+  } else {
+    card = `<div style="border-radius:var(--radius);overflow:hidden;border:1px solid #ecd9a8">
+      <div style="background:#fbf1dc;padding:20px 22px;border-bottom:1px solid #ecd9a8">
+        <h2 class="h-result" style="color:#7a4a00">You may need to meet the ABAWD work rules to keep getting SNAP</h2>
+      </div>
+      <div style="padding:20px 22px;background:#fff">
+        <p style="font-size:16px;line-height:1.6;color:#3a424e;margin:0 0 8px">→ If you already lost your SNAP because of the Work Rules, you can <a href="${LINKS.reapply}" target="_blank" rel="noopener">reapply</a> at any time.</p>
+        <ul style="margin:0 0 20px;padding-left:20px;font-size:15px;line-height:1.7;color:#3a424e">
+          <li><a href="${LINKS.getSnapBack}" target="_blank" rel="noopener">See here</a> for more information on how you may be able to get your SNAP back</li>
+          <li>If you lost your SNAP or are about to lose your SNAP because of the ABAWD rules, email us at <a href="mailto:${email}">${email}</a>.</li>
+        </ul>
+
+        <div style="padding:18px 20px;background:#eef7f1;border:1px solid #cbe4d5;border-radius:var(--radius)">
+          <h3 style="font-size:17px;margin:0 0 14px">You can meet the rules by:</h3>
+          <div style="display:flex;gap:13px;align-items:flex-start">
+            <span aria-hidden="true" style="width:26px;height:26px;border-radius:50%;background:#1f7a4d;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none">1</span>
+            <div>
+              <p style="margin:0;font-size:15.5px;line-height:1.55">Doing <strong>paid or unpaid work</strong>, and/or doing a <a href="${LINKS.dtaTraining}" target="_blank" rel="noopener">DTA training program</a>, for at least <strong>20 hours per week (80 hours a month)</strong></p>
+              <ul style="margin:7px 0 0;padding-left:20px;font-size:15px;line-height:1.6;color:#3a424e"><li>Examples of unpaid work include internships, or caring for family or friends who aren't disabled or under age 6.</li></ul>
+            </div>
+          </div>
+          <p style="text-align:center;font-weight:700;font-size:15px;color:#3a424e;margin:14px 0">OR</p>
+          <div style="display:flex;gap:13px;align-items:flex-start">
+            <span aria-hidden="true" style="width:26px;height:26px;border-radius:50%;background:#1f7a4d;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none">2</span>
+            <div>
+              <p style="margin:0;font-size:15.5px;line-height:1.55"><strong>Community Service/Volunteering</strong> a certain number of hours per month</p>
+              <ul style="margin:7px 0 0;padding-left:20px;font-size:15px;line-height:1.6;color:#3a424e"><li>The number of hours depends on how much SNAP you get. DTA will tell you how many hours you need to volunteer.</li></ul>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin:20px 0 0;padding:18px 20px;background:var(--soft);border-radius:var(--radius)">
+          <h3 style="font-size:17px;margin:0 0 10px">How to tell DTA if you are meeting the work rules:</h3>
+          <p style="font-size:15px;line-height:1.6;color:#3a424e;margin:0 0 12px">Send proof of income or explain to DTA how you are meeting the rules through unpaid work, school/training program, or community service hours in a <strong>written, signed statement</strong> (handwritten note is fine):</p>
+          ${dtaContacts}
+          <hr style="border:none;border-top:1px solid #c7d6f0;margin:18px 0">
+          <p style="font-size:15.5px;line-height:1.6;color:#1b1f27;margin:0 0 10px"><strong>You may have a good reason for missing work, school, or volunteer hours.</strong> This includes missing hours before or after your start date.</p>
+          <p style="font-size:15px;line-height:1.6;color:#3a424e;margin:0">Tell DTA as soon as possible if you couldn't meet the work rules for one or more months because of an unexpected life situation like temporary transportation issues, a personal or family emergency, or employment issues. <a href="${LINKS.goodCause}" target="_blank" rel="noopener">Learn more here</a>.</p>
+        </div>
+      </div></div>`;
+  }
+
+  let form = '';
+  if(rt === 'exempt' || rt === 'goodcause'){
+    const formLead = rt === 'exempt'
+      ? 'To tell DTA you are exempt, you can fill out this form with your results and send it to DTA.'
+      : 'To tell DTA why you missed work hours, you can fill out this form and send it to DTA.';
+    const blanks = prompts.map((p, i) => `<div style="margin:0 0 16px">
+      <label for="f-explain-${i}" style="display:block;font-size:14.5px;font-weight:700;margin:0 0 7px">${esc(p)}</label>
+      <textarea id="f-explain-${i}" data-explain-prompt="${esc(p)}" rows="4" placeholder="Type here…" style="width:100%;font-family:inherit;font-size:16px;line-height:1.5;padding:11px 13px;border:1.5px solid #cdd3dc;border-radius:calc(var(--radius) - 3px);resize:vertical"></textarea>
+    </div>`).join('');
+    form = `<div style="margin:26px 0 0;padding:22px;background:#fff;border:1px solid #dfe3ea;border-radius:var(--radius)">
+      <div class="hint-tip-wrap" style="margin:0 0 10px">
+        <h3 style="font-size:19px;margin:0">${esc(formLead)}</h3>
+        ${hintTip('why-info', 'Why are we asking for more information?', WHY_INFO_HELP, true)}
+      </div>
+      <p style="font-size:14.5px;line-height:1.55;color:#5b6470;margin:0 0 6px"><em>Note: MLRI does <strong>not</strong> have access to or save the information you type on this form.</em></p>
+      <p style="font-size:14.5px;line-height:1.55;color:#5b6470;margin:0 0 18px">When you print or save, you will get a signed letter you can mail, fax, or upload to DTA. Print or save to keep a copy.</p>
+      <p style="font-size:15px;font-weight:700;margin:0 0 12px">In the blank spaces below,</p>
+      ${blanks}
+      <div class="form-row">
+        <div><label for="f-name" style="display:block;font-size:14px;font-weight:700;margin:0 0 6px">Your name</label><input id="f-name" autocomplete="name" style="${inputStyle}"></div>
+        <div><label for="f-agency" style="display:block;font-size:14px;font-weight:700;margin:0 0 6px">Client / Agency ID (if you have one)</label><input id="f-agency" style="${inputStyle}"></div>
+      </div>
+      <div style="margin:14px 0 0">
+        <div class="hint-tip-wrap" style="margin:0 0 6px">
+          <label id="sig-label" style="font-size:14px;font-weight:700;margin:0">Signature</label>
+          ${hintTip('sig', 'About signatures', 'Sign with your finger on a touch screen, or with your mouse. A typed signature won\u2019t be accepted \u2014 this captures your real one.', true)}
+        </div>
+        <div style="position:relative;border:1.5px solid #cdd3dc;border-radius:calc(var(--radius) - 3px);background:#fff">
+          <canvas id="sig-pad" role="img" aria-labelledby="sig-label" style="display:block;width:100%;height:140px;border-radius:calc(var(--radius) - 3px);cursor:crosshair;touch-action:none;-webkit-print-color-adjust:exact;print-color-adjust:exact"></canvas>
+          <span id="sig-hint" class="no-print" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#aeb4bd;font-size:14.5px;pointer-events:none">Sign here with your finger or mouse</span>
+        </div>
+        <div class="no-print" style="display:flex;justify-content:flex-end;margin:7px 0 0">
+          <button type="button" data-action="sig-clear" style="flex:none;font-family:inherit;font-size:13.5px;font-weight:700;color:var(--accent);background:none;border:2px solid var(--accent);border-radius:calc(var(--radius) - 3px);padding:8px 14px;cursor:pointer">Clear</button>
+        </div>
+        <p style="font-size:14px;line-height:1.5;color:#5b6470;margin:8px 0 0;text-align:center">(DTA needs your actual signature, not a typed signature)</p>
+      </div>
+      <div class="no-print" style="display:flex;gap:12px;margin:20px 0 0;flex-wrap:wrap">
+        <button type="button" data-action="print" style="${nextBtn}">Print this form</button>
+        <button type="button" data-action="print" style="${ghostBtn}">Save this form</button>
+        <button type="button" data-action="download-doc" style="${ghostBtn}">Download as Word</button>
+        <div style="width:100%;margin-top:2px">${hintTip('pdf-save', 'Tips for saving this form', 'Save this form opens your browser\u2019s print menu \u2014 use your usual printer or PDF option. If the dialog is slow to open, try Download as Word.')}</div>
+      </div>
+    </div>`;
+  }
+
+  let nextSteps = '';
+  if(rt === 'exempt' || rt === 'goodcause'){
+    const stepsLead = rt === 'exempt'
+      ? `Fill out and send in <a href="${LINKS.exemptionForm}" target="_blank" rel="noopener">DTA\u2019s exemption form</a> or explain the information to DTA in a written, signed statement (handwritten note is fine):`
+      : 'Explain the information to DTA in a written, signed statement (handwritten note is fine):';
+    nextSteps = `<div style="margin:26px 0 0;padding:22px;background:var(--soft);border-radius:var(--radius)">
+      <h3 style="font-size:18px;margin:0 0 10px">Or, you can do one of these next steps:</h3>
+      <p style="font-size:15px;line-height:1.6;color:#3a424e;margin:0 0 12px">${stepsLead}</p>
+      ${dtaContacts}
+    </div>`;
+  } else if(rt === 'ageinfo'){
+    nextSteps = `<div style="margin:26px 0 0;padding:22px;background:var(--soft);border-radius:var(--radius)">
+      <h3 style="font-size:18px;margin:0 0 12px">Ways to reach DTA</h3>
+      ${dtaContacts}
+    </div>`;
+  }
+
+  // The not-exempt card already carries the advocacy email in its own list.
+  const footer = `<div style="margin:24px 0 0">${learnMore}${rt === 'notexempt' ? '' : lostSnap}</div>`;
+
+  return `<div class="${animClass()}">${resultsHead}${card}${form}${nextSteps}${footer}
+    <div class="no-print" style="display:flex;flex-wrap:wrap;gap:12px;margin-top:22px">
+      <button type="button" data-action="restart" style="${ghostBtn}">↺ Start over</button>
+      <button type="button" data-action="delete-answers" style="font-size:15px;font-weight:700;color:#a12b2b;background:none;border:2px solid #d8a2a2;border-radius:var(--radius);padding:10px 18px;cursor:pointer">Delete my answers</button>
+    </div>
+  </div>`;
+}
+
+/* ---- Finger / mouse signature pad (canvas) ----
+ * Drawn locally and never saved or uploaded. Prints as a real image, so
+ * DTA gets a genuine handwritten mark rather than a typed cursive font. */
+function initSignaturePad(){
+  const canvas = document.getElementById('sig-pad');
+  if(!canvas){ sigCanvas = sigCtx = sigHint = null; return; }
+  sigCanvas = canvas;
+  sigHint = document.getElementById('sig-hint');
+  sigDrawn = false;
+
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.clientWidth || 300;
+  const h = canvas.clientHeight || 140;
+  canvas.width = Math.round(w * dpr);
+  canvas.height = Math.round(h * dpr);
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.lineWidth = 2.2; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  ctx.strokeStyle = '#1b1f27'; ctx.fillStyle = '#1b1f27';
+  sigCtx = ctx;
+
+  let drawing = false, lastX = 0, lastY = 0;
+  const at = (e) => { const r = canvas.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+  const start = (e) => {
+    drawing = true;
+    const p = at(e); lastX = p.x; lastY = p.y;
+    if(!sigDrawn){ sigDrawn = true; if(sigHint) sigHint.style.display = 'none'; }
+    ctx.beginPath(); ctx.arc(lastX, lastY, ctx.lineWidth / 2, 0, Math.PI * 2); ctx.fill();
+    if(canvas.setPointerCapture && e.pointerId != null){ try{ canvas.setPointerCapture(e.pointerId); }catch(_){} }
+    e.preventDefault();
+  };
+  const move = (e) => {
+    if(!drawing) return;
+    const p = at(e);
+    ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(p.x, p.y); ctx.stroke();
+    lastX = p.x; lastY = p.y;
+    e.preventDefault();
+  };
+  const end = () => { drawing = false; };
+  canvas.addEventListener('pointerdown', start);
+  canvas.addEventListener('pointermove', move);
+  canvas.addEventListener('pointerup', end);
+  canvas.addEventListener('pointerleave', end);
+  canvas.addEventListener('pointercancel', end);
+}
+
+function clearSignature(){
+  if(!sigCtx || !sigCanvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  sigCtx.clearRect(0, 0, sigCanvas.width / dpr, sigCanvas.height / dpr);
+  sigDrawn = false;
+  if(sigHint) sigHint.style.display = '';
+}
+
+/* Export signature as a white-backed PNG so print/PDF keeps the ink. */
+function captureSignatureDataURL(){
+  if(!sigDrawn || !sigCanvas) return '';
+  try{
+    const out = document.createElement('canvas');
+    out.width = sigCanvas.width;
+    out.height = sigCanvas.height;
+    const ctx = out.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, out.width, out.height);
+    ctx.drawImage(sigCanvas, 0, 0);
+    return out.toDataURL('image/png');
+  }catch(_){ return ''; }
+}
+
+/* ---- Printable / downloadable "Statement to DTA" letter ---- */
+function statementInnerHTML(sigSrc){
+  const val = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
+  const sigImg = (sigSrc === undefined) ? captureSignatureDataURL() : sigSrc;
+  let today = '';
+  try{ today = new Date().toLocaleDateString('en-US', {year:'numeric', month:'long', day:'numeric'}); }catch(_){}
+  // One labelled blank per applicable exemption, in the order they were shown.
+  const explain = Array.from(document.querySelectorAll('[data-explain-prompt]'))
+    .map(el => ({ prompt: el.getAttribute('data-explain-prompt'), text: el.value }));
+  return SnapScreening.buildStatementHTML({
+    name: val('f-name'),
+    agency: val('f-agency'),
+    explain,
+    sigImg: sigImg || '',
+    rt: resultType(),
+    rs: reasons(),
+    gcText: S.goodCauseText(state.answers),
+    today
+  });
+}
+
+function buildPrintRoot(){
+  let root = document.getElementById('print-root');
+  if(!root){ root = document.createElement('div'); root.id = 'print-root'; document.body.appendChild(root); }
+  root.innerHTML = statementInnerHTML();
+}
+
+function printForm(){
+  buildPrintRoot();
+  const cleanup = () => document.body.classList.remove('printing-form');
+  window.addEventListener('afterprint', cleanup, { once:true });
+  document.body.classList.add('printing-form');
+  // Wait a frame so the signature <img> can decode before the print snapshot.
+  // Do not clear printing-form on a short timer. Chrome returns from print()
+  // immediately, and a 2s cleanup was wiping the form mid Save-as-PDF.
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => { window.print(); });
+  });
+}
+
+function downloadDoc(){
+  // Word ignores data: URLs in HTML .doc files. Package as MHTML so the
+  // signature PNG is a real related image part Word can display.
+  const dataUrl = captureSignatureDataURL();
+  const boundary = '----=_NextPart_CFO_SNAP_STMT';
+  const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><title>SNAP Work Rules Statement</title>
+<!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom></w:WordDocument></xml><![endif]-->
+</head>
+<body>${statementInnerHTML(dataUrl ? 'signature.png' : '')}</body>
+</html>`;
+
+  const wrap76 = (s) => (s.match(/.{1,76}/g) || []).join('\r\n');
+  const htmlB64 = wrap76(btoa(unescape(encodeURIComponent(html))));
+
+  const parts = [
+    'MIME-Version: 1.0',
+    'Content-Type: multipart/related; boundary="' + boundary + '"',
+    '',
+    '--' + boundary,
+    'Content-Type: text/html; charset="utf-8"',
+    'Content-Transfer-Encoding: base64',
+    'Content-Location: statement.htm',
+    '',
+    htmlB64
+  ];
+  if(dataUrl){
+    const pngB64 = dataUrl.replace(/^data:image\/png;base64,/, '');
+    parts.push(
+      '--' + boundary,
+      'Content-Type: image/png',
+      'Content-Transfer-Encoding: base64',
+      'Content-Location: signature.png',
+      '',
+      wrap76(pngB64)
+    );
+  }
+  parts.push('--' + boundary + '--', '');
+
+  const blob = new Blob([parts.join('\r\n')], { type: 'application/msword' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'SNAP-Work-Rules-Statement.doc';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
+function render(){
+  renderProgress();
+  const stage = document.getElementById('stage');
+  if(state.view === 'intro') stage.innerHTML = renderIntro();
+  else if(state.view === 'question') stage.innerHTML = renderPage();
+  else stage.innerHTML = renderResults();
+
+  // Move focus to the new stage heading for screen-reader users.
+  const heading = stage.querySelector('h1, h2');
+  if(heading){ heading.setAttribute('tabindex', '-1'); }
+
+  state.animate = false;
+  initSignaturePad();
+  persist();
+}
+
+function renderWithMotion(){
+  state.animate = true;
+  render();
+}
+
+/* ------------------------------------------------------------------ *
+ * Event handling (delegation)
+ * ------------------------------------------------------------------ */
+
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('button');
+  if(!btn) return;
+
+  // Option buttons within a question
+  const kind = btn.getAttribute('data-opt-kind');
+  if(kind){
+    const q = qById(btn.getAttribute('data-q-id'));
+    if(!q) return;
+    // Selecting an answer no longer moves you forward. Use Next when ready.
+    if(kind === 'yn'){
+      setAns(q.id, btn.getAttribute('data-opt-val'));
+      if(q.id === 'housing' && btn.getAttribute('data-opt-val') !== 'no'){
+        delete state.answers.housingFollowup;
+      }
+      render();
+    } else if(kind === 'multi'){
+      const o = q.options[+btn.getAttribute('data-opt-idx')];
+      const cur = Array.isArray(state.answers[q.id]) ? state.answers[q.id] : [];
+      state.answers[q.id] = cur.includes(o.id) ? cur.filter(x => x !== o.id) : [...cur, o.id];
+      render();
+    } else if(kind === 'multi-none'){
+      setAns(q.id, NONE);
+      render();
+    } else if(kind === 'single'){
+      setAns(q.id, q.options[+btn.getAttribute('data-opt-idx')].id);
+      render();
+    } else if(kind === 'single-none'){
+      setAns(q.id, NONE);
+      render();
+    }
+    return;
+  }
+
+  const action = btn.getAttribute('data-action');
+  if(!action) return;
+  switch(action){
+    case 'start':
+      if(!canStart()) return;
+      if(state.answers.ageRange === 'no'){ state.view = 'results'; renderWithMotion(); return; }
+      state.view = 'question'; state.step = 0; state.gc = false; state.helpOpen = {}; renderWithMotion(); break;
+    case 'back': back(); break;
+    case 'next': advance(); break;
+    case 'skip-end': skipToEnd(); break;
+    case 'toggle-help': { const id = btn.getAttribute('data-q-id'); if(id){ state.helpOpen[id] = !state.helpOpen[id]; render(); } break; }
+    case 'toggle-hint': {
+      const tip = btn.closest('.hint-tip');
+      if(!tip) break;
+      const willOpen = !tip.classList.contains('is-open');
+      if(willOpen){
+        document.querySelectorAll('.hint-tip.is-open').forEach(t => { if(t !== tip) setHintTipOpen(t, false); });
+        setHintTipOpen(tip, true);
+      } else {
+        setHintTipOpen(tip, false);
+      }
+      break;
+    }
+    case 'restart':
+      state.view = 'intro'; state.step = 0; state.gc = false; state.helpOpen = {}; state.answers = {}; renderWithMotion(); break;
+    case 'delete-answers': deleteAnswers(); break;
+    case 'go-back': window.location.href = SCREENING_HUB_URL; break;
+    case 'print': printForm(); break;
+    case 'download-doc': downloadDoc(); break;
+    case 'sig-clear': clearSignature(); break;
+  }
+});
+
+// Terms of Use consent toggle: enable/disable Start without a full re-render
+// so the checkbox keeps focus.
+document.addEventListener('change', (e) => {
+  if(e.target && e.target.id === 'agree'){
+    state.agreed = e.target.checked;
+    persist();
+    updateStartBtn();
+  }
+  if(e.target && e.target.name === 'ageRange'){
+    state.answers.ageRange = e.target.value;
+    persist();
+    updateStartBtn();
+  }
+});
+
+function updateStartBtn(){
+  const btn = document.getElementById('start-btn');
+  if(btn){
+    if(canStart()){
+      btn.style.opacity = ''; btn.style.cursor = 'pointer'; btn.removeAttribute('aria-disabled');
+    } else {
+      btn.style.opacity = '.5'; btn.style.cursor = 'not-allowed'; btn.setAttribute('aria-disabled', 'true');
+    }
+  }
+}
+
+/* Re-fit the signature canvas when the viewport changes (e.g. phone rotation).
+ * The bitmap is sized from clientWidth at draw time, so a later resize would
+ * otherwise leave pointer coordinates misaligned. Re-init clears any ink. */
+let sigResizeTimer = null;
+function refitSignatureOnResize(){
+  if(!document.getElementById('sig-pad')) return;
+  clearTimeout(sigResizeTimer);
+  sigResizeTimer = setTimeout(() => { if(document.getElementById('sig-pad')) initSignaturePad(); }, 200);
+}
+window.addEventListener('resize', refitSignatureOnResize, { passive: true });
+window.addEventListener('orientationchange', refitSignatureOnResize);
+
+loadPersisted();
+initHintTips();
+state.animate = true;
+render();
+</script>
+</body>
+</html>

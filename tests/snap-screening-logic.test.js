@@ -4,11 +4,12 @@ const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
 const SnapScreening = require('../court-forms/snap-screening-logic.js');
 
-const { NONE, WORK_REASON_INCOME, WORK_REASON_HOURS_30, DISABILITY_OTHER_REASON, create, migrateAnswers, resultTypeFor, exemptReasonsFor, housingUnableExempt, buildQuestions } = SnapScreening;
+const { NONE, WORK_REASON_INCOME, WORK_REASON_HOURS_30, DISABILITY_OTHER_REASON, HOUSING_EXEMPT_REASON, LINKS, create, migrateAnswers, resultTypeFor, exemptReasonsFor, housingUnableExempt, buildQuestions, statementPromptsFor, goodCauseCategories } = SnapScreening;
 
 describe('snap-screening-logic', () => {
   const classic = create('classic');
   const v2 = create('v2');
+  const classic2 = create('classic2');
 
   it('classic and v2 produce the same resultType for equivalent answers', () => {
     const cases = [
@@ -141,5 +142,105 @@ describe('snap-screening-logic', () => {
     assert.match(html, /break-inside:avoid/);
     assert.doesNotMatch(html, /How to send this statement/);
     assert.doesNotMatch(html, /SAMPLE - draft/);
+  });
+
+  /* ---- classic2: the author's website copy draft ---- */
+
+  it('classic2 decides the same result as classic for equivalent answers', () => {
+    const cases = [
+      { child14: 'yes' },
+      { health: 'yes' },
+      { housing: 'no', housingFollowup: NONE },
+      { housing: 'no', housingFollowup: ['diploma', 'steady_job'] },
+      { working: 'income_weekly' },
+      { working: 'hours_30' },
+      { goodcause: 'transport' },
+      { disability: ['other'] },
+      { disability: ['ssi_ssdi'] },
+      { ageRange: 'no' },
+      {}
+    ];
+    for (const answers of cases) {
+      assert.equal(classic2.resultType(answers), classic.resultType(answers), JSON.stringify(answers));
+    }
+  });
+
+  it('classic2 carries the draft-only rendering fields', () => {
+    const byId = classic2.Q_BY_ID;
+    assert.match(byId.child14.helpHtml, /SNAP household/);
+    assert.match(byId.dv.note, /contact info here/);
+    assert.equal(byId.stateagency.listItems.length, 5);
+    assert.match(byId.school.yesLabel, /half-time or more/);
+    assert.match(byId.substanceUse.help, /daily program/);
+    // Other variants must not pick these up.
+    assert.equal(classic.Q_BY_ID.stateagency.listItems, undefined);
+    assert.equal(classic.Q_BY_ID.school.yesLabel, undefined);
+  });
+
+  it('classic2 work options use the draft wording and still normalize', () => {
+    const labels = classic2.Q_BY_ID.working.options.map(o => o.label);
+    assert.ok(labels.every(l => l.startsWith('Yes, I am ')), labels.join(' | '));
+    assert.match(labels.join(' '), /\$217\.50/);
+    const migrated = migrateAnswers({ working: labels[2] }, 'classic2');
+    assert.equal(migrated.working, 'hours_30');
+  });
+
+  it('an unknown variant falls back to classic', () => {
+    assert.equal(create('nope').Q_BY_ID.health.text, classic.Q_BY_ID.health.text);
+  });
+
+  it('statementPromptsFor returns one prompt per exemption that needs one', () => {
+    const answers = { health: 'yes', caretaker: 'yes', pregnant: 'yes' };
+    const prompts = classic2.statementPrompts(answers);
+    assert.equal(prompts.length, 2);
+    assert.match(prompts[0], /health reason/);
+    assert.match(prompts[1], /caretaking/);
+  });
+
+  it('statementPromptsFor dedupes the two work reasons and always returns one', () => {
+    const both = statementPromptsFor([WORK_REASON_INCOME, WORK_REASON_HOURS_30]);
+    assert.equal(both.length, 1);
+    assert.deepEqual(statementPromptsFor([], 'goodcause'), ['Explain why you had to miss work, school, or volunteer hours']);
+    assert.equal(statementPromptsFor(['Pregnant']).length, 1);
+    assert.equal(statementPromptsFor([HOUSING_EXEMPT_REASON]).length, 1);
+  });
+
+  it('classic2 lists every good-cause category for the results screen', () => {
+    const cats = classic2.GOODCAUSE_CATEGORIES;
+    assert.deepEqual(cats.map(c => c.title), ['No transportation', 'Emergency', 'Employment issues']);
+    assert.ok(cats.every(c => c.detail.length > 0));
+    assert.equal(cats.filter(c => c.moreExamplesUrl).length, 2);
+    assert.equal(goodCauseCategories('classic2').length, 3);
+  });
+
+  it('buildStatementHTML renders one labelled block per prompt', () => {
+    const html = SnapScreening.buildStatementHTML({
+      name: 'Jane Doe',
+      rt: 'exempt',
+      rs: ['Pregnant'],
+      explain: [
+        { prompt: 'Explain the health reason', text: 'chronic back pain' },
+        { prompt: 'Explain your caretaking', text: '' }
+      ]
+    });
+    assert.match(html, /Explain the health reason/);
+    assert.match(html, /chronic back pain/);
+    assert.match(html, /Explain your caretaking/);
+    assert.match(html, /No additional explanation provided/);
+  });
+
+  it('buildStatementHTML still accepts a plain string explain', () => {
+    const html = SnapScreening.buildStatementHTML({ rt: 'exempt', rs: ['Pregnant'], explain: 'just one box' });
+    assert.match(html, /just one box/);
+    assert.doesNotMatch(html, /No additional explanation provided/);
+  });
+
+  it('every LINKS entry is an absolute URL or a bare email address', () => {
+    const entries = Object.entries(LINKS);
+    assert.ok(entries.length >= 13);
+    for (const [key, value] of entries) {
+      const ok = key === 'advocacyEmail' ? /^[^@\s]+@[^@\s]+$/.test(value) : /^https:\/\/\S+$/.test(value);
+      assert.ok(ok, `${key} = ${value}`);
+    }
   });
 });

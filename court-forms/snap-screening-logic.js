@@ -16,6 +16,29 @@
   /** Production deploy: swap the top-bar Back button for Quick exit using this URL (neutral external site). See README. */
   const PRODUCTION_QUICK_EXIT_URL = 'https://www.weather.com/';
 
+  /** Copy variants. 'classic2' carries the author's website copy draft (see README). */
+  const VARIANTS = ['classic', 'v2', 'classic2'];
+  function normVariant(variant) {
+    return VARIANTS.indexOf(variant) !== -1 ? variant : 'classic';
+  }
+
+  /* ---- Outbound links, all sourced from the author's copy draft ---- */
+  const LINKS = {
+    abawd: 'https://www.masslegalhelp.org/public-benefits-ssi/snap-food-benefits/snap-3-month-time-limit-abawd-work-rules',
+    goodCause: 'https://www.masslegalhelp.org/public-benefits-ssi/snap-food-benefits/snap-3-month-time-limit-abawd-work-rules#:~:text=What%20if%20I%20had%20a%20good%20reason%20for%20not%20meeting%20the%20Work%20Rules%3F',
+    snapWorkNotice: 'https://eohhs.ehs.state.ma.us/DTA/PolicyOnline/olg%20docs/Consolidated%20Notice%20Sample.pdf',
+    dtaConnect: 'https://dtaconnect.eohhs.mass.gov/',
+    snapHousehold: 'https://www.masslegalhelp.org/public-benefits-ssi/snap-food-benefits/34-what-snap-household-or-assistance-unit',
+    dvServices: 'https://www.mass.gov/info-details/dta-domestic-violence-services',
+    exemptionForm: 'https://www.mass.gov/doc/snap-work-rules-exemption-self-declaration-form/download',
+    reachDtaWorker: 'https://www.masslegalservices.org/system/files/library/Advocacy%20Tips_%20Reaching%20a%20DTA%20worker.pdf',
+    dtaOffices: 'https://www.mass.gov/orgs/department-of-transitional-assistance/locations',
+    reapply: 'https://www.mass.gov/how-to/supplemental-nutrition-assistance-program-snap-formerly-known-as-food-stamps',
+    getSnapBack: 'https://www.masslegalhelp.org/sites/default/files/2025-11/Terminations%20OB3%20KYR%20SNAP%20ABAWDs%20Flyers%20.pdf',
+    dtaTraining: 'https://snappathtowork.org/',
+    advocacyEmail: 'info@masslegalservices.org'
+  };
+
   /* ---- Work-rule thresholds (MA ABAWD) ---- */
   const WORK_INCOME_THRESHOLD = 217.5;
   const MA_MIN_WAGE = 15;
@@ -36,9 +59,9 @@
   ];
 
   const WORK_OPTION_DEFS = [
-    { id: 'income_weekly', kind: 'income', label: 'I make $217.50 a week or more (before taxes)' },
-    { id: 'hours_min_wage', kind: 'income', label: 'I work at least 14.5 hours a week at $15+ an hour' },
-    { id: 'hours_30', kind: 'income', label: 'I work 30 hours or more a week (I make less than minimum wage)' }
+    { id: 'income_weekly', kind: 'income', label: 'I make $217.50 a week or more (before taxes)', labelDraft: 'Yes, I am making $217.50 a week or more (before taxes)' },
+    { id: 'hours_min_wage', kind: 'income', label: 'I work at least 14.5 hours a week at $15+ an hour', labelDraft: 'Yes, I am working at least 14.5 hours a week at $15 or more an hour' },
+    { id: 'hours_30', kind: 'income', label: 'I work 30 hours or more a week (I make less than minimum wage)', labelDraft: 'Yes, I am working 30 hours or more a week (I make less than minimum wage)' }
   ];
 
   const DISABILITY_OPTION_DEFS = [
@@ -72,6 +95,38 @@
         { id: 'transport', label: 'Yes \u2014 my ride or transportation broke down', result: 'No transportation \u2014 a temporary loss of transportation, such as a broken-down car or a public transit shutdown.' },
         { id: 'emergency', label: 'Yes \u2014 a family or personal emergency', result: 'Emergency \u2014 any family or personal crisis, or a situation where you need to give care or support to others.' },
         { id: 'employment', label: 'Yes \u2014 an unfair or unreasonable job situation', result: 'Employment issues \u2014 for example, a workplace that discriminates, or unreasonable job conditions.' }
+      ]
+    },
+    /* Author's draft. `title` / `detail` drive the good-cause results screen,
+     * which lists every category rather than only the one selected. */
+    classic2: {
+      text: 'Are there other reasons why it is hard for you to do work, go to school, or do community service right now?',
+      help: 'These reasons mean you missed work, school, or volunteering hours for one or more months because of an unexpected life situation.',
+      noneLabel: 'This question does not apply to me / I\u2019m not sure',
+      options: [
+        {
+          id: 'transport',
+          label: 'Yes, I have temporary transportation issues',
+          result: 'No transportation \u2014 a temporary loss of transportation, like a broken down car or temporary public transportation shutdown.',
+          title: 'No transportation',
+          detail: ['A temporary loss of transportation, like a broken down car or temporary public transportation shutdown.']
+        },
+        {
+          id: 'emergency',
+          label: 'Yes, I have a family or personal emergency',
+          result: 'Emergency \u2014 any family, personal crisis, or emergency situation, and/or if you need to give care or support to others.',
+          title: 'Emergency',
+          detail: ['Any family, personal crisis, or emergency situation, and/or if you need to give care or support to others.'],
+          moreExamples: true
+        },
+        {
+          id: 'employment',
+          label: 'Yes, I\u2019m dealing with unreasonable employment',
+          result: 'Employment issues \u2014 an employer or work environment that discriminates on the basis of age, sex, race, religion, ethnicity, or physical or mental disability.',
+          title: 'Employment issues',
+          detail: ['Employer or work environment discriminates on the basis of age, sex, race, religion, ethnicity, or physical or mental disability.'],
+          moreExamples: true
+        }
       ]
     }
   };
@@ -112,6 +167,39 @@
       stateagency: { text: 'Do you get services from a Massachusetts state agency?', help: 'For example: MassAbility, Dept. of Mental Health, Dept. of Developmental Services, MA Commission for the Blind, or MA Commission for the Deaf and Hard of Hearing.' },
       school: { text: 'Are you in school half-time or more?', help: 'This includes high school, vocational/technical school, college, or any education and training program.' },
       working: { text: 'Are you working for pay right now?', help: 'Pick the one that is true for you.', noneLabel: 'None of these' }
+    },
+    /* Author's website copy draft. `helpHtml`, `listItems`, `note`, and
+     * `yesLabel` are optional fields the classic-v2 page knows how to render. */
+    classic2: {
+      child14: {
+        text: 'Do you live with a child under 14 years old?',
+        helpHtml: 'If you live with a child under 14 who should be part of your <a href="' + LINKS.snapHousehold + '" target="_blank" rel="noopener">SNAP household</a>, even if they are not eligible (for example, because of immigration status or if they are a foster child), select “Yes.”'
+      },
+      health: { text: 'Do you have a health reason or disability that makes it hard to work at least 30 hours a week?' },
+      child6: { text: 'Do you take care of a child under 6 years old?', help: 'You do not need to be related to them, live with them, or provide care full-time.' },
+      caretaker: { text: 'Do you take care of a child or adult who cannot care for themselves?', help: 'You do not need to be related to them, live with them, or provide care full-time.' },
+      pregnant: { text: 'Are you pregnant?' },
+      housing: { text: 'Do you have a regular place to sleep at night?', help: 'Choose “No” if you are experiencing homelessness or unstable housing.' },
+      housingFollowup: { text: 'Please choose all that apply:', noneLabel: 'None of the above' },
+      dv: {
+        text: 'Has a domestic violence or safety situation made it hard for you to work?',
+        note: 'DTA has DV specialists in each local DTA office. Find their <a href="' + LINKS.dvServices + '" target="_blank" rel="noopener">contact info here</a>.'
+      },
+      tribe: { text: 'Are you an Alaska native or a member of an American Indian, Urban Indian, or California Indian tribe?', help: 'Choose “Yes” if you have a parent or grandparent who is a member of one of these tribes.' },
+      tafdc: { text: 'Do you get, or are you applying for TAFDC cash assistance benefits?' },
+      disability: { text: 'Do you get any of these disability benefits?', noneLabel: 'None of the above' },
+      substanceUse: { text: 'Are you participating in a substance use treatment program?', help: 'It does not have to be a daily program.' },
+      unemployment: { text: 'Do you get, or are you applying for unemployment benefits?' },
+      stateagency: {
+        text: 'Do you get services from any of the below state agencies?',
+        listItems: ['MassAbility', 'Dept. of Mental Health', 'Dept. of Developmental Services', 'MA Commission for the Blind', 'MA Commission for Deaf and Hard of Hearing']
+      },
+      school: {
+        text: 'Are you enrolled in school half-time or more?',
+        help: 'This includes high school, vocational/technical school, college, or any education and training program.',
+        yesLabel: 'Yes, I am enrolled half-time or more in a school or program'
+      },
+      working: { text: 'Are you currently working for pay?', help: 'Choose the option that applies to you.', noneLabel: 'None of the above' }
     }
   };
 
@@ -131,6 +219,34 @@
     school: 'Enrolled in school half-time or more'
   };
 
+  /* ---- Write-in prompts for the "Statement to DTA" form ----
+   * The author's draft shows one labelled blank per exemption that needs
+   * explaining. Reasons not listed here (pregnant, TAFDC, unemployment, and so
+   * on) speak for themselves and get no blank. */
+  const STATEMENT_PROMPT_GOODCAUSE = 'Explain why you had to miss work, school, or volunteer hours';
+  const STATEMENT_PROMPT_FALLBACK = 'Explain your reasons in your own words';
+
+  const STATEMENT_PROMPTS = [
+    { reason: REASONS.health, prompt: 'Explain the health reason that makes it hard for you to work 30 or more hours a week' },
+    { reason: REASONS.caretaker, prompt: 'Explain your caretaking responsibilities or arrangement' },
+    { reason: REASONS.child6, prompt: 'Explain your caretaking arrangement for the child under 6' },
+    { reason: WORK_REASON_INCOME, prompt: 'Explain your work hours, pay, and what proof you can send to DTA' },
+    { reason: WORK_REASON_HOURS_30, prompt: 'Explain your work hours, pay, and what proof you can send to DTA' },
+    { reason: DISABILITY_OTHER_REASON, prompt: 'Name the disability benefit or payment you receive' },
+    { reason: HOUSING_EXEMPT_REASON, prompt: 'Explain where you sleep and any barriers that make it hard to work' }
+  ];
+
+  /** Prompts to show, in order. Always at least one so the form is never blank. */
+  function statementPromptsFor(reasons, resultType) {
+    if (resultType === 'goodcause') return [STATEMENT_PROMPT_GOODCAUSE];
+    const rs = Array.isArray(reasons) ? reasons : [];
+    const out = [];
+    STATEMENT_PROMPTS.forEach(p => {
+      if (rs.indexOf(p.reason) !== -1 && out.indexOf(p.prompt) === -1) out.push(p.prompt);
+    });
+    return out.length ? out : [STATEMENT_PROMPT_FALLBACK];
+  }
+
   const GROUPS = [
     { title: 'Children and people you care for', ids: ['child14', 'child6', 'caretaker', 'pregnant'] },
     { title: 'Your health, housing, and safety', ids: ['health', 'housing', 'housingFollowup', 'dv'] },
@@ -139,7 +255,7 @@
   ];
 
   function housingOptions(variant) {
-    const v = variant === 'v2' ? 'labelV2' : 'labelClassic';
+    const v = normVariant(variant) === 'v2' ? 'labelV2' : 'labelClassic';
     return HOUSING_OPTION_DEFS.map(o => ({ id: o.id, label: o[v] }));
   }
 
@@ -147,17 +263,27 @@
     return DISABILITY_OPTION_DEFS.map(o => ({ id: o.id, label: o.label }));
   }
 
-  function workOptions() {
-    return WORK_OPTION_DEFS.map(o => ({ id: o.id, label: o.label, kind: o.kind }));
+  function workOptions(variant) {
+    const draft = normVariant(variant) === 'classic2';
+    return WORK_OPTION_DEFS.map(o => ({
+      id: o.id,
+      label: (draft && o.labelDraft) ? o.labelDraft : o.label,
+      kind: o.kind
+    }));
   }
 
+  /** Optional per-variant rendering fields carried straight through to the UI.
+   * Only filled in where the question definition below left the field unset, so
+   * composed values (such as the disability help text) still win. */
+  const COPY_PASSTHROUGH = ['help', 'helpHtml', 'listItems', 'note', 'yesLabel', 'noLabel'];
+
   function buildQuestions(variant) {
-    const copy = QUESTION_COPY[variant] || QUESTION_COPY.classic;
+    const copy = QUESTION_COPY[normVariant(variant)];
     const housingOpts = housingOptions(variant);
     const disabilityOpts = disabilityOptions();
-    const workOpts = workOptions();
+    const workOpts = workOptions(variant);
 
-    return [
+    const questions = [
       { id: 'child14', type: 'yn', text: copy.child14.text, help: copy.child14.help, exemptOn: 'yes', reason: REASONS.child14 },
       { id: 'health', type: 'yn', text: copy.health.text, exemptOn: 'yes', reason: REASONS.health },
       { id: 'child6', type: 'yn', text: copy.child6.text, help: copy.child6.help, exemptOn: 'yes', reason: REASONS.child6 },
@@ -185,10 +311,18 @@
         options: workOpts, noneLabel: copy.working.noneLabel
       }
     ];
+
+    questions.forEach(q => {
+      const c = copy[q.id];
+      if (!c) return;
+      COPY_PASSTHROUGH.forEach(k => { if (c[k] != null && q[k] == null) q[k] = c[k]; });
+    });
+
+    return questions;
   }
 
   function buildGoodCause(variant) {
-    const def = GOODCAUSE_DEFS[variant] || GOODCAUSE_DEFS.classic;
+    const def = GOODCAUSE_DEFS[normVariant(variant)];
     return {
       id: 'goodcause',
       type: 'single',
@@ -200,10 +334,22 @@
   }
 
   function buildGcText(variant) {
-    const def = GOODCAUSE_DEFS[variant] || GOODCAUSE_DEFS.classic;
+    const def = GOODCAUSE_DEFS[normVariant(variant)];
     const out = {};
     def.options.forEach(o => { out[o.id] = o.result; });
     return out;
+  }
+
+  /** Every good-cause category, for screens that list them all rather than
+   * only the one the visitor picked. */
+  function goodCauseCategories(variant) {
+    const def = GOODCAUSE_DEFS[normVariant(variant)];
+    return def.options.map(o => ({
+      id: o.id,
+      title: o.title || o.label,
+      detail: o.detail || [],
+      moreExamplesUrl: o.moreExamples ? LINKS.goodCause : ''
+    }));
   }
 
   function normalizeHousingFollowup(value, variant) {
@@ -222,7 +368,7 @@
   function normalizeWorking(value) {
     if (value == null || value === NONE) return value;
     for (const o of WORK_OPTION_DEFS) {
-      if (value === o.id || value === o.label) return o.id;
+      if (value === o.id || value === o.label || value === o.labelDraft) return o.id;
     }
     return value;
   }
@@ -237,7 +383,7 @@
 
   function normalizeGoodcause(value, variant) {
     if (value == null || value === NONE) return value;
-    const def = GOODCAUSE_DEFS[variant] || GOODCAUSE_DEFS.classic;
+    const def = GOODCAUSE_DEFS[normVariant(variant)];
     for (const o of def.options) {
       if (value === o.id || value === o.label) return o.id;
     }
@@ -424,9 +570,25 @@
         <p style="margin:0 0 14px">I am writing to tell you about my situation regarding the SNAP ABAWD work rules.</p>`;
     }
 
-    const explainContent = explain.trim()
-      ? esc(explain)
-      : '<span style="color:#666;font-style:italic">(No additional explanation provided.)</span>';
+    // `explain` is either a plain string or, for pages that show one labelled
+    // blank per exemption, an array of { prompt, text }.
+    const explainEntries = Array.isArray(explain)
+      ? explain.filter(e => e && (e.prompt || e.text))
+      : [{ prompt: '', text: explain }];
+    const box = (content) =>
+      `<div style="border:1px solid #999;padding:12px 14px;min-height:72px;white-space:pre-wrap;background:#fff">${content}</div>`;
+    const explainContent = explainEntries.length
+      ? explainEntries.map(e => {
+        const text = String(e.text == null ? '' : e.text);
+        const inner = text.trim()
+          ? esc(text)
+          : '<span style="color:#666;font-style:italic">(No additional explanation provided.)</span>';
+        const label = e.prompt
+          ? `<div style="font-size:10.5pt;color:#333;margin:0 0 6px">${esc(e.prompt)}</div>`
+          : '';
+        return label + box(inner);
+      }).join('<div style="height:14px"></div>')
+      : box('<span style="color:#666;font-style:italic">(No additional explanation provided.)</span>');
 
     const sigBlock = sigImg
       ? `<img src="${sigImg}" alt="Signature" width="320" height="72" style="display:block;width:320px;height:72px;max-width:100%;margin:0 0 4px">`
@@ -451,7 +613,7 @@
 
       <div style="margin:20px 0 0;break-inside:avoid;page-break-inside:avoid">
         <div style="font-weight:700;margin:0 0 8px;font-size:11pt">Additional information (in my own words)</div>
-        <div style="border:1px solid #999;padding:12px 14px;min-height:72px;white-space:pre-wrap;background:#fff">${explainContent}</div>
+        ${explainContent}
       </div>
 
       <div style="margin:28px 0 0;break-inside:avoid;page-break-inside:avoid">
@@ -466,10 +628,11 @@
   }
 
   function create(variant) {
-    const v = variant === 'v2' ? 'v2' : 'classic';
+    const v = normVariant(variant);
     const QUESTIONS = buildQuestions(v);
     const GOODCAUSE = buildGoodCause(v);
     const GC_TEXT = buildGcText(v);
+    const GOODCAUSE_CATEGORIES = goodCauseCategories(v);
     const Q_BY_ID = {};
     QUESTIONS.forEach(q => { Q_BY_ID[q.id] = q; });
 
@@ -477,6 +640,7 @@
       NONE,
       SCREENING_HUB_URL,
       PRODUCTION_QUICK_EXIT_URL,
+      LINKS,
       WORK_INCOME_THRESHOLD,
       MA_MIN_WAGE,
       WORK_HOURS_AT_MIN_WAGE,
@@ -488,6 +652,7 @@
       QUESTIONS,
       GOODCAUSE,
       GC_TEXT,
+      GOODCAUSE_CATEGORIES,
       GROUPS,
       Q_BY_ID,
       migrateAnswers: (answers) => migrateAnswers(answers, v),
@@ -496,6 +661,7 @@
       resultType: (answers) => resultTypeFor(answers, QUESTIONS),
       shouldSkipGoodCause: (answers) => shouldSkipGoodCause(answers, QUESTIONS),
       goodCauseText: (answers) => goodCauseText(answers, GC_TEXT),
+      statementPrompts: (answers) => statementPromptsFor(exemptReasonsFor(answers, QUESTIONS), resultTypeFor(answers, QUESTIONS)),
       pageQuestions: (answers, step, gc) => pageQuestionsFor(answers, step, gc, GROUPS, Q_BY_ID, GOODCAUSE),
       qById: (id) => (id === 'goodcause' ? GOODCAUSE : Q_BY_ID[id]),
       workOptionKind: (id) => {
@@ -509,6 +675,8 @@
     NONE,
     SCREENING_HUB_URL,
     PRODUCTION_QUICK_EXIT_URL,
+    LINKS,
+    VARIANTS,
     WORK_INCOME_THRESHOLD,
     MA_MIN_WAGE,
     WORK_HOURS_AT_MIN_WAGE,
@@ -533,6 +701,8 @@
     buildQuestions,
     buildGoodCause,
     buildGcText,
+    goodCauseCategories,
+    statementPromptsFor,
     buildStatementHTML,
     DTA_SUBMISSION,
     escHtml

@@ -12,8 +12,9 @@ the homepage lists them.
 | `court-forms/` | The **Court Forms Online** project folder → `/court-forms/`. |
 | `court-forms/index.html` | Minimal project page — links to the SNAP screening hub. |
 | `court-forms/snap-screening.html` | SNAP screening **hub** — links to the tool, sample results, and how-it-works. |
-| `court-forms/snap-screening-logic.js` | Shared screening logic (questions, thresholds, result engine) used by both tools. |
+| `court-forms/snap-screening-logic.js` | Shared screening logic (questions, thresholds, links, result engine) used by all three tools. |
 | `court-forms/snap-abawd.html` | SNAP ABAWD work-rules screening (classic). |
+| `court-forms/snap-abawd-classic-v2.html` | SNAP ABAWD screening — **classic design, author's copy draft**. Same look as `snap-abawd.html`, rebuilt from the MLRI author's website copy draft (see [Classic v2](#classic-v2-the-authors-copy-draft) below). |
 | `court-forms/snap-screening-v2.html` | SNAP screening — accessible / plain-language redesign. Supports `?sample=exempt\|goodcause\|notexempt` to jump straight to a sample result screen (demo only; nothing saved). |
 | `court-forms/snap-how-it-works.html` | Plain-language explainer of the screening. |
 | `court-forms/immigration-court-landing.html` | Landing-page demo for the guided EOIR-28 form. _(Unlinked. Kept in the repo but not shown in site nav.)_ |
@@ -70,10 +71,13 @@ A short, private screening tool that helps someone on SNAP check whether the
 Massachusetts DTA **ABAWD work rules** apply to them, or whether they may be
 exempt or have good cause. Built for Court Forms Online / MLRI.
 
-Two UIs share one logic module ([`court-forms/snap-screening-logic.js`](court-forms/snap-screening-logic.js)):
+Three UIs share one logic module ([`court-forms/snap-screening-logic.js`](court-forms/snap-screening-logic.js)), each selecting a copy variant via `SnapScreening.create(variant)`:
 
-- [`court-forms/snap-abawd.html`](court-forms/snap-abawd.html) — classic design
-- [`court-forms/snap-screening-v2.html`](court-forms/snap-screening-v2.html) — accessible redesign
+| File | Variant | What it is |
+|------|---------|-----------|
+| [`court-forms/snap-abawd.html`](court-forms/snap-abawd.html) | `classic` | Classic design |
+| [`court-forms/snap-abawd-classic-v2.html`](court-forms/snap-abawd-classic-v2.html) | `classic2` | Classic design, author's copy draft |
+| [`court-forms/snap-screening-v2.html`](court-forms/snap-screening-v2.html) | `v2` | Accessible redesign |
 
 It walks through up to 14 questions plus a "good cause" follow-up and shows one
 of these results:
@@ -83,9 +87,36 @@ of these results:
 - **May need to meet the work rules** — no exemption or good cause; explains work/volunteer options.
 - **Age may not apply** — if the person is not 18–64, shown before question flow.
 
+## Classic v2: the author's copy draft
+
+[`court-forms/snap-abawd-classic-v2.html`](court-forms/snap-abawd-classic-v2.html)
+is the classic design rebuilt from the MLRI author's **ABAWD Screening Tool
+website copy draft**, which also supplies every outbound URL. That draft is
+shared separately and is not tracked in this repo. It keeps the four grouped
+question sections, the Terms of Use gate, and the 18–64 question, and adds
+material the original classic page does not have:
+
+- Intro explains the **SNAP and Work notice** and that DTA must screen for all exemptions first, with a *More on the SNAP ABAWD work rules* disclosure.
+- Every outbound link lives in one place: `LINKS` in `snap-screening-logic.js`.
+- The exempt screen states the result directly ("You are exempt and do not need to meet the ABAWD work rules") rather than hedging.
+- **One labelled write-in blank per exemption that needs explaining** instead of a single box. Driven by `statementPromptsFor` in the logic module; each blank prints as its own labelled section of the statement letter.
+- The not-exempt screen carries the good-cause guidance and *How to tell DTA if you are meeting the work rules*.
+- The good-cause screen lists **all three** categories with detail and *More examples* links, not just the one selected.
+- An *Or, you can do one of these next steps* panel including DTA's own exemption form.
+
+It stores answers under its own key (`cfo-abawd-classic-v2-screening-v1`), so it
+never shares state with `snap-abawd.html`.
+
+### Open items for the author
+
+- **"Why are we asking for more information?"** The draft marks this as help text but does not supply the wording. `WHY_INFO_HELP` in the HTML holds a placeholder pending review.
+- **Good-cause "More examples"** (Emergency, Employment issues) have no URL in the draft. Both currently point at the good-cause anchor the draft supplies on the not-exempt page.
+- **The safety question** is narrower here than in `snap-abawd.html`, which names stalking, sexual harassment, and sexual assault explicitly. This page follows the draft; see the launch question below.
+- **Housing follow-up labels** reuse the shared `HOUSING_OPTION_DEFS` text, which differs from the draft only in trailing punctuation.
+
 ## How to run it
 
-Open [`court-forms/snap-screening.html`](court-forms/snap-screening.html) in any browser, or either tool file directly. **No build step** is required for the tools themselves.
+Open [`court-forms/snap-screening.html`](court-forms/snap-screening.html) in any browser, or any tool file directly. **No build step** is required for the tools themselves.
 
 For automated tests:
 
@@ -115,7 +146,7 @@ Before go-live:
 | **This preview repo** | ← Back | `snap-screening.html` (screening hub) |
 | **Production deploy** | Quick exit | Neutral external site (default: `https://www.weather.com/`) |
 
-**TODO when deploying:** In `snap-abawd.html` and `snap-screening-v2.html`, change the top-bar button from `data-action="go-back"` / “← Back” to `data-action="quick-exit"` / “Quick exit”, and handle `quick-exit` with `window.location.replace(PRODUCTION_QUICK_EXIT_URL)` instead of `go-back`. Update intro/privacy copy if it still says “Back.”
+**TODO when deploying:** In `snap-abawd.html`, `snap-abawd-classic-v2.html`, and `snap-screening-v2.html`, change the top-bar button from `data-action="go-back"` / “← Back” to `data-action="quick-exit"` / “Quick exit”, and handle `quick-exit` with `window.location.replace(PRODUCTION_QUICK_EXIT_URL)` instead of `go-back`. Update intro/privacy copy if it still says “Back.”
 
 ### SME verification checklist
 
@@ -140,9 +171,11 @@ Everything runs in the visitor's browser. There is **no backend, no analytics,
 and answers are never transmitted anywhere.**
 
 - **1-day retention.** Screening answers are saved in the browser's
-  `localStorage` (key `cfo-abawd-screening-v1`) so a visitor can close the tab
-  and finish later. Anything older than 24 hours is discarded automatically on
-  the next visit. Tune the window via `RETENTION_MS` in `snap-abawd.html`.
+  `localStorage` so a visitor can close the tab and finish later. Anything older
+  than 24 hours is discarded automatically on the next visit. Each tool uses its
+  own key, so they never share state: `cfo-abawd-screening-v1` (classic),
+  `cfo-abawd-classic-v2-screening-v1` (classic v2), `cfo-abawd-screening-v2`
+  (accessible redesign). Tune the window via `RETENTION_MS` in each HTML file.
 - **Delete my answers.** The results screen has an explicit button that clears
   the stored answers immediately and returns to the start.
 - **"Tell DTA" form fields** (name, agency ID, free text) are *not* stored on the device. The visitor prints or downloads to keep a copy.
@@ -170,9 +203,18 @@ then.
 
 Screening rules and question text live in [`court-forms/snap-screening-logic.js`](court-forms/snap-screening-logic.js):
 
-- `QUESTION_COPY` — classic vs v2 wording (same logic IDs)
+- `QUESTION_COPY` — per-variant wording (`classic`, `classic2`, `v2`) against the same logic IDs
+- `GOODCAUSE_DEFS` — good-cause question wording, plus the `title` / `detail` used by the classic-v2 results screen
 - `WORK_OPTION_DEFS`, `HOUSING_OPTION_DEFS`, `DISABILITY_OPTION_DEFS` — stable option IDs
+- `LINKS` — every outbound URL, in one place
+- `STATEMENT_PROMPTS` / `statementPromptsFor` — which write-in blanks each exemption gets
 - `resultTypeFor`, `exemptReasonsFor`, `housingUnableExempt` — decision engine
+
+A variant may add these optional per-question fields, which the classic-v2 page
+knows how to render: `helpHtml` (help text containing links), `listItems` (bullet
+list inside the question), `note` (footnote under the options), and
+`yesLabel` / `noLabel` (custom Yes/No wording). They only fill in where the
+question definition left the field unset.
 
 UI/rendering stays in each HTML file. After logic changes, run `npm test`.
 
@@ -181,4 +223,4 @@ UI/rendering stays in each HTML file. After logic changes, run `npm test`.
 Automated tests live in [`tests/`](tests/):
 
 - `snap-screening-logic.test.js` — pure logic unit tests
-- `snap-screening.spec.js` — Playwright end-to-end tests for both HTML tools
+- `snap-screening.spec.js` — Playwright end-to-end tests for all three HTML tools
