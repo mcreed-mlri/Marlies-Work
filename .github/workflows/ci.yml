@@ -1,0 +1,37 @@
+name: CI
+
+# Runs on every push and pull request. The tests use only Node builtins, so
+# there is no install step and nothing to keep in sync with a lockfile.
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  # Lets you re-run the checks by hand from the Actions tab.
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Unit and render tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Run tests
+        run: node --test tests/snap-screening-logic.test.js tests/render-smoke.test.js
+
+  static-checks:
+    name: Page script checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Check page scripts parse and files are valid UTF-8
+        run: node scripts/check-pages.js

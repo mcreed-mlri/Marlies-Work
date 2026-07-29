@@ -154,10 +154,31 @@ Open [`court-forms/snap-screening.html`](court-forms/snap-screening.html) in any
 For automated tests:
 
 ```bash
-npm install
-npm test          # unit tests for snap-screening-logic.js
+npm run verify    # everything below except the browser tests; run this before a deploy
+npm run check     # structural checks on the shipped pages (no dependencies)
+npm test          # unit tests plus the render smoke tests (no dependencies)
+
+npm install       # only needed for the Playwright tests
 npm run test:e2e  # Playwright browser tests (starts a local static server)
 ```
+
+`npm run verify` and everything it calls use only Node builtins, so they work
+without `npm install`. [CI](.github/workflows/ci.yml) runs both on every push.
+
+### What the checks protect against
+
+These pages are static files with no build step, so nothing catches a mistake
+before a visitor does. Each check exists because of a bug that actually shipped:
+
+| Check | Catches |
+|---|---|
+| `tests/render-smoke.test.js` | A reference to something undeclared inside a template literal. It parses fine, then throws at render time and the page paints **nothing**. Drives every result screen, every question page, and every button path (print, download, email, restart) against a small DOM shim. |
+| Interpolation guard in the same file | The same bug on a path the tests do not drive. Reads the source and checks every interpolated `SCREAMING_CASE` name is declared. |
+| `scripts/check-pages.js` | An inline `<script>` that does not parse; mojibake or a lost character from a bulk find-and-replace writing the wrong encoding; a CSS class used in markup but never defined, which silently falls back to browser defaults; HTML, JS, or CSS added to the service worker's `PRECACHE`, which would pin visitors to a stale build. |
+
+Because the pages are unbundled and share copy through `snap-screening-logic.js`,
+the cheapest protection is coverage of the render paths. Add a screen or a button
+and it is worth adding a line to `SCREENS` or `ACTIONS` in the smoke test.
 
 ## Deployment to production
 

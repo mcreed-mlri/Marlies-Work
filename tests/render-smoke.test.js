@@ -32,10 +32,43 @@ const SCREENS = {
   'exempt: housing': 'state.answers={housing:"no",housingFollowup:NONE}; state.view="results"; render();',
   'exempt: other disability': 'state.answers={disability:["other"]}; state.view="results"; render();',
   'exempt: named disability': 'state.answers={disability:["ssi_ssdi"]}; state.view="results"; render();',
+  'exempt: several reasons at once':
+    'state.answers={child14:"yes",working:"income_weekly",housing:"no",housingFollowup:NONE,disability:["other"],pregnant:"yes"}; state.view="results"; render();',
   'good cause': 'state.answers={goodcause:"transport"}; state.view="results"; render();',
   'must meet the rules': 'state.answers={child14:"no",health:"no"}; state.view="results"; render();',
   'age info': 'state.answers={ageRange:"no"}; state.view="results"; render();',
-  'first question page': 'state.view="question"; state.step=0; render();'
+  /* Every question page, so a template error on a later group cannot hide. */
+  'all question pages':
+    'state.view="question"; for(let i=0;i<GROUPS.length;i++){ state.step=i; render(); }',
+  'good-cause question page': 'state.view="question"; state.gc=true; render();',
+  /* Housing follow-up only appears once housing is answered "no". */
+  'housing follow-up question':
+    'state.answers={housing:"no"}; state.view="question"; state.step=1; render();'
+};
+
+/* Paths reached by buttons rather than by rendering a view. These are where an
+ * undefined reference hides longest, because nobody clicks Download as Word on
+ * every deploy. Called directly: they are top-level declarations in the page
+ * script's scope, which the appended driver shares. */
+const ACTIONS = {
+  'advance through to results':
+    'state.view="question"; state.step=0; for(let i=0;i<GROUPS.length+2;i++){ advance(); }',
+  'back out to the intro':
+    'state.view="results"; state.answers={child14:"yes"}; back(); back(); back(); back(); back(); back();',
+  'skip to results': 'state.view="question"; skipToEnd();',
+  'restart from results':
+    'state.answers={child14:"yes"}; state.view="results"; render(); state.view="intro"; state.answers={}; renderWithMotion();',
+  'delete answers': 'state.answers={child14:"yes"}; deleteAnswers();',
+  'print the letter (exempt)':
+    'state.answers={child14:"yes"}; state.view="results"; render(); printForm();',
+  'print the letter (good cause)':
+    'state.answers={goodcause:"transport"}; state.view="results"; render(); printForm();',
+  'download as Word':
+    'state.answers={child14:"yes"}; state.view="results"; render(); downloadDoc();',
+  'email these results':
+    'state.answers={child14:"yes"}; state.view="results"; render(); emailResults();',
+  'clear the signature':
+    'state.answers={child14:"yes"}; state.view="results"; render(); clearSignature();'
 };
 
 function makeEl(tag) {
@@ -66,6 +99,7 @@ function makeEl(tag) {
     hasAttribute(k) { return k in this.attrs; },
     appendChild(c) { this.children.push(c); return c; },
     removeChild(c) { this.children = this.children.filter(x => x !== c); return c; },
+    remove() {},
     insertBefore(c) { this.children.push(c); return c; },
     addEventListener() {}, removeEventListener() {},
     focus() {}, blur() {}, click() {},
@@ -126,8 +160,13 @@ function buildContext() {
     addEventListener() {}, removeEventListener() {},
     atob: (s) => Buffer.from(s, 'base64').toString('binary'),
     btoa: (s) => Buffer.from(s, 'binary').toString('base64'),
-    URL, URLSearchParams,
-    Blob: class { constructor() {} },
+    URL: Object.assign(
+      function ShimURL(u, base) { return new URL(u, base); },
+      URL,
+      { createObjectURL: () => 'blob:shim', revokeObjectURL() {} }
+    ),
+    URLSearchParams,
+    Blob: class { constructor(parts) { this.parts = parts; } },
     Image: class { constructor() { this.onload = null; } set src(v) {} },
     lucide: { createIcons() {} },
     devicePixelRatio: 1,
@@ -169,5 +208,56 @@ describe('screener pages render without throwing', () => {
         );
       });
     }
+
+    /* Button paths. These assert "did not throw" rather than checking output,
+     * since print and download write elsewhere or hand off to the browser. */
+    for (const [action, driver] of Object.entries(ACTIONS)) {
+      it(page + ' survives ' + action, () => {
+        const { ctx } = buildContext();
+        vm.createContext(ctx);
+        vm.runInContext(LOGIC_SRC, ctx, { filename: 'snap-screening-logic.js' });
+        vm.runInContext(src + '\n;(function(){' + driver + '})();', ctx, { filename: page });
+      });
+    }
+  }
+});
+
+/* ------------------------------------------------------------------------- *
+ * Path-independent guard for the exact bug that shipped: a `${SOME_CONST}`
+ * left in a template literal after the const was deleted. The render tests
+ * above only catch it on paths they drive, so this one reads the source and
+ * checks every interpolated SCREAMING_CASE name is actually declared. That
+ * naming convention is what the page-level link and copy constants use, which
+ * keeps the check specific enough to avoid false positives on locals.
+ * ------------------------------------------------------------------------- */
+describe('page scripts declare every constant they interpolate', () => {
+  for (const page of PAGES) {
+    it(page, () => {
+      const html = fs.readFileSync(path.join(COURT_FORMS, page), 'utf8');
+      const src = inlineScript(html, page);
+
+      // Root identifier of each ${...}, e.g. "LINKS" from "${LINKS.abawd}".
+      const used = new Set();
+      for (const m of src.matchAll(/\$\{\s*([A-Z][A-Z0-9_]{2,})\b/g)) used.add(m[1]);
+
+      // Anything bound in this script, destructured from a module, or a builtin.
+      const declared = new Set(['URL', 'URLSearchParams', 'JSON', 'Math', 'Number', 'String', 'Boolean', 'Array', 'Object', 'Date', 'NaN', 'Infinity']);
+      for (const m of src.matchAll(/\b(?:const|let|var|function)\s+([A-Z][A-Z0-9_]{2,})\b/g)) declared.add(m[1]);
+      // Destructuring blocks: const { A, B } = X;  and  const [A, B] = X;
+      for (const m of src.matchAll(/\b(?:const|let|var)\s*[{[]([^}\]]*)[}\]]\s*=/g)) {
+        for (const part of m[1].split(',')) {
+          const name = part.split(':').pop().trim().replace(/^\.\.\./, '');
+          if (/^[A-Z][A-Z0-9_]{2,}$/.test(name)) declared.add(name);
+        }
+      }
+
+      const missing = [...used].filter(n => !declared.has(n));
+      assert.deepEqual(
+        missing, [],
+        'interpolated but never declared in ' + page + ': ' + missing.join(', ') +
+        '. A deleted const still referenced inside a template literal parses fine ' +
+        'and throws at render time, blanking the page.'
+      );
+    });
   }
 });
