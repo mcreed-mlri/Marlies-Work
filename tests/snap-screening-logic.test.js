@@ -168,8 +168,15 @@ describe('snap-screening-logic', () => {
   it('classic2 carries the draft-only rendering fields', () => {
     const byId = classic2.Q_BY_ID;
     assert.match(byId.child14.helpHtml, /SNAP household/);
-    assert.match(byId.dv.note, /contact info here/);
+    assert.match(byId.caretaker.helpHtml, /Adult Foster Care provider/);
+    assert.match(byId.dv.helpHtml, /contact info here/);
+    assert.match(byId.health.help, /short- or long-term/);
+    assert.match(byId.housing.help, /couch surfing/);
+    assert.equal(byId.stateagency.text, 'Do you get services from any of these state agencies?');
     assert.equal(byId.stateagency.listItems.length, 5);
+    assert.equal(classic2.GROUPS[0].title, 'Your Family and Household');
+    assert.equal(classic2.GROUPS[2].title, 'Public Benefits and Participating in Programs');
+    assert.match(classic2.GOODCAUSE.text, /Is something making it hard to work/);
     assert.match(byId.school.yesLabel, /half-time or more/);
     assert.match(byId.substanceUse.help, /daily program/);
     // Other variants must not pick these up.

@@ -183,7 +183,7 @@ const { GOODCAUSE_CATEGORIES, GROUPS, NONE, SCREENING_HUB_URL, LINKS } = S;
  * State + logic (ports the DCLogic Component)
  * ------------------------------------------------------------------ */
 
-const state = { view:'intro', step:0, gc:false, helpOpen:{}, agreed:false, answers:{}, animate:true };
+const state = { view:'intro', step:0, gc:false, helpOpen:{}, answers:{}, animate:true };
 
 /* ---- Local, 1-day retention -------------------------------------- *
  * Answers are kept only in this browser (never sent anywhere) and are
@@ -201,7 +201,7 @@ function persist(){
   try{
     localStorage.setItem(STORAGE_KEY, JSON.stringify({
       view:state.view, step:state.step, gc:state.gc,
-      agreed:state.agreed, answers:state.answers, savedAt:Date.now()
+      answers:state.answers, savedAt:Date.now()
     }));
   }catch(e){ /* storage unavailable or full; fail quietly */ }
 }
@@ -220,7 +220,6 @@ function loadPersisted(){
     // Clamp in case saved data predates the themed grouping (step used to index questions).
     state.step = Math.max(0, Math.min(state.step, GROUPS.length - 1));
     state.gc = !!d.gc;
-    state.agreed = !!d.agreed;
     state.answers = (d.answers && typeof d.answers === 'object') ? S.migrateAnswers(d.answers) : {};
   }catch(e){
     try{ localStorage.removeItem(STORAGE_KEY); }catch(_){}
@@ -436,19 +435,10 @@ function renderIntro(){
     <p style="font-size:16.5px;line-height:1.6;color:#3a424e;margin:0 0 22px">This short screening asks a few questions to check if you need to meet the ABAWD work rules or if you are exempt. It takes about 3 minutes.</p>
     <div style="display:flex;align-items:flex-start;gap:12px;background:var(--soft);border-radius:var(--radius);padding:15px 17px;margin-bottom:22px">
       <div style="font-size:18px;line-height:1.4;flex:none" aria-hidden="true">\u{1F512}</div>
-      <p style="font-size:14.5px;line-height:1.55;color:#3a424e;margin:0">Your answers stay in your browser and are never sent to us. They are automatically cleared after 1 day, and you can delete them yourself at any time.</p>
+      <p style="font-size:14.5px;line-height:1.55;color:#3a424e;margin:0"><strong>Your information is private</strong> and will not automatically be saved on this device. MLRI does NOT have access to or save the information you share on this form.</p>
     </div>
 
-    <details style="margin:0 0 16px;border:1px solid #dfe3ea;border-radius:var(--radius);background:#fff">
-      <summary style="cursor:pointer;padding:13px 16px;font-size:15px;font-weight:700;color:var(--accent)">Terms of Use</summary>
-      <div style="padding:0 16px 15px;font-size:14px;line-height:1.6;color:#3a424e">
-        <p style="margin:0 0 10px">This screening tool provides general information only. It is <strong>not legal advice</strong> and does not create an attorney–client relationship. Results are based only on the answers you provide and may not reflect your full situation.</p>
-        <p style="margin:0 0 10px">For advice about your specific case, contact a legal aid program or an attorney, and always confirm requirements with DTA before acting.</p>
-        <p style="margin:0">Your answers are stored only in this browser, are never transmitted to us, and are cleared automatically after 1 day.</p>
-      </div>
-    </details>
-
-    <fieldset style="border:1px solid #dfe3ea;border-radius:var(--radius);padding:15px 17px;margin:0 0 18px;background:#fff">
+    <fieldset style="border:1px solid #dfe3ea;border-radius:var(--radius);padding:15px 17px;margin:0 0 22px;background:#fff">
       <legend style="display:block;float:left;width:100%;font-size:15px;font-weight:700;padding:0;margin:0 0 13px;color:var(--ink)">Before you start</legend>
       <p style="clear:both;font-size:15px;line-height:1.55;color:#3a424e;margin:0 0 12px">Are you between 18 and 64 years old?</p>
       <div role="radiogroup" aria-label="Are you between 18 and 64 years old?" style="display:flex;flex-direction:column;gap:10px">
@@ -456,11 +446,6 @@ function renderIntro(){
         <label style="display:flex;gap:10px;align-items:center;font-size:15px;cursor:pointer"><input type="radio" name="ageRange" value="no" ${state.answers.ageRange === 'no' ? 'checked' : ''} style="width:18px;height:18px;accent-color:var(--accent)"> No</label>
       </div>
     </fieldset>
-
-    <label style="display:flex;gap:11px;align-items:flex-start;margin:0 0 22px;font-size:15px;line-height:1.5;color:#3a424e;cursor:pointer">
-      <input type="checkbox" id="agree" ${state.agreed ? 'checked' : ''} style="width:20px;height:20px;flex:none;margin-top:1px;accent-color:var(--accent);cursor:pointer">
-      <span>I have read and agree to the Terms of Use above.</span>
-    </label>
 
     <h2 class="h2" style="margin:0 0 14px">Check if the SNAP work rules apply to you.</h2>
     <button type="button" id="start-btn" data-action="start" ${canStart() ? '' : 'aria-disabled="true"'} style="${primaryBtn}${canStart() ? '' : ';opacity:.5;cursor:not-allowed'}">Fill out the form →</button>
@@ -531,7 +516,7 @@ function renderQBlock(q){
   </div>`;
 }
 
-function canStart(){ return state.agreed && (state.answers.ageRange === 'yes' || state.answers.ageRange === 'no'); }
+function canStart(){ return state.answers.ageRange === 'yes' || state.answers.ageRange === 'no'; }
 
 function renderPage(){
   const lastGroup = !state.gc && state.step === GROUPS.length - 1;
@@ -568,8 +553,11 @@ function renderResults(){
   const email = LINKS.advocacyEmail;
 
   /* Closing arrow lines, shown under every result screen. */
-  const learnMore = `<p style="font-size:15px;line-height:1.6;margin:0">→ To learn more about the ABAWD work rules, <a href="${LINKS.abawd}" target="_blank" rel="noopener">click here</a>.</p>`;
+  const learnMore = `<p style="font-size:15px;line-height:1.6;margin:0"><a href="${LINKS.abawd}" target="_blank" rel="noopener">Learn more about the ABAWD SNAP work rules</a></p>`;
   const lostSnap = `<p style="font-size:15px;line-height:1.6;margin:12px 0 0">→ If you lost your SNAP or are about to lose your SNAP because of the ABAWD rules, email us at <a href="mailto:${email}">${email}</a>.</p>`;
+
+  const privacyNote = `<p style="font-size:14.5px;line-height:1.55;color:#5b6470;margin:0 0 6px"><em><strong>Note:</strong> <strong>Your information is private</strong> and will not automatically be saved on this device. MLRI does NOT have access to or save the information you type on this form. What you type here is not saved on this device. Print, download, or email these results to yourself to keep a copy.</em></p>`;
+  const printLead = `<p style="font-size:14.5px;line-height:1.55;color:#5b6470;margin:0 0 18px">When you click print or download, you will get a signed letter you can mail, fax, or upload to DTA Connect. You can also email yourself these results.</p>`;
 
   /* Ways to get a written, signed statement to DTA. Reused on several screens. */
   const dtaContacts = `<ul style="margin:0;padding-left:20px;font-size:15px;line-height:1.7;color:#3a424e">
@@ -600,10 +588,14 @@ function renderResults(){
       <span>${esc(r)}</span></li>`).join('');
     card = `<div style="border-radius:var(--radius);overflow:hidden;border:1px solid #cbe4d5">
       <div style="background:#e6f4ec;padding:20px 22px;border-bottom:1px solid #cbe4d5">
-        <h2 class="h-result" style="color:#14532d">You are exempt and do not need to meet the ABAWD work rules because of these reasons:</h2>
+        <h2 class="h-result" style="color:#14532d">Good news: You are exempt and do not have to meet the ABAWD work rules</h2>
       </div>
       <div style="padding:20px 22px;background:#fff">
-        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px">${items}</ul>
+        <p style="font-size:16px;line-height:1.6;color:#3a424e;margin:0 0 14px">You may not have to meet the work rules because of these reasons:</p>
+        <ul style="list-style:none;padding:0;margin:0 0 14px;display:flex;flex-direction:column;gap:9px">${items}</ul>
+        <p style="font-size:16px;line-height:1.6;color:#1b1f27;font-weight:700;margin:0 0 14px">Tell DTA as soon as you can if one of these is true:</p>
+        <p style="font-size:15.5px;line-height:1.6;color:#3a424e;margin:0 0 14px">If this is based on work, send proof of your income and hours, such as pay stubs or a letter. If this is based on housing or another disability benefit, tell DTA the details so they can review your exemption.</p>
+        ${learnMore}
       </div></div>`;
   } else if(rt === 'goodcause'){
     const cats = GOODCAUSE_CATEGORIES.map(c => {
@@ -617,19 +609,21 @@ function renderResults(){
     }).join('');
     card = `<div style="border-radius:var(--radius);overflow:hidden;border:1px solid #c7d6f0">
       <div style="background:var(--soft);padding:20px 22px;border-bottom:1px solid #c7d6f0">
-        <h2 class="h-result" style="color:var(--accent-dark)">You may have a good reason for missing work, school, or volunteer hours</h2>
+        <h2 class="h-result" style="color:var(--accent-dark)">You may have a good reason for missing hours</h2>
       </div>
       <div style="padding:20px 22px;background:#fff">
         <p style="font-size:16px;line-height:1.6;color:#3a424e;margin:0 0 14px">This includes missing hours before or after your start date.</p>
-        <p style="font-size:16px;line-height:1.6;color:#1b1f27;font-weight:700;margin:0 0 14px">Tell DTA as soon as possible if you couldn't meet the work rules for one or more months for any of the below reasons:</p>
-        <ul style="list-style:none;padding:0;margin:0">${cats}</ul>
+        <p style="font-size:16px;line-height:1.6;color:#1b1f27;font-weight:700;margin:0 0 14px">Tell DTA as soon as you can if you could not meet the work rules for one or more months because of a hard life event, like:</p>
+        <ul style="list-style:none;padding:0;margin:0 0 14px">${cats}</ul>
+        ${learnMore}
       </div></div>`;
   } else {
     card = `<div style="border-radius:var(--radius);overflow:hidden;border:1px solid #ecd9a8">
       <div style="background:#fbf1dc;padding:20px 22px;border-bottom:1px solid #ecd9a8">
-        <h2 class="h-result" style="color:#7a4a00">You may need to meet the ABAWD work rules to keep getting SNAP</h2>
+        <h2 class="h-result" style="color:#7a4a00">You may need to meet the ABAWD work rules</h2>
       </div>
       <div style="padding:20px 22px;background:#fff">
+        <p style="font-size:16px;line-height:1.6;color:#3a424e;margin:0 0 16px">Based on your responses, you may not be exempt from the ABAWD work rules. You did not pick a reason to be exempt.</p>
         <p style="font-size:16px;line-height:1.6;color:#3a424e;margin:0 0 8px">→ If you already lost your SNAP because of the Work Rules, you can <a href="${LINKS.reapply}" target="_blank" rel="noopener">reapply</a> at any time.</p>
         <ul style="margin:0 0 20px;padding-left:20px;font-size:15px;line-height:1.7;color:#3a424e">
           <li><a href="${LINKS.getSnapBack}" target="_blank" rel="noopener">See here</a> for more information on how you may be able to get your SNAP back</li>
@@ -637,52 +631,58 @@ function renderResults(){
         </ul>
 
         <div style="padding:18px 20px;background:#eef7f1;border:1px solid #cbe4d5;border-radius:var(--radius)">
-          <h3 style="font-size:17px;margin:0 0 14px">You can meet the rules by:</h3>
+          <h3 style="font-size:17px;margin:0 0 14px">To keep getting SNAP, you can meet the ABAWD work rules by doing <strong>one</strong> of these:</h3>
           <div style="display:flex;gap:13px;align-items:flex-start">
             <span aria-hidden="true" style="width:26px;height:26px;border-radius:50%;background:#1f7a4d;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none">1</span>
             <div>
-              <p style="margin:0;font-size:15.5px;line-height:1.55">Doing <strong>paid or unpaid work</strong>, and/or doing a <a href="${LINKS.dtaTraining}" target="_blank" rel="noopener">DTA training program</a>, for at least <strong>20 hours per week (80 hours a month)</strong></p>
-              <ul style="margin:7px 0 0;padding-left:20px;font-size:15px;line-height:1.6;color:#3a424e"><li>Examples of unpaid work include internships, or caring for family or friends who aren't disabled or under age 6.</li></ul>
+              <p style="margin:0;font-size:15.5px;line-height:1.55"><strong>Work or train 20 hours a week</strong> (80 hours a month). This can be paid work, unpaid work, or a <a href="${LINKS.dtaTraining}" target="_blank" rel="noopener">DTA training program</a>.</p>
+              <ul style="margin:7px 0 0;padding-left:20px;font-size:15px;line-height:1.6;color:#3a424e"><li>Unpaid work can include internships or caring for family or friends who are not disabled or under age 6.</li></ul>
             </div>
           </div>
           <p style="text-align:center;font-weight:700;font-size:15px;color:#3a424e;margin:14px 0">OR</p>
           <div style="display:flex;gap:13px;align-items:flex-start">
             <span aria-hidden="true" style="width:26px;height:26px;border-radius:50%;background:#1f7a4d;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none">2</span>
             <div>
-              <p style="margin:0;font-size:15.5px;line-height:1.55"><strong>Community Service/Volunteering</strong> a certain number of hours per month</p>
-              <ul style="margin:7px 0 0;padding-left:20px;font-size:15px;line-height:1.6;color:#3a424e"><li>The number of hours depends on how much SNAP you get. DTA will tell you how many hours you need to volunteer.</li></ul>
+              <p style="margin:0;font-size:15.5px;line-height:1.55"><strong>Volunteer</strong> a set number of hours each month. The number depends on how much SNAP you get. DTA will tell you how many hours to volunteer.</p>
             </div>
           </div>
         </div>
 
         <div style="margin:20px 0 0;padding:18px 20px;background:var(--soft);border-radius:var(--radius)">
-          <h3 style="font-size:17px;margin:0 0 10px">How to tell DTA if you are meeting the work rules:</h3>
-          <p style="font-size:15px;line-height:1.6;color:#3a424e;margin:0 0 12px">Send proof of income or explain to DTA how you are meeting the rules through unpaid work, school/training program, or community service hours in a <strong>written, signed statement</strong> (handwritten note is fine):</p>
+          <h3 style="font-size:17px;margin:0 0 10px">How to tell DTA you are meeting the work rules:</h3>
+          <p style="font-size:15px;line-height:1.6;color:#3a424e;margin:0 0 12px">For <strong>paid work</strong>, send DTA proof of income and hours, such as pay stubs or an employer letter. For <strong>unpaid or in-kind work</strong>, tell DTA how you are meeting the work rules and your hours. Send a statement or letter that explains the arrangement and hours. If your work hours go below 80 hours in a month, report that to DTA by the 10th day of the next month.</p>
+          <p style="font-size:15px;line-height:1.6;color:#3a424e;margin:0 0 12px">Upload a <strong>written, signed statement</strong> (handwritten note is fine):</p>
           ${dtaContacts}
           <hr style="border:none;border-top:1px solid #c7d6f0;margin:18px 0">
           <p style="font-size:15.5px;line-height:1.6;color:#1b1f27;margin:0 0 10px"><strong>You may have a good reason for missing work, school, or volunteer hours.</strong> This includes missing hours before or after your start date.</p>
-          <p style="font-size:15px;line-height:1.6;color:#3a424e;margin:0">Tell DTA as soon as possible if you couldn't meet the work rules for one or more months because of an unexpected life situation like temporary transportation issues, a personal or family emergency, or employment issues. <a href="${LINKS.goodCause}" target="_blank" rel="noopener">Learn more here</a>.</p>
+          <p style="font-size:15px;line-height:1.6;color:#3a424e;margin:0 0 14px">Tell DTA as soon as possible if you couldn\u2019t meet the work rules for one or more months because of an unexpected life situation like temporary transportation issues, a personal or family emergency, or employment issues. <a href="${LINKS.goodCause}" target="_blank" rel="noopener">Learn more here</a>.</p>
+          <p style="font-size:15px;line-height:1.6;color:#3a424e;margin:0">Already lost your SNAP because of the work rules? You can apply again any time. Email <a href="mailto:${email}">${email}</a> if you lost or are about to lose SNAP because of these rules.</p>
         </div>
+        ${learnMore}
       </div></div>`;
   }
 
   let form = '';
   if(rt === 'exempt' || rt === 'goodcause'){
+    const formTitle = rt === 'exempt'
+      ? 'Tell DTA that you are exempt as soon as you can. Send a statement to DTA'
+      : 'Tell DTA why you missed work hours as soon as you can. Send a statement to DTA';
     const formLead = rt === 'exempt'
-      ? 'To tell DTA you are exempt, you can fill out this form with your results and send it to DTA.'
-      : 'To tell DTA why you missed work hours, you can fill out this form and send it to DTA.';
+      ? 'To tell DTA you are exempt, you can fill in the blanks below with your results and send it to DTA.'
+      : 'To tell DTA the reason you missed hours, you can fill in the blanks below with your results and send it to DTA.';
     const blanks = prompts.map((p, i) => `<div style="margin:0 0 16px">
       <label for="f-explain-${i}" style="display:block;font-size:14.5px;font-weight:700;margin:0 0 7px">${esc(p)}</label>
       <textarea id="f-explain-${i}" data-explain-prompt="${esc(p)}" rows="4" placeholder="Type here…" style="width:100%;font-family:inherit;font-size:16px;line-height:1.5;padding:11px 13px;border:1.5px solid #cdd3dc;border-radius:calc(var(--radius) - 3px);resize:vertical"></textarea>
     </div>`).join('');
     form = `<div style="margin:26px 0 0;padding:22px;background:#fff;border:1px solid #dfe3ea;border-radius:var(--radius)">
+      <h3 style="font-size:19px;margin:0 0 10px">${esc(formTitle)}</h3>
       <div class="hint-tip-wrap" style="margin:0 0 10px">
-        <h3 style="font-size:19px;margin:0">${esc(formLead)}</h3>
+        <p style="font-size:15px;line-height:1.55;color:#3a424e;margin:0">${esc(formLead)}</p>
         ${hintTip('why-info', 'Why are we asking for more information?', WHY_INFO_HELP, true)}
       </div>
-      <p style="font-size:14.5px;line-height:1.55;color:#5b6470;margin:0 0 6px"><em>Note: MLRI does <strong>not</strong> have access to or save the information you type on this form.</em></p>
-      <p style="font-size:14.5px;line-height:1.55;color:#5b6470;margin:0 0 18px">When you print or save, you will get a signed letter you can mail, fax, or upload to DTA. Print or save to keep a copy.</p>
-      <p style="font-size:15px;font-weight:700;margin:0 0 12px">In the blank spaces below,</p>
+      ${privacyNote}
+      ${printLead}
+      <p style="font-size:15px;font-weight:700;margin:0 0 12px">Additional information (in your own words) — In a few sentences:</p>
       ${blanks}
       <div class="form-row">
         <div><label for="f-name" style="display:block;font-size:14px;font-weight:700;margin:0 0 6px">Your name</label><input id="f-name" autocomplete="name" style="${inputStyle}"></div>
@@ -717,7 +717,7 @@ function renderResults(){
       ? `Fill out and send in <a href="${LINKS.exemptionForm}" target="_blank" rel="noopener">DTA\u2019s exemption form</a> or explain the information to DTA in a written, signed statement (handwritten note is fine):`
       : 'Explain the information to DTA in a written, signed statement (handwritten note is fine):';
     nextSteps = `<div style="margin:26px 0 0;padding:22px;background:var(--soft);border-radius:var(--radius)">
-      <h3 style="font-size:18px;margin:0 0 10px">Or, you can do one of these next steps:</h3>
+      <h3 style="font-size:18px;margin:0 0 10px">Other ways to reach DTA</h3>
       <p style="font-size:15px;line-height:1.6;color:#3a424e;margin:0 0 12px">${stepsLead}</p>
       ${dtaContacts}
     </div>`;
@@ -728,8 +728,8 @@ function renderResults(){
     </div>`;
   }
 
-  // The not-exempt card already carries the advocacy email in its own list.
-  const footer = `<div style="margin:24px 0 0">${learnMore}${rt === 'notexempt' ? '' : lostSnap}</div>`;
+  // Exempt/good-cause cards include learn-more; not-exempt includes it in the card.
+  const footer = `<div style="margin:24px 0 0">${rt === 'exempt' || rt === 'goodcause' || rt === 'notexempt' ? '' : learnMore}${rt === 'notexempt' ? '' : lostSnap}</div>`;
 
   return `<div class="${animClass()}">${resultsHead}${card}${form}${nextSteps}${footer}
     <div class="no-print" style="display:flex;flex-wrap:wrap;gap:12px;margin-top:22px">
@@ -990,14 +990,9 @@ document.addEventListener('click', (e) => {
   }
 });
 
-// Terms of Use consent toggle: enable/disable Start without a full re-render
-// so the checkbox keeps focus.
+// Age-range selection: enable/disable Start without a full re-render
+// so the radio buttons keep focus.
 document.addEventListener('change', (e) => {
-  if(e.target && e.target.id === 'agree'){
-    state.agreed = e.target.checked;
-    persist();
-    updateStartBtn();
-  }
   if(e.target && e.target.name === 'ageRange'){
     state.answers.ageRange = e.target.value;
     persist();

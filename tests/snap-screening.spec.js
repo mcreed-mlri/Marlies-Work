@@ -13,6 +13,11 @@ async function agreeAndStart(page, ageYes = true) {
   await page.locator('#start-btn').click();
 }
 
+async function startClassicV2(page, ageYes = true) {
+  await page.locator(`input[name="ageRange"][value="${ageYes ? 'yes' : 'no'}"]`).check();
+  await page.locator('#start-btn').click();
+}
+
 async function clickYn(page, questionText, answer) {
   const block = page.locator('main').filter({ hasText: questionText });
   await block.getByRole('radio', { name: answer, exact: true }).click();
@@ -75,38 +80,39 @@ test.describe('SNAP ABAWD screening — classic v2 (author copy)', () => {
     await expect(page.getByRole('heading', { name: /Did DTA tell you that you need to meet ABAWD Work Rules/i })).toBeVisible();
     await expect(page.getByRole('link', { name: 'SNAP and Work notice' })).toBeVisible();
     await expect(page.getByText('More on the SNAP ABAWD work rules')).toBeVisible();
+    await expect(page.getByText(/Your information is private/i)).toBeVisible();
     await expect(page.getByRole('button', { name: /Fill out the form/i })).toBeVisible();
   });
 
   test('exempt result states the exemption and shows one blank per reason', async ({ page }) => {
-    await agreeAndStart(page);
+    await startClassicV2(page);
     await yn(page, 'caretaker', 'yes').click();   // group 1
     await clickNext(page);
     await yn(page, 'health', 'yes').click();      // group 2
     await skipToResults(page);
-    await expect(page.getByRole('heading', { name: /You are exempt and do not need to meet the ABAWD work rules/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Good news: You are exempt and do not have to meet the ABAWD work rules/i })).toBeVisible();
     await expect(page.getByLabel(/Explain the health reason/i)).toBeVisible();
     await expect(page.getByLabel(/Explain your caretaking responsibilities/i)).toBeVisible();
     await expect(page.getByRole('link', { name: /exemption form/i })).toBeVisible();
   });
 
   test('not-exempt result carries the good-cause guidance', async ({ page }) => {
-    await agreeAndStart(page);
+    await startClassicV2(page);
     await skipToResults(page);
     await noneOf(page, 'goodcause').click();
     await clickNext(page);
-    await expect(page.getByRole('heading', { name: /may need to meet the ABAWD work rules/i })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'You can meet the rules by:' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /You may need to meet the ABAWD work rules/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /To keep getting SNAP, you can meet the ABAWD work rules/i })).toBeVisible();
     await expect(page.getByText(/You may have a good reason for missing work, school, or volunteer hours/i)).toBeVisible();
     await expect(page.getByRole('link', { name: 'DTA training program' })).toBeVisible();
   });
 
   test('good-cause result lists every category, not only the one picked', async ({ page }) => {
-    await agreeAndStart(page);
+    await startClassicV2(page);
     await skipToResults(page);
     await choice(page, 'goodcause', 1).click();   // family or personal emergency
     await clickNext(page);
-    await expect(page.getByRole('heading', { name: /good reason for missing work, school, or volunteer hours/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /good reason for missing hours/i })).toBeVisible();
     for (const title of ['No transportation', 'Emergency', 'Employment issues']) {
       await expect(page.getByText(title, { exact: true })).toBeVisible();
     }
@@ -114,7 +120,7 @@ test.describe('SNAP ABAWD screening — classic v2 (author copy)', () => {
   });
 
   test('state agencies are listed in the question and school uses the long Yes label', async ({ page }) => {
-    await agreeAndStart(page);
+    await startClassicV2(page);
     for (let i = 0; i < 2; i++) await clickNext(page);   // group 3: benefits
     await expect(page.getByText('MA Commission for Deaf and Hard of Hearing')).toBeVisible();
     await clickNext(page);                               // group 4: school and work
@@ -122,7 +128,7 @@ test.describe('SNAP ABAWD screening — classic v2 (author copy)', () => {
   });
 
   test('answers are stored under their own key, not the classic tool’s', async ({ page }) => {
-    await agreeAndStart(page);
+    await startClassicV2(page);
     const keys = await page.evaluate(() => Object.keys(localStorage));
     expect(keys).toContain('cfo-abawd-classic-v2-screening-v1');
     expect(keys).not.toContain('cfo-abawd-screening-v1');

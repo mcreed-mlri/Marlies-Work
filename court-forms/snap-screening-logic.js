@@ -29,6 +29,7 @@
     snapWorkNotice: 'https://eohhs.ehs.state.ma.us/DTA/PolicyOnline/olg%20docs/Consolidated%20Notice%20Sample.pdf',
     dtaConnect: 'https://dtaconnect.eohhs.mass.gov/',
     snapHousehold: 'https://www.masslegalhelp.org/public-benefits-ssi/snap-food-benefits/34-what-snap-household-or-assistance-unit',
+    adultFosterCare: 'https://www.masslegalhelp.org/public-benefits-ssi/snap-food-benefits/adult-foster-care-and-snap',
     dvServices: 'https://www.mass.gov/info-details/dta-domestic-violence-services',
     exemptionForm: 'https://www.mass.gov/doc/snap-work-rules-exemption-self-declaration-form/download',
     reachDtaWorker: 'https://www.masslegalservices.org/system/files/library/Advocacy%20Tips_%20Reaching%20a%20DTA%20worker.pdf',
@@ -100,13 +101,13 @@
     /* Author's draft. `title` / `detail` drive the good-cause results screen,
      * which lists every category rather than only the one selected. */
     classic2: {
-      text: 'Are there other reasons why it is hard for you to do work, go to school, or do community service right now?',
-      help: 'These reasons mean you missed work, school, or volunteering hours for one or more months because of an unexpected life situation.',
+      text: 'Is something making it hard to work, go to school, or volunteer right now?',
+      help: 'These are situations where you missed work, school, or volunteering hours for one or more months because of an unexpected life event.',
       noneLabel: 'This question does not apply to me / I\u2019m not sure',
       options: [
         {
           id: 'transport',
-          label: 'Yes, I have temporary transportation issues',
+          label: 'Yes \u2014 my ride broke down or I have temporary transportation issues',
           result: 'No transportation \u2014 a temporary loss of transportation, like a broken down car or temporary public transportation shutdown.',
           title: 'No transportation',
           detail: ['A temporary loss of transportation, like a broken down car or temporary public transportation shutdown.']
@@ -175,15 +176,24 @@
         text: 'Do you live with a child under 14 years old?',
         helpHtml: 'If you live with a child under 14 who should be part of your <a href="' + LINKS.snapHousehold + '" target="_blank" rel="noopener">SNAP household</a>, even if they are not eligible (for example, because of immigration status or if they are a foster child), select “Yes.”'
       },
-      health: { text: 'Do you have a health reason or disability that makes it hard to work at least 30 hours a week?' },
+      health: {
+        text: 'Do you have a health reason or disability that makes it hard to work at least 30 hours a week?',
+        help: 'It can be a physical or mental health reason, and short- or long-term.'
+      },
       child6: { text: 'Do you take care of a child under 6 years old?', help: 'You do not need to be related to them, live with them, or provide care full-time.' },
-      caretaker: { text: 'Do you take care of a child or adult who cannot care for themselves?', help: 'You do not need to be related to them, live with them, or provide care full-time.' },
+      caretaker: {
+        text: 'Do you take care of a child or adult who cannot care for themselves?',
+        helpHtml: 'You do not need to be related to them, live with them, or provide care full-time.<br><br>Caring for someone means you regularly do things like make food, help with daily tasks like bathing and personal care, run errands for them, and monitor their health and wellbeing. If you are an <a href="' + LINKS.adultFosterCare + '" target="_blank" rel="noopener">Adult Foster Care provider</a>, answer “Yes.”'
+      },
       pregnant: { text: 'Are you pregnant?' },
-      housing: { text: 'Do you have a regular place to sleep at night?', help: 'Choose “No” if you are experiencing homelessness or unstable housing.' },
+      housing: {
+        text: 'Do you have a regular place to sleep at night?',
+        help: 'Choose “No” if you are experiencing homelessness or unstable housing, like living in a shelter or couch surfing.'
+      },
       housingFollowup: { text: 'Please choose all that apply:', noneLabel: 'None of the above' },
       dv: {
-        text: 'Has a domestic violence or safety situation made it hard for you to work?',
-        note: 'DTA has DV specialists in each local DTA office. Find their <a href="' + LINKS.dvServices + '" target="_blank" rel="noopener">contact info here</a>.'
+        text: 'Has a domestic violence, stalking, sexual harassment, sexual assault, or another safety situation made it hard for you to work?',
+        helpHtml: 'This includes stalking, harassment, abuse, assault, or any health/safety concerns that make it hard for you to work. DTA has domestic violence specialists in each local office who can help. Find their <a href="' + LINKS.dvServices + '" target="_blank" rel="noopener">contact info here</a>. Your answer stays private.'
       },
       tribe: { text: 'Are you an Alaska native or a member of an American Indian, Urban Indian, or California Indian tribe?', help: 'Choose “Yes” if you have a parent or grandparent who is a member of one of these tribes.' },
       tafdc: { text: 'Do you get, or are you applying for TAFDC cash assistance benefits?' },
@@ -191,7 +201,7 @@
       substanceUse: { text: 'Are you participating in a substance use treatment program?', help: 'It does not have to be a daily program.' },
       unemployment: { text: 'Do you get, or are you applying for unemployment benefits?' },
       stateagency: {
-        text: 'Do you get services from any of the below state agencies?',
+        text: 'Do you get services from any of these state agencies?',
         listItems: ['MassAbility', 'Dept. of Mental Health', 'Dept. of Developmental Services', 'MA Commission for the Blind', 'MA Commission for Deaf and Hard of Hearing']
       },
       school: {
@@ -248,11 +258,19 @@
   }
 
   const GROUPS = [
-    { title: 'Children and people you care for', ids: ['child14', 'child6', 'caretaker', 'pregnant'] },
+    { title: 'Children and people you care for', ids: ['child14', 'child6', 'caretaker', 'pregnant'], classic2Title: 'Your Family and Household' },
     { title: 'Your health, housing, and safety', ids: ['health', 'housing', 'housingFollowup', 'dv'] },
-    { title: 'Benefits, programs, and cash assistance', ids: ['tafdc', 'disability', 'substanceUse', 'unemployment', 'stateagency'] },
+    { title: 'Benefits, programs, and cash assistance', ids: ['tafdc', 'disability', 'substanceUse', 'unemployment', 'stateagency'], classic2Title: 'Public Benefits and Participating in Programs' },
     { title: 'School, work, and background', ids: ['school', 'working', 'tribe'] }
   ];
+
+  function groupsForVariant(variant) {
+    const v = normVariant(variant);
+    return GROUPS.map(g => ({
+      title: (v === 'classic2' && g.classic2Title) ? g.classic2Title : g.title,
+      ids: g.ids
+    }));
+  }
 
   function housingOptions(variant) {
     const v = normVariant(variant) === 'v2' ? 'labelV2' : 'labelClassic';
@@ -629,6 +647,7 @@
 
   function create(variant) {
     const v = normVariant(variant);
+    const GROUPS_V = groupsForVariant(v);
     const QUESTIONS = buildQuestions(v);
     const GOODCAUSE = buildGoodCause(v);
     const GC_TEXT = buildGcText(v);
@@ -653,7 +672,7 @@
       GOODCAUSE,
       GC_TEXT,
       GOODCAUSE_CATEGORIES,
-      GROUPS,
+      GROUPS: GROUPS_V,
       Q_BY_ID,
       migrateAnswers: (answers) => migrateAnswers(answers, v),
       housingUnableExempt: (answers) => housingUnableExempt(answers),
@@ -662,7 +681,7 @@
       shouldSkipGoodCause: (answers) => shouldSkipGoodCause(answers, QUESTIONS),
       goodCauseText: (answers) => goodCauseText(answers, GC_TEXT),
       statementPrompts: (answers) => statementPromptsFor(exemptReasonsFor(answers, QUESTIONS), resultTypeFor(answers, QUESTIONS)),
-      pageQuestions: (answers, step, gc) => pageQuestionsFor(answers, step, gc, GROUPS, Q_BY_ID, GOODCAUSE),
+      pageQuestions: (answers, step, gc) => pageQuestionsFor(answers, step, gc, GROUPS_V, Q_BY_ID, GOODCAUSE),
       qById: (id) => (id === 'goodcause' ? GOODCAUSE : Q_BY_ID[id]),
       workOptionKind: (id) => {
         const o = WORK_OPTION_DEFS.find(x => x.id === id);
