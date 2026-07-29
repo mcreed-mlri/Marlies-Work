@@ -108,8 +108,8 @@ Three UIs share one logic module ([`court-forms/snap-screening-logic.js`](court-
 
 | File | Variant | What it is |
 |------|---------|-----------|
-| [`court-forms/snap-abawd.html`](court-forms/snap-abawd.html) | `classic` | Classic Design - Updated Language |
-| [`court-forms/snap-abawd-classic-v2.html`](court-forms/snap-abawd-classic-v2.html) | `classic2` | Classic Design - new Copy |
+| [`court-forms/snap-abawd.html`](court-forms/snap-abawd.html) | `classic` | Classic Design |
+| [`court-forms/snap-abawd-classic-v2.html`](court-forms/snap-abawd-classic-v2.html) | `classic2` | Classic Design - updated language |
 | [`court-forms/snap-screening-v2.html`](court-forms/snap-screening-v2.html) | `v2` | Accessible redesign |
 
 It walks through up to 14 questions plus a "good cause" follow-up and shows one
