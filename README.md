@@ -14,7 +14,7 @@ the homepage lists them.
 | `court-forms/snap-screening.html` | SNAP screening **hub** — links to the tool, sample results, and how-it-works. |
 | `court-forms/snap-screening-logic.js` | Shared screening logic (questions, thresholds, links, result engine) used by all three tools. |
 | `court-forms/snap-abawd.html` | SNAP ABAWD work-rules screening (classic). |
-| `court-forms/snap-abawd-classic-v2.html` | SNAP ABAWD screening — **classic design, author's copy draft**. Same look as `snap-abawd.html`, rebuilt from the MLRI author's website copy draft (see [Classic v2](#classic-v2-the-authors-copy-draft) below). |
+| `court-forms/snap-abawd-classic-v2.html` | SNAP ABAWD screening — **classic design, author's copy draft**. Same look as `snap-abawd.html`, rebuilt from the MLRI author's website copy draft (see [Classic v2](#classic-v2-the-authors-copy-draft) below). Supports `?sample=exempt\|goodcause\|notexempt` for hub sample result previews (demo only; nothing saved). |
 | `court-forms/snap-screening-v2.html` | SNAP screening — accessible / plain-language redesign. Supports `?sample=exempt\|goodcause\|notexempt` to jump straight to a sample result screen (demo only; nothing saved). |
 | `court-forms/snap-how-it-works.html` | Plain-language explainer of the screening. |
 | `court-forms/immigration-court-landing.html` | Landing-page demo for the guided EOIR-28 form. _(Unlinked. Kept in the repo but not shown in site nav.)_ |

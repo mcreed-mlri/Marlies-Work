@@ -535,6 +535,65 @@
     fax: '(617) 887-8765'
   };
 
+  /** Shared results-screen copy (author's website draft). Used by all UI variants. */
+  const RESULT_COPY = {
+    resultsHeadTitle: 'ABAWD Screening Tool Results',
+    resultsHeadLead: 'Based on your answers,',
+    learnMoreLabel: 'Learn more about the ABAWD work rules',
+    lostSnapIntro: 'If you lost your SNAP or are about to lose your SNAP because of the ABAWD rules, email us at',
+    privacyNote: 'Note: Your information is private and will not automatically be saved on this device. MLRI does NOT have access to or save the information you type on this form. Print, download, or email these results to keep a copy.',
+    printLead: 'When you click print or download, you will get a signed letter you can mail, fax, or upload to DTA Connect.',
+    exemptHeading: 'Good news: You are exempt and do not have to meet the ABAWD work rules',
+    exemptReasonsIntro: 'You may not have to meet the work rules because of these reasons:',
+    exemptTellDta: 'Tell DTA as soon as you can if one of these is true:',
+    exemptProof: 'If this is based on work, send proof of your income and hours, such as pay stubs or a letter. If this is based on housing or another disability benefit, tell DTA the details so they can review your exemption.',
+    goodCauseHeading: 'You may have a good reason for missing hours',
+    goodCauseIntro: 'This includes missing hours before or after your start date.',
+    goodCauseLead: 'Tell DTA as soon as you can if you could not meet the work rules for one or more months because of a hard life event, like:',
+    notExemptHeading: 'You may need to meet the ABAWD work rules',
+    notExemptIntro: 'Based on your responses, you may not be exempt from the ABAWD work rules. You did not pick a reason to be exempt.',
+    notExemptReapply: 'If you already lost your SNAP because of the Work Rules, you can reapply at any time.',
+    notExemptSnapBack: 'See here for more information on how you may be able to get your SNAP back',
+    notExemptEmail: 'If you lost your SNAP or are about to lose your SNAP because of the ABAWD rules, email us at',
+    workRulesHeading: 'To keep getting SNAP, you can meet the ABAWD work rules by doing one of these:',
+    workOption1: 'Paid work, unpaid work, or training program for 20 hours a week (80 hours a month).',
+    workOption1Unpaid: 'Unpaid work can include internships or caring for family or friends who are not disabled or under age 6.',
+    workOption1Training: 'Find a DTA training program',
+    workOption2: 'Community service for a set number of hours each month. The number depends on how much SNAP you get. DTA will tell you how many hours.',
+    meetingDtaHeading: 'How to tell DTA you are meeting the work rules:',
+    meetingDtaPaid: 'For paid work, send DTA proof of income and hours, such as pay stubs or an employer letter. For unpaid work, tell DTA how you are meeting the work rules and your hours.',
+    meetingDtaStatement: 'Upload a written, signed statement (handwritten note is fine):',
+    goodCauseInNotExemptBold: 'You may have a good reason for missing work, school, or volunteer hours.',
+    goodCauseInNotExemptIntro: 'This includes missing hours before or after your start date.',
+    goodCauseInNotExemptBody: 'Tell DTA as soon as possible if you couldn\u2019t meet the work rules for one or more months because of an unexpected life situation like temporary transportation issues, a personal or family emergency, or employment issues.',
+    goodCauseInNotExemptLink: 'Learn more here',
+    formTitleExempt: 'Send a statement to DTA',
+    formTitleGoodCause: 'Tell DTA why you missed work hours as soon as you can.',
+    formLeadExempt: 'To tell DTA you are exempt, you can fill in the blanks below with your results and send it to DTA.',
+    formLeadGoodCause: 'To tell DTA the reason you missed hours, you can fill in the blanks below with your results and send it to DTA.',
+    formExplainHeading: 'In a few sentences:',
+    otherWaysHeading: 'Other ways to tell DTA',
+    otherWaysExemptLead: 'Fill out and send in DTA\u2019s exemption form or explain the information to DTA in a written, signed statement (handwritten note is fine):',
+    otherWaysGoodCauseLead: 'Explain the information to DTA in a written, signed statement (handwritten note is fine):',
+    ageInfoHeading: 'These work rules may not apply to your age group',
+    ageInfoBody: 'You said you are not between 18 and 64. The ABAWD work rules usually apply to adults in that age range. You may still have other SNAP rights. Contact DTA or a legal aid program to check your situation.',
+    waysToReachDta: 'Ways to reach DTA'
+  };
+
+  /** HTML list of DTA contact options (author's draft order). */
+  function buildDtaContactsHtml(links) {
+    const L = links || LINKS;
+    return '<ul style="margin:0;padding-left:20px;font-size:15px;line-height:1.7;color:#3a424e">'
+      + '<li>Upload on <a href="' + L.dtaConnect + '" target="_blank" rel="noopener">DTAConnect</a></li>'
+      + '<li>Mail: DTA Document Processing Center, P.O. Box 4406, Taunton, MA 02780-0420</li>'
+      + '<li>Fax: (617) 887-8765</li>'
+      + '<li>Call the DTA Assistance line at <a href="tel:8773822363">(877) 382-2363</a>'
+      + '<ul style="margin:4px 0 0;padding-left:20px"><li><a href="' + L.reachDtaWorker + '" target="_blank" rel="noopener">Click here</a> to see how to get help if you can\'t reach DTA by phone</li></ul>'
+      + '</li>'
+      + '<li>Go to a <a href="' + L.dtaOffices + '" target="_blank" rel="noopener">local DTA office</a> to speak with a SNAP worker</li>'
+      + '</ul>';
+  }
+
   /** Printable / downloadable letter to DTA (print, PDF, Word). */
   function buildStatementHTML(opts) {
     const {
@@ -561,7 +620,7 @@
       const specialReasons = [WORK_REASON_INCOME, WORK_REASON_HOURS_30, DISABILITY_OTHER_REASON, HOUSING_EXEMPT_REASON];
       const exemptReasons = rs.filter(r => !specialReasons.includes(r));
       let inner = `<p style="margin:0 0 14px">Dear DTA,</p>
-        <p style="margin:0 0 14px">I am writing to tell you about my situation regarding the SNAP ABAWD work rules. <strong>I believe I should not have to meet these work rules</strong> for the reason(s) below.</p>`;
+        <p style="margin:0 0 14px">I am writing to ask that you update my SNAP case. I believe I am exempt from the ABAWD work rules and should not have to meet them for the following reason(s):</p>`;
       if (exemptReasons.length) {
         const items = exemptReasons.map(r => `<li style="margin:0 0 6px">${esc(r)}</li>`).join('');
         inner += `<ul style="margin:0 0 16px;padding-left:22px">${items}</ul>`;
@@ -581,11 +640,11 @@
       body = inner;
     } else if (rt === 'goodcause') {
       body = `<p style="margin:0 0 14px">Dear DTA,</p>
-        <p style="margin:0 0 14px">I am writing to tell you about my situation regarding the SNAP ABAWD work rules. <strong>I was not able to meet the work rules for one or more months</strong> because of the following good-cause reason:</p>
+        <p style="margin:0 0 14px">I am writing to explain why I could not meet the ABAWD work rules for one or more months. My good-cause reason is:</p>
         <p style="margin:0 0 14px;padding:12px 14px;border-left:3px solid #333;background:#f7f7f7">${esc(gcText)}</p>`;
     } else {
       body = `<p style="margin:0 0 14px">Dear DTA,</p>
-        <p style="margin:0 0 14px">I am writing to tell you about my situation regarding the SNAP ABAWD work rules.</p>`;
+        <p style="margin:0 0 14px">I am writing about my SNAP case and the ABAWD work rules.</p>`;
     }
 
     // `explain` is either a plain string or, for pages that show one labelled
@@ -600,37 +659,30 @@
         const text = String(e.text == null ? '' : e.text);
         const inner = text.trim()
           ? esc(text)
-          : '<span style="color:#666;font-style:italic">(No additional explanation provided.)</span>';
+          : '&nbsp;';
         const label = e.prompt
           ? `<div style="font-size:10.5pt;color:#333;margin:0 0 6px">${esc(e.prompt)}</div>`
           : '';
         return label + box(inner);
       }).join('<div style="height:14px"></div>')
-      : box('<span style="color:#666;font-style:italic">(No additional explanation provided.)</span>');
+      : box('&nbsp;');
 
     const sigBlock = sigImg
       ? `<img src="${sigImg}" alt="Signature" width="320" height="72" style="display:block;width:320px;height:72px;max-width:100%;margin:0 0 4px">`
       : `<div style="border-bottom:1px solid #111;height:56px;width:320px;max-width:100%;margin:0 0 4px"></div>`;
 
-    return `<div style="font-family:'Atkinson Hyperlegible',Georgia,'Times New Roman',serif;color:#111;max-width:6.5in;margin:0 auto;font-size:11.5pt;line-height:1.55">
-      <div style="border-bottom:2px solid #111;padding-bottom:14px;margin-bottom:22px;break-inside:avoid;page-break-inside:avoid">
-        <div style="font-size:10pt;letter-spacing:.04em;text-transform:uppercase;color:#444;margin-bottom:4px">Statement to DTA</div>
-        <div style="font-size:17pt;font-weight:700;line-height:1.25;color:#111">SNAP ABAWD Work Rules: Client Statement</div>
-        <div style="font-size:10pt;color:#555;margin-top:6px">Prepared by the SNAP recipient (not an official DTA form)</div>
-      </div>
-
-      <table style="width:100%;border-collapse:collapse;margin:0 0 22px;font-size:11pt;break-inside:avoid;page-break-inside:avoid">
+    return `<div style="font-family:Georgia,'Times New Roman',serif;color:#111;max-width:6.5in;margin:0 auto;font-size:12pt;line-height:1.55">
+      <table style="width:100%;border-collapse:collapse;margin:0 0 28px;font-size:11pt;break-inside:avoid;page-break-inside:avoid">
         ${addrRow('Date', today)}
         ${addrRow('To', 'Massachusetts Department of Transitional Assistance (DTA)')}
         ${addrRow('From', name)}
-        ${addrRow('Client / Agency ID', agency)}
-        ${addrRow('RE', 'SNAP work rules (ABAWD)')}
+        ${agency ? addrRow('Client / Agency ID', agency) : ''}
+        ${addrRow('Re', 'SNAP benefits — ABAWD work rules')}
       </table>
 
       ${body}
 
       <div style="margin:20px 0 0;break-inside:avoid;page-break-inside:avoid">
-        <div style="font-weight:700;margin:0 0 8px;font-size:11pt">Additional information (in my own words)</div>
         ${explainContent}
       </div>
 
@@ -640,8 +692,6 @@
         <div style="font-size:11pt;margin:0 0 2px">${name ? esc(name) : 'Printed name: _________________________________'}</div>
         <div style="font-size:10.5pt;color:#444">Date signed: ${today ? esc(today) : '________________'}</div>
       </div>
-
-      <p style="font-size:9pt;color:#666;margin:20px 0 0;padding-top:10px;border-top:1px solid #ccc;line-height:1.45;break-inside:avoid;page-break-inside:avoid">Prepared with the Court Forms Online SNAP work-rules screening tool. This document is based on the answers provided and is general information, not legal advice.</p>
     </div>`;
   }
 
@@ -724,6 +774,8 @@
     statementPromptsFor,
     buildStatementHTML,
     DTA_SUBMISSION,
+    RESULT_COPY,
+    buildDtaContactsHtml,
     escHtml
   };
 });

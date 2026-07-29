@@ -36,7 +36,7 @@ test.describe('SNAP ABAWD screening — classic', () => {
     await agreeAndStart(page);
     await clickYn(page, 'child under 14', 'Yes');
     for (let i = 0; i < 4; i++) await clickNext(page);
-    await expect(page.getByRole('heading', { name: /exempt from the ABAWD work rules/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Good news: You are exempt and do not have to meet the ABAWD work rules/i })).toBeVisible();
   });
 
   test('30+ hours below minimum wage routes to exempt', async ({ page }) => {
@@ -44,7 +44,7 @@ test.describe('SNAP ABAWD screening — classic', () => {
     for (let i = 0; i < 3; i++) await clickNext(page);
     await page.getByRole('radio', { name: /30 hours or more/i }).click();
     await clickNext(page);
-    await expect(page.getByRole('heading', { name: /exempt from the ABAWD work rules/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Good news: You are exempt and do not have to meet the ABAWD work rules/i })).toBeVisible();
     await expect(page.getByText(/30 or more hours/i)).toBeVisible();
   });
 
@@ -136,6 +136,25 @@ test.describe('SNAP ABAWD screening — classic v2 (author copy)', () => {
     expect(keys).not.toContain('cfo-abawd-screening-v1');
   });
 
+  test('sample exempt shows updated language result copy', async ({ page }) => {
+    await page.goto(`${classicV2Url}?sample=exempt`);
+    await expect(page.getByText('Sample result')).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Good news: You are exempt and do not have to meet the ABAWD work rules/i })).toBeVisible();
+    await expect(page.getByLabel(/Explain the health reason/i)).toBeVisible();
+    await expect(page.getByLabel(/Explain your caretaking responsibilities/i)).toBeVisible();
+    const stored = await page.evaluate(() => localStorage.getItem('cfo-abawd-classic-v2-screening-v1'));
+    expect(stored).toBeNull();
+  });
+
+  test('sample good cause lists every category', async ({ page }) => {
+    await page.goto(`${classicV2Url}?sample=goodcause`);
+    await expect(page.getByText('Sample result')).toBeVisible();
+    await expect(page.getByRole('heading', { name: /good reason for missing hours/i })).toBeVisible();
+    for (const title of ['No transportation', 'Emergency', 'Employment issues']) {
+      await expect(page.getByText(title, { exact: true })).toBeVisible();
+    }
+  });
+
   test('reclicking a selected answer clears it', async ({ page }) => {
     await startClassicV2(page);
     const yesBtn = yn(page, 'child14', 'yes');
@@ -164,7 +183,7 @@ test.describe('SNAP ABAWD screening — v2', () => {
   test('sample exempt mode shows banner and does not persist', async ({ page }) => {
     await page.goto(`${v2Url}?sample=exempt`);
     await expect(page.getByText('Sample result')).toBeVisible();
-    await expect(page.getByRole('heading', { name: /do not have to meet the work rules/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /do not have to meet the ABAWD work rules/i })).toBeVisible();
     const stored = await page.evaluate(() => localStorage.getItem('cfo-abawd-screening-v2'));
     expect(stored).toBeNull();
   });

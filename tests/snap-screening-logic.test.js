@@ -4,7 +4,7 @@ const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
 const SnapScreening = require('../court-forms/snap-screening-logic.js');
 
-const { NONE, WORK_REASON_INCOME, WORK_REASON_HOURS_30, DISABILITY_OTHER_REASON, HOUSING_EXEMPT_REASON, LINKS, create, migrateAnswers, resultTypeFor, exemptReasonsFor, housingUnableExempt, buildQuestions, statementPromptsFor, goodCauseCategories } = SnapScreening;
+const { NONE, WORK_REASON_INCOME, WORK_REASON_HOURS_30, DISABILITY_OTHER_REASON, HOUSING_EXEMPT_REASON, LINKS, RESULT_COPY, buildDtaContactsHtml, create, migrateAnswers, resultTypeFor, exemptReasonsFor, housingUnableExempt, buildQuestions, statementPromptsFor, goodCauseCategories } = SnapScreening;
 
 describe('snap-screening-logic', () => {
   const classic = create('classic');
@@ -126,7 +126,7 @@ describe('snap-screening-logic', () => {
     assert.match(labels, /\$15/);
   });
 
-  it('buildStatementHTML uses client letter format', () => {
+  it('buildStatementHTML uses a plain professional letter format', () => {
     const html = SnapScreening.buildStatementHTML({
       name: 'Jane Doe',
       agency: '12345',
@@ -135,11 +135,15 @@ describe('snap-screening-logic', () => {
       rs: ['Pregnant'],
       today: 'January 1, 2026'
     });
-    assert.match(html, /Statement to DTA/);
-    assert.match(html, /not an official DTA form/);
     assert.match(html, /Dear DTA,/);
+    assert.match(html, /I am writing to ask that you update my SNAP case/);
     assert.match(html, /Jane Doe/);
+    assert.match(html, /SNAP benefits — ABAWD work rules/);
     assert.match(html, /break-inside:avoid/);
+    assert.doesNotMatch(html, /Statement to DTA/);
+    assert.doesNotMatch(html, /Court Forms Online/);
+    assert.doesNotMatch(html, /not an official DTA form/);
+    assert.doesNotMatch(html, /not legal advice/);
     assert.doesNotMatch(html, /How to send this statement/);
     assert.doesNotMatch(html, /SAMPLE - draft/);
   });
@@ -234,13 +238,25 @@ describe('snap-screening-logic', () => {
     assert.match(html, /Explain the health reason/);
     assert.match(html, /chronic back pain/);
     assert.match(html, /Explain your caretaking/);
-    assert.match(html, /No additional explanation provided/);
+    assert.doesNotMatch(html, /No additional explanation provided/);
   });
 
   it('buildStatementHTML still accepts a plain string explain', () => {
     const html = SnapScreening.buildStatementHTML({ rt: 'exempt', rs: ['Pregnant'], explain: 'just one box' });
     assert.match(html, /just one box/);
     assert.doesNotMatch(html, /No additional explanation provided/);
+  });
+
+  it('RESULT_COPY and buildDtaContactsHtml carry the author results draft', () => {
+    assert.match(RESULT_COPY.exemptHeading, /Good news: You are exempt/);
+    assert.match(RESULT_COPY.formTitleExempt, /^Send a statement to DTA$/);
+    assert.match(RESULT_COPY.otherWaysHeading, /tell DTA/i);
+    assert.match(RESULT_COPY.learnMoreLabel, /ABAWD work rules/);
+    assert.doesNotMatch(RESULT_COPY.learnMoreLabel, /SNAP/);
+    const contacts = buildDtaContactsHtml(LINKS);
+    assert.match(contacts, /local DTA office/);
+    assert.match(contacts, /Click here/);
+    assert.match(contacts, /8773822363/);
   });
 
   it('every LINKS entry is an absolute URL or a bare email address', () => {
