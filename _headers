@@ -1,0 +1,11 @@
+/sw.js
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/sw-register.js
+  Cache-Control: no-cache
+
+/*.html
+  Cache-Control: no-cache
+
+/court-forms/*
+  Cache-Control: no-cache

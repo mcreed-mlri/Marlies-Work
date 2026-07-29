@@ -19,6 +19,9 @@ the homepage lists them.
 | `court-forms/snap-how-it-works.html` | Plain-language explainer of the screening. |
 | `court-forms/immigration-court-landing.html` | Landing-page demo for the guided EOIR-28 form. _(Unlinked. Kept in the repo but not shown in site nav.)_ |
 | `functions/_middleware.js` | Cloudflare Pages Function enforcing the site-wide password (see below). |
+| `sw.js` | Service worker — offline support and update handling for the PWA. |
+| `sw-register.js` | Client script that checks for service worker updates and prompts a refresh. |
+| `_headers` | Cloudflare Pages cache headers (keeps HTML and the service worker fresh). |
 
 ## Adding a new project
 
@@ -62,6 +65,36 @@ Hosted on **Cloudflare Pages**, connected to the GitHub repo
 settings are: Framework preset **None**, no build command, output directory
 `/`. Every `git push` to `main` auto-deploys. The `functions/` directory is
 picked up automatically as Pages Functions. No extra config.
+
+## PWA updates (service worker)
+
+The preview site is installable as a PWA. HTML, JS, and CSS are fetched
+**network-first** so routine deploys reach returning visitors without a hard
+refresh. Icons and images stay cache-first for speed.
+
+Each page loads [`sw-register.js`](sw-register.js), which checks for updates on
+load, when the tab regains focus, and when you switch back to the tab. When a
+new version is ready, visitors see a small **"A new version is ready — Refresh"**
+banner (or the page refreshes automatically if the tab is in the background).
+
+### Bumping the cache version on deploy
+
+After **significant changes** (especially to HTML, JS, or CSS), bump the cache
+names in [`sw.js`](sw.js) so any leftover cached files are cleared:
+
+```js
+const CACHE = 'mlri-work-v4';        // was v3
+const STATIC_CACHE = 'mlri-work-static-v4';  // was v3
+```
+
+Change both `CACHE` and `STATIC_CACHE` together (e.g. `v3` → `v4`). You do not
+need to do this for every small edit — network-first fetching handles most
+day-to-day updates. Bump the version when you want to force a clean slate (big
+logic changes, broken cached state, or if someone still sees stale content).
+
+The [`_headers`](_headers) file tells Cloudflare not to cache `sw.js`,
+`sw-register.js`, or HTML, so the browser always checks for a new service worker
+on deploy.
 
 ---
 
