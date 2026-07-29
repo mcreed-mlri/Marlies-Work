@@ -138,7 +138,7 @@ describe('snap-screening-logic', () => {
     assert.match(html, /Dear DTA,/);
     assert.match(html, /I am writing to ask that you update my SNAP case/);
     assert.match(html, /Jane Doe/);
-    assert.match(html, /SNAP benefits — ABAWD work rules/);
+    assert.match(html, /SNAP benefits, ABAWD work rules/);
     assert.match(html, /break-inside:avoid/);
     assert.doesNotMatch(html, /Statement to DTA/);
     assert.doesNotMatch(html, /Court Forms Online/);

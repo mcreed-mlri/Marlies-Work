@@ -1,5 +1,5 @@
 /**
- * SNAP ABAWD screening — shared decision logic for classic + v2 UIs.
+ * SNAP ABAWD screening: shared decision logic for classic + v2 UIs.
  * Thresholds last verified against Mass.gov / MLH guidance: Nov 2025.
  */
 (function (root, factory) {
@@ -751,7 +751,7 @@
         ${addrRow('To', 'Massachusetts Department of Transitional Assistance (DTA)')}
         ${addrRow('From', name)}
         ${agency ? addrRow('Client / Agency ID', agency) : ''}
-        ${addrRow('Re', 'SNAP benefits — ABAWD work rules')}
+        ${addrRow('Re', 'SNAP benefits, ABAWD work rules')}
       </table>
 
       ${body}

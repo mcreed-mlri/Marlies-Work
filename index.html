@@ -80,15 +80,7 @@
   .list{margin-top:28px;display:flex;flex-direction:column;gap:14px}
   .entry{display:flex;gap:16px;padding:18px;background:var(--card);
     border:1px solid var(--rule);border-radius:14px;
-    transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
-    animation:rise .45s ease both}
-  .list .entry:nth-child(1){animation-delay:.04s}
-  .list .entry:nth-child(2){animation-delay:.1s}
-  .foot{animation:rise .45s ease .16s both}
-  @keyframes rise{
-    from{opacity:0;transform:translateY(8px)}
-    to{opacity:1;transform:none}
-  }
+    transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
   .entry:hover{transform:translateY(-2px);border-color:var(--accent);
     box-shadow:0 8px 22px -14px rgba(58,90,64,.45)}
   .entry.court{--accent:#a85a32}
@@ -151,7 +143,6 @@
     .go::after,.entry,.theme-toggle,.btn{transition:none}
     .go:hover::after{transform:none}
     .entry:hover,.theme-toggle:hover,.btn:hover{transform:none}
-    .entry,.foot{animation:none}
   }
 
   .foot{

@@ -1,4 +1,4 @@
-# Marlie's MLRI Work — preview site
+# Marlie's MLRI Work (preview site)
 
 A growing set of static prototype projects for MLRI, shared with the team for
 feedback behind a server-side password. Each project lives in its own folder;
@@ -10,16 +10,15 @@ the homepage lists them.
 |------|------------|
 | `index.html` | Homepage (**"Marlie's MLRI Work"**). Lists projects. **Start here.** |
 | `court-forms/` | The **Court Forms Online** project folder → `/court-forms/`. |
-| `court-forms/index.html` | Minimal project page — links to the SNAP screening hub. |
-| `court-forms/snap-screening.html` | SNAP screening **hub** — links to the tool, sample results, and how-it-works. |
+| `court-forms/index.html` | Minimal project page. Links to the SNAP screening hub. |
+| `court-forms/snap-screening.html` | SNAP screening **hub**. Links to the tool, sample results, and how-it-works. |
 | `court-forms/snap-screening-logic.js` | Shared screening logic (questions, thresholds, links, result engine) used by all three tools. |
 | `court-forms/snap-abawd.html` | SNAP ABAWD work-rules screening (classic). |
-| `court-forms/snap-abawd-classic-v2.html` | SNAP ABAWD screening — **classic design, author's copy draft**. Same look as `snap-abawd.html`, rebuilt from the MLRI author's website copy draft (see [Classic v2](#classic-v2-the-authors-copy-draft) below). Supports `?sample=exempt\|goodcause\|notexempt` for hub sample result previews (demo only; nothing saved). |
-| `court-forms/snap-screening-v2.html` | SNAP screening — accessible / plain-language redesign. Supports `?sample=exempt\|goodcause\|notexempt` to jump straight to a sample result screen (demo only; nothing saved). |
+| `court-forms/snap-abawd-classic-v2.html` | SNAP ABAWD screening, **classic design, author's copy draft**. Same look as `snap-abawd.html`, rebuilt from the MLRI author's website copy draft (see [Classic v2](#classic-v2-the-authors-copy-draft) below). Supports `?sample=exempt\|goodcause\|notexempt` for hub sample result previews (demo only; nothing saved). |
+| `court-forms/snap-screening-v2.html` | SNAP screening, accessible / plain-language redesign. Supports `?sample=exempt\|goodcause\|notexempt` to jump straight to a sample result screen (demo only; nothing saved). |
 | `court-forms/snap-how-it-works.html` | Plain-language explainer of the screening. |
-| `court-forms/immigration-court-landing.html` | Landing-page demo for the guided EOIR-28 form. _(Unlinked. Kept in the repo but not shown in site nav.)_ |
 | `functions/_middleware.js` | Cloudflare Pages Function enforcing the site-wide password (see below). |
-| `sw.js` | Service worker — offline support and update handling for the PWA. |
+| `sw.js` | Service worker. Offline support and update handling for the PWA. |
 | `sw-register.js` | Client script that checks for service worker updates and prompts a refresh. |
 | `_headers` | Cloudflare Pages cache headers (keeps HTML and the service worker fresh). |
 
@@ -74,8 +73,9 @@ refresh. Icons and images stay cache-first for speed.
 
 Each page loads [`sw-register.js`](sw-register.js), which checks for updates on
 load, when the tab regains focus, and when you switch back to the tab. When a
-new version is ready, visitors see a small **"A new version is ready — Refresh"**
-banner (or the page refreshes automatically if the tab is in the background).
+new version is ready, visitors see a small **"A new version is ready"** banner
+with a **Refresh** button (or the page refreshes automatically if the tab is in
+the background).
 
 ### Bumping the cache version on deploy
 
@@ -88,7 +88,7 @@ const STATIC_CACHE = 'mlri-work-static-v4';  // was v3
 ```
 
 Change both `CACHE` and `STATIC_CACHE` together (e.g. `v3` → `v4`). You do not
-need to do this for every small edit — network-first fetching handles most
+need to do this for every small edit; network-first fetching handles most
 day-to-day updates. Bump the version when you want to force a clean slate (big
 logic changes, broken cached state, or if someone still sees stale content).
 
@@ -115,10 +115,12 @@ Three UIs share one logic module ([`court-forms/snap-screening-logic.js`](court-
 It walks through up to 14 questions plus a "good cause" follow-up and shows one
 of these results:
 
-- **Exempt** — qualifies for one or more exemptions (including income/work-based exemptions), with a printable "Tell DTA" form.
-- **Good cause** — no exemption, but a temporary hardship may excuse missed hours.
-- **May need to meet the work rules** — no exemption or good cause; explains work/volunteer options.
-- **Age may not apply** — if the person is not 18–64, shown before question flow.
+- **Exempt.** The person qualifies for one or more exemptions, including the
+  income and work-based ones. Includes a printable "Tell DTA" form.
+- **Good cause.** No exemption, but a temporary hardship may excuse missed hours.
+- **May need to meet the work rules.** Neither an exemption nor good cause came
+  up, so the screen explains the work and volunteer options instead.
+- **Age may not apply.** Shown before the question flow if the person is not 18–64.
 
 ## Classic v2: the author's copy draft
 
@@ -191,7 +193,7 @@ Before go-live:
 - Confirm **Terms of Use** wording matches the hosting organization.
 - Verify DTA contact info (phone, fax, mail) against current Mass.gov guidance.
 - Have an SME spot-check thresholds in `snap-screening-logic.js` (last verified Nov 2025: $217.50/week, 14.5×$15, 30 hrs/week below minimum wage, 20 hrs/week or 80 hrs/month requirement).
-- **Restore Quick exit on production** — this preview uses a **← Back** button to `snap-screening.html`. On the live Court Forms Online site, replace it with **Quick exit** that jumps to a neutral external URL (see `PRODUCTION_QUICK_EXIT_URL` in `snap-screening-logic.js` and the deploy note below).
+- **Restore Quick exit on production.** This preview uses a **← Back** button to `snap-screening.html`. On the live Court Forms Online site, replace it with **Quick exit** that jumps to a neutral external URL (see `PRODUCTION_QUICK_EXIT_URL` in `snap-screening-logic.js` and the deploy note below).
 
 ### Preview vs production top bar
 
@@ -257,12 +259,12 @@ then.
 
 Screening rules and question text live in [`court-forms/snap-screening-logic.js`](court-forms/snap-screening-logic.js):
 
-- `QUESTION_COPY` — per-variant wording (`classic`, `classic2`, `v2`) against the same logic IDs
-- `GOODCAUSE_DEFS` — good-cause question wording, plus the `title` / `detail` used by the classic-v2 results screen
-- `WORK_OPTION_DEFS`, `HOUSING_OPTION_DEFS`, `DISABILITY_OPTION_DEFS` — stable option IDs
-- `LINKS` — every outbound URL, in one place
-- `STATEMENT_PROMPTS` / `statementPromptsFor` — which write-in blanks each exemption gets
-- `resultTypeFor`, `exemptReasonsFor`, `housingUnableExempt` — decision engine
+- `QUESTION_COPY`: per-variant wording (`classic`, `classic2`, `v2`) against the same logic IDs
+- `GOODCAUSE_DEFS`: good-cause question wording, plus the `title` / `detail` used by the classic-v2 results screen
+- `WORK_OPTION_DEFS`, `HOUSING_OPTION_DEFS`, `DISABILITY_OPTION_DEFS`: stable option IDs
+- `LINKS`: every outbound URL, in one place
+- `STATEMENT_PROMPTS` / `statementPromptsFor`: which write-in blanks each exemption gets
+- `resultTypeFor`, `exemptReasonsFor`, `housingUnableExempt`: the decision engine
 
 A variant may add these optional per-question fields, which the classic-v2 page
 knows how to render: `helpHtml` (help text containing links), `listItems` (bullet
@@ -276,5 +278,5 @@ UI/rendering stays in each HTML file. After logic changes, run `npm test`.
 
 Automated tests live in [`tests/`](tests/):
 
-- `snap-screening-logic.test.js` — pure logic unit tests
-- `snap-screening.spec.js` — Playwright end-to-end tests for all three HTML tools
+- `snap-screening-logic.test.js`: pure logic unit tests
+- `snap-screening.spec.js`: Playwright end-to-end tests for all three HTML tools
