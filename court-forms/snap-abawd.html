@@ -181,7 +181,7 @@ const {
   SCREENING_HUB_URL, WORK_REASON_INCOME, WORK_REASON_HOURS_30,
   DISABILITY_OTHER_REASON, HOUSING_EXEMPT_REASON, LINKS
 } = S;
-const { RESULT_COPY, exemptHeadingHtml, exemptProofNotes, buildDtaContactsHtml, buildResultsEmailContent, goodCauseCategories } = SnapScreening;
+const { RESULT_COPY, exemptHeadingHtml, exemptProofNotes, buildDtaContactsHtml, buildResultsEmailContent, buildResultsMailto, goodCauseCategories } = SnapScreening;
 const RESULT_GC_CATEGORIES = goodCauseCategories('classic2');
 
 /* ------------------------------------------------------------------ *
@@ -704,6 +704,15 @@ function renderResults(){
         <button type="button" data-action="email-self" style="${ghostBtn}">${esc(C.emailSelfLabel)}</button>
         <div style="width:100%;margin-top:2px">${hintTip('pdf-save', C.savingTipsTitle, C.savingTipsBody)}</div>
       </div>
+      <div class="no-print" id="email-fallback" hidden style="margin:18px 0 0;padding:16px 18px;background:var(--soft);border-radius:12px">
+        <h4 style="font-size:16px;margin:0 0 6px">${esc(C.emailFallbackHeading)}</h4>
+        <p style="font-size:15px;line-height:1.55;color:#37414f;margin:0 0 10px">${esc(C.emailFallbackBody)}</p>
+        <textarea id="email-text" readonly rows="6" aria-label="${esc(C.emailFallbackHeading)}" style="width:100%;font-family:inherit;font-size:15px;line-height:1.5;padding:10px 12px;border:1.5px solid #767f8c;border-radius:10px;background:#fff;resize:vertical"></textarea>
+        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:10px 0 0">
+          <button type="button" data-action="copy-email-text" style="${ghostBtn}">${esc(C.emailCopyLabel)}</button>
+          <span id="email-copy-status" role="status" aria-live="polite" style="font-size:15px;font-weight:700;color:#166534"></span>
+        </div>
+      </div>
     </div>`;
   }
 
@@ -892,6 +901,16 @@ function downloadDoc(){
   setTimeout(() => URL.revokeObjectURL(url), 2000);
 }
 
+/* mailto: is the only send path that keeps the promise in the privacy note:
+ * the text never reaches a server. It has two failure modes and both are
+ * handled here.
+ *
+ * A machine with no mail app registered does nothing at all when the link
+ * fires, and nothing in the browser reports that back, so the copy-and-paste
+ * panel is revealed every time instead of being guessed at with a timer.
+ *
+ * A long statement overflows the mailto length cap, which buildResultsMailto
+ * trims. The panel always holds the untrimmed text. */
 function emailResults(){
   const val = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
   const explain = Array.from(document.querySelectorAll('[data-explain-prompt]'))
@@ -904,7 +923,38 @@ function emailResults(){
     agency: val('f-agency'),
     explain
   });
-  window.location.href = 'mailto:?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  const { url } = buildResultsMailto({ subject, body });
+  showEmailFallback(body);
+  window.location.href = url;
+}
+
+function showEmailFallback(text){
+  const panel = document.getElementById('email-fallback');
+  if(!panel) return;
+  const box = document.getElementById('email-text');
+  if(box) box.value = text;
+  const status = document.getElementById('email-copy-status');
+  if(status) status.textContent = '';
+  panel.hidden = false;
+}
+
+function copyEmailText(){
+  const box = document.getElementById('email-text');
+  if(!box) return;
+  const status = document.getElementById('email-copy-status');
+  const say = (msg) => { if(status) status.textContent = msg; };
+  /* Selecting the text covers an insecure origin or a browser that refuses the
+   * clipboard call, so there is always a way to get the text out. */
+  const selectInstead = () => {
+    if(typeof box.focus === 'function') box.focus();
+    if(typeof box.select === 'function') box.select();
+    say(RESULT_COPY.emailSelectedLabel);
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(box.value).then(() => say(RESULT_COPY.emailCopiedLabel), selectInstead);
+  } else {
+    selectInstead();
+  }
 }
 
 function render(){
@@ -1008,6 +1058,7 @@ document.addEventListener('click', (e) => {
     case 'print': printForm(); break;
     case 'download-doc': downloadDoc(); break;
     case 'email-self': emailResults(); break;
+    case 'copy-email-text': copyEmailText(); break;
     case 'sig-clear': clearSignature(); break;
   }
 });

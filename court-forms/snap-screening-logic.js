@@ -556,7 +556,7 @@
     learnMoreLabel: 'Learn more about the ABAWD work rules',
     lostSnapIntro: 'If you lost your SNAP or are about to lose your SNAP because of the ABAWD rules, email us at',
     privacyNote: 'Note: Your information is private and will not automatically be saved on this device. MLRI does NOT have access to or save the information you type on this form. Print, download, or email these results to keep a copy.',
-    printLead: 'When you click print or download, you will get a signed letter you can mail, fax, or upload to DTA Connect. You can also email yourself these results.',
+    printLead: 'When you click print or download, you will get a signed letter you can mail, fax, or upload to DTA Connect. You can also email yourself a copy of these results.',
     exemptHeading: EXEMPT_HEADING_TEXT,
     exemptReasonsIntro: 'You may not have to meet the work rules because of these reasons:',
     exemptProofWork: 'Send DTA proof of your income and hours, such as pay stubs or a letter.',
@@ -598,8 +598,14 @@
     downloadWordLabel: 'Download as Word',
     savingTipsTitle: 'Tips for printing or saving',
     savingTipsBody: 'Print or save this form opens your browser’s print menu. Pick your printer, or choose "Save as PDF" to keep a copy on your device. If the menu is slow to open, use Download as Word instead.',
-    emailSelfLabel: 'Email these results to myself',
+    emailSelfLabel: 'Email myself a copy',
     emailSelfSubject: 'My SNAP ABAWD screening results',
+    emailFallbackHeading: 'If your email app did not open',
+    emailFallbackBody: 'Some computers have no email app set up. Copy the summary below and paste it into your email instead. This is a text summary, not the signed letter. Use "Print or save this form" for the copy you send to DTA.',
+    emailCopyLabel: 'Copy the text',
+    emailCopiedLabel: 'Copied.',
+    emailSelectedLabel: 'Text selected. Press Ctrl+C (or Command+C) to copy it.',
+    emailTruncatedNote: 'This summary was shortened to fit in an email. Use "Copy the text" in the screening tool to get the full version.',
     otherWaysHeading: 'Other ways to tell DTA',
     otherWaysExemptLead: 'Fill out and send in DTA\u2019s exemption form or explain the information to DTA in a written, signed statement (handwritten note is fine):',
     otherWaysGoodCauseLead: 'Explain the information to DTA in a written, signed statement (handwritten note is fine):',
@@ -820,6 +826,58 @@
     };
   }
 
+  /* A mailto: URL is not allowed to be as long as we want. Windows refuses to
+   * hand off anything past roughly 2048 characters and several mail clients
+   * truncate without saying so, which with the free-text boxes filled in means
+   * a half-empty draft or no draft at all. Stay well under the cap. */
+  const MAILTO_MAX_URL = 1800;
+
+  function encodedLength(text) {
+    /* A slice can split a surrogate pair, and encodeURIComponent throws on a
+     * lone surrogate. Reporting that candidate as too long makes the search
+     * below back off to the previous character instead of crashing. */
+    try { return encodeURIComponent(text).length; } catch (e) { return Infinity; }
+  }
+
+  /** Longest prefix of `text` that survives encoding within `limit` characters. */
+  function trimToEncodedLength(text, limit) {
+    if (encodedLength(text) <= limit) return text;
+    let lo = 0;
+    let hi = text.length;
+    while (lo < hi) {
+      const mid = Math.ceil((lo + hi) / 2);
+      if (encodedLength(text.slice(0, mid)) <= limit) lo = mid;
+      else hi = mid - 1;
+    }
+    let cut = text.slice(0, lo);
+    // Prefer a line boundary, but not at the cost of most of the text.
+    const nl = cut.lastIndexOf('\n');
+    if (nl > lo * 0.6) cut = cut.slice(0, nl);
+    return cut.replace(/\s+$/, '');
+  }
+
+  /**
+   * mailto: URL for the results summary, trimmed to a length mail clients
+   * accept. `truncated` tells the caller the draft is not the whole summary.
+   */
+  function buildResultsMailto(opts) {
+    const {
+      subject = '',
+      body = '',
+      max = MAILTO_MAX_URL,
+      copy = RESULT_COPY
+    } = opts || {};
+    const prefix = 'mailto:?subject=' + encodeURIComponent(subject) + '&body=';
+    const room = max - prefix.length;
+    if (room <= 0) return { url: prefix, truncated: Boolean(body) };
+    if (encodedLength(body) <= room) {
+      return { url: prefix + encodeURIComponent(body), truncated: false };
+    }
+    const note = '\n\n' + copy.emailTruncatedNote;
+    const text = trimToEncodedLength(body, Math.max(0, room - encodedLength(note))) + note;
+    return { url: prefix + encodeURIComponent(text), truncated: true };
+  }
+
   function create(variant) {
     const v = normVariant(variant);
     const GROUPS_V = groupsForVariant(v);
@@ -904,6 +962,8 @@
     exemptProofNotes,
     buildDtaContactsHtml,
     buildResultsEmailContent,
+    buildResultsMailto,
+    MAILTO_MAX_URL,
     escHtml
   };
 });

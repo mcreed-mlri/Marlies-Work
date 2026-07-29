@@ -4,7 +4,7 @@ const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
 const SnapScreening = require('../court-forms/snap-screening-logic.js');
 
-const { NONE, WORK_REASON_INCOME, WORK_REASON_HOURS_30, DISABILITY_OTHER_REASON, HOUSING_EXEMPT_REASON, LINKS, RESULT_COPY, exemptHeadingHtml, exemptProofNotes, buildDtaContactsHtml, buildResultsEmailContent, create, migrateAnswers, resultTypeFor, exemptReasonsFor, housingUnableExempt, buildQuestions, statementPromptsFor, goodCauseCategories } = SnapScreening;
+const { NONE, WORK_REASON_INCOME, WORK_REASON_HOURS_30, DISABILITY_OTHER_REASON, HOUSING_EXEMPT_REASON, LINKS, RESULT_COPY, exemptHeadingHtml, exemptProofNotes, buildDtaContactsHtml, buildResultsEmailContent, buildResultsMailto, MAILTO_MAX_URL, create, migrateAnswers, resultTypeFor, exemptReasonsFor, housingUnableExempt, buildQuestions, statementPromptsFor, goodCauseCategories } = SnapScreening;
 
 describe('snap-screening-logic', () => {
   const classic = create('classic');
@@ -261,6 +261,48 @@ describe('snap-screening-logic', () => {
     assert.match(body, /Print or save this form/);
   });
 
+  /* ----------------------------------------------------------------------- *
+   * mailto length. Windows refuses to hand off a mailto past roughly 2048
+   * characters and some clients truncate silently, so a filled-in statement
+   * used to produce an empty draft or no draft at all with nothing to show the
+   * user what went wrong.
+   * ----------------------------------------------------------------------- */
+  describe('buildResultsMailto', () => {
+    it('passes a short summary through whole', () => {
+      const { url, truncated } = buildResultsMailto({ subject: 'Subj', body: 'Line one\nLine two' });
+      assert.equal(truncated, false);
+      assert.equal(url, 'mailto:?subject=Subj&body=' + encodeURIComponent('Line one\nLine two'));
+    });
+
+    it('trims a long summary to fit and says so in the draft', () => {
+      const body = Array.from({ length: 200 }, (_, i) => 'Sentence number ' + i + ' of the statement.').join('\n');
+      const { url, truncated } = buildResultsMailto({ subject: RESULT_COPY.emailSelfSubject, body });
+      assert.equal(truncated, true);
+      assert.ok(url.length <= MAILTO_MAX_URL, 'url is ' + url.length + ' chars, over the ' + MAILTO_MAX_URL + ' cap');
+      const draft = decodeURIComponent(url.split('&body=')[1]);
+      assert.match(draft, /Sentence number 0 of the statement\./);
+      assert.ok(draft.endsWith(RESULT_COPY.emailTruncatedNote), 'trimmed draft must point at the full copy');
+    });
+
+    it('keeps the whole real summary when the boxes are left empty', () => {
+      const { body } = buildResultsEmailContent({ rt: 'exempt', rs: ['Pregnant'], name: 'Jane Doe' });
+      assert.equal(buildResultsMailto({ subject: RESULT_COPY.emailSelfSubject, body }).truncated, false);
+    });
+
+    it('does not split a surrogate pair into an unencodable string', () => {
+      // Emoji are two code units each, so a naive slice lands mid-pair and
+      // encodeURIComponent throws URIError.
+      const { url } = buildResultsMailto({ subject: 'S', body: '\u{1F600}'.repeat(600) });
+      assert.doesNotThrow(() => decodeURIComponent(url.split('&body=')[1]));
+    });
+
+    it('never returns more than the cap even with a huge subject', () => {
+      const { url, truncated } = buildResultsMailto({ subject: 'x'.repeat(3000), body: 'anything' });
+      assert.equal(truncated, true);
+      assert.equal(url.endsWith('&body='), true);
+    });
+  });
+
   it('RESULT_COPY and buildDtaContactsHtml carry the author results draft', () => {
     assert.match(RESULT_COPY.exemptHeading, /Good news: You are exempt/);
     // Only "Good news:", "exempt", and "do not" carry emphasis, and the plain
@@ -270,12 +312,16 @@ describe('snap-screening-logic', () => {
     assert.equal(headingHtml.match(/<strong>/g).length, 3);
     assert.match(headingHtml, /<strong>Good news:<\/strong> You are <strong>exempt<\/strong> and <strong>do not<\/strong> have to meet the ABAWD work rules/);
     assert.match(RESULT_COPY.formTitleExempt, /^Tell DTA that you are exempt as soon as you can\.$/);
-    assert.match(RESULT_COPY.emailSelfLabel, /Email these results to myself/);
+    /* "myself" has to stay in the label. Every other button on this screen
+     * sends something to DTA, so a bare "Email" reads as emailing DTA, and a
+     * user could leave believing DTA has their exemption. */
+    assert.match(RESULT_COPY.emailSelfLabel, /^Email myself a copy$/);
+    assert.match(RESULT_COPY.emailSelfLabel, /myself/);
     // Print and Save fired the same handler, so the two buttons are now one.
     assert.match(RESULT_COPY.printFormLabel, /^Print or save this form$/);
     assert.match(RESULT_COPY.downloadWordLabel, /^Download as Word$/);
     assert.match(RESULT_COPY.savingTipsBody, /Save as PDF/);
-    assert.match(RESULT_COPY.printLead, /You can also email yourself these results\.$/);
+    assert.match(RESULT_COPY.printLead, /You can also email yourself a copy of these results\.$/);
     assert.match(RESULT_COPY.whyInfoLabel, /^Why are we asking for more information\?$/);
     // The pop-up wording is exemption-specific, so good cause gets its own.
     assert.match(RESULT_COPY.whyInfoExempt, /^Telling DTA about your exemption can help them update your SNAP case more quickly\./);

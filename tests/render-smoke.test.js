@@ -67,6 +67,10 @@ const ACTIONS = {
     'state.answers={child14:"yes"}; state.view="results"; render(); downloadDoc();',
   'email these results':
     'state.answers={child14:"yes"}; state.view="results"; render(); emailResults();',
+  /* The copy-and-paste fallback for a machine with no mail app. Runs with no
+   * navigator.clipboard in the shim, so this drives the select-instead path. */
+  'copy the email text':
+    'state.answers={child14:"yes"}; state.view="results"; render(); emailResults(); copyEmailText();',
   'clear the signature':
     'state.answers={child14:"yes"}; state.view="results"; render(); clearSignature();'
 };
@@ -103,6 +107,7 @@ function makeEl(tag) {
     insertBefore(c) { this.children.push(c); return c; },
     addEventListener() {}, removeEventListener() {},
     focus() {}, blur() {}, click() {},
+    select() {}, setSelectionRange() {},
     querySelector() { return makeEl('div'); },
     querySelectorAll() { return []; },
     closest() { return null; },
