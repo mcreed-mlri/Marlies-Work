@@ -111,8 +111,16 @@
   .hint-tip-panel{
     z-index:100;padding:12px 14px;font-size:12.5px;line-height:1.5;font-weight:400;
     color:var(--ink);background:#fff;border:1px solid #767f8c;border-radius:calc(var(--radius) + 2px);
+    /* A neutral elevation shadow, offset 8px, on a white panel on a white page.
+       The rule is aimed at zero-offset chromatic halos on dark surfaces. */
+    /* impeccable-disable-next-line dark-glow */
     box-shadow:0 8px 24px rgba(16,32,56,.12);text-align:left;overflow-wrap:anywhere;
     opacity:0;visibility:hidden;pointer-events:none;
+    /* On coarse pointers this panel is an inline accordion, so max-height and
+       padding really are animated. grid-template-rows would need an extra
+       wrapper inside a role="note" span and is newer than the browsers some
+       clients are on. One small subtree, on an explicit tap, is not thrash. */
+    /* impeccable-disable-next-line layout-transition */
     transition:opacity .15s ease,visibility .15s ease,max-height .2s ease,padding .2s ease,margin .2s ease;
   }
   .hint-tip--icon{display:inline-flex;vertical-align:middle;width:auto}
@@ -437,7 +445,7 @@ function renderProgress(){
   else { const cur = state.step + 1; pct = Math.round((cur / total) * 100); label = `Section ${cur} of ${total}`; }
   el.innerHTML =
     `<div style="height:6px;background:#dbe3ef" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}" aria-label="Screening progress">`
-    + `<div style="height:100%;width:${pct}%;background:var(--accent);transition:width .3s ease"></div></div>`
+    + `<div style="height:100%;width:100%;transform:scaleX(${pct / 100});transform-origin:left;background:var(--accent);transition:transform .3s ease"></div></div>`
     + `<div style="max-width:660px;margin:0 auto;padding:10px max(16px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left));font-size:13px;color:#5b6470;font-weight:700">${label}</div>`;
 }
 
@@ -490,6 +498,9 @@ function renderHelp(q){
       ${open ? 'Hide help' : 'What does this mean?'}
     </button>`;
   if(open){
+    // Inset text with a left rule is the long-standing convention for guidance
+    // callouts in government content (GOV.UK inset text, USWDS site alerts).
+    // impeccable-disable-next-line side-tab
     help += `<p style="font-size:15px;line-height:1.6;color:#3a424e;margin:10px 0 0;padding:13px 15px;background:var(--soft);border-radius:var(--radius);border-left:4px solid var(--accent)">${body}</p>`;
   }
   help += `</div>`;
@@ -868,7 +879,7 @@ function printForm(){
   const cleanup = () => document.body.classList.remove('printing-form');
   window.addEventListener('afterprint', cleanup, { once:true });
   document.body.classList.add('printing-form');
-  // Wait a frame so the signature <img> can decode before the print snapshot.
+  // Wait a frame so the signature image can decode before the print snapshot.
   // Do not clear printing-form on a short timer. Chrome returns from print()
   // immediately, and a 2s cleanup was wiping the form mid Save-as-PDF.
   requestAnimationFrame(() => {
