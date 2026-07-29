@@ -105,6 +105,12 @@
   .h-hero{font-size:clamp(26px,6.5vw,34px);line-height:1.2;margin:0 0 16px;letter-spacing:-.01em;max-width:22ch}
   .h-q{font-size:clamp(22px,5.8vw,28px);line-height:1.25;margin:0;letter-spacing:-.01em}
   .h-result{font-size:clamp(22px,5.5vw,27px);line-height:1.2;margin:4px 0 0}
+  /* Results page title. Was class="h1", which this stylesheet never defined, so
+   * it fell back to the browser default and sat off the type scale. */
+  .h-results-title{font-size:clamp(24px,6vw,30px);line-height:1.2;letter-spacing:-.01em}
+  /* Cap the reading measure. The 760px card at 17px ran ~83 characters a line;
+   * 68ch keeps prose in the 45-75 range without narrowing the card itself. */
+  .result-body > p,.result-body > ul,.result-body > ol{max-width:68ch}
   .lead{font-size:clamp(17px,4.2vw,19px);line-height:1.55;color:#37414f}
   .btn-block{touch-action:manipulation}
   input,textarea,select{font-size:16px;max-width:100%}
@@ -147,7 +153,7 @@
   }
   .hint-tip-panel{
     z-index:100;padding:12px 14px;font-size:13.5px;line-height:1.5;font-weight:400;
-    color:var(--ink);background:#fff;border:1px solid #cdd3dc;border-radius:12px;
+    color:var(--ink);background:#fff;border:1px solid #767f8c;border-radius:12px;
     box-shadow:0 8px 24px rgba(16,32,56,.12);text-align:left;overflow-wrap:anywhere;
     opacity:0;visibility:hidden;pointer-events:none;
     transition:opacity .15s ease,visibility .15s ease,max-height .2s ease,padding .2s ease,margin .2s ease;
@@ -325,6 +331,16 @@ function esc(s){
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
+/* Decorative arrow used as a visual bullet. Hidden from assistive tech, which
+ * would otherwise announce "right arrow" before each of these lines. */
+const arrow = '<span aria-hidden="true">→</span>';
+
+/* Numbered marker for the two ways to meet the work rules. The <ol> already
+ * conveys order and count, so the circle is decorative. */
+function optNum(n){
+  return `<span aria-hidden="true" style="width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none">${n}</span>`;
+}
+
 function hintTip(id, label, bodyHtml, iconOnly){
   const tipClass = iconOnly ? 'hint-tip hint-tip--icon' : 'hint-tip';
   const btnClass = iconOnly ? 'hint-tip-btn hint-tip-btn--icon' : 'hint-tip-btn';
@@ -338,6 +354,10 @@ function hintTip(id, label, bodyHtml, iconOnly){
     </button>
     <span id="hint-${id}" class="hint-tip-panel" role="note">${bodyHtml}</span>
   </span>`;
+}
+
+function prefersReducedMotion(){
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
 function hintTipUsesInlinePanel(){
@@ -435,7 +455,7 @@ const nextBtn    = "font-family:inherit;font-size:18px;font-weight:700;color:#ff
 const ghostBtn   = "font-family:inherit;font-size:16px;font-weight:700;color:var(--blue);background:none;border:2px solid var(--blue);border-radius:12px;padding:12px 22px;cursor:pointer;min-height:48px;touch-action:manipulation";
 /* Inline text button that reads as a link (used inside result copy). */
 const linkBtn    = "font-family:inherit;font-size:inherit;font-weight:700;color:var(--blue);background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px;touch-action:manipulation";
-const inputStyle = "width:100%;font-family:inherit;font-size:16px;padding:12px 14px;border:1.5px solid #cdd3dc;border-radius:10px;min-height:48px";
+const inputStyle = "width:100%;font-family:inherit;font-size:16px;padding:12px 14px;border:1.5px solid #767f8c;border-radius:10px;min-height:48px";
 
 /* ---- Question option buttons ---- */
 
@@ -647,11 +667,11 @@ function renderResults(){
   });
 
   const learnMore = `<p style="font-size:16px;margin:16px 0 0"><a href="${LINKS.abawd}" target="_blank" rel="noopener">${C.learnMoreLabel}</a></p>`;
-  const lostSnap = `<p style="font-size:16px;line-height:1.6;margin:16px 0 0">→ ${C.lostSnapIntro} <a href="mailto:${email}">${email}</a>.</p>`;
+  const lostSnap = `<p style="font-size:16px;line-height:1.6;margin:16px 0 0">${arrow} ${C.lostSnapIntro} <a href="mailto:${email}">${email}</a>.</p>`;
   const privacyNote = `<p style="font-size:15px;line-height:1.55;color:var(--muted);margin:0 0 10px"><em><strong>${esc(C.privacyNote)}</strong></em></p>`;
   const printLead = `<p style="font-size:15px;line-height:1.55;color:var(--muted);margin:0 0 18px">${esc(C.printLead)}</p>`;
 
-  const resultsHead = `<h1 class="h1" style="text-align:center;margin:0 0 16px">${esc(C.resultsHeadTitle)}</h1>
+  const resultsHead = `<h1 class="h-results-title" style="text-align:center;margin:0 0 16px">${esc(C.resultsHeadTitle)}</h1>
     <p style="font-size:17px;line-height:1.6;color:#37414f;margin:0 0 18px">${esc(C.resultsHeadLead)}</p>`;
 
   let card = '';
@@ -679,7 +699,7 @@ function renderResults(){
       </div>
       <div class="result-body">
         <p style="font-size:17px;line-height:1.6;color:#37414f;margin:0 0 16px">${esc(C.exemptReasonsIntro)}</p>
-        <ul style="list-style:none;padding:0;margin:0 0 16px;display:flex;flex-direction:column;gap:12px">${items}</ul>
+        <ul role="list" style="list-style:none;padding:0;margin:0 0 16px;display:flex;flex-direction:column;gap:12px">${items}</ul>
         ${exemptProofNotes(rs).map(n => `<p style="font-size:16px;line-height:1.6;color:#37414f;margin:0 0 16px">${esc(n)}</p>`).join('')}
         ${learnMore}
       </div></div>`;
@@ -703,7 +723,7 @@ function renderResults(){
       <div class="result-body">
         <p style="font-size:17px;line-height:1.6;color:#37414f;margin:0 0 16px">${esc(C.goodCauseIntro)}</p>
         <p style="font-size:17px;line-height:1.6;color:var(--ink);font-weight:700;margin:0 0 16px">${esc(C.goodCauseLead)}</p>
-        <ul style="list-style:none;padding:0;margin:0 0 16px">${cats}</ul>
+        <ul role="list" style="list-style:none;padding:0;margin:0 0 16px">${cats}</ul>
         ${learnMore}
       </div></div>`;
   } else {
@@ -716,36 +736,40 @@ function renderResults(){
       </div>
       <div class="result-body">
         <p style="font-size:17px;line-height:1.6;color:#37414f;margin:0 0 12px">${esc(C.notExemptIntro)}</p>
-        <p style="font-size:17px;line-height:1.6;color:#37414f;margin:0 0 16px">→ <button type="button" data-action="restart" style="${linkBtn}">${esc(C.notExemptStartOver)}</button></p>
-        <p style="font-size:17px;line-height:1.6;color:#37414f;margin:0 0 8px">→ ${esc(C.notExemptReapplyLead)} <a href="${LINKS.reapply}" target="_blank" rel="noopener">${esc(C.notExemptReapplyLink)}</a> ${esc(C.notExemptReapplyEnd)}</p>
+        <p style="font-size:17px;line-height:1.6;color:#37414f;margin:0 0 16px">${arrow} <button type="button" data-action="restart" style="${linkBtn}">${esc(C.notExemptStartOver)}</button></p>
+        <p style="font-size:17px;line-height:1.6;color:#37414f;margin:0 0 8px">${arrow} ${esc(C.notExemptReapplyLead)} <a href="${LINKS.reapply}" target="_blank" rel="noopener">${esc(C.notExemptReapplyLink)}</a> ${esc(C.notExemptReapplyEnd)}</p>
         <ul style="margin:0 0 20px;padding-left:22px;font-size:16px;line-height:1.7;color:#37414f">
           <li><a href="${LINKS.getSnapBack}" target="_blank" rel="noopener">${esc(C.notExemptSnapBack)}</a></li>
           <li>${esc(C.notExemptEmail)} <a href="mailto:${email}">${email}</a> ${esc(C.notExemptEmailSuffix)}</li>
         </ul>
         <div style="padding:18px 20px;background:var(--green-bg);border:1px solid var(--green-bd);border-radius:16px;margin:0 0 18px">
           <h3 style="font-size:18px;margin:0 0 14px">To keep getting SNAP, you can meet the ABAWD work rules by doing <strong>one</strong> of these:</h3>
-          <div style="display:flex;gap:14px;align-items:flex-start;margin:0 0 14px">
-            <span aria-hidden="true" style="width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none">1</span>
-            <div>
-              <p style="margin:0;font-size:16.5px;line-height:1.55"><strong>${esc(C.workOption1)}</strong></p>
-              <ul style="margin:8px 0 0;padding-left:20px;font-size:15.5px;line-height:1.6;color:#37414f">
-                <li>${esc(C.workOption1Unpaid)}</li>
-                <li><a href="${LINKS.dtaTraining}" target="_blank" rel="noopener">${esc(C.workOption1Training)}</a></li>
-              </ul>
-            </div>
-          </div>
-          <p style="text-align:center;font-weight:700;font-size:15px;color:#37414f;margin:14px 0">OR</p>
-          <div style="display:flex;gap:14px;align-items:flex-start">
-            <span aria-hidden="true" style="width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none">2</span>
-            <p style="margin:0;font-size:16.5px;line-height:1.55"><strong>${esc(C.workOption2)}</strong></p>
-          </div>
+          <ul role="list" style="list-style:none;padding:0;margin:0">
+            <li style="display:flex;gap:14px;align-items:flex-start;margin:0 0 14px">
+              ${optNum('1')}
+              <div>
+                <p style="margin:0;font-size:16.5px;line-height:1.55"><strong>${esc(C.workOption1)}</strong></p>
+                <ul style="margin:8px 0 0;padding-left:20px;font-size:15.5px;line-height:1.6;color:#37414f">
+                  <li>${esc(C.workOption1Unpaid)}</li>
+                  <li><a href="${LINKS.dtaTraining}" target="_blank" rel="noopener">${esc(C.workOption1Training)}</a></li>
+                </ul>
+              </div>
+            </li>
+            <li aria-hidden="true" style="text-align:center;font-weight:700;font-size:15px;color:#37414f;margin:14px 0">OR</li>
+            <li style="display:flex;gap:14px;align-items:flex-start">
+              ${optNum('2')}
+              <p style="margin:0;font-size:16.5px;line-height:1.55"><strong>${esc(C.workOption2)}</strong></p>
+            </li>
+          </ul>
         </div>
         <div style="padding:18px 20px;background:var(--soft);border-radius:16px">
           <h3 style="font-size:18px;margin:0 0 12px">${esc(C.meetingDtaHeading)}</h3>
           <p style="font-size:16px;line-height:1.6;color:#37414f;margin:0 0 12px">For <strong>paid work</strong>, send DTA proof of income and hours, such as pay stubs or an employer letter. For <strong>unpaid work</strong>, tell DTA how you are meeting the work rules and your hours.</p>
           ${dtaContactsUpload}
-          <hr style="border:none;border-top:1px solid #c7d6f0;margin:18px 0">
-          <p style="font-size:16.5px;line-height:1.6;color:var(--ink);margin:0 0 10px"><strong>${esc(C.goodCauseInNotExemptBold)}</strong> ${esc(C.goodCauseInNotExemptIntro)}</p>
+        </div>
+        <div style="margin:18px 0 0;padding:18px 20px;background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:16px">
+          <h3 style="font-size:18px;margin:0 0 10px;color:#7a4a00">${esc(C.goodCauseInNotExemptBold)}</h3>
+          <p style="font-size:16px;line-height:1.6;color:#37414f;margin:0 0 10px">${esc(C.goodCauseInNotExemptIntro)}</p>
           <p style="font-size:16px;line-height:1.6;color:#37414f;margin:0">${esc(C.goodCauseInNotExemptBody)} <a href="${LINKS.goodCause}" target="_blank" rel="noopener">${esc(C.goodCauseInNotExemptLink)}</a>.</p>
         </div>
         ${learnMore}
@@ -759,7 +783,7 @@ function renderResults(){
     const whyInfo = rt === 'exempt' ? C.whyInfoExempt : C.whyInfoGoodCause;
     const blanks = prompts.map((p, i) => `<div style="margin:0 0 16px">
       <label for="f-explain-${i}" style="display:block;font-size:16px;font-weight:700;margin:0 0 8px">${esc(p)}</label>
-      <textarea id="f-explain-${i}" data-explain-prompt="${esc(p)}" rows="4" placeholder="Type here…" style="width:100%;font-family:inherit;font-size:16px;line-height:1.5;padding:12px 14px;border:1.5px solid #cdd3dc;border-radius:10px;resize:vertical"></textarea>
+      <textarea id="f-explain-${i}" data-explain-prompt="${esc(p)}" rows="4" placeholder="Type here…" style="width:100%;font-family:inherit;font-size:16px;line-height:1.5;padding:12px 14px;border:1.5px solid #767f8c;border-radius:10px;resize:vertical"></textarea>
     </div>`).join('');
     form = `<div class="card-box" style="margin:22px 0 0">
       <h3 style="font-size:21px;margin:0 0 10px">${esc(formTitle)}</h3>
@@ -780,9 +804,9 @@ function renderResults(){
           <label id="sig-label" style="font-size:15px;font-weight:700;margin:0">Signature</label>
           ${hintTip('sig', 'About signatures', 'Sign with your finger on a touch screen, or with your mouse. A typed signature won\u2019t be accepted \u2014 this captures your real one.', true)}
         </div>
-        <div style="position:relative;border:1.5px solid #cdd3dc;border-radius:10px;background:#fff">
+        <div style="position:relative;border:1.5px solid #767f8c;border-radius:10px;background:#fff">
           <canvas id="sig-pad" role="img" aria-labelledby="sig-label" style="display:block;width:100%;height:150px;border-radius:10px;cursor:crosshair;touch-action:none;-webkit-print-color-adjust:exact;print-color-adjust:exact"></canvas>
-          <span id="sig-hint" class="no-print" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);color:#aeb4bd;font-size:15px;pointer-events:none">Sign here with your finger or mouse</span>
+          <span id="sig-hint" class="no-print" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);color:#6b7280;font-size:15px;pointer-events:none">Sign here with your finger or mouse</span>
         </div>
         <div class="no-print" style="display:flex;justify-content:flex-end;margin:8px 0 0">
           <button type="button" data-action="sig-clear" style="flex:none;font-family:inherit;font-size:14px;font-weight:700;color:var(--blue);background:none;border:2px solid var(--blue);border-radius:10px;padding:9px 16px;cursor:pointer;min-height:42px">Clear</button>
@@ -1011,18 +1035,31 @@ function render(){
   else if(state.view === 'question') stage.innerHTML = renderPage();
   else stage.innerHTML = (SAMPLE_MODE ? sampleBanner() : '') + renderResults();
 
-  const heading = stage.querySelector('h1, h2');
-  if(heading){ heading.setAttribute('tabindex', '-1'); }
-
   state.animate = false;
   renderIcons();
   initSignaturePad();
   persist();
 }
 
+/* Move focus to the heading of the view we just drew. innerHTML destroyed
+ * whatever the user clicked, so without this focus falls back to <body>: a
+ * screen reader announces nothing and a keyboard user tabs from the top of the
+ * document again. preventScroll leaves the scroll to the line after it. */
+function focusStageHeading(){
+  const stage = document.getElementById('stage');
+  const heading = stage && stage.querySelector('h1, h2');
+  if(!heading) return;
+  heading.setAttribute('tabindex', '-1');
+  heading.focus({ preventScroll: true });
+  window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+}
+
+/* Page-level navigation. Picking an answer calls render() directly instead,
+ * which deliberately leaves focus and scroll position where they are. */
 function renderWithMotion(){
   state.animate = true;
   render();
+  focusStageHeading();
 }
 
 /* ------------------------------------------------------------------ *
