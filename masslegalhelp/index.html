@@ -19,8 +19,21 @@
   :root{
     --accent:#0057a2;       /* 7.28:1, MLH accent blue. Was #1a5fb4 */
     --navy:#1e2e5f;         /* MLH header bar */
-    --yellow:#e8da8d;       /* MLH gold. 9.21:1 on --navy, only 1.41:1 on white:
-                               never use it for meaning outside the navy bar */
+    /* Two golds, because MassLegalHelp uses two. --pill is the pale gold of the
+       Legal Topics button; --gold is the saturated rule under the header, measured
+       at #eab736 and 9.6px. An earlier version used the pale one for the rule,
+       which read as a hairline instead of the band it is. Both are decorative and
+       both fail contrast on white, so neither may carry meaning off the navy bar. */
+    --gold:#eab736;
+    --pill:#e8da8d;
+    --yellow:#e8da8d;       /* alias kept: the top-bar focus ring reads --yellow */
+    /* Title band, copied from their article pages: a pale blue gradient panel with
+       a solid block offset behind it down and to the right. --band-edge is that
+       block. */
+    --band-top:#d3e7ff;
+    --band-bottom:#fafcff;
+    --band-edge:#a2c4f0;
+    --rule-ink:#192a65;     /* the short heavy rule under their byline */
     --accent-dark:#1f2c5c;  /* 13.35:1, MLH brand navy, result headings */
     --soft:#d3e7ff;         /* MLH pale blue band */
     --bg:#ffffff;
@@ -102,7 +115,7 @@
     background:var(--navy);color:#fff;
     /* The gold rule under the header is MassLegalHelp's strongest chrome cue.
        Decorative only, which is why 1.41:1 against white is acceptable here. */
-    border-bottom:4px solid var(--yellow);
+    border-bottom:9px solid var(--gold);
   }
   .topbar-brand{display:flex;align-items:center;gap:12px;min-width:0}
   .topbar-title{font-size:17px;font-weight:700;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -118,6 +131,48 @@
   .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0 0}
   .q-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:28px 0 0;flex-wrap:wrap}
   .h1{font-size:clamp(24px,6vw,29px);line-height:1.2;margin:8px 0 16px;letter-spacing:-.01em}
+
+  /* ---- MassLegalHelp page-header pattern ----------------------------------
+     Their article pages open with the title in a pale blue gradient panel that
+     has a solid block offset behind it, down and to the right, then a byline and
+     a short heavy rule. Reproduced here so a screener reads as part of the site
+     rather than as a tool bolted onto it. Measured from their SNAP ABAWD article
+     on 2026-07-30; values in MASSLEGALHELP-BRAND.md.
+
+     Written as reusable classes, not inline styles, because the intent is a
+     pattern for every screener MLRI puts on the site, not a one-off. */
+  .band{
+    background:linear-gradient(var(--band-top),var(--band-bottom));
+    padding:30px 26px 22px;
+    margin:0 0 22px;
+    /* The offset block, as a hard-edged shadow rather than a positioned
+       pseudo-element. Theirs is an absolutely positioned ::after inset 8px from
+       the top and left and 8px past the bottom and right; a shadow offset 8px
+       down and right is the same visible result, which is an 8px band along the
+       right edge and the bottom.
+       Two reasons for the shadow. A pseudo-element needs z-index:-1 to sit behind
+       the panel, and because .band creates no stacking context that would put it
+       behind the body's own white background, where it is invisible. And a
+       shadow never affects layout, so it cannot push a horizontal scrollbar onto
+       a narrow screen the way a negatively-inset absolute box can. */
+    box-shadow:8px 8px 0 0 var(--band-edge);
+  }
+  .band .h1{margin:0}
+  @media (max-width:640px){
+    .band{padding:22px 18px 18px;box-shadow:5px 5px 0 0 var(--band-edge)}
+  }
+
+  .byline{display:flex;align-items:flex-start;gap:13px;margin:0 0 22px}
+  .byline-mark{
+    flex:none;width:40px;height:40px;border-radius:50%;
+    background:var(--accent);color:#fff;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .byline-mark svg{width:20px;height:20px;display:block}
+  .byline-text{font-size:15.5px;line-height:1.5;color:var(--prose);min-width:0}
+  .byline-text b{font-weight:700}
+  /* Their short heavy rule: 146px by 5px in a darker navy than the body text. */
+  .byline-rule{width:146px;height:5px;background:var(--rule-ink);margin:0 0 22px}
   .h2{font-size:clamp(21px,5.5vw,25px);line-height:1.25;margin:6px 0 0;letter-spacing:-.01em}
   .h-result{font-size:clamp(21px,5.5vw,26px);line-height:1.25;margin:6px 0 0}
   input,textarea,select{font-size:16px;max-width:100%}
@@ -545,7 +600,20 @@ function animClass(){ return state.animate ? 'card-in' : ''; }
 
 function renderIntro(){
   return `<div class="${animClass()}">
-    <h1 class="h1">Did DTA tell you that you need to meet ABAWD Work Rules to keep getting SNAP?</h1>
+    <div class="band">
+      <h1 class="h1">Did DTA tell you that you need to meet ABAWD Work Rules to keep getting SNAP?</h1>
+    </div>
+    <div class="byline">
+      <span class="byline-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg></span>
+      <div class="byline-text"><b>By</b> Massachusetts Law Reform Institute</div>
+    </div>
+    <!-- No "Reviewed <Month Year>" line yet, though their article pages carry one
+         next to the byline and it is the thing that puts content staleness where a
+         reader can see it. Left out because nobody has signed off on this content:
+         the thresholds were last checked in November 2025 and the copy is still in
+         review. A date here would assert a review that has not happened. Add it,
+         and only it, when someone actually reviews. -->
+    <div class="byline-rule" aria-hidden="true"></div>
     <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 14px">Some adults on SNAP who are <strong>18 or older and under 65</strong> have to meet ABAWD work rules to get SNAP for more than 3 months. <strong>Many adults are exempt</strong> from the work rules. Being "exempt" means that you don't have to meet the work rules to keep getting SNAP.</p>
     <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 14px">You only have to meet these rules, or tell DTA you are exempt, if DTA sends you a <a href="${LINKS.snapWorkNotice}" target="_blank" rel="noopener">SNAP and Work notice</a> that says you have to meet the ABAWD Work Rules. Check your mail and <a href="${LINKS.dtaConnect}" target="_blank" rel="noopener">DTAConnect</a> to see notes from DTA. DTA has to screen you for all exemptions <em>before</em> subjecting you to the rules.</p>
     <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 18px">If you lost your SNAP because of the work rules, you might be able to get back on if you have an exemption, or if you met or are currently meeting the work rules.</p>

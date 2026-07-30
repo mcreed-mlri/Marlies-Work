@@ -17,7 +17,12 @@ restyle the site. Budget for that, or ask their web team for an include.
 | Top strip | `#0c1639` | Thin bar above the header holding the language selector, 42px |
 | Header | `#1e2e5f` | Main header bar, 120px at rest |
 | Brand navy | `#1f2c5c` | Body text, headings, links, footer background |
-| Gold | `#e8da8d` | The `Legal Topics` pill, the rule under the header, the rule above the footer, left accent bars on promo cards |
+| Pale gold | `#e8da8d` | The `Legal Topics` pill, and the left accent bars on promo cards |
+| Gold | `#eab736` | The rule under the header, **9.6px**. Corrected 2026-07-30: this was originally read as `#e8da8d` at 4px, which rendered as a hairline instead of the band it actually is. Two different golds, measured separately |
+| Band top | `#d3e7ff` | Top of the page-title gradient |
+| Band bottom | `#fafcff` | Bottom of the same gradient |
+| Band edge | `#a2c4f0` | The solid block offset behind the title panel |
+| Rule ink | `#192a65` | The short heavy rule under the byline, 146px by 5px |
 | Pale blue | `#d3e7ff` | Hero band, section backgrounds behind card grids, page-title band |
 | Pale blue, low end | `#fafcff` | Bottom of the title band gradient, `linear-gradient(#d3e7ff, #fafcff)` |
 | Accent blue | `#0057a2` | Skip-link focus, circular arrow affordances on cards |
@@ -66,6 +71,45 @@ It is not fine for anything that carries meaning. The screener currently sets
 `.topbar :focus-visible{outline-color:var(--yellow)}`. That is legitimate only while the
 focus ring stays inside the navy bar. A gold focus ring, selected state, or error indicator
 anywhere on the white page would fail. Use `#0057a2` at 7.28:1 for those.
+
+## The page-header pattern
+
+This is the part that makes a page read as theirs, and it is worth treating as the template
+for every screener MLRI puts on the site rather than as one page's styling. Implemented as
+`.band`, `.byline`, and `.byline-rule` in `masslegalhelp/index.html`.
+
+Their article pages open with four things in order. A pale blue gradient panel holding the
+title, `linear-gradient(#d3e7ff, #fafcff)`, padded roughly `42px 51px 20px` at their column
+width. A solid `#a2c4f0` block offset behind it, down and to the right. A byline: a navy
+circle with a document glyph, then `By <organisation>` and `Reviewed <Month Year>`. Then a
+short heavy rule, 146px by 5px, in `#192a65`.
+
+The offset block is theirs as an absolutely positioned `::after`, inset `top:8px left:8px
+right:-8px bottom:-8px`. Ours is `box-shadow:8px 8px 0 0 var(--band-edge)`, which produces
+the same visible result for two reasons. A pseudo-element needs `z-index:-1` to sit behind
+the panel, and since `.band` creates no stacking context that puts it behind the page's own
+white background where it is invisible. And a shadow never affects layout, so it cannot push
+a horizontal scrollbar onto a narrow screen the way a negatively inset absolute box can.
+
+## What we deliberately do not copy
+
+Three pieces of their chrome are absent on purpose, because faking them is worse than
+leaving them out.
+
+The dark top strip exists to hold a language selector. Until there is a Spanish version there
+is nothing to select, and an empty dark bar is decoration pretending to be navigation. Add
+the strip when translations land, not before.
+
+The breadcrumb row with Print and Share, and the "Listen to this Page" button. Each is a
+working control on their site. A screener that draws them without wiring them is offering a
+button that does nothing, which is worse than a page that never promised it.
+
+Headings in Domine. Their `h1` is Domine 700 at 36px over 48px; ours is Atkinson Hyperlegible.
+This is the largest remaining visual difference, and it is a missing font file rather than a
+decision. Domine is OFL and self-hosted by their theme, so dropping `domine-700.woff2` into
+`masslegalhelp/fonts/` and pointing `.h1` and `.band .h1` at it would close most of the gap.
+Body copy stays Atkinson regardless: they use Montserrat, and Atkinson was chosen for
+low-vision readers, which outranks matching a host font.
 
 ## Layout patterns worth matching
 

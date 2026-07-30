@@ -12,7 +12,7 @@
   'use strict';
 
   const NONE = '__none';
-  const SCREENING_HUB_URL = 'snap-screening.html';
+  const SCREENING_HUB_URL = '../screener/';
   /** Production deploy: swap the top-bar Back button for Quick exit using this URL (neutral external site). See README. */
   const PRODUCTION_QUICK_EXIT_URL = 'https://www.weather.com/';
 
