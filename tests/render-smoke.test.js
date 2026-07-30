@@ -20,21 +20,21 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 
-const COURT_FORMS = path.join(__dirname, '..', 'court-forms');
 const MLH = path.join(__dirname, '..', 'masslegalhelp');
 const LOGIC_FILE = 'snap-screening-logic.js';
 
-/* The MassLegalHelp build is a separate deployable, so it carries its own copy
- * of the logic module and is driven through every screen here too. It is the one
- * that ships to the public, so leaving it uncovered would put the tested pages
- * and the shipping page in different places.
+/* One build. court-forms/ was archived on 2026-07-30 along with the two earlier
+ * designs, so masslegalhelp/index.html is both the page reviewers look at and the
+ * page the public gets. That removes a whole class of risk rather than testing for
+ * it: there is no second copy to drift, and no lookalike to approve by mistake.
  *
- * Two earlier designs moved to archive/ on 2026-07-30 and are deliberately not
- * listed. They are frozen, they carry their own snapshot of the logic module, and
- * the point of archiving them was to stop every shared-logic change having to
- * keep three variants working. See archive/README.md. */
+ * The archived pages are deliberately absent. They are frozen, they carry their own
+ * snapshot of the logic module which is meant to diverge, and nothing should have to
+ * keep passing for them. See archive/README.md.
+ *
+ * PAGES stays a list rather than collapsing to one path, because the loops below
+ * read naturally over it and the next screener MLRI adds will slot straight in. */
 const PAGES = [
-  { label: 'court-forms/snap-abawd-classic-v2.html', dir: COURT_FORMS, file: 'snap-abawd-classic-v2.html' },
   { label: 'masslegalhelp/index.html', dir: MLH, file: 'index.html' }
 ];
 
@@ -171,7 +171,7 @@ function buildContext() {
       removeItem: (k) => { delete store[k]; }
     },
     matchMedia: () => ({ matches: false, addEventListener() {}, removeEventListener() {}, addListener() {} }),
-    location: { href: 'https://example.test/court-forms/page.html', search: '', pathname: '/court-forms/page.html' },
+    location: { href: 'https://example.test/masslegalhelp/', search: '', pathname: '/masslegalhelp/' },
     requestAnimationFrame: (fn) => { fn(); return 1; },
     cancelAnimationFrame() {},
     setTimeout: () => 0,
@@ -203,20 +203,14 @@ function inlineScript(html, file) {
   return m[1];
 }
 
-/* Two deployables, two copies of the decision logic. A copy that drifts is the
- * worst failure available here: the preview a reviewer signs off on would stop
- * matching the page the public gets, and nothing else would notice. */
-describe('the shipping build shares the reviewed logic module', () => {
-  it('masslegalhelp and court-forms hold identical copies', () => {
-    const a = fs.readFileSync(path.join(COURT_FORMS, LOGIC_FILE), 'utf8');
-    const b = fs.readFileSync(path.join(MLH, LOGIC_FILE), 'utf8');
-    assert.equal(
-      b, a,
-      'masslegalhelp/' + LOGIC_FILE + ' has drifted from court-forms/' + LOGIC_FILE +
-      '. Copy the reviewed one over the other; do not edit them separately.'
-    );
-  });
-});
+/* The drift guard that lived here compared masslegalhelp/snap-screening-logic.js
+ * against court-forms/. It earned its keep: it caught a real one-sided edit on
+ * 2026-07-30, twice. It is gone because court-forms/ is archived and there is now
+ * one copy, so the failure it detected cannot happen rather than being caught after
+ * the fact. If a second build ever appears, bring it back.
+ *
+ * The archived copy under archive/ is intentionally not compared. It is a frozen
+ * snapshot and is supposed to fall behind. */
 
 /* The progress announcement broke once by being written the obvious way, so it
  * gets a guard. Reassigning the container's innerHTML on every render destroys
@@ -230,11 +224,7 @@ describe('the shipping build shares the reviewed logic module', () => {
  * Only the two live builds are checked. snap-abawd.html and snap-screening-v2.html
  * are frozen previews that still have the original pattern and are not shipping. */
 describe('the progress label announces section changes', () => {
-  const LIVE_BUILDS = [
-    { label: 'masslegalhelp/index.html', dir: MLH, file: 'index.html' },
-    { label: 'court-forms/snap-abawd-classic-v2.html', dir: COURT_FORMS, file: 'snap-abawd-classic-v2.html' }
-  ];
-  for (const build of LIVE_BUILDS) {
+  for (const build of PAGES) {
     it(build.label, () => {
       const src = inlineScript(fs.readFileSync(path.join(build.dir, build.file), 'utf8'), build.label);
       const fn = /function renderProgress\(\)\{[\s\S]*?\n\}/.exec(src);
@@ -275,10 +265,7 @@ describe('the progress label announces section changes', () => {
  * group only. It is a one-line change that a later edit to the group header
  * could undo without anyone noticing, so it gets an assertion. */
 describe('the optional-questions note appears above group 1 only', () => {
-  for (const build of [
-    { label: 'masslegalhelp/index.html', dir: MLH, file: 'index.html' },
-    { label: 'court-forms/snap-abawd-classic-v2.html', dir: COURT_FORMS, file: 'snap-abawd-classic-v2.html' }
-  ]) {
+  for (const build of PAGES) {
     it(build.label, () => {
       const src = inlineScript(fs.readFileSync(path.join(build.dir, build.file), 'utf8'), build.label);
       const note = /Answer any that apply to you\. Every question is optional\./;
@@ -319,22 +306,11 @@ describe('the shipping build stores answers per tab only', () => {
     assert.match(code, /sessionStorage\.setItem\(STORAGE_KEY/, 'answers are not being stored at all');
   });
 
-  it('does not share a storage key with the preview builds', () => {
-    const keyOf = (dir, file) => {
-      const m = /const STORAGE_KEY = '([^']+)'/.exec(fs.readFileSync(path.join(dir, file), 'utf8'));
-      return m && m[1];
-    };
-    const shipping = keyOf(MLH, 'index.html');
-    assert.ok(shipping, 'no STORAGE_KEY in the shipping build');
-    /* Every build is served from one origin on the preview site. This file was
-     * copied from snap-abawd-classic-v2.html and carried its key, so the two
-     * overwrote each other's answers during review. */
-    assert.notEqual(
-      shipping, keyOf(COURT_FORMS, 'snap-abawd-classic-v2.html'),
-      'masslegalhelp/index.html shares its storage key with the preview build. On the ' +
-      'preview site they are the same origin, so they overwrite each other.'
-    );
-  });
+  /* The companion guard here asserted the shipping key differed from the preview
+   * builds', because all of them were served from one origin on the preview site and
+   * a shared key meant they overwrote each other's answers. It found exactly that
+   * bug, introduced by copying the file. With one build there is nothing to collide
+   * with, so the assertion is gone rather than kept as decoration. */
 });
 
 /* Quick exit is a safety control, and the failure mode is silent: it navigates

@@ -28,14 +28,16 @@ lives in its own top-level folder; the homepage lists them.
 
 Success for the site is a reviewer opening a link, understanding what the draft is within a
 few seconds, testing it, and responding. Success for a project inside it is being accepted
-for production; the SNAP screener is aimed at CourtFormsOnline.org.
+for production; the SNAP screener is aimed at MassLegalHelp.org, a site MLRI already owns.
+It was aimed at CourtFormsOnline.org until 2026-07-30, when that turned out to require a
+Docassemble interview and a review process MLRI does not control.
 
 ## Positioning
 
 The prototypes are working software, not mockups. Real screening logic, real outbound links,
 real print and download output, so a reviewer exercises actual behavior instead of imagining
-it from a picture. The `court-forms/` folder deliberately mirrors production Court Forms
-Online chrome so a finished tool can be dropped in without a redesign first.
+it from a picture. The screener wears MassLegalHelp's chrome, measured from their live pages,
+so what a reviewer approves is what the public will see rather than a lookalike.
 
 ## Operating Context
 
@@ -43,8 +45,8 @@ Online chrome so a finished tool can be dropped in without a redesign first.
   preset None, no build command, output directory `/`. Every push to `main` auto-deploys.
 - Access is HTTP Basic Auth enforced at the edge by `functions/_middleware.js`, reading an
   encrypted `SITE_PASSWORD`. It fails closed with a 503 if the variable is unset. The
-  password never reaches the browser as source. That middleware is not needed on the public
-  Court Forms Online site.
+  password never reaches the browser as source. That middleware must not follow the screener
+  to its public deploy; see `masslegalhelp/README.md`.
 - Installable as a PWA. HTML, JS, and CSS are network-first; `sw-register.js` shows a "A new
   version is ready" banner when a deploy lands.
 - Feedback comes back by email, Slack, or a booked meeting; the homepage footer carries those
@@ -73,18 +75,18 @@ Online chrome so a finished tool can be dropped in without a redesign first.
   through the bundled Node binary. The Playwright suite cannot run locally.
 - Adding a project means a new top-level folder with an `index.html` plus an entry on the
   homepage. The password gate covers new folders automatically.
-- No backend and no analytics. Fonts and icons are self-hosted under `court-forms/fonts/` and
-  `court-forms/vendor/`.
+- No backend. No analytics yet, though aggregate non-identifying counts are planned; see the
+  open items. Fonts are self-hosted under `masslegalhelp/fonts/`.
 - The SNAP screener walks up to 14 questions plus a good-cause follow-up and returns one of
   four results: exempt, good cause, may need to meet the work rules, or age may not apply.
-  Rules and question text live in `court-forms/snap-screening-logic.js`; every outbound URL
+  Rules and question text live in `masslegalhelp/snap-screening-logic.js`; every outbound URL
   lives in `LINKS` there.
-- Two builds share that logic module, both using the `classic2` copy and differing only in
-  chrome: `masslegalhelp/index.html`, which ships, and `court-forms/snap-abawd-classic-v2.html`,
-  the internal preview. Two earlier variants, the original classic and the accessible
-  redesign, moved to `archive/` on 2026-07-30 and are frozen and untested. Carrying three
-  through every shared-logic change was worth it while the destination was undecided; it is
-  not now. The superseded note below is kept for context.
+- One build, `masslegalhelp/index.html`, using the `classic2` copy. It is both the page
+  reviewers approve and the page the public gets, which removes the risk of approving a
+  lookalike rather than testing for it. All three earlier designs and the `court-forms/`
+  folder moved to `archive/` on 2026-07-30 and are frozen and untested. Carrying several
+  variants through every shared-logic change was worth it while the destination was
+  undecided; it is not now. The superseded note below is kept for context.
 - Superseded 2026-07-29: three UIs shared that logic module; the active variant was `classic2`
   (`court-forms/snap-abawd-classic-v2.html`), the classic design carrying the author's
   updated language. `snap-abawd.html` (classic) and `snap-screening-v2.html` (accessible
@@ -101,14 +103,17 @@ Online chrome so a finished tool can be dropped in without a redesign first.
   (30+ hours below minimum wage routing, "other disability benefit" routing, housing result
   language, substance use treatment criteria, the safety question's categories, and how much
   the not-exempt screen should say about proving unpaid or volunteer hours).
-- Pending before production: swap the top-bar "← Back" control for "Quick exit" to a neutral
-  external site in the shipping screener, and confirm the Terms of Use wording matches the
-  hosting organization.
+- Done 2026-07-30: Quick exit replaced the Back control in the shipping build and clears
+  storage before navigating. Still pending: confirm the neutral exit URL, currently
+  weather.com, and settle whether the tool needs its own Terms of Use or inherits
+  MassLegalHelp's.
 
 ## Brand Commitments
 
-- Names: "Marlie's MLRI Work" for the site, "Court Forms Online" for the project folder, with
-  that product's navy bar and gold torch mark.
+- Names: "Marlie's MLRI Work" for the site. The screener wears MassLegalHelp's chrome: navy
+  header, saturated gold rule, and the page-header pattern recorded in
+  `MASSLEGALHELP-BRAND.md`. Court Forms Online's navy bar and gold torch mark are retired to
+  `archive/`.
 - Copy in the SNAP screening was provided to Marlie by the MLRI author and is not ours to
   edit. Propose wording changes; do not rewrite factual or legal copy in place.
 - Atkinson Hyperlegible is the typeface, chosen for low-vision readers rather than for style.

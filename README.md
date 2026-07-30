@@ -9,13 +9,11 @@ the homepage lists them.
 | Path | What it is |
 |------|------------|
 | `index.html` | Homepage (**"Marlie's MLRI Work"**). Lists projects. **Start here.** |
-| `court-forms/` | The **Court Forms Online** project folder → `/court-forms/`. |
-| `court-forms/index.html` | Minimal project page. Links to the SNAP screening hub. |
-| `screener/index.html` | **Screener landing page** → `/screener/`. Lists both versions, the sample results, and the review documents. |
+| `screener/index.html` | **Screener landing page** → `/screener/`. The screener, the sample results, and the review documents. |
 | `masslegalhelp/` | The build that **ships**, styled for MassLegalHelp → `/masslegalhelp/`. See `masslegalhelp/README.md` for the deploy contract. |
-| `archive/` | Two earlier designs, frozen and untested. See `archive/README.md`. |
-| `court-forms/snap-screening-logic.js` | Shared screening logic (questions, thresholds, links, result engine). Exists twice, here and in `masslegalhelp/`, byte-identical, with a test that fails if they drift. |
-| `court-forms/snap-abawd-classic-v2.html` | SNAP ABAWD screening, **classic design, author's copy draft**. Same look as `snap-abawd.html`, rebuilt from the MLRI author's website copy draft (see [Classic v2](#classic-v2-the-authors-copy-draft) below). Supports `?sample=exempt\|goodcause\|notexempt` for hub sample result previews (demo only; nothing saved). |
+| `archive/` | Three earlier designs and the retired `court-forms/` project page, frozen and untested. See `archive/README.md`. |
+| `masslegalhelp/snap-screening-logic.js` | The screening logic: questions, thresholds, links, result engine. One copy, next to the one build that uses it. |
+| `masslegalhelp/index.html` | **The screener.** MassLegalHelp chrome, Quick exit, `sessionStorage`. Supports `?sample=exempt\|goodcause\|notexempt` on review hosts only. |
 | `screener/how-it-works.html` | Plain-language explainer of the screening, in the preview site's own look rather than Court Forms chrome. It is documentation about the tool, not part of it. |
 | `functions/_middleware.js` | Cloudflare Pages Function enforcing the site-wide password (see below). |
 | `sw.js` | Service worker. Offline support and update handling for the PWA. |
@@ -102,13 +100,12 @@ on deploy.
 
 A short, private screening tool that helps someone on SNAP check whether the
 Massachusetts DTA **ABAWD work rules** apply to them, or whether they may be
-exempt or have good cause. Built for Court Forms Online / MLRI.
+exempt or have good cause. Built by MLRI, for MassLegalHelp.
 
-Two builds share one logic module ([`court-forms/snap-screening-logic.js`](court-forms/snap-screening-logic.js)), each selecting a copy variant via `SnapScreening.create(variant)`. Both use the `classic2` copy; only the chrome differs. Two earlier variants moved to `archive/` on 2026-07-30:
+One build, [`masslegalhelp/index.html`](masslegalhelp/index.html), selecting its copy variant via `SnapScreening.create('classic2')`. Three earlier designs and the `court-forms/` folder moved to `archive/` on 2026-07-30:
 
 | File | Variant | What it is |
 |------|---------|-----------|
-| [`court-forms/snap-abawd-classic-v2.html`](court-forms/snap-abawd-classic-v2.html) | `classic2` | Classic Design - updated language |
 | [`masslegalhelp/index.html`](masslegalhelp/index.html) | `classic2` | **Ships.** MassLegalHelp chrome, Quick exit, `sessionStorage` |
 
 It walks through up to 14 questions plus a "good cause" follow-up and shows one
@@ -121,9 +118,9 @@ of these results:
   up, so the screen explains the work and volunteer options instead.
 - **Age may not apply.** Shown before the question flow if the person is not 18 or older and under 65.
 
-## Classic v2: the author's copy draft
+## The author's copy draft
 
-[`court-forms/snap-abawd-classic-v2.html`](court-forms/snap-abawd-classic-v2.html)
+The shipping build ([`masslegalhelp/index.html`](masslegalhelp/index.html))
 is the classic design rebuilt from the MLRI author's **ABAWD Screening Tool
 website copy draft**, which also supplies every outbound URL. That draft is
 shared separately and is not tracked in this repo. It keeps the four grouped
@@ -249,7 +246,7 @@ and answers are never transmitted anywhere.**
   needs to stop being on the page immediately, so leaving answers behind would
   defeat it. `location.replace()` also means no history entry survives.
 - **"Tell DTA" form fields** (name, agency ID, free text) are *not* stored on the device. The visitor prints or downloads to keep a copy.
-- Fonts and icons are **self-hosted** under `court-forms/fonts/` and `court-forms/vendor/` (no Google Fonts or unpkg in production tools).
+- Fonts are **self-hosted** under `masslegalhelp/fonts/` (no Google Fonts or unpkg in the shipping tool). Icons are inline SVG; the vendored Lucide bundle went to `archive/` with the one page that used it.
 
 > Note: because screening answers (which can include health, pregnancy, or
 > safety-related responses) persist for up to a day on the device, the intro
@@ -271,7 +268,7 @@ then.
 
 ## Editing the questions
 
-Screening rules and question text live in [`court-forms/snap-screening-logic.js`](court-forms/snap-screening-logic.js):
+Screening rules and question text live in [`masslegalhelp/snap-screening-logic.js`](masslegalhelp/snap-screening-logic.js):
 
 - `QUESTION_COPY`: per-variant wording (`classic`, `classic2`, `v2`) against the same logic IDs
 - `GOODCAUSE_DEFS`: good-cause question wording, plus the `title` / `detail` used by the classic-v2 results screen

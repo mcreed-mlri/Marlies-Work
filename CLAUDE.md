@@ -78,30 +78,34 @@ Only the archived `archive/snap-screening-v2.html` loads `vendor/lucide.min.js` 
 blank the icons if it failed to load. Do not add the vendored copy to a page that does not
 already need it.
 
-## Two homes for the screener
+## One build
 
-`masslegalhelp/` is the build that ships to the public, at a path on masslegalhelp.org.
-`court-forms/` holds the password-gated builds MLRI reviews internally. Read
-`masslegalhelp/README.md` before touching the shipping one; it carries the deploy contract.
+`masslegalhelp/index.html` is the screener. It is what reviewers look at and what the public
+gets, and there is exactly one copy of `snap-screening-logic.js`, next to it. Read
+`masslegalhelp/README.md` before touching it; it carries the deploy contract.
 
-Court Forms Online told us in July 2026 that anything on their site has to be a Docassemble
-interview, so there is no longer a static Court Forms Online deliverable. The static track
-is MassLegalHelp only.
+`court-forms/` is gone as of 2026-07-30. Court Forms Online requires a Docassemble interview,
+so a Court Forms styled static page shipped nowhere, and the three earlier designs are frozen
+in `archive/`. Two guards went with it: a drift test between the two copies of the logic
+module, and the same check in the publish script. They caught a real one-sided edit twice, and
+are unnecessary now that there is nothing to drift against.
 
-`snap-screening-logic.js` exists twice, once per deployable, byte-identical. Edit one and
-copy it over the other. A test in `tests/render-smoke.test.js` fails if they diverge, and
-that test is the only thing standing between a reviewer approving one page and the public
-getting a different one.
+If a second build ever appears, bring the drift guard back before the second copy does.
 
-## Court Forms Online look
+## MassLegalHelp look
 
-`court-forms/` deliberately mirrors production Court Forms Online so the tools can be
-dropped in. Match the chrome: navy top bar, gold torch mark, and the color tokens in
-`:root`.
+The shipping build wears MassLegalHelp's chrome, measured off their live article pages and
+recorded with contrast ratios in `MASSLEGALHELP-BRAND.md`. Read the "what we deliberately do
+not copy" section there before adding any of their chrome that is missing: the language strip,
+breadcrumbs, Print, Share, and Listen are all absent on purpose, because drawing a control
+that does nothing is worse than not drawing it.
 
-Do not copy production's interview screens wholesale. They are dated Docassemble defaults
-(Bootstrap carets, a flat sidebar step list). The big Yes/No tiles in `archive/snap-screening-v2.html`
-are the better pattern and should stay.
+The page-header pattern, `.band` plus `.byline` plus `.byline-rule`, is meant as the template
+for every screener MLRI puts on the site rather than one page's styling.
+
+Court Forms Online's own interview screens are dated Docassemble defaults (Bootstrap carets, a
+flat sidebar step list). The big Yes/No tiles in `archive/snap-screening-v2.html` are the
+better pattern if the design ever grows them.
 
 ## Contrast model: white page, tinted controls
 

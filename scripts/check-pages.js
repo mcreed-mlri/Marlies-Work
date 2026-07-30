@@ -24,7 +24,6 @@ const vm = require('vm');
 
 const ROOT = path.join(__dirname, '..');
 const PAGE_GLOBS = [
-  'court-forms',
   'masslegalhelp',
   'screener',
   '.'
@@ -91,7 +90,7 @@ for (const rel of files) {
     const rules = styles.replace(/\/\*[\s\S]*?\*\//g, '');
     const defined = new Set();
     for (const d of rules.matchAll(/\.([a-zA-Z][\w-]*)/g)) defined.add(d[1]);
-    /* The court-forms families, then the shell families used by index.html and
+    /* The screener families, then the shell families used by index.html and
      * screener/index.html. The shell half was missing, so of the ~17 classes on
      * screener/index.html only `lead` was ever checked, and `.mono` shipped with
      * no rule behind it while this script reported ok. Those pages carry a comment

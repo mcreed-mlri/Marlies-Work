@@ -26,7 +26,7 @@ const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
 const OUT_DIR = path.join(ROOT, 'docassemble-snap-abawd', 'docassemble', 'MLRISnapAbawd', 'data');
-const S = require(path.join(ROOT, 'court-forms', 'snap-screening-logic.js'));
+const S = require(path.join(ROOT, 'masslegalhelp', 'snap-screening-logic.js'));
 const A = S.create('classic2');
 const C = S.RESULT_COPY;
 const NONE = S.NONE;

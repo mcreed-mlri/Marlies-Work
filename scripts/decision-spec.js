@@ -25,7 +25,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
-const S = require(path.join(ROOT, 'court-forms', 'snap-screening-logic.js'));
+const S = require(path.join(ROOT, 'masslegalhelp', 'snap-screening-logic.js'));
 const VARIANT = 'classic2';
 const A = S.create(VARIANT);
 const NONE = S.NONE;

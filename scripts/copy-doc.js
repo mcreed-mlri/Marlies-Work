@@ -26,7 +26,7 @@ const HTML = path.join(ROOT, 'masslegalhelp', 'index.html');
 const OUT = path.join(ROOT, 'SCREENER-COPY.md');
 const VARIANT = 'classic2';
 
-const S = require(path.join(ROOT, 'court-forms', 'snap-screening-logic.js'));
+const S = require(path.join(ROOT, 'masslegalhelp', 'snap-screening-logic.js'));
 const A = S.create(VARIANT);
 const C = S.RESULT_COPY;
 

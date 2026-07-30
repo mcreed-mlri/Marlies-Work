@@ -11,6 +11,8 @@ should be linked to as though it were current. The live screening is
 |---|---|
 | `snap-abawd.html` | The original design, mirroring how Court Forms Online is set up today. |
 | `snap-screening-v2.html` | An accessible redesign: plain language, picture cues, big Yes/No tiles. |
+| `snap-abawd-classic-v2.html` | The classic design carrying the author's current wording. Archived later the same day, when `court-forms/` was retired entirely. |
+| `court-forms-index.html` | The `court-forms/` project page. Renamed on the way in so it does not collide with an `index.html` here. |
 
 ## Why they stopped
 
@@ -21,6 +23,14 @@ launch, which does not fit handing a package to another organisation to upload.
 
 Keeping three variants alive meant every change to the shared logic had to not break all
 three. That cost was worth paying while the destination was undecided. It is not any more.
+
+`snap-abawd-classic-v2.html` and the `court-forms/` project page followed a few hours later,
+once it was clear a Court Forms styled static page ships nowhere. That left one build,
+`masslegalhelp/index.html`, which is now both the page reviewers look at and the page the
+public gets. Two guards written that morning came out with it: a test comparing the two
+copies of the logic module for drift, and the same check in the publish script. They had
+caught a real one-sided edit twice, but with a single copy the failure cannot happen rather
+than being detected after the fact.
 
 `snap-screening-v2.html` is the one to look at if you want the tiles. CLAUDE.md points here
 for that pattern: the big Yes/No tiles are better than stock interview screens, and if the

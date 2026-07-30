@@ -66,17 +66,15 @@ if (!files.some(f => f.rel === 'index.html')) {
   problems.push('No index.html at the root of ' + PREFIX + '/. The deploy repo root is the site root.');
 }
 
-/* ---- Guard: the logic module has not drifted ----
- * Same check the test suite makes, repeated here so publishing cannot succeed
- * on a tree where they differ even if nobody ran the tests. */
+/* ---- Guard: the logic module is present ----
+ * This used to compare this copy against court-forms/snap-screening-logic.js,
+ * because there were two builds and a reviewer could approve one while the public
+ * got the other. court-forms/ was archived on 2026-07-30, so there is now one copy
+ * and drift is impossible rather than merely detected. The archived pages keep
+ * their own frozen snapshot, which is meant to diverge and is not checked. */
 const here = path.join(DIR, LOGIC);
-const there = path.join(ROOT, 'court-forms', LOGIC);
-if (fs.existsSync(here) && fs.existsSync(there)) {
-  if (fs.readFileSync(here, 'utf8') !== fs.readFileSync(there, 'utf8')) {
-    problems.push(LOGIC + ' differs from the copy in court-forms/. Reconcile them before publishing.');
-  }
-} else {
-  problems.push('Could not compare ' + LOGIC + ' against court-forms/; one of them is missing.');
+if (!fs.existsSync(here)) {
+  problems.push(LOGIC + ' is missing. The page cannot decide anything without it.');
 }
 
 /* ---- Guard: nothing reaches outside the folder ----
