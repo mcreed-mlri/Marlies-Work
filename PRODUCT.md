@@ -124,9 +124,13 @@ so what a reviewer approves is what the public will see rather than a lookalike.
 
 - `README.md` is the fullest existing record of the screener: results, retention, deploy
   steps, the SME checklist, and the open launch questions.
-- The author's copy draft, untracked in this repo and shared separately: "ABAWD Screener Tool
-  (Court Forms Draft).md" and "Website Draft - ABAWD Screening Tool" (`.md` and `.pdf`). It is
-  the source of the `classic2` wording and of every outbound URL.
+- The author's copy draft, untracked and shared separately, now in `_local/` rather than the
+  repository root: "ABAWD Screener Tool (Court Forms Draft).md" and "Website Draft - ABAWD
+  Screening Tool" (`.md` and `.pdf`). It is the source of the `classic2` wording and of every
+  outbound URL, which makes it the provenance for questions about why something is worded a
+  particular way or where a link points. `SCREENER-COPY.md` records the current state of the
+  copy and is not a substitute: it says what the tool says today, not what the author supplied.
+  See `_local/README.md`.
 - Real DTA contact detail already in the draft and the logic module: DTA Assistance Line
   (877) 382-2363, the Document Processing Center address in Taunton, the fax number, DTA
   Connect, the exemption self-declaration form, and the Mass Legal Help ABAWD article.
