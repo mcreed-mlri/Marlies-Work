@@ -3,6 +3,25 @@
 const { test, expect } = require('@playwright/test');
 const path = require('path');
 
+/* Result copy is read from the logic module rather than typed out here.
+ *
+ * This file previously hardcoded the exempt heading in five places. The author
+ * revised that heading in July 2026, dropping "Good news:" and softening "You are
+ * exempt" to "You may be exempt", and all five assertions went stale without
+ * anyone noticing: this suite cannot run on the authoring machine, and CI did not
+ * run it either. Author copy changes regularly, so a test that duplicates it will
+ * keep rotting. Derive it instead. */
+const { RESULT_COPY } = require('../court-forms/snap-screening-logic.js');
+
+/** Literal text as a case-insensitive regex, for Playwright's name matchers. */
+const asRegex = (text) => new RegExp(text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+
+const EXEMPT_HEADING = asRegex(RESULT_COPY.exemptHeading);
+const GOOD_CAUSE_HEADING = asRegex(RESULT_COPY.goodCauseHeading);
+const NOT_EXEMPT_HEADING = asRegex(RESULT_COPY.notExemptHeading);
+const WORK_RULES_HEADING = asRegex(RESULT_COPY.workRulesHeading);
+const AGE_INFO_HEADING = asRegex(RESULT_COPY.ageInfoHeading);
+
 const classicUrl = '/court-forms/snap-abawd.html';
 const classicV2Url = '/court-forms/snap-abawd-classic-v2.html';
 const v2Url = '/court-forms/snap-screening-v2.html';
@@ -36,7 +55,7 @@ test.describe('SNAP ABAWD screening — classic', () => {
     await agreeAndStart(page);
     await clickYn(page, 'child under 14', 'Yes');
     for (let i = 0; i < 4; i++) await clickNext(page);
-    await expect(page.getByRole('heading', { name: /Good news: You are exempt and do not have to meet the ABAWD work rules/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: EXEMPT_HEADING })).toBeVisible();
   });
 
   test('30+ hours below minimum wage routes to exempt', async ({ page }) => {
@@ -44,13 +63,13 @@ test.describe('SNAP ABAWD screening — classic', () => {
     for (let i = 0; i < 3; i++) await clickNext(page);
     await page.getByRole('radio', { name: /30 hours or more/i }).click();
     await clickNext(page);
-    await expect(page.getByRole('heading', { name: /Good news: You are exempt and do not have to meet the ABAWD work rules/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: EXEMPT_HEADING })).toBeVisible();
     await expect(page.getByText(/30 or more hours/i)).toBeVisible();
   });
 
   test('age outside range shows ageinfo', async ({ page }) => {
     await agreeAndStart(page, false);
-    await expect(page.getByRole('heading', { name: /may not apply to your age group/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: AGE_INFO_HEADING })).toBeVisible();
   });
 
   test('delete answers clears storage', async ({ page }) => {
@@ -90,7 +109,7 @@ test.describe('SNAP ABAWD screening — classic v2 (author copy)', () => {
     await clickNext(page);
     await yn(page, 'health', 'yes').click();      // group 2
     await skipToResults(page);
-    await expect(page.getByRole('heading', { name: /Good news: You are exempt and do not have to meet the ABAWD work rules/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: EXEMPT_HEADING })).toBeVisible();
     await expect(page.getByLabel(/Explain the health reason/i)).toBeVisible();
     await expect(page.getByLabel(/Explain your caretaking responsibilities/i)).toBeVisible();
     await expect(page.getByRole('link', { name: /exemption form/i })).toBeVisible();
@@ -101,8 +120,8 @@ test.describe('SNAP ABAWD screening — classic v2 (author copy)', () => {
     await skipToResults(page);
     await noneOf(page, 'goodcause').click();
     await clickNext(page);
-    await expect(page.getByRole('heading', { name: /You may need to meet the ABAWD work rules/i })).toBeVisible();
-    await expect(page.getByRole('heading', { name: /To keep getting SNAP, you can meet the ABAWD work rules/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: NOT_EXEMPT_HEADING })).toBeVisible();
+    await expect(page.getByRole('heading', { name: WORK_RULES_HEADING })).toBeVisible();
     await expect(page.getByText(/You may have a good reason for missing work, school, or volunteer hours/i)).toBeVisible();
     await expect(page.getByRole('link', { name: 'DTA training program' })).toBeVisible();
   });
@@ -112,7 +131,7 @@ test.describe('SNAP ABAWD screening — classic v2 (author copy)', () => {
     await skipToResults(page);
     await choice(page, 'goodcause', 1).click();   // family or personal emergency
     await clickNext(page);
-    await expect(page.getByRole('heading', { name: /good reason for missing hours/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: GOOD_CAUSE_HEADING })).toBeVisible();
     for (const title of ['No transportation', 'Emergency', 'Employment issues']) {
       await expect(page.getByText(title, { exact: true })).toBeVisible();
     }
@@ -139,7 +158,7 @@ test.describe('SNAP ABAWD screening — classic v2 (author copy)', () => {
   test('sample exempt shows updated language result copy', async ({ page }) => {
     await page.goto(`${classicV2Url}?sample=exempt`);
     await expect(page.getByText('Sample result')).toBeVisible();
-    await expect(page.getByRole('heading', { name: /Good news: You are exempt and do not have to meet the ABAWD work rules/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: EXEMPT_HEADING })).toBeVisible();
     await expect(page.getByLabel(/Explain the health reason/i)).toBeVisible();
     await expect(page.getByLabel(/Explain your caretaking responsibilities/i)).toBeVisible();
     const stored = await page.evaluate(() => localStorage.getItem('cfo-abawd-classic-v2-screening-v1'));
@@ -149,7 +168,7 @@ test.describe('SNAP ABAWD screening — classic v2 (author copy)', () => {
   test('sample good cause lists every category', async ({ page }) => {
     await page.goto(`${classicV2Url}?sample=goodcause`);
     await expect(page.getByText('Sample result')).toBeVisible();
-    await expect(page.getByRole('heading', { name: /good reason for missing hours/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: GOOD_CAUSE_HEADING })).toBeVisible();
     for (const title of ['No transportation', 'Emergency', 'Employment issues']) {
       await expect(page.getByText(title, { exact: true })).toBeVisible();
     }
@@ -183,14 +202,14 @@ test.describe('SNAP ABAWD screening — v2', () => {
   test('sample exempt mode shows banner and does not persist', async ({ page }) => {
     await page.goto(`${v2Url}?sample=exempt`);
     await expect(page.getByText('Sample result')).toBeVisible();
-    await expect(page.getByRole('heading', { name: /do not have to meet the ABAWD work rules/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: EXEMPT_HEADING })).toBeVisible();
     const stored = await page.evaluate(() => localStorage.getItem('cfo-abawd-screening-v2'));
     expect(stored).toBeNull();
   });
 
   test('good cause sample uses shared logic ids', async ({ page }) => {
     await page.goto(`${v2Url}?sample=goodcause`);
-    await expect(page.getByRole('heading', { name: /good reason for missing hours/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: GOOD_CAUSE_HEADING })).toBeVisible();
     await expect(page.getByText(/transportation/i)).toBeVisible();
   });
 

@@ -1,10 +1,11 @@
 {
-  "name": "snap-calculator",
+  "name": "mlri-preview-site",
   "private": true,
   "scripts": {
     "test": "node --test tests/snap-screening-logic.test.js tests/render-smoke.test.js",
     "check": "node scripts/check-pages.js",
-    "verify": "npm run check && npm test",
+    "guards": "node scripts/publish-mlh.js --check",
+    "verify": "npm run check && npm test && npm run guards",
     "test:e2e": "playwright test",
     "test:all": "npm test && npm run test:e2e"
   },

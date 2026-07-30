@@ -9,3 +9,10 @@
 
 /court-forms/*
   Cache-Control: no-cache
+
+# Same reason as court-forms above: reviewers must see the current build, not a
+# cached one. Added when masslegalhelp/ was created; without it these pages fall
+# through to the default and a reviewer can be looking at yesterday's copy while
+# saying it reads fine.
+/masslegalhelp/*
+  Cache-Control: no-cache

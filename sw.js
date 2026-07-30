@@ -1,6 +1,9 @@
 /* Minimal service worker for Marlie's MLRI Work PWA. */
-const CACHE = 'mlri-work-v3';
-const STATIC_CACHE = 'mlri-work-static-v3';
+/* Bumped to v4 when masslegalhelp/ was added and the shared result copy changed.
+   README explains when to bump: after significant changes, to clear anything left
+   in a returning reviewer's cache. Change both names together. */
+const CACHE = 'mlri-work-v4';
+const STATIC_CACHE = 'mlri-work-static-v4';
 
 // Only precache assets that rarely change. HTML/JS/CSS stay network-first.
 const PRECACHE = [

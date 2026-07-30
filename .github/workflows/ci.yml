@@ -94,6 +94,43 @@ jobs:
             exit 1
           fi
 
+  # The browser tests cannot run on the authoring machine, so before this job
+  # existed they ran nowhere. That is how five assertions in the spec came to
+  # reference an exempt heading the author had already changed: nothing executed
+  # them. A suite that never runs is worse than no suite, because it reads like
+  # coverage.
+  #
+  # Heavier than the other jobs, since it installs Playwright and a browser. It is
+  # the only place these paths are exercised end to end, which earns the minutes.
+  browser:
+    name: Browser tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # npm install, not npm ci: there is no lockfile, and adding one for a single
+      # dev dependency would need keeping in sync for no benefit here.
+      - name: Install Playwright
+        run: npm install
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run browser tests
+        run: npx playwright test --project=chromium
+
+      - name: Upload the report when something fails
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
   # Catches the failure that looks fine in the preview site and 404s in
   # production: a parent-relative or rooted path in the build that gets served
   # from a path on masslegalhelp.org. Guards only, so it changes nothing.
