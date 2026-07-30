@@ -291,6 +291,34 @@ describe('the optional-questions note appears above group 1 only', () => {
   }
 });
 
+/* Quick exit is a safety control, and the failure mode is silent: it navigates
+ * away correctly while leaving the answers on the device. Only the shipping build
+ * has it; the preview builds still use a Back button to the hub. */
+describe('Quick exit clears the stored answers', () => {
+  it('masslegalhelp/index.html', () => {
+    const src = inlineScript(fs.readFileSync(path.join(MLH, 'index.html'), 'utf8'), 'masslegalhelp/index.html');
+    const handler = /case 'quick-exit':[\s\S]*?break;/.exec(src);
+    assert.ok(handler, 'no quick-exit handler found. The top-bar control is the only way out.');
+
+    assert.match(
+      handler[0], /removeItem\(STORAGE_KEY\)/,
+      'Quick exit navigates away without clearing STORAGE_KEY, so a domestic violence ' +
+      'or pregnancy answer stays on the device for the next person using it.'
+    );
+    assert.match(
+      handler[0], /location\.replace/,
+      'Quick exit must use location.replace, not href, or Back returns to the answers.'
+    );
+    // Clearing after navigation would not run.
+    const clearAt = handler[0].indexOf('removeItem');
+    const navAt = handler[0].indexOf('location.replace');
+    assert.ok(
+      clearAt < navAt,
+      'Quick exit navigates before clearing storage, so the clear never happens.'
+    );
+  });
+});
+
 describe('screener pages render without throwing', () => {
   for (const page of PAGES) {
     const html = fs.readFileSync(path.join(page.dir, page.file), 'utf8');

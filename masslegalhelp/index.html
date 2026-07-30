@@ -1271,9 +1271,19 @@ document.addEventListener('click', (e) => {
       SAMPLE_MODE = false;
       state.view = 'intro'; state.step = 0; state.gc = false; state.helpOpen = {}; state.answers = {}; renderWithMotion(); break;
     case 'delete-answers': deleteAnswers(); break;
-    /* replace(), not href: it leaves no history entry, so Back cannot return
-       to a screen holding answers about pregnancy, disability, or safety. */
-    case 'quick-exit': window.location.replace(PRODUCTION_QUICK_EXIT_URL); break;
+    /* Quick exit has to leave nothing behind, not just navigate away.
+     *
+     * replace(), not href, so no history entry survives for Back to return to.
+     * And the stored answers go first: this control exists for someone who needs
+     * to stop being on this page right now, and leaving "pregnant: yes" or a
+     * domestic violence answer in localStorage for the next person on a shared
+     * phone defeats the entire point of it.
+     *
+     * Clearing before navigating, not after, because after does not run. */
+    case 'quick-exit':
+      try{ localStorage.removeItem(STORAGE_KEY); }catch(e){ /* storage blocked; nothing to clear */ }
+      window.location.replace(PRODUCTION_QUICK_EXIT_URL);
+      break;
     case 'print': printForm(); break;
     case 'download-doc': downloadDoc(); break;
     case 'email-self': emailResults(); break;
