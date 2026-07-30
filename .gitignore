@@ -12,6 +12,10 @@ Thumbs.db
 # Node
 node_modules/
 
+# Python bytecode from running the Docassemble package tests locally
+__pycache__/
+*.py[cod]
+
 # Impeccable live mode runtime state (config.json stays tracked)
 .impeccable/live/sessions/
 .impeccable/live/roots.json

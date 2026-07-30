@@ -1,0 +1,788 @@
+{
+  "variant": "classic2",
+  "generated": "by scripts/decision-spec.js",
+  "outcomes": {
+    "order": [
+      "ageinfo",
+      "exempt",
+      "goodcause",
+      "notexempt"
+    ],
+    "ageinfoWhen": "answers.ageRange === 'no'",
+    "exemptWhen": "exemptReasons(answers).length > 0",
+    "goodcauseWhen": "answers.goodcause is set and is not the none sentinel ('__none')",
+    "notexemptWhen": "none of the above",
+    "goodCauseSkippedFor": [
+      "ageinfo",
+      "exempt"
+    ]
+  },
+  "simpleExemptions": [
+    {
+      "id": "child14",
+      "exemptOn": "yes",
+      "reasons": [
+        "Live with a child under 14 years old"
+      ],
+      "text": "Do you live with a child under 14 years old?"
+    },
+    {
+      "id": "health",
+      "exemptOn": "yes",
+      "reasons": [
+        "Have a health reason that makes it hard to work 30 or more hours a week"
+      ],
+      "text": "Do you have a health reason or disability that makes it hard to work at least 30 hours a week?"
+    },
+    {
+      "id": "child6",
+      "exemptOn": "yes",
+      "reasons": [
+        "Take care of a child under 6 years old"
+      ],
+      "text": "Do you take care of a child under 6 years old?"
+    },
+    {
+      "id": "caretaker",
+      "exemptOn": "yes",
+      "reasons": [
+        "Take care of a child or adult who cannot care for themselves"
+      ],
+      "text": "Do you take care of a child or adult who cannot care for themselves?"
+    },
+    {
+      "id": "pregnant",
+      "exemptOn": "yes",
+      "reasons": [
+        "Pregnant"
+      ],
+      "text": "Are you pregnant?"
+    },
+    {
+      "id": "dv",
+      "exemptOn": "yes",
+      "reasons": [
+        "Domestic violence, stalking, sexual harassment, sexual assault, or another safety situation that affects work"
+      ],
+      "text": "Has a domestic violence or safety situation made it hard for you to work?"
+    },
+    {
+      "id": "tribe",
+      "exemptOn": "yes",
+      "reasons": [
+        "Alaska Native or member of a Tribe"
+      ],
+      "text": "Are you an Alaska native or a member of an American Indian, Urban Indian, or California Indian tribe?"
+    },
+    {
+      "id": "tafdc",
+      "exemptOn": "yes",
+      "reasons": [
+        "Get or applying for TAFDC cash assistance"
+      ],
+      "text": "Do you get, or are you applying for TAFDC cash assistance benefits?"
+    },
+    {
+      "id": "substanceUse",
+      "exemptOn": "yes",
+      "reasons": [
+        "Participating in a substance use treatment program"
+      ],
+      "text": "Are you participating in a substance use treatment program?"
+    },
+    {
+      "id": "unemployment",
+      "exemptOn": "yes",
+      "reasons": [
+        "Get or applying for unemployment benefits"
+      ],
+      "text": "Do you get, or are you applying for unemployment benefits?"
+    },
+    {
+      "id": "stateagency",
+      "exemptOn": "yes",
+      "reasons": [
+        "Get services from a state agency"
+      ],
+      "text": "Do you receive services from any state agencies?"
+    },
+    {
+      "id": "school",
+      "exemptOn": "yes",
+      "reasons": [
+        "Enrolled in school half-time or more"
+      ],
+      "text": "Are you enrolled in school half-time or more?"
+    }
+  ],
+  "workOptions": [
+    {
+      "id": "income_weekly",
+      "label": "Yes, I am making $217.50 a week or more (before taxes)",
+      "kind": "income",
+      "reasons": [
+        "Earn enough income to be exempt from the work rules"
+      ]
+    },
+    {
+      "id": "hours_min_wage",
+      "label": "Yes, I am working at least 14.5 hours a week at $15 or more an hour",
+      "kind": "income",
+      "reasons": [
+        "Earn enough income to be exempt from the work rules"
+      ]
+    },
+    {
+      "id": "hours_30",
+      "label": "Yes, I am working 30 hours or more a week (I make less than minimum wage)",
+      "kind": "income",
+      "reasons": [
+        "Work 30 or more hours a week while earning less than minimum wage"
+      ]
+    }
+  ],
+  "disabilityOptions": [
+    {
+      "id": "eaedc",
+      "label": "EAEDC",
+      "reasons": [
+        "Get disability benefits"
+      ]
+    },
+    {
+      "id": "veteran",
+      "label": "Veteran’s disability benefit",
+      "reasons": [
+        "Get disability benefits"
+      ]
+    },
+    {
+      "id": "workers_comp",
+      "label": "Workers’ compensation",
+      "reasons": [
+        "Get disability benefits"
+      ]
+    },
+    {
+      "id": "pfml",
+      "label": "Paid Family Medical Leave",
+      "reasons": [
+        "Get disability benefits"
+      ]
+    },
+    {
+      "id": "std",
+      "label": "Short-term disability",
+      "reasons": [
+        "Get disability benefits"
+      ]
+    },
+    {
+      "id": "ssi_ssdi",
+      "label": "SSI or SSDI",
+      "reasons": [
+        "Get disability benefits"
+      ]
+    },
+    {
+      "id": "other",
+      "label": "Other disability benefit or payment",
+      "reasons": [
+        "Get another disability benefit or payment DTA should review"
+      ]
+    }
+  ],
+  "housingTruthTable": [
+    {
+      "selected": [],
+      "exempt": false
+    },
+    {
+      "selected": [
+        "diploma"
+      ],
+      "exempt": true
+    },
+    {
+      "selected": [
+        "ongoing_care"
+      ],
+      "exempt": true
+    },
+    {
+      "selected": [
+        "diploma",
+        "ongoing_care"
+      ],
+      "exempt": true
+    },
+    {
+      "selected": [
+        "steady_job"
+      ],
+      "exempt": true
+    },
+    {
+      "selected": [
+        "diploma",
+        "steady_job"
+      ],
+      "exempt": false
+    },
+    {
+      "selected": [
+        "ongoing_care",
+        "steady_job"
+      ],
+      "exempt": true
+    },
+    {
+      "selected": [
+        "diploma",
+        "ongoing_care",
+        "steady_job"
+      ],
+      "exempt": true
+    },
+    {
+      "selected": [
+        "full_time_student"
+      ],
+      "exempt": true
+    },
+    {
+      "selected": [
+        "diploma",
+        "full_time_student"
+      ],
+      "exempt": false
+    },
+    {
+      "selected": [
+        "ongoing_care",
+        "full_time_student"
+      ],
+      "exempt": true
+    },
+    {
+      "selected": [
+        "diploma",
+        "ongoing_care",
+        "full_time_student"
+      ],
+      "exempt": true
+    },
+    {
+      "selected": [
+        "steady_job",
+        "full_time_student"
+      ],
+      "exempt": true
+    },
+    {
+      "selected": [
+        "diploma",
+        "steady_job",
+        "full_time_student"
+      ],
+      "exempt": false
+    },
+    {
+      "selected": [
+        "ongoing_care",
+        "steady_job",
+        "full_time_student"
+      ],
+      "exempt": true
+    },
+    {
+      "selected": [
+        "diploma",
+        "ongoing_care",
+        "steady_job",
+        "full_time_student"
+      ],
+      "exempt": true
+    },
+    {
+      "selected": [
+        "hospitalized"
+      ],
+      "exempt": true
+    },
+    {
+      "selected": [
+        "diploma",
+        "hospitalized"
+      ],
+      "exempt": true
+    },
+    {
+      "selected": [
+        "ongoing_care",
+        "hospitalized"
+      ],
+      "exempt": true
+    },
+    {
+      "selected": [
+        "diploma",
+        "ongoing_care",
+        "hospitalized"
+      ],
+      "exempt": true
+    },
+    {
+      "selected": [
+        "steady_job",
+        "hospitalized"
+      ],
+      "exempt": true
+    },
+    {
+      "selected": [
+        "diploma",
+        "steady_job",
+        "hospitalized"
+      ],
+      "exempt": true
+    },
+    {
+      "selected": [
+        "ongoing_care",
+        "steady_job",
+        "hospitalized"
+      ],
+      "exempt": true
+    },
+    {
+      "selected": [
+        "diploma",
+        "ongoing_care",
+        "steady_job",
+        "hospitalized"
+      ],
+      "exempt": true
+    },
+    {
+      "selected": [
+        "full_time_student",
+        "hospitalized"
+      ],
+      "exempt": true
+    },
+    {
+      "selected": [
+        "diploma",
+        "full_time_student",
+        "hospitalized"
+      ],
+      "exempt": true
+    },
+    {
+      "selected": [
+        "ongoing_care",
+        "full_time_student",
+        "hospitalized"
+      ],
+      "exempt": true
+    },
+    {
+      "selected": [
+        "diploma",
+        "ongoing_care",
+        "full_time_student",
+        "hospitalized"
+      ],
+      "exempt": true
+    },
+    {
+      "selected": [
+        "steady_job",
+        "full_time_student",
+        "hospitalized"
+      ],
+      "exempt": true
+    },
+    {
+      "selected": [
+        "diploma",
+        "steady_job",
+        "full_time_student",
+        "hospitalized"
+      ],
+      "exempt": true
+    },
+    {
+      "selected": [
+        "ongoing_care",
+        "steady_job",
+        "full_time_student",
+        "hospitalized"
+      ],
+      "exempt": true
+    },
+    {
+      "selected": [
+        "diploma",
+        "ongoing_care",
+        "steady_job",
+        "full_time_student",
+        "hospitalized"
+      ],
+      "exempt": true
+    },
+    {
+      "selected": "__none",
+      "exempt": true
+    }
+  ],
+  "goodCauseOptions": [
+    {
+      "id": "transport",
+      "label": "Yes — my ride broke down or I have temporary transportation issues",
+      "outcome": "goodcause",
+      "statementText": "No transportation — a temporary loss of transportation, like a broken down car or temporary public transportation shutdown."
+    },
+    {
+      "id": "emergency",
+      "label": "Yes, I have a family or personal emergency",
+      "outcome": "goodcause",
+      "statementText": "Emergency — any family, personal crisis, or emergency situation, and/or if you need to give care or support to others."
+    },
+    {
+      "id": "employment",
+      "label": "Yes, I’m dealing with unreasonable employment",
+      "outcome": "goodcause",
+      "statementText": "Employment issues — an employer or work environment that discriminates on the basis of age, sex, race, religion, ethnicity, or physical or mental disability."
+    }
+  ],
+  "groups": [
+    {
+      "title": "Your Family and Household",
+      "questions": [
+        {
+          "id": "child14",
+          "type": "yn",
+          "showIf": null,
+          "exemptOn": "yes"
+        },
+        {
+          "id": "child6",
+          "type": "yn",
+          "showIf": null,
+          "exemptOn": "yes"
+        },
+        {
+          "id": "caretaker",
+          "type": "yn",
+          "showIf": null,
+          "exemptOn": "yes"
+        },
+        {
+          "id": "pregnant",
+          "type": "yn",
+          "showIf": null,
+          "exemptOn": "yes"
+        }
+      ]
+    },
+    {
+      "title": "Your health, housing, and safety",
+      "questions": [
+        {
+          "id": "health",
+          "type": "yn",
+          "showIf": null,
+          "exemptOn": "yes"
+        },
+        {
+          "id": "housing",
+          "type": "yn",
+          "showIf": null,
+          "exemptOn": null
+        },
+        {
+          "id": "housingFollowup",
+          "type": "multi",
+          "showIf": {
+            "id": "housing",
+            "val": "no"
+          },
+          "exemptOn": null
+        },
+        {
+          "id": "dv",
+          "type": "yn",
+          "showIf": null,
+          "exemptOn": "yes"
+        }
+      ]
+    },
+    {
+      "title": "Public Benefits and Participating in Programs",
+      "questions": [
+        {
+          "id": "tafdc",
+          "type": "yn",
+          "showIf": null,
+          "exemptOn": "yes"
+        },
+        {
+          "id": "disability",
+          "type": "multi",
+          "showIf": null,
+          "exemptOn": null
+        },
+        {
+          "id": "substanceUse",
+          "type": "yn",
+          "showIf": null,
+          "exemptOn": "yes"
+        },
+        {
+          "id": "unemployment",
+          "type": "yn",
+          "showIf": null,
+          "exemptOn": "yes"
+        },
+        {
+          "id": "stateagency",
+          "type": "yn",
+          "showIf": null,
+          "exemptOn": "yes"
+        }
+      ]
+    },
+    {
+      "title": "School, work, and background",
+      "questions": [
+        {
+          "id": "school",
+          "type": "yn",
+          "showIf": null,
+          "exemptOn": "yes"
+        },
+        {
+          "id": "working",
+          "type": "single",
+          "showIf": null,
+          "exemptOn": null
+        },
+        {
+          "id": "tribe",
+          "type": "yn",
+          "showIf": null,
+          "exemptOn": "yes"
+        }
+      ]
+    }
+  ],
+  "thresholds": {
+    "weeklyIncome": 217.5,
+    "minimumWage": 15,
+    "hoursAtMinimumWage": 14.5,
+    "hoursBelowMinimumWage": 30,
+    "ageRange": "18 through 64",
+    "lastVerified": "2025-11"
+  },
+  "examples": [
+    {
+      "name": "Nothing answered",
+      "answers": {},
+      "expect": {
+        "outcome": "notexempt",
+        "reasons": []
+      }
+    },
+    {
+      "name": "Under 18 or over 64",
+      "answers": {
+        "ageRange": "no"
+      },
+      "expect": {
+        "outcome": "ageinfo",
+        "reasons": []
+      }
+    },
+    {
+      "name": "Pregnant",
+      "answers": {
+        "ageRange": "yes",
+        "pregnant": "yes"
+      },
+      "expect": {
+        "outcome": "exempt",
+        "reasons": [
+          "Pregnant"
+        ]
+      }
+    },
+    {
+      "name": "Lives with a child under 14",
+      "answers": {
+        "ageRange": "yes",
+        "child14": "yes"
+      },
+      "expect": {
+        "outcome": "exempt",
+        "reasons": [
+          "Live with a child under 14 years old"
+        ]
+      }
+    },
+    {
+      "name": "Earns $217.50 a week or more",
+      "answers": {
+        "ageRange": "yes",
+        "working": "income_weekly"
+      },
+      "expect": {
+        "outcome": "exempt",
+        "reasons": [
+          "Earn enough income to be exempt from the work rules"
+        ]
+      }
+    },
+    {
+      "name": "30+ hours below minimum wage",
+      "answers": {
+        "ageRange": "yes",
+        "working": "hours_30"
+      },
+      "expect": {
+        "outcome": "exempt",
+        "reasons": [
+          "Work 30 or more hours a week while earning less than minimum wage"
+        ]
+      }
+    },
+    {
+      "name": "Gets SSI or SSDI",
+      "answers": {
+        "ageRange": "yes",
+        "disability": [
+          "ssi_ssdi"
+        ]
+      },
+      "expect": {
+        "outcome": "exempt",
+        "reasons": [
+          "Get disability benefits"
+        ]
+      }
+    },
+    {
+      "name": "Other disability payment only",
+      "answers": {
+        "ageRange": "yes",
+        "disability": [
+          "other"
+        ]
+      },
+      "expect": {
+        "outcome": "exempt",
+        "reasons": [
+          "Get another disability benefit or payment DTA should review"
+        ]
+      }
+    },
+    {
+      "name": "No place to sleep, no diploma",
+      "answers": {
+        "ageRange": "yes",
+        "housing": "no",
+        "housingFollowup": [
+          "steady_job"
+        ]
+      },
+      "expect": {
+        "outcome": "exempt",
+        "reasons": [
+          "No regular place to sleep, and DTA should review unable-to-work factors"
+        ]
+      }
+    },
+    {
+      "name": "No place to sleep, diploma and steady job",
+      "answers": {
+        "ageRange": "yes",
+        "housing": "no",
+        "housingFollowup": [
+          "diploma",
+          "steady_job"
+        ]
+      },
+      "expect": {
+        "outcome": "notexempt",
+        "reasons": []
+      }
+    },
+    {
+      "name": "No place to sleep, none of these apply",
+      "answers": {
+        "ageRange": "yes",
+        "housing": "no",
+        "housingFollowup": "__none"
+      },
+      "expect": {
+        "outcome": "exempt",
+        "reasons": [
+          "No regular place to sleep, and DTA should review unable-to-work factors"
+        ]
+      }
+    },
+    {
+      "name": "Safety concern",
+      "answers": {
+        "ageRange": "yes",
+        "dv": "yes"
+      },
+      "expect": {
+        "outcome": "exempt",
+        "reasons": [
+          "Domestic violence, stalking, sexual harassment, sexual assault, or another safety situation that affects work"
+        ]
+      }
+    },
+    {
+      "name": "Several exemptions at once",
+      "answers": {
+        "ageRange": "yes",
+        "child14": "yes",
+        "pregnant": "yes",
+        "working": "income_weekly"
+      },
+      "expect": {
+        "outcome": "exempt",
+        "reasons": [
+          "Live with a child under 14 years old",
+          "Pregnant",
+          "Earn enough income to be exempt from the work rules"
+        ]
+      }
+    },
+    {
+      "name": "No exemption, transport problem",
+      "answers": {
+        "ageRange": "yes",
+        "goodcause": "transport"
+      },
+      "expect": {
+        "outcome": "goodcause",
+        "reasons": []
+      }
+    },
+    {
+      "name": "No exemption, no good cause",
+      "answers": {
+        "ageRange": "yes",
+        "goodcause": "__none"
+      },
+      "expect": {
+        "outcome": "notexempt",
+        "reasons": []
+      }
+    }
+  ]
+}

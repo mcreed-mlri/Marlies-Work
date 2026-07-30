@@ -22,6 +22,36 @@ Node directly with the bundled binary:
 The Playwright suite (`tests/snap-screening.spec.js`) cannot run locally. CI covers the
 unit and page checks on every push.
 
+Generators and the publish path, same binary. All four are safe to re-run; each
+overwrites its own output and nothing else:
+
+```
+scripts/copy-doc.js                 regenerates SCREENER-COPY.md from the code
+scripts/decision-spec.js            regenerates DECISION-SPEC.md and decision-spec.json
+scripts/gen-docassemble.js          regenerates the interview YAML and ALKiln feature file
+scripts/publish-mlh.js --check      guards on the shipping build, changes nothing
+scripts/publish-mlh.js              guards, then split the deploy branch
+```
+
+Run `decision-spec.js` before `gen-docassemble.js`: the second reads the JSON the
+first writes.
+
+The Docassemble port has its own tests, and there IS a Python on this machine
+(3.12), so unlike Playwright these do run locally:
+
+```
+python docassemble-snap-abawd/tests/test_snap_abawd_parity.py
+python docassemble-snap-abawd/tests/test_good_cause_text.py
+```
+
+They read `decision-spec.json`, so regenerating the spec after a logic change makes
+them check the new behaviour automatically. If you change a rule in the JavaScript
+and not the Python, that is where it surfaces.
+
+`publish-mlh.js` never pushes. It prints the push command and stops. Run it with `--check`
+after any change to `masslegalhelp/`; it catches the failures that look fine in the preview
+site and 404 at the deploy root, mainly parent-relative and rooted paths.
+
 ## Writing style
 
 No em dashes. Use a colon, semicolon, or a second sentence instead. Keep prose short and
@@ -36,10 +66,26 @@ No emoji in UI. Use Lucide line glyphs in a filled circle, white stroke on
 `--navy` / `--blue` / `--green` / `#9a6a00`, matching the result screens in
 `court-forms/snap-screening-v2.html`.
 
-The screener pages load `vendor/lucide.min.js` and call `lucide.createIcons()` because they
-render icons dynamically. The small static pages (`court-forms/index.html`,
-`snap-screening.html`, `snap-how-it-works.html`) inline the SVG instead, to avoid a 361KB
-dependency that would blank the icons if it failed to load.
+Only `court-forms/snap-screening-v2.html` loads `vendor/lucide.min.js` and calls
+`lucide.createIcons()`. Every other page, including both classic builds and the shipping
+`masslegalhelp/index.html`, inlines the SVG instead, to avoid a 361KB dependency that would
+blank the icons if it failed to load. Do not add the vendored copy to a page that does not
+already need it.
+
+## Two homes for the screener
+
+`masslegalhelp/` is the build that ships to the public, at a path on masslegalhelp.org.
+`court-forms/` holds the password-gated builds MLRI reviews internally. Read
+`masslegalhelp/README.md` before touching the shipping one; it carries the deploy contract.
+
+Court Forms Online told us in July 2026 that anything on their site has to be a Docassemble
+interview, so there is no longer a static Court Forms Online deliverable. The static track
+is MassLegalHelp only.
+
+`snap-screening-logic.js` exists twice, once per deployable, byte-identical. Edit one and
+copy it over the other. A test in `tests/render-smoke.test.js` fails if they diverge, and
+that test is the only thing standing between a reviewer approving one page and the public
+getting a different one.
 
 ## Court Forms Online look
 
@@ -53,9 +99,14 @@ are the better pattern and should stay.
 
 ## Contrast model: white page, tinted controls
 
-All `court-forms/` pages are `--bg:#ffffff`, matching production. Separation comes from
-tinting the *controls*, not the page. Do not revert options to a white fill; on a white page
-they would disappear.
+Every page is `--bg:#ffffff`, matching both Court Forms Online and MassLegalHelp. Separation
+comes from tinting the *controls*, not the page. Do not revert options to a white fill; on a
+white page they would disappear.
+
+Because the page is white in both, the control tokens below survived the MassLegalHelp
+rebrand unchanged; only the chrome moved. Host chrome tokens and their measured ratios are
+in `MASSLEGALHELP-BRAND.md`. One trap recorded there: MLH's gold `#e8da8d` is 1.41:1 on
+white, so it is decorative only and must never carry meaning outside the navy bar.
 
 - Option fill `--field:#eef1f5`, hover `--field-hover:#e3e8f0`, selected `--sel:#d7e6f9`
 - Option border `#84909f` (3.25:1 on white, so it satisfies WCAG 1.4.11 for a component
