@@ -16,7 +16,7 @@ the homepage lists them.
 | `archive/` | Two earlier designs, frozen and untested. See `archive/README.md`. |
 | `court-forms/snap-screening-logic.js` | Shared screening logic (questions, thresholds, links, result engine). Exists twice, here and in `masslegalhelp/`, byte-identical, with a test that fails if they drift. |
 | `court-forms/snap-abawd-classic-v2.html` | SNAP ABAWD screening, **classic design, author's copy draft**. Same look as `snap-abawd.html`, rebuilt from the MLRI author's website copy draft (see [Classic v2](#classic-v2-the-authors-copy-draft) below). Supports `?sample=exempt\|goodcause\|notexempt` for hub sample result previews (demo only; nothing saved). |
-| `court-forms/snap-how-it-works.html` | Plain-language explainer of the screening. |
+| `screener/how-it-works.html` | Plain-language explainer of the screening, in the preview site's own look rather than Court Forms chrome. It is documentation about the tool, not part of it. |
 | `functions/_middleware.js` | Cloudflare Pages Function enforcing the site-wide password (see below). |
 | `sw.js` | Service worker. Offline support and update handling for the PWA. |
 | `sw-register.js` | Client script that checks for service worker updates and prompts a refresh. |
