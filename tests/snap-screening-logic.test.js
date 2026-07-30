@@ -304,13 +304,18 @@ describe('snap-screening-logic', () => {
   });
 
   it('RESULT_COPY and buildDtaContactsHtml carry the author results draft', () => {
-    assert.match(RESULT_COPY.exemptHeading, /Good news: You are exempt/);
-    // Only "Good news:", "exempt", and "do not" carry emphasis, and the plain
-    // string must stay in sync with the marked-up one.
+    // The heading must not assert an exemption the screening cannot confirm.
+    assert.match(RESULT_COPY.exemptHeading, /^You may be exempt and do not need to meet the ABAWD work rules because of these reasons:$/);
+    assert.doesNotMatch(RESULT_COPY.exemptHeading, /Good news|You are exempt/);
+    // Only "exempt" and "do not need to meet the ABAWD work rules" carry
+    // emphasis, and the plain string must stay in sync with the marked-up one.
     const headingHtml = exemptHeadingHtml();
     assert.equal(headingHtml.replace(/<\/?strong>/g, ''), RESULT_COPY.exemptHeading);
-    assert.equal(headingHtml.match(/<strong>/g).length, 3);
-    assert.match(headingHtml, /<strong>Good news:<\/strong> You are <strong>exempt<\/strong> and <strong>do not<\/strong> have to meet the ABAWD work rules/);
+    assert.equal(headingHtml.match(/<strong>/g).length, 2);
+    assert.match(headingHtml, /^You may be <strong>exempt<\/strong> and <strong>do not need to meet the ABAWD work rules<\/strong> because of these reasons:$/);
+    // The heading absorbed this sentence, so it must stay empty and every
+    // render site must omit the paragraph rather than print a blank one.
+    assert.equal(RESULT_COPY.exemptReasonsIntro, '');
     assert.match(RESULT_COPY.formTitleExempt, /^Tell DTA that you are exempt as soon as you can\.$/);
     /* "myself" has to stay in the label. Every other button on this screen
      * sends something to DTA, so a bare "Email" reads as emailing DTA, and a
@@ -321,7 +326,7 @@ describe('snap-screening-logic', () => {
     assert.match(RESULT_COPY.printFormLabel, /^Print or save this form$/);
     assert.match(RESULT_COPY.downloadWordLabel, /^Download as Word$/);
     assert.match(RESULT_COPY.savingTipsBody, /Save as PDF/);
-    assert.match(RESULT_COPY.printLead, /You can also email yourself a copy of these results\.$/);
+    assert.match(RESULT_COPY.printLead, /\(More info on how to contact DTA in the box below\)$/);
     assert.match(RESULT_COPY.whyInfoLabel, /^Why are we asking for more information\?$/);
     // The pop-up wording is exemption-specific, so good cause gets its own.
     assert.match(RESULT_COPY.whyInfoExempt, /^Telling DTA about your exemption can help them update your SNAP case more quickly\./);

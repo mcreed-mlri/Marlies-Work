@@ -3,25 +3,34 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ABAWD Screening Tool · Court Forms Online</title>
+<title>SNAP Work Rules Screening | Massachusetts Legal Help</title>
 <meta name="description" content="A short, private screening to check if you need to meet the SNAP ABAWD work rules or if you are exempt.">
 <link rel="stylesheet" href="fonts/atkinson.css">
 <!-- impeccable-disable single-font -- Atkinson Hyperlegible is the legibility choice for this audience; a display-font pairing would work against it. -->
 <style>
+  /* MassLegalHelp build. Chrome tokens are theirs, read off masslegalhelp.org on
+     2026-07-30 and recorded with measured ratios in MASSLEGALHELP-BRAND.md.
+     The control tokens below the chrome are unchanged from the Court Forms
+     Online build, because the page is white in both and only the chrome moved.
+
+     Atkinson Hyperlegible stays. MassLegalHelp sets body copy in Montserrat and
+     headings in Domine, but Atkinson was chosen for low-vision readers and that
+     outranks matching a host font. Revisit only with their font files in hand. */
   :root{
-    --accent:#1a5fb4;
-    --navy:#0a2b52;
-    --yellow:#f4bd3f;
-    --accent-dark:#124a8f;
-    --soft:#e8f0fb;
+    --accent:#0057a2;       /* 7.28:1, MLH accent blue. Was #1a5fb4 */
+    --navy:#1e2e5f;         /* MLH header bar */
+    --yellow:#e8da8d;       /* MLH gold. 9.21:1 on --navy, only 1.41:1 on white:
+                               never use it for meaning outside the navy bar */
+    --accent-dark:#1f2c5c;  /* 13.35:1, MLH brand navy, result headings */
+    --soft:#d3e7ff;         /* MLH pale blue band */
     --bg:#ffffff;
     --field:#eef1f5;
     --field-hover:#e3e8f0;
     --sel:#d7e6f9;
-    --ink:#1b1f27;
+    --ink:#1f2c5c;          /* 13.35:1, MLH sets headings and body in one navy */
     /* Text and boundary values that used to be repeated as literals through the
        render templates. Ratios are against --bg unless noted. */
-    --prose:#3a424e;        /* 10.15:1, long-form paragraph text */
+    --prose:#1f2c5c;        /* 13.35:1, matches MLH body copy. Was #3a424e at 10.15:1 */
     --muted:#5b6470;        /* 6:1, captions and quiet controls */
     --panel:#c8d2e0;        /* non-interactive panel border */
     --stroke:#767f8c;       /* 4.05:1, input strokes and mark borders */
@@ -91,10 +100,13 @@
     display:flex;align-items:center;justify-content:space-between;gap:12px;
     padding:12px max(16px, env(safe-area-inset-right)) 12px max(16px, env(safe-area-inset-left));
     background:var(--navy);color:#fff;
+    /* The gold rule under the header is MassLegalHelp's strongest chrome cue.
+       Decorative only, which is why 1.41:1 against white is acceptable here. */
+    border-bottom:4px solid var(--yellow);
   }
   .topbar-brand{display:flex;align-items:center;gap:12px;min-width:0}
-  .topbar-title{font-size:15px;font-weight:700;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .topbar-sub{font-size:12px;opacity:.85;line-height:1.2}
+  .topbar-title{font-size:17px;font-weight:700;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .topbar-sub{font-size:12px;opacity:.9;line-height:1.2}
   .btn-exit{
     flex:none;font-size:13px;font-weight:700;color:var(--navy);background:#fff;border:none;
     border-radius:999px;padding:10px 14px;cursor:pointer;min-height:44px;
@@ -194,13 +206,12 @@
 <!-- Top bar -->
 <div class="no-print topbar">
   <div class="topbar-brand">
-    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none;stroke:var(--yellow)"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
     <div style="min-width:0">
-      <div class="topbar-title">Court Forms Online</div>
-      <div class="topbar-sub">SNAP · ABAWD Screening Tool</div>
+      <div class="topbar-title">Mass Legal Help</div>
+      <div class="topbar-sub">Massachusetts Legal Information</div>
     </div>
   </div>
-  <button type="button" class="btn-exit" data-action="go-back" title="Back to the screening home page">← Back</button>
+  <button type="button" class="btn-exit" data-action="quick-exit" title="Leave this page now">Quick exit</button>
 </div>
 
 <!-- Progress -->
@@ -209,6 +220,33 @@
 <!-- Stage -->
 <main id="stage"></main>
 
+<!-- Footer, matching the MassLegalHelp pattern: gold rule, navy band, darker
+     strip. Every URL here was read off their live footer, except that Terms of
+     Use and Privacy Policy are NOT in their <footer> element and their URLs are
+     still unknown. They are deliberately absent rather than guessed, because a
+     Terms link that 404s on a public benefits page is worse than none. Add them
+     before launch; see masslegalhelp/README.md. -->
+<footer class="no-print" style="border-top:4px solid var(--yellow);background:var(--navy);color:#fff;margin-top:40px">
+  <div style="max-width:660px;margin:0 auto;padding:22px max(16px, env(safe-area-inset-right)) 18px max(16px, env(safe-area-inset-left))">
+    <div style="font-size:17px;font-weight:700;line-height:1.1">Mass Legal Help</div>
+    <div style="font-size:12px;opacity:.9;margin-top:3px">Massachusetts Legal Information</div>
+    <p style="font-size:13.5px;line-height:1.6;margin:14px 0 0">
+      This screening gives you information about the SNAP work rules. It is not legal
+      advice, it does not tell DTA anything, and it does not change your SNAP case.
+    </p>
+    <nav aria-label="Massachusetts Legal Help" style="display:flex;flex-wrap:wrap;gap:10px 20px;margin:16px 0 0;font-size:14px">
+      <a href="https://www.masslegalhelp.org/public-benefits-ssi/snap-food-benefits/snap-3-month-time-limit-abawd-work-rules" style="color:#fff">About the ABAWD work rules</a>
+      <a href="https://www.masslegalhelp.org/legal-topics" style="color:#fff">Legal Topics</a>
+      <a href="https://www.masslegalhelp.org/about/contact-us" style="color:#fff">Contact Us</a>
+    </nav>
+  </div>
+  <div style="background:#0c1639">
+    <div style="max-width:660px;margin:0 auto;padding:12px max(16px, env(safe-area-inset-right)) 12px max(16px, env(safe-area-inset-left));font-size:12.5px">
+      Written by the Massachusetts Law Reform Institute.
+    </div>
+  </div>
+</footer>
+
 <script src="snap-screening-logic.js"></script>
 <script>
 "use strict";
@@ -216,7 +254,7 @@
 /* Shared screening logic (see snap-screening-logic.js).
  * 'classic2' is the author's website copy draft in the classic design. */
 const S = SnapScreening.create('classic2');
-const { GOODCAUSE_CATEGORIES, GROUPS, NONE, SCREENING_HUB_URL, LINKS } = S;
+const { GOODCAUSE_CATEGORIES, GROUPS, NONE, PRODUCTION_QUICK_EXIT_URL, LINKS } = S;
 const { RESULT_COPY, exemptHeadingHtml, exemptProofNotes, buildDtaContactsHtml, buildResultsEmailContent, buildResultsMailto } = SnapScreening;
 
 /* ------------------------------------------------------------------ *
@@ -466,11 +504,16 @@ function renderProgress(){
   let pct, label;
   if(state.gc){ pct = 100; label = 'Last question'; }
   else { const cur = state.step + 1; pct = Math.round((cur / total) * 100); label = `Section ${cur} of ${total}`; }
-  /* Built once, then updated in place. See the same block in
-   * masslegalhelp/index.html: reassigning innerHTML on every render destroyed
-   * the live region before it could announce, so section changes were silent to
-   * a screen reader even though the bar animated. Kept identical here so the
-   * preview a reviewer approves behaves like the page the public gets. */
+  /* Built once, then updated in place.
+   *
+   * This used to reassign el.innerHTML on every render, which quietly defeated
+   * the announcement. A live region has to already exist in the DOM when its
+   * contents change; destroying and recreating it means a screen reader has
+   * nothing to compare against and stays silent. Someone using one got no word
+   * that the section had changed, even though the bar animated.
+   *
+   * Queried by data attribute rather than class because check-pages.js fails a
+   * class that appears in markup with no CSS rule behind it. */
   if(!el.firstChild){
     el.innerHTML =
       `<div style="height:6px;background:#dbe3ef" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="Screening progress" data-progress-bar>`
@@ -613,9 +656,17 @@ function renderPage(){
     ? `<p style="font-size:14.5px;line-height:1.55;color:var(--warn-ink);margin:16px 0 0;padding:12px 14px;background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:var(--radius)">If you skipped questions, you may not see exemptions that apply to you.</p>`
     : '';
 
+  /* The "every question is optional" line is the author's, and she asked for it
+     on the first group only. It used to repeat above all four, which read as
+     nagging by the third one. Someone who reaches group 2 has already answered
+     optional questions and knows how this works. */
+  const optionalNote = state.step === 0
+    ? `<p style="font-size:15.5px;line-height:1.55;color:var(--prose);margin:8px 0 0">Answer any that apply to you. Every question is optional.</p>`
+    : '';
+
   const header = state.gc ? '' : `<div style="margin:0 0 18px">
     <h1 class="h2">${esc(curGroup().title)}</h1>
-    ${state.step === 0 ? `<p style="font-size:15.5px;line-height:1.55;color:var(--prose);margin:8px 0 0">Answer any that apply to you. Every question is optional.</p>` : ''}
+    ${optionalNote}
   </div>`;
 
   const blocks = pageQuestions().map(renderQBlock).join('');
@@ -1049,7 +1100,7 @@ function render(){
   const stage = document.getElementById('stage');
   if(state.view === 'intro') stage.innerHTML = renderIntro();
   else if(state.view === 'question') stage.innerHTML = renderPage();
-  else stage.innerHTML = (SAMPLE_MODE ? sampleBanner() : '') + renderResults();
+  else stage.innerHTML = renderResults();
 
   state.animate = false;
   initSignaturePad();
@@ -1220,7 +1271,9 @@ document.addEventListener('click', (e) => {
       SAMPLE_MODE = false;
       state.view = 'intro'; state.step = 0; state.gc = false; state.helpOpen = {}; state.answers = {}; renderWithMotion(); break;
     case 'delete-answers': deleteAnswers(); break;
-    case 'go-back': window.location.href = SCREENING_HUB_URL; break;
+    /* replace(), not href: it leaves no history entry, so Back cannot return
+       to a screen holding answers about pregnancy, disability, or safety. */
+    case 'quick-exit': window.location.replace(PRODUCTION_QUICK_EXIT_URL); break;
     case 'print': printForm(); break;
     case 'download-doc': downloadDoc(); break;
     case 'email-self': emailResults(); break;
@@ -1262,40 +1315,19 @@ function refitSignatureOnResize(){
 window.addEventListener('resize', refitSignatureOnResize, { passive: true });
 window.addEventListener('orientationchange', refitSignatureOnResize);
 
-/* ------------------------------------------------------------------ *
- * Sample previews (demo only)
- * ?sample=exempt | goodcause | notexempt jumps straight to a sample
- * result screen, reusing the real result rendering so a sample can
- * never drift from the tool. Nothing is saved in this mode.
- * ------------------------------------------------------------------ */
-function applySampleFromURL(){
-  let p = '';
-  try{ p = (new URLSearchParams(location.search).get('sample') || '').toLowerCase(); }catch(e){}
-  if(!p) return false;
-  if(p === 'exempt') state.answers = { child14:'yes', health:'yes', caretaker:'yes' };
-  else if(p === 'goodcause') state.answers = { goodcause:'transport' };
-  else if(p === 'notexempt') state.answers = { goodcause: NONE };
-  else if(p === 'meeting') state.answers = { working: 'hours_30' }; // legacy sample URL
-  else return false;
-  SAMPLE_MODE = true;
-  state.view = 'results';
-  state.gc = false;
-  return true;
-}
+/* The preview build has a ?sample= mode that jumps to a result screen for
+ * reviewers, plus a banner linking back to the sample index. Both are gone from
+ * this build. A public benefits page should not carry a hidden demo mode, and
+ * the banner's links pointed at preview-site pages that do not exist here.
+ *
+ * SAMPLE_MODE stays declared and permanently false so the guards that read it,
+ * including the one stopping a preview from overwriting a real saved session,
+ * keep evaluating exactly as they do in the preview build. */
 
-function sampleBanner(){
-  return `<div class="no-print" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:var(--radius);padding:14px 18px;margin:0 0 18px">
-    <span style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--warn-ink)">Sample result</span>
-    <span style="font-size:15px;line-height:1.5;color:var(--prose);flex:1;min-width:200px">An example of one outcome. No questions were answered, and nothing is saved.</span>
-    <span style="display:flex;gap:14px;font-size:14.5px"><a href="snap-screening.html" style="font-weight:700">← All samples</a><a href="snap-abawd-classic-v2.html" style="font-weight:700">Try it for real →</a></span>
-  </div>`;
-}
-
-if(!applySampleFromURL()){ loadPersisted(); }
+loadPersisted();
 initHintTips();
 state.animate = true;
 render();
 </script>
-<script src="../sw-register.js"></script>
 </body>
 </html>

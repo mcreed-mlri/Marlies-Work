@@ -25,6 +25,7 @@ const vm = require('vm');
 const ROOT = path.join(__dirname, '..');
 const PAGE_GLOBS = [
   'court-forms',
+  'masslegalhelp',
   '.'
 ];
 

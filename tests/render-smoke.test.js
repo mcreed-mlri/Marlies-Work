@@ -21,7 +21,19 @@ const path = require('node:path');
 const vm = require('node:vm');
 
 const COURT_FORMS = path.join(__dirname, '..', 'court-forms');
-const PAGES = ['snap-abawd.html', 'snap-abawd-classic-v2.html', 'snap-screening-v2.html'];
+const MLH = path.join(__dirname, '..', 'masslegalhelp');
+const LOGIC_FILE = 'snap-screening-logic.js';
+
+/* The MassLegalHelp build is a separate deployable, so it carries its own copy
+ * of the logic module and is driven through every screen here too. It is the one
+ * that ships to the public, so leaving it uncovered would put the tested pages
+ * and the shipping page in different places. */
+const PAGES = [
+  { label: 'court-forms/snap-abawd.html', dir: COURT_FORMS, file: 'snap-abawd.html' },
+  { label: 'court-forms/snap-abawd-classic-v2.html', dir: COURT_FORMS, file: 'snap-abawd-classic-v2.html' },
+  { label: 'court-forms/snap-screening-v2.html', dir: COURT_FORMS, file: 'snap-screening-v2.html' },
+  { label: 'masslegalhelp/index.html', dir: MLH, file: 'index.html' }
+];
 
 /* Result screens to drive, as answer sets. Keyed so a failure names the screen. */
 const SCREENS = {
@@ -182,31 +194,121 @@ function buildContext() {
   return { ctx, stage };
 }
 
-const LOGIC_SRC = fs.readFileSync(path.join(COURT_FORMS, 'snap-screening-logic.js'), 'utf8');
-
 function inlineScript(html, file) {
   const m = /<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/i.exec(html);
   assert.ok(m, file + ' has no inline <script> block');
   return m[1];
 }
 
+/* Two deployables, two copies of the decision logic. A copy that drifts is the
+ * worst failure available here: the preview a reviewer signs off on would stop
+ * matching the page the public gets, and nothing else would notice. */
+describe('the shipping build shares the reviewed logic module', () => {
+  it('masslegalhelp and court-forms hold identical copies', () => {
+    const a = fs.readFileSync(path.join(COURT_FORMS, LOGIC_FILE), 'utf8');
+    const b = fs.readFileSync(path.join(MLH, LOGIC_FILE), 'utf8');
+    assert.equal(
+      b, a,
+      'masslegalhelp/' + LOGIC_FILE + ' has drifted from court-forms/' + LOGIC_FILE +
+      '. Copy the reviewed one over the other; do not edit them separately.'
+    );
+  });
+});
+
+/* The progress announcement broke once by being written the obvious way, so it
+ * gets a guard. Reassigning the container's innerHTML on every render destroys
+ * the live region before it can announce, and the failure is invisible unless
+ * you are actually using a screen reader: the bar still animates.
+ *
+ * Source assertions, not behaviour, because the DOM shim in this file returns a
+ * fresh stub from querySelector and so cannot observe element identity across
+ * renders. Narrow, but it catches the specific regression.
+ *
+ * Only the two live builds are checked. snap-abawd.html and snap-screening-v2.html
+ * are frozen previews that still have the original pattern and are not shipping. */
+describe('the progress label announces section changes', () => {
+  const LIVE_BUILDS = [
+    { label: 'masslegalhelp/index.html', dir: MLH, file: 'index.html' },
+    { label: 'court-forms/snap-abawd-classic-v2.html', dir: COURT_FORMS, file: 'snap-abawd-classic-v2.html' }
+  ];
+  for (const build of LIVE_BUILDS) {
+    it(build.label, () => {
+      const src = inlineScript(fs.readFileSync(path.join(build.dir, build.file), 'utf8'), build.label);
+      const fn = /function renderProgress\(\)\{[\s\S]*?\n\}/.exec(src);
+      assert.ok(fn, 'renderProgress not found in ' + build.label);
+      const body = fn[0];
+
+      assert.match(
+        body, /role="status" aria-live="polite"/,
+        build.label + ': the progress label needs a polite live region, or a screen ' +
+        'reader user is never told the section changed.'
+      );
+      assert.match(
+        body, /if\(!el\.firstChild\)\{/,
+        build.label + ': the live region must be built once and then updated. Without ' +
+        'the guard, every render recreates it and nothing is announced.'
+      );
+      assert.match(
+        body, /\[data-progress-label\][\s\S]*textContent/,
+        build.label + ': the label must be updated via textContent on the persistent ' +
+        'node, not rebuilt as part of an innerHTML string.'
+      );
+      /* The tell of the old shape. Baking the label into the HTML string means
+       * the text can only change by rebuilding the node it lives in, which is
+       * the thing that silences the announcement. The guarded rebuild above
+       * still assigns innerHTML once, so the assignment itself is not the
+       * signal; the interpolated label is. */
+      assert.doesNotMatch(
+        body, /\$\{label\}/,
+        build.label + ': the label is interpolated into the innerHTML string again, ' +
+        'so it can only update by recreating the live region. Set textContent on the ' +
+        'persistent node instead.'
+      );
+    });
+  }
+});
+
+/* The author asked for the "every question is optional" line above the first
+ * group only. It is a one-line change that a later edit to the group header
+ * could undo without anyone noticing, so it gets an assertion. */
+describe('the optional-questions note appears above group 1 only', () => {
+  for (const build of [
+    { label: 'masslegalhelp/index.html', dir: MLH, file: 'index.html' },
+    { label: 'court-forms/snap-abawd-classic-v2.html', dir: COURT_FORMS, file: 'snap-abawd-classic-v2.html' }
+  ]) {
+    it(build.label, () => {
+      const src = inlineScript(fs.readFileSync(path.join(build.dir, build.file), 'utf8'), build.label);
+      const note = /Answer any that apply to you\. Every question is optional\./;
+      assert.match(src, note, build.label + ': the note is gone entirely.');
+      // The line has to sit behind a first-group condition, not render every time.
+      const guarded = /state\.step === 0[\s\S]{0,400}?Answer any that apply to you/.test(src);
+      assert.ok(
+        guarded,
+        build.label + ': the optional-questions note is not gated on state.step === 0, so ' +
+        'it renders above every group again. The author asked for group 1 only.'
+      );
+    });
+  }
+});
+
 describe('screener pages render without throwing', () => {
   for (const page of PAGES) {
-    const html = fs.readFileSync(path.join(COURT_FORMS, page), 'utf8');
-    const src = inlineScript(html, page);
+    const html = fs.readFileSync(path.join(page.dir, page.file), 'utf8');
+    const src = inlineScript(html, page.label);
+    const logic = fs.readFileSync(path.join(page.dir, LOGIC_FILE), 'utf8');
 
-    it(page + ' parses as a script', () => {
-      new vm.Script(src, { filename: page });
+    it(page.label + ' parses as a script', () => {
+      new vm.Script(src, { filename: page.label });
     });
 
     for (const [screen, driver] of Object.entries(SCREENS)) {
-      it(page + ' renders ' + screen, () => {
+      it(page.label + ' renders ' + screen, () => {
         const { ctx, stage } = buildContext();
         vm.createContext(ctx);
-        vm.runInContext(LOGIC_SRC, ctx, { filename: 'snap-screening-logic.js' });
+        vm.runInContext(logic, ctx, { filename: LOGIC_FILE });
         // Appended so the driver shares the page script's lexical scope, which
         // is where `state` and `render` live in a classic (non-module) script.
-        vm.runInContext(src + '\n;(function(){' + driver + '})();', ctx, { filename: page });
+        vm.runInContext(src + '\n;(function(){' + driver + '})();', ctx, { filename: page.label });
         assert.ok(
           stage.innerHTML.length > 200,
           screen + ' rendered only ' + stage.innerHTML.length + ' chars into #stage'
@@ -217,11 +319,11 @@ describe('screener pages render without throwing', () => {
     /* Button paths. These assert "did not throw" rather than checking output,
      * since print and download write elsewhere or hand off to the browser. */
     for (const [action, driver] of Object.entries(ACTIONS)) {
-      it(page + ' survives ' + action, () => {
+      it(page.label + ' survives ' + action, () => {
         const { ctx } = buildContext();
         vm.createContext(ctx);
-        vm.runInContext(LOGIC_SRC, ctx, { filename: 'snap-screening-logic.js' });
-        vm.runInContext(src + '\n;(function(){' + driver + '})();', ctx, { filename: page });
+        vm.runInContext(logic, ctx, { filename: LOGIC_FILE });
+        vm.runInContext(src + '\n;(function(){' + driver + '})();', ctx, { filename: page.label });
       });
     }
   }
@@ -237,9 +339,9 @@ describe('screener pages render without throwing', () => {
  * ------------------------------------------------------------------------- */
 describe('page scripts declare every constant they interpolate', () => {
   for (const page of PAGES) {
-    it(page, () => {
-      const html = fs.readFileSync(path.join(COURT_FORMS, page), 'utf8');
-      const src = inlineScript(html, page);
+    it(page.label, () => {
+      const html = fs.readFileSync(path.join(page.dir, page.file), 'utf8');
+      const src = inlineScript(html, page.label);
 
       // Root identifier of each ${...}, e.g. "LINKS" from "${LINKS.abawd}".
       const used = new Set();
@@ -259,7 +361,7 @@ describe('page scripts declare every constant they interpolate', () => {
       const missing = [...used].filter(n => !declared.has(n));
       assert.deepEqual(
         missing, [],
-        'interpolated but never declared in ' + page + ': ' + missing.join(', ') +
+        'interpolated but never declared in ' + page.label + ': ' + missing.join(', ') +
         '. A deleted const still referenced inside a template literal parses fine ' +
         'and throws at render time, blanking the page.'
       );

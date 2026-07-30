@@ -78,8 +78,12 @@ Online chrome so a finished tool can be dropped in without a redesign first.
   updated language. `snap-abawd.html` (classic) and `snap-screening-v2.html` (accessible
   redesign) stay in the repo but are not where work goes; do not assume a change must be
   carried across all three.
-- The screening cannot start until the visitor accepts the Terms of Use. The Start button is
-  disabled and the guard is repeated in code.
+- Terms of Use gating is inconsistent, and this entry used to claim otherwise. In `classic`
+  and `v2`, `canStart()` requires `state.agreed` and the Start button stays disabled until
+  the visitor accepts. In `classic2`, the variant that ships, `canStart()` checks only the
+  age answer and there is no Terms of Use text on the page at all. Undecided and not ours to
+  settle: whether the tool inherits the host site's terms, MassLegalHelp having its own, or
+  needs its own gate.
 - Screener copy is author-supplied and frozen. See Brand Commitments.
 - Undecided, and not ours to resolve silently: the launch questions listed in README.md
   (30+ hours below minimum wage routing, "other disability benefit" routing, housing result
