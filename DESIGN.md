@@ -119,8 +119,31 @@ typography:
     fontWeight: 400
     lineHeight: 1.2
     letterSpacing: "0.06em"
+  question:
+    fontFamily: "Atkinson Hyperlegible, system-ui, -apple-system, sans-serif"
+    fontSize: "clamp(18px, 4.6vw, 21px)"
+    fontWeight: 700
+    lineHeight: 1.3
+    letterSpacing: "-0.01em"
+  panel-title:
+    fontFamily: "Atkinson Hyperlegible, system-ui, -apple-system, sans-serif"
+    fontSize: "18px"
+    fontWeight: 700
+    lineHeight: 1.3
+  caption:
+    fontFamily: "Atkinson Hyperlegible, system-ui, -apple-system, sans-serif"
+    fontSize: "13px"
+    fontWeight: 700
+    lineHeight: 1.4
+  control-small:
+    fontFamily: "Atkinson Hyperlegible, system-ui, -apple-system, sans-serif"
+    fontSize: "13.5px"
+    fontWeight: 700
+    lineHeight: 1.3
 rounded:
   focus: "3px"
+  xs: "4px"
+  mark: "6px"
   sm: "7px"
   md: "10px"
   lg: "12px"
