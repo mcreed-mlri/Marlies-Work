@@ -19,8 +19,14 @@ Node directly with the bundled binary:
 "$LOCALAPPDATA/OpenAI/Codex/bin/node.exe" --test tests/snap-screening-logic.test.js tests/render-smoke.test.js
 ```
 
-The Playwright suite (`tests/snap-screening.spec.js`) cannot run locally. CI covers the
-unit and page checks on every push.
+The Playwright suite (`tests/snap-screening.spec.js`) cannot run locally.
+
+CI runs five jobs on every push: the unit and render tests, the page checks, the
+JavaScript-to-Python decision parity, a check that every generated file is current,
+and the publish guards on the shipping build. The last two exist because both
+failures are silent. A stale `SCREENER-COPY.md` means the author reviews copy the
+tool no longer has, and a parent-relative path works in the preview site and 404s
+in production.
 
 Generators and the publish path, same binary. All four are safe to re-run; each
 overwrites its own output and nothing else:

@@ -35,3 +35,77 @@ jobs:
 
       - name: Check page scripts parse and files are valid UTF-8
         run: node scripts/check-pages.js
+
+  # The screening logic exists twice: JavaScript for the web builds, Python for
+  # the Docassemble port. This job is the only thing that notices when someone
+  # changes a rule in one and not the other. It needs no dependencies; the tests
+  # use the standard library and read their expectations from decision-spec.json,
+  # which is generated from the JavaScript.
+  decision-parity:
+    name: Docassemble port matches the reference
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Decision logic parity
+        run: python docassemble-snap-abawd/tests/test_snap_abawd_parity.py
+
+      - name: Good cause statement wording
+        run: python docassemble-snap-abawd/tests/test_good_cause_text.py
+
+  # Several files in the repo are generated from the code, and going stale is
+  # silent. SCREENER-COPY.md going stale is the worst case: the author would be
+  # reviewing copy the tool no longer has. Regenerating on a clean checkout must
+  # produce no diff.
+  #
+  # Together with decision-parity above this closes the loop. Change a rule and
+  # forget to regenerate the spec, this job fails. Regenerate the spec and forget
+  # to update the Python, that job fails.
+  generated-files:
+    name: Generated files are current
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # decision-spec.js writes the JSON that gen-docassemble.js reads, so the
+      # order matters.
+      - name: Regenerate
+        run: |
+          node scripts/copy-doc.js
+          node scripts/decision-spec.js
+          node scripts/gen-docassemble.js
+
+      - name: Fail if anything changed
+        run: |
+          if git diff --quiet; then
+            echo "Generated files are current."
+          else
+            echo "::error::Generated files are out of date. Run the generators listed in CLAUDE.md and commit the result."
+            git diff --stat
+            git diff
+            exit 1
+          fi
+
+  # Catches the failure that looks fine in the preview site and 404s in
+  # production: a parent-relative or rooted path in the build that gets served
+  # from a path on masslegalhelp.org. Guards only, so it changes nothing.
+  shipping-build:
+    name: Shipping build is self-contained
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Publish guards
+        run: node scripts/publish-mlh.js --check
