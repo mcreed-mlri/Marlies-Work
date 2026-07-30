@@ -263,12 +263,27 @@ const { RESULT_COPY, exemptHeadingHtml, exemptProofNotes, buildDtaContactsHtml, 
 
 const state = { view:'intro', step:0, gc:false, helpOpen:{}, answers:{}, animate:true };
 
-/* ---- Local, 1-day retention -------------------------------------- *
- * Answers are kept only in this browser (never sent anywhere) and are
- * discarded automatically after RETENTION_MS. The results screen also
- * offers an explicit "Delete my answers" control.
+/* ---- Tab-scoped storage, nothing left behind --------------------- *
+ * sessionStorage, not localStorage. Answers survive a refresh or a stray
+ * navigation in this tab and are erased the moment the tab closes.
+ *
+ * The preview builds use localStorage and keep answers for a day, so someone
+ * can come back tomorrow. This build deliberately does not. The questions
+ * cover pregnancy, disability, substance use treatment, and domestic
+ * violence, PRODUCT.md says to assume a shared or monitored phone, and a day
+ * of recoverable answers on a borrowed phone is a worse trade than losing
+ * resume-tomorrow on a screening that takes three minutes. Raised by the
+ * MassLegalHelp vendor, decided by Marlie, 2026-07-30.
+ *
+ * RETENTION_MS still applies. sessionStorage already ends with the tab, so
+ * this only bounds a tab left open for days.
+ *
+ * Own key, not the one the preview builds use. On the preview site every
+ * build is served from one origin, and this file previously carried the same
+ * key as snap-abawd-classic-v2.html, so the two overwrote each other's
+ * answers during review.
  * ------------------------------------------------------------------ */
-const STORAGE_KEY = 'cfo-abawd-classic-v2-screening-v1';
+const STORAGE_KEY = 'mlh-snap-work-rules-v1';
 const RETENTION_MS = 24 * 60 * 60 * 1000; // 1 day
 let SAMPLE_MODE = false; // true when showing a ?sample= preview result
 let sigCanvas = null, sigCtx = null, sigHint = null, sigDrawn = false; // finger/mouse signature pad
@@ -276,7 +291,7 @@ let sigCanvas = null, sigCtx = null, sigHint = null, sigDrawn = false; // finger
 function persist(){
   if(SAMPLE_MODE) return; // a sample preview must never overwrite a real saved session
   try{
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify({
       view:state.view, step:state.step, gc:state.gc,
       answers:state.answers, savedAt:Date.now()
     }));
@@ -285,11 +300,11 @@ function persist(){
 
 function loadPersisted(){
   try{
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = sessionStorage.getItem(STORAGE_KEY);
     if(!raw) return;
     const d = JSON.parse(raw);
     if(!d || typeof d.savedAt !== 'number' || (Date.now() - d.savedAt) > RETENTION_MS){
-      localStorage.removeItem(STORAGE_KEY);
+      sessionStorage.removeItem(STORAGE_KEY);
       return;
     }
     state.view = d.view || 'intro';
@@ -299,12 +314,12 @@ function loadPersisted(){
     state.gc = !!d.gc;
     state.answers = (d.answers && typeof d.answers === 'object') ? S.migrateAnswers(d.answers) : {};
   }catch(e){
-    try{ localStorage.removeItem(STORAGE_KEY); }catch(_){}
+    try{ sessionStorage.removeItem(STORAGE_KEY); }catch(_){}
   }
 }
 
 function deleteAnswers(){
-  try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+  try{ sessionStorage.removeItem(STORAGE_KEY); }catch(e){}
   SAMPLE_MODE = false;
   state.view = 'intro'; state.step = 0; state.gc = false;
   state.helpOpen = {}; state.answers = {};
@@ -1276,12 +1291,12 @@ document.addEventListener('click', (e) => {
      * replace(), not href, so no history entry survives for Back to return to.
      * And the stored answers go first: this control exists for someone who needs
      * to stop being on this page right now, and leaving "pregnant: yes" or a
-     * domestic violence answer in localStorage for the next person on a shared
+     * domestic violence answer in storage for the next person on a shared
      * phone defeats the entire point of it.
      *
      * Clearing before navigating, not after, because after does not run. */
     case 'quick-exit':
-      try{ localStorage.removeItem(STORAGE_KEY); }catch(e){ /* storage blocked; nothing to clear */ }
+      try{ sessionStorage.removeItem(STORAGE_KEY); }catch(e){ /* storage blocked; nothing to clear */ }
       window.location.replace(PRODUCTION_QUICK_EXIT_URL);
       break;
     case 'print': printForm(); break;

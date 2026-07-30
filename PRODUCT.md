@@ -51,9 +51,15 @@ Online chrome so a finished tool can be dropped in without a redesign first.
   links.
 - The homepage also links two LACE Project apps that are live and hosted elsewhere on Vercel,
   the Learning Hub and Brightspace Manager. They are not in this repo.
-- The screener runs entirely in the visitor's browser. Answers persist in `localStorage` for
-  24 hours so someone can close the tab and finish later, under a per-tool key. Nothing is
-  transmitted anywhere.
+- The screener runs entirely in the visitor's browser and nothing is transmitted anywhere.
+  Storage differs by build, on purpose. The shipping MassLegalHelp build uses
+  `sessionStorage`, so answers are erased when the tab closes; the preview builds keep them
+  in `localStorage` for 24 hours so a reviewer can return to a part-finished session. The
+  shared-phone assumption below is why the public build gives up resume-tomorrow. Decided
+  2026-07-30 after the MassLegalHelp vendor pointed out that the intro copy claimed answers
+  were not saved on the device while `localStorage` was doing exactly that.
+- The "Tell DTA" statement fields, name, Client/Agency ID, free text, and signature, are
+  never stored. They are read from the page only when someone prints, downloads, or emails.
 - The review chain includes the MLRI author who supplied the ABAWD copy draft and an SME who
   must spot-check the income and hour thresholds. Thresholds were last verified in November
   2025.

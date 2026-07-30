@@ -226,14 +226,29 @@ Before go-live:
 Everything runs in the visitor's browser. There is **no backend, no analytics,
 and answers are never transmitted anywhere.**
 
-- **1-day retention.** Screening answers are saved in the browser's
-  `localStorage` so a visitor can close the tab and finish later. Anything older
-  than 24 hours is discarded automatically on the next visit. Each tool uses its
-  own key, so they never share state: `cfo-abawd-screening-v1` (classic),
+- **The shipping build keeps answers for the tab only.**
+  `masslegalhelp/index.html` uses `sessionStorage`, so answers survive a refresh
+  or a stray navigation and are erased when the tab closes. Nothing is
+  recoverable afterwards. Key: `mlh-snap-work-rules-v1`.
+
+  This is deliberate and differs from the preview builds. The questions cover
+  pregnancy, disability, substance use treatment, and domestic violence, and the
+  working assumption is a shared or monitored phone, so a day of recoverable
+  answers on a borrowed device is a worse trade than losing resume-tomorrow on a
+  three-minute screening. Raised by the MassLegalHelp vendor and decided
+  2026-07-30. `RETENTION_MS` still applies but now only bounds a tab left open
+  for days.
+- **The preview builds keep answers for a day**, in `localStorage`, so a reviewer
+  can come back to a part-finished session. Each uses its own key, because on the
+  preview site every build is served from one origin and a shared key means they
+  overwrite each other: `cfo-abawd-screening-v1` (classic),
   `cfo-abawd-classic-v2-screening-v1` (classic v2), `cfo-abawd-screening-v2`
   (accessible redesign). Tune the window via `RETENTION_MS` in each HTML file.
 - **Delete my answers.** The results screen has an explicit button that clears
   the stored answers immediately and returns to the start.
+- **Quick exit clears storage before it navigates.** It exists for someone who
+  needs to stop being on the page immediately, so leaving answers behind would
+  defeat it. `location.replace()` also means no history entry survives.
 - **"Tell DTA" form fields** (name, agency ID, free text) are *not* stored on the device. The visitor prints or downloads to keep a copy.
 - Fonts and icons are **self-hosted** under `court-forms/fonts/` and `court-forms/vendor/` (no Google Fonts or unpkg in production tools).
 

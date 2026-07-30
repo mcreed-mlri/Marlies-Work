@@ -291,9 +291,54 @@ describe('the optional-questions note appears above group 1 only', () => {
   }
 });
 
+/* The shipping build stores answers per tab, not per device, so nothing survives
+ * the tab closing. The questions cover pregnancy, disability, substance use
+ * treatment, and domestic violence, and the assumption is a shared phone. A
+ * well-meaning change back to localStorage would restore the resume-tomorrow
+ * behaviour and silently reintroduce the exposure, so it is asserted. */
+describe('the shipping build stores answers per tab only', () => {
+  const src = () => inlineScript(fs.readFileSync(path.join(MLH, 'index.html'), 'utf8'), 'masslegalhelp/index.html');
+
+  it('uses sessionStorage and never localStorage', () => {
+    /* Comments stripped first. The block above this storage code explains why it
+     * is not localStorage, and naming the thing you are avoiding is not using it.
+     * The same distinction check-pages.js makes for CSS classes: prose about a
+     * thing is not a use of it. Without this the guard failed on its own rationale. */
+    const code = src()
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .replace(/(^|[^:])\/\/.*$/gm, '$1');
+
+    assert.doesNotMatch(
+      code, /\blocalStorage\b/,
+      'masslegalhelp/index.html touches localStorage, which outlives the tab. Answers ' +
+      'about pregnancy and domestic violence would stay recoverable on a shared phone.'
+    );
+    assert.match(code, /sessionStorage\.setItem\(STORAGE_KEY/, 'answers are not being stored at all');
+  });
+
+  it('does not share a storage key with the preview builds', () => {
+    const keyOf = (dir, file) => {
+      const m = /const STORAGE_KEY = '([^']+)'/.exec(fs.readFileSync(path.join(dir, file), 'utf8'));
+      return m && m[1];
+    };
+    const shipping = keyOf(MLH, 'index.html');
+    assert.ok(shipping, 'no STORAGE_KEY in the shipping build');
+    /* Every build is served from one origin on the preview site. This file was
+     * copied from snap-abawd-classic-v2.html and carried its key, so the two
+     * overwrote each other's answers during review. */
+    for (const file of ['snap-abawd.html', 'snap-abawd-classic-v2.html', 'snap-screening-v2.html']) {
+      assert.notEqual(
+        shipping, keyOf(COURT_FORMS, file),
+        'masslegalhelp/index.html shares its storage key with court-forms/' + file +
+        '. On the preview site they are the same origin, so they overwrite each other.'
+      );
+    }
+  });
+});
+
 /* Quick exit is a safety control, and the failure mode is silent: it navigates
- * away correctly while leaving the answers on the device. Only the shipping build
- * has it; the preview builds still use a Back button to the hub. */
+ * away correctly while leaving the answers behind. Only the shipping build has it;
+ * the preview builds still use a Back button to the hub. */
 describe('Quick exit clears the stored answers', () => {
   it('masslegalhelp/index.html', () => {
     const src = inlineScript(fs.readFileSync(path.join(MLH, 'index.html'), 'utf8'), 'masslegalhelp/index.html');
@@ -303,7 +348,7 @@ describe('Quick exit clears the stored answers', () => {
     assert.match(
       handler[0], /removeItem\(STORAGE_KEY\)/,
       'Quick exit navigates away without clearing STORAGE_KEY, so a domestic violence ' +
-      'or pregnancy answer stays on the device for the next person using it.'
+      'or pregnancy answer stays readable to anyone who reopens the tab.'
     );
     assert.match(
       handler[0], /location\.replace/,
