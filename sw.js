@@ -1,19 +1,23 @@
 /* Minimal service worker for Marlie's MLRI Work PWA. */
-/* Bumped to v4 when masslegalhelp/ was added and the shared result copy changed.
-   README explains when to bump: after significant changes, to clear anything left
-   in a returning reviewer's cache. Change both names together. */
-const CACHE = 'mlri-work-v4';
-const STATIC_CACHE = 'mlri-work-static-v4';
+/* Bumped to v5 when the icons moved into icons/. This one is not optional: every
+   entry in PRECACHE below changed path, so a returning visitor's STATIC_CACHE holds
+   six URLs that now 404. The activate handler only deletes caches whose names do not
+   match, so without a rename the stale entries would survive.
+
+   README explains the general rule: bump after significant changes. Change both
+   names together. v4 was masslegalhelp/ plus the shared result copy. */
+const CACHE = 'mlri-work-v5';
+const STATIC_CACHE = 'mlri-work-static-v5';
 
 // Only precache assets that rarely change. HTML/JS/CSS stay network-first.
 const PRECACHE = [
   './manifest.webmanifest',
-  './favicon.svg',
-  './favicon-32.png',
-  './favicon.ico',
-  './apple-touch-icon.png',
-  './icon-192.png',
-  './icon-512.png'
+  './icons/favicon.svg',
+  './icons/favicon-32.png',
+  './icons/favicon.ico',
+  './icons/apple-touch-icon.png',
+  './icons/icon-192.png',
+  './icons/icon-512.png'
 ];
 
 const MUTABLE = /\.(?:html?|js|css|json|webmanifest)$/i;

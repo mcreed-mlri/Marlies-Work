@@ -19,6 +19,8 @@ the homepage lists them.
 | `sw.js` | Service worker. Offline support and update handling for the PWA. |
 | `sw-register.js` | Client script that checks for service worker updates and prompts a refresh. |
 | `_headers` | Cloudflare Pages cache headers (keeps HTML and the service worker fresh). |
+| `_redirects` | One line, sending the magic `/favicon.ico` path into `icons/`. |
+| `icons/` | Favicons, the apple-touch icon, and the PWA icons. Referenced by the pages, `manifest.webmanifest`, and the service worker's PRECACHE. |
 
 ## Adding a new project
 
@@ -81,8 +83,8 @@ After **significant changes** (especially to HTML, JS, or CSS), bump the cache
 names in [`sw.js`](sw.js) so any leftover cached files are cleared:
 
 ```js
-const CACHE = 'mlri-work-v4';        // was v3
-const STATIC_CACHE = 'mlri-work-static-v4';  // was v3
+const CACHE = 'mlri-work-v5';        // was v4
+const STATIC_CACHE = 'mlri-work-static-v5';  // was v4
 ```
 
 Change both `CACHE` and `STATIC_CACHE` together (e.g. `v3` → `v4`). You do not

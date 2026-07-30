@@ -1,0 +1,8 @@
+# Cloudflare Pages redirects. Read from the output root at deploy time.
+#
+# /favicon.ico is the one icon path that is not ours to choose. Browsers request it
+# on their own when a page declares no icon, and so do some link-preview and feed
+# tools. Every page here does declare its icons, so nothing in the site depends on
+# it, but the file moved into icons/ on 2026-07-30 and a bare request would now 404.
+# One line is cheaper than finding out which tool cared.
+/favicon.ico  /icons/favicon.ico  301
