@@ -83,9 +83,21 @@ for (const rel of files) {
    * project uses rather than every class, to stay quiet and useful. */
   const styles = [...text.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/gi)].map(s => s[1]).join('\n');
   if (styles) {
+    /* Strip CSS comments before harvesting selectors. The same rule the `used`
+     * side already follows: prose about a class is not a definition of it. A
+     * comment reading "`.mono` was used with no rule behind it" was enough to
+     * register `.mono` as defined and hide exactly the bug it described, and a
+     * commented-out rule is genuinely not defined either. */
+    const rules = styles.replace(/\/\*[\s\S]*?\*\//g, '');
     const defined = new Set();
-    for (const d of styles.matchAll(/\.([a-zA-Z][\w-]*)/g)) defined.add(d[1]);
-    const interesting = /^(h\d|h-|btn-|opt-|card-|result-|q-|hint-|form-|facts-|fact-|topbar|brand|sr-only|no-print|fade|card-in|lead|icon-)/;
+    for (const d of rules.matchAll(/\.([a-zA-Z][\w-]*)/g)) defined.add(d[1]);
+    /* The court-forms families, then the shell families used by index.html and
+     * screener/index.html. The shell half was missing, so of the ~17 classes on
+     * screener/index.html only `lead` was ever checked, and `.mono` shipped with
+     * no rule behind it while this script reported ok. Those pages carry a comment
+     * saying their tokens are duplicated rather than shared precisely to keep this
+     * check alive; that was only true for one class. */
+    const interesting = /^(h\d|h-|btn-|opt-|card-|result-|q-|hint-|form-|facts-|fact-|topbar|brand|sr-only|no-print|fade|card-in|lead|icon-|mono|kicker|wrap|back|section|list|entry|badge|body|titlerow|tag|go|docs|panel|row|tool|foot|actions|theme-toggle)/;
     const used = new Set();
     /* Scan markup only. A class name mentioned inside a <style> block or an HTML
      * comment is prose about the CSS, not a use of it. */
