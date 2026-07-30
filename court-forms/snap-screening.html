@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SNAP work rules screening · Court Forms Online</title>
-<meta name="description" content="Overview of the SNAP ABAWD work-rules screening. Try the tool, see sample results, and read how it works.">
+<meta name="description" content="The SNAP ABAWD work-rules screening in Court Forms Online's style. Try the tool and read how it works.">
 <link rel="stylesheet" href="fonts/atkinson.css">
 <!-- impeccable-disable single-font -- Atkinson Hyperlegible is the legibility choice for this audience; a display-font pairing would work against it. -->
 <style>
@@ -39,12 +39,12 @@
   h1{font-size:clamp(26px,6.5vw,34px);line-height:1.18;margin:0 0 12px;letter-spacing:-.01em}
   .lead{font-size:clamp(17px,4.2vw,19px);line-height:1.55;color:var(--lead-ink);margin:0 0 8px}
 
-  /* Three sections, three weights. "Try the tool" is what most people came for,
-     so it leads; the sample results are a convenience and sit quietest. */
+  /* Two sections, two weights. "Try the tool" is what most people came for, so it
+     leads. The sample results moved to /screener/ on 2026-07-30, because they now
+     render in the MassLegalHelp design and showing them from a Court Forms styled
+     page was incoherent. The .quiet rules that styled them went with them. */
   h2{font-size:clamp(20px,4.8vw,23px);line-height:1.3;letter-spacing:-.01em;margin:40px 0 14px}
   .secondary h2{font-size:19px;margin-top:44px}
-  .quiet h2{font-size:17px;color:var(--muted);margin:44px 0 4px}
-  .quiet .note{font-size:15.5px;color:var(--muted);line-height:1.45;margin:0 0 14px}
 
   .row{display:flex;align-items:center;gap:15px;border:1px solid var(--line);border-radius:14px;
     padding:19px 20px;text-decoration:none;color:inherit;
@@ -55,20 +55,14 @@
     .row{transition:none}
     .row:hover{transform:none}
   }
-  .quiet .row{padding:14px 18px;gap:13px}
 
   .dot{width:40px;height:40px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;
     background:var(--blue);color:#fff}
   .dot svg{width:21px;height:21px;display:block}
-  .dot.green{background:var(--green)}
-  .dot.amber{background:var(--amber)}
-  .quiet .dot{width:33px;height:33px}
-  .quiet .dot svg{width:18px;height:18px}
 
   .row .body{flex:1;min-width:0}
   .row .t{font-size:17px;font-weight:700;line-height:1.25}
   .row .d{font-size:14.5px;color:var(--muted);line-height:1.45;margin-top:2px}
-  .quiet .row .t{font-size:16px}
   .row .arrow{color:var(--blue);font-weight:700;flex:none}
 </style>
 </head>
@@ -92,34 +86,18 @@
   <section>
     <h2>Try the tool</h2>
 
-    <p class="lead" style="font-size:15.5px;margin:0 0 18px">These three are in Court Forms
-    Online's style. There is also a <a href="../masslegalhelp/">version styled for
-    MassLegalHelp</a>, and a <a href="../screener/">page listing both</a>. Of the three
-    below, only the second still receives changes; the other two are frozen.</p>
-
-    <a class="row" href="snap-abawd.html">
-      <span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></span>
-      <div class="body">
-        <div class="t">Classic design (frozen)</div>
-        <div class="d">Mirrors how Court Forms Online is set up today. No longer updated.</div>
-      </div>
-      <span class="arrow" aria-hidden="true">→</span>
-    </a>
+    <p class="lead" style="font-size:15.5px;margin:0 0 18px">This is the screening in Court
+    Forms Online's style. The version being prepared for release is
+    <a href="../masslegalhelp/">styled for MassLegalHelp</a>, and the
+    <a href="../screener/">screener page</a> lists everything. Two earlier designs, the
+    original classic and the accessible redesign, moved to
+    <a href="../archive/">the archive</a> on 30 July 2026.</p>
 
     <a class="row" href="snap-abawd-classic-v2.html">
       <span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 22H18a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v9.5"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M13.378 15.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/></svg></span>
       <div class="body">
         <div class="t">Classic design, updated language</div>
-        <div class="d">The same screens, with the intro, questions, and results rewritten.</div>
-      </div>
-      <span class="arrow" aria-hidden="true">→</span>
-    </a>
-
-    <a class="row" href="snap-screening-v2.html">
-      <span class="dot green" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="16" cy="4" r="1"/><path d="m18 19 1-7-6 1"/><path d="m5 8 3-3 5.5 3-2.36 3.5"/><path d="M4.24 14.5a5 5 0 0 0 6.88 6"/><path d="M13.76 17.5a5 5 0 0 0-6.88-6"/></svg></span>
-      <div class="body">
-        <div class="t">Accessible redesign (frozen)</div>
-        <div class="d">Plain language, picture cues, big Yes / No tiles. Its copy was never approved, so it is kept as a design reference only.</div>
+        <div class="d">The intro, questions, and results in the author's current wording.</div>
       </div>
       <span class="arrow" aria-hidden="true">→</span>
     </a>
@@ -133,38 +111,6 @@
       <div class="body">
         <div class="t">How it works</div>
         <div class="d">A plain-language explainer: the rules, the result screens, and how the screening decides.</div>
-      </div>
-      <span class="arrow" aria-hidden="true">→</span>
-    </a>
-  </section>
-
-  <section class="quiet">
-    <h2>See a sample result</h2>
-    <p class="note">Skip the questions and jump to a real result screen.</p>
-
-    <a class="row" href="snap-abawd-classic-v2.html?sample=exempt">
-      <span class="dot green" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
-      <div class="body">
-        <div class="t">Exempt</div>
-        <div class="d">Does not have to meet the work rules. Includes reasons and a Tell-DTA form.</div>
-      </div>
-      <span class="arrow" aria-hidden="true">→</span>
-    </a>
-
-    <a class="row" href="snap-abawd-classic-v2.html?sample=goodcause">
-      <span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg></span>
-      <div class="body">
-        <div class="t">Good cause</div>
-        <div class="d">May have a temporary good reason for missing hours.</div>
-      </div>
-      <span class="arrow" aria-hidden="true">→</span>
-    </a>
-
-    <a class="row" href="snap-abawd-classic-v2.html?sample=notexempt">
-      <span class="dot amber" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></span>
-      <div class="body">
-        <div class="t">Must meet the rules</div>
-        <div class="d">May need to meet the work rules, with ways to do it.</div>
       </div>
       <span class="arrow" aria-hidden="true">→</span>
     </a>

@@ -114,7 +114,6 @@ for (const f of textFiles.filter(f => f.rel.endsWith('.html') || f.rel.endsWith(
  * public build must not. See masslegalhelp/README.md for the reasoning. */
 const BANNED = [
   { re: /sw-register\.js|serviceWorker/, what: 'a service worker registration' },
-  { re: /applySampleFromURL|sampleBanner/, what: 'the ?sample= preview mode' },
   { re: /SITE_PASSWORD|WWW-Authenticate/, what: 'password-gate code' }
 ];
 for (const f of textFiles) {
@@ -127,6 +126,27 @@ for (const f of textFiles) {
 }
 if (fs.existsSync(path.join(DIR, 'functions'))) {
   problems.push(PREFIX + '/functions/ exists. Cloudflare Pages would pick it up and could gate the public site.');
+}
+
+/* ---- Guard: sample mode, if present, is gated to review hosts ----
+ * This used to ban ?sample= from the shipping build outright. The team reviews
+ * every result screen before launch, and reaching the good-cause screen honestly
+ * means answering through four groups, so the mode earns its place. What it must
+ * not do is work in front of the public, where a shared URL would show a reader a
+ * result that is not theirs. So the ban became a requirement that it be gated. */
+const shipHtml = fs.readFileSync(path.join(DIR, 'index.html'), 'utf8');
+if (/function applySampleFromURL/.test(shipHtml)) {
+  if (!/function samplesAllowed/.test(shipHtml)) {
+    problems.push('index.html has ?sample= mode with no samplesAllowed() host gate, so the demo would be live in production.');
+  }
+  const fn = /function applySampleFromURL\(\)\{[\s\S]*?\n\}/.exec(shipHtml);
+  if (fn && !/^\s*if\(!samplesAllowed\(\)\) return false;/m.test(fn[0])) {
+    problems.push('applySampleFromURL does not bail out on samplesAllowed() as its first act, so the host gate can be bypassed.');
+  }
+  const hosts = /const SAMPLE_HOSTS = \[([^\]]*)\]/.exec(shipHtml);
+  if (hosts && /masslegalhelp/.test(hosts[1])) {
+    problems.push('SAMPLE_HOSTS includes a masslegalhelp host. That puts the demo mode in front of real users.');
+  }
 }
 
 /* ---- Notes, not failures ---- */

@@ -1115,7 +1115,7 @@ function render(){
   const stage = document.getElementById('stage');
   if(state.view === 'intro') stage.innerHTML = renderIntro();
   else if(state.view === 'question') stage.innerHTML = renderPage();
-  else stage.innerHTML = renderResults();
+  else stage.innerHTML = (SAMPLE_MODE ? sampleBanner() : '') + renderResults();
 
   state.animate = false;
   initSignaturePad();
@@ -1340,16 +1340,64 @@ function refitSignatureOnResize(){
 window.addEventListener('resize', refitSignatureOnResize, { passive: true });
 window.addEventListener('orientationchange', refitSignatureOnResize);
 
-/* The preview build has a ?sample= mode that jumps to a result screen for
- * reviewers, plus a banner linking back to the sample index. Both are gone from
- * this build. A public benefits page should not carry a hidden demo mode, and
- * the banner's links pointed at preview-site pages that do not exist here.
+/* ------------------------------------------------------------------ *
+ * Sample previews, review hosts only
  *
- * SAMPLE_MODE stays declared and permanently false so the guards that read it,
- * including the one stopping a preview from overwriting a real saved session,
- * keep evaluating exactly as they do in the preview build. */
+ * ?sample=exempt | goodcause | notexempt jumps straight to a result screen,
+ * reusing the real result rendering so a sample can never drift from the tool.
+ * Nothing is stored in this mode.
+ *
+ * The team reviews every screen before launch, and reaching the good-cause
+ * result honestly means answering through all four groups. So this exists for
+ * them, and it must not exist for the public: a hidden demo mode on a benefits
+ * page invites someone to share a URL that shows a result which is not theirs.
+ *
+ * Gated by an allowlist of review hosts rather than by excluding production.
+ * That is the safer failure direction. If the preview moves to a host not
+ * listed, samples stop working, which is visible and harmless. If it were
+ * written as "anything except masslegalhelp.org", then moving production to a
+ * new domain would silently switch the demo mode on in front of real users.
+ *
+ * Add a host here if the preview moves. `location.hostname` is empty for
+ * file:// URLs, which is why the empty string counts as local.
+ * ------------------------------------------------------------------ */
+const SAMPLE_HOSTS = ['localhost', '127.0.0.1', ''];
 
-loadPersisted();
+function samplesAllowed(){
+  try{
+    const h = location.hostname;
+    return SAMPLE_HOSTS.indexOf(h) !== -1 || /\.pages\.dev$/.test(h);
+  }catch(e){ return false; }
+}
+
+function applySampleFromURL(){
+  if(!samplesAllowed()) return false;
+  let p = '';
+  try{ p = (new URLSearchParams(location.search).get('sample') || '').toLowerCase(); }catch(e){}
+  if(!p) return false;
+  if(p === 'exempt') state.answers = { child14:'yes', health:'yes', caretaker:'yes' };
+  else if(p === 'goodcause') state.answers = { goodcause:'transport' };
+  else if(p === 'notexempt') state.answers = { goodcause: NONE };
+  else return false;
+  SAMPLE_MODE = true;
+  state.view = 'results';
+  state.gc = false;
+  return true;
+}
+
+function sampleBanner(){
+  return `<div class="no-print" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:var(--radius);padding:14px 18px;margin:0 0 18px">
+    <span style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--warn-ink)">Sample result</span>
+    <span style="font-size:15px;line-height:1.5;color:var(--prose);flex:1;min-width:200px">An example of one outcome. No questions were answered, and nothing is saved.</span>
+    <!-- No link back to the sample index. It would be ../screener/, a parent path,
+         which does not exist at the deploy root, and the publish guard is right to
+         reject one even on a code path that should never run in production. Browser
+         Back does the job for a reviewer who arrived from that page. -->
+    <span style="font-size:14.5px"><a href="./" style="font-weight:700">Try it for real →</a></span>
+  </div>`;
+}
+
+if(!applySampleFromURL()){ loadPersisted(); }
 initHintTips();
 state.animate = true;
 render();

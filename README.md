@@ -11,11 +11,12 @@ the homepage lists them.
 | `index.html` | Homepage (**"Marlie's MLRI Work"**). Lists projects. **Start here.** |
 | `court-forms/` | The **Court Forms Online** project folder → `/court-forms/`. |
 | `court-forms/index.html` | Minimal project page. Links to the SNAP screening hub. |
-| `court-forms/snap-screening.html` | SNAP screening **hub**. Links to the tool, sample results, and how-it-works. |
-| `court-forms/snap-screening-logic.js` | Shared screening logic (questions, thresholds, links, result engine) used by all three tools. |
-| `court-forms/snap-abawd.html` | SNAP ABAWD work-rules screening (classic). |
+| `screener/index.html` | **Screener landing page** → `/screener/`. Lists both versions, the sample results, and the review documents. |
+| `masslegalhelp/` | The build that **ships**, styled for MassLegalHelp → `/masslegalhelp/`. See `masslegalhelp/README.md` for the deploy contract. |
+| `archive/` | Two earlier designs, frozen and untested. See `archive/README.md`. |
+| `court-forms/snap-screening.html` | The Court Forms styled tool and the how-it-works explainer. Sample results moved to `/screener/`. |
+| `court-forms/snap-screening-logic.js` | Shared screening logic (questions, thresholds, links, result engine). Exists twice, here and in `masslegalhelp/`, byte-identical, with a test that fails if they drift. |
 | `court-forms/snap-abawd-classic-v2.html` | SNAP ABAWD screening, **classic design, author's copy draft**. Same look as `snap-abawd.html`, rebuilt from the MLRI author's website copy draft (see [Classic v2](#classic-v2-the-authors-copy-draft) below). Supports `?sample=exempt\|goodcause\|notexempt` for hub sample result previews (demo only; nothing saved). |
-| `court-forms/snap-screening-v2.html` | SNAP screening, accessible / plain-language redesign. Supports `?sample=exempt\|goodcause\|notexempt` to jump straight to a sample result screen (demo only; nothing saved). |
 | `court-forms/snap-how-it-works.html` | Plain-language explainer of the screening. |
 | `functions/_middleware.js` | Cloudflare Pages Function enforcing the site-wide password (see below). |
 | `sw.js` | Service worker. Offline support and update handling for the PWA. |
@@ -104,13 +105,12 @@ A short, private screening tool that helps someone on SNAP check whether the
 Massachusetts DTA **ABAWD work rules** apply to them, or whether they may be
 exempt or have good cause. Built for Court Forms Online / MLRI.
 
-Three UIs share one logic module ([`court-forms/snap-screening-logic.js`](court-forms/snap-screening-logic.js)), each selecting a copy variant via `SnapScreening.create(variant)`:
+Two builds share one logic module ([`court-forms/snap-screening-logic.js`](court-forms/snap-screening-logic.js)), each selecting a copy variant via `SnapScreening.create(variant)`. Both use the `classic2` copy; only the chrome differs. Two earlier variants moved to `archive/` on 2026-07-30:
 
 | File | Variant | What it is |
 |------|---------|-----------|
-| [`court-forms/snap-abawd.html`](court-forms/snap-abawd.html) | `classic` | Classic Design |
 | [`court-forms/snap-abawd-classic-v2.html`](court-forms/snap-abawd-classic-v2.html) | `classic2` | Classic Design - updated language |
-| [`court-forms/snap-screening-v2.html`](court-forms/snap-screening-v2.html) | `v2` | Accessible redesign |
+| [`masslegalhelp/index.html`](masslegalhelp/index.html) | `classic2` | **Ships.** MassLegalHelp chrome, Quick exit, `sessionStorage` |
 
 It walks through up to 14 questions plus a "good cause" follow-up and shows one
 of these results:
@@ -120,7 +120,7 @@ of these results:
 - **Good cause.** No exemption, but a temporary hardship may excuse missed hours.
 - **May need to meet the work rules.** Neither an exemption nor good cause came
   up, so the screen explains the work and volunteer options instead.
-- **Age may not apply.** Shown before the question flow if the person is not 18–64.
+- **Age may not apply.** Shown before the question flow if the person is not 18 or older and under 65.
 
 ## Classic v2: the author's copy draft
 
@@ -128,12 +128,12 @@ of these results:
 is the classic design rebuilt from the MLRI author's **ABAWD Screening Tool
 website copy draft**, which also supplies every outbound URL. That draft is
 shared separately and is not tracked in this repo. It keeps the four grouped
-question sections, the Terms of Use gate, and the 18–64 question, and adds
+question sections and the age question, and adds
 material the original classic page does not have:
 
 - Intro explains the **SNAP and Work notice** and that DTA must screen for all exemptions first, with a *More on the SNAP ABAWD work rules* disclosure.
 - Every outbound link lives in one place: `LINKS` in `snap-screening-logic.js`.
-- The exempt screen states the result directly ("You are exempt and do not need to meet the ABAWD work rules") rather than hedging.
+- The exempt screen names the reasons it found. Since 2026-07-30 it reads "You may be exempt and do not need to meet the ABAWD work rules because of these reasons:", because the screening cannot confirm an exemption, only suggest one.
 - **One labelled write-in blank per exemption that needs explaining** instead of a single box. Driven by `statementPromptsFor` in the logic module; each blank prints as its own labelled section of the statement letter.
 - The not-exempt screen carries the good-cause guidance and *How to tell DTA if you are meeting the work rules*.
 - The good-cause screen lists **all three** categories with detail and *More examples* links, not just the one selected.
@@ -202,7 +202,7 @@ Before go-live:
 | **This preview repo** | ← Back | `snap-screening.html` (screening hub) |
 | **Production deploy** | Quick exit | Neutral external site (default: `https://www.weather.com/`) |
 
-**TODO when deploying:** In `snap-abawd.html`, `snap-abawd-classic-v2.html`, and `snap-screening-v2.html`, change the top-bar button from `data-action="go-back"` / “← Back” to `data-action="quick-exit"` / “Quick exit”, and handle `quick-exit` with `window.location.replace(PRODUCTION_QUICK_EXIT_URL)` instead of `go-back`. Update intro/privacy copy if it still says “Back.”
+**Done 2026-07-30** in `masslegalhelp/index.html`, which is the build that ships. The preview `snap-abawd-classic-v2.html` keeps its Back button on purpose. Previously read: in each tool, change the top-bar button from `data-action="go-back"` / “← Back” to `data-action="quick-exit"` / “Quick exit”, and handle `quick-exit` with `window.location.replace(PRODUCTION_QUICK_EXIT_URL)` instead of `go-back`. Update intro/privacy copy if it still says “Back.”
 
 ### SME verification checklist
 

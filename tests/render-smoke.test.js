@@ -27,11 +27,14 @@ const LOGIC_FILE = 'snap-screening-logic.js';
 /* The MassLegalHelp build is a separate deployable, so it carries its own copy
  * of the logic module and is driven through every screen here too. It is the one
  * that ships to the public, so leaving it uncovered would put the tested pages
- * and the shipping page in different places. */
+ * and the shipping page in different places.
+ *
+ * Two earlier designs moved to archive/ on 2026-07-30 and are deliberately not
+ * listed. They are frozen, they carry their own snapshot of the logic module, and
+ * the point of archiving them was to stop every shared-logic change having to
+ * keep three variants working. See archive/README.md. */
 const PAGES = [
-  { label: 'court-forms/snap-abawd.html', dir: COURT_FORMS, file: 'snap-abawd.html' },
   { label: 'court-forms/snap-abawd-classic-v2.html', dir: COURT_FORMS, file: 'snap-abawd-classic-v2.html' },
-  { label: 'court-forms/snap-screening-v2.html', dir: COURT_FORMS, file: 'snap-screening-v2.html' },
   { label: 'masslegalhelp/index.html', dir: MLH, file: 'index.html' }
 ];
 
@@ -326,13 +329,11 @@ describe('the shipping build stores answers per tab only', () => {
     /* Every build is served from one origin on the preview site. This file was
      * copied from snap-abawd-classic-v2.html and carried its key, so the two
      * overwrote each other's answers during review. */
-    for (const file of ['snap-abawd.html', 'snap-abawd-classic-v2.html', 'snap-screening-v2.html']) {
-      assert.notEqual(
-        shipping, keyOf(COURT_FORMS, file),
-        'masslegalhelp/index.html shares its storage key with court-forms/' + file +
-        '. On the preview site they are the same origin, so they overwrite each other.'
-      );
-    }
+    assert.notEqual(
+      shipping, keyOf(COURT_FORMS, 'snap-abawd-classic-v2.html'),
+      'masslegalhelp/index.html shares its storage key with the preview build. On the ' +
+      'preview site they are the same origin, so they overwrite each other.'
+    );
   });
 });
 

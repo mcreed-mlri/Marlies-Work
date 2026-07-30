@@ -70,9 +70,9 @@ it with a real sentence and let bullet lengths vary.
 
 No emoji in UI. Use Lucide line glyphs in a filled circle, white stroke on
 `--navy` / `--blue` / `--green` / `#9a6a00`, matching the result screens in
-`court-forms/snap-screening-v2.html`.
+`archive/snap-screening-v2.html`.
 
-Only `court-forms/snap-screening-v2.html` loads `vendor/lucide.min.js` and calls
+Only the archived `archive/snap-screening-v2.html` loads `vendor/lucide.min.js` and calls
 `lucide.createIcons()`. Every other page, including both classic builds and the shipping
 `masslegalhelp/index.html`, inlines the SVG instead, to avoid a 361KB dependency that would
 blank the icons if it failed to load. Do not add the vendored copy to a page that does not
@@ -100,7 +100,7 @@ dropped in. Match the chrome: navy top bar, gold torch mark, and the color token
 `:root`.
 
 Do not copy production's interview screens wholesale. They are dated Docassemble defaults
-(Bootstrap carets, a flat sidebar step list). The big Yes/No tiles in `snap-screening-v2.html`
+(Bootstrap carets, a flat sidebar step list). The big Yes/No tiles in `archive/snap-screening-v2.html`
 are the better pattern and should stay.
 
 ## Contrast model: white page, tinted controls

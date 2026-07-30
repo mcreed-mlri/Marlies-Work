@@ -79,7 +79,13 @@ Online chrome so a finished tool can be dropped in without a redesign first.
   four results: exempt, good cause, may need to meet the work rules, or age may not apply.
   Rules and question text live in `court-forms/snap-screening-logic.js`; every outbound URL
   lives in `LINKS` there.
-- Three UIs share that logic module. Confirmed 2026-07-29: the active variant is `classic2`
+- Two builds share that logic module, both using the `classic2` copy and differing only in
+  chrome: `masslegalhelp/index.html`, which ships, and `court-forms/snap-abawd-classic-v2.html`,
+  the internal preview. Two earlier variants, the original classic and the accessible
+  redesign, moved to `archive/` on 2026-07-30 and are frozen and untested. Carrying three
+  through every shared-logic change was worth it while the destination was undecided; it is
+  not now. The superseded note below is kept for context.
+- Superseded 2026-07-29: three UIs shared that logic module; the active variant was `classic2`
   (`court-forms/snap-abawd-classic-v2.html`), the classic design carrying the author's
   updated language. `snap-abawd.html` (classic) and `snap-screening-v2.html` (accessible
   redesign) stay in the repo but are not where work goes; do not assume a change must be
