@@ -16,6 +16,15 @@ node_modules/
 __pycache__/
 *.py[cod]
 
+# The MLRI author's copy drafts. Shared separately and deliberately untracked, per
+# PRODUCT.md: they are the source of the screener's wording and every outbound URL,
+# but they are hers rather than the repo's. Ignored rather than merely untracked so
+# they stop appearing in `git status` forever, and so a `git add -A` cannot sweep an
+# author draft into a commit.
+ABAWD Screener Tool (Court Forms Draft).md
+Website Draft -  ABAWD Screening Tool.md
+Website Draft -  ABAWD Screening Tool (1).pdf
+
 # Impeccable live mode runtime state (config.json stays tracked)
 .impeccable/live/sessions/
 .impeccable/live/roots.json

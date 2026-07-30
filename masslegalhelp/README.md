@@ -1,8 +1,8 @@
 # SNAP work rules screening: MassLegalHelp build
 
 The public build of the SNAP ABAWD screening, wearing MassLegalHelp chrome. This is the
-one intended to ship. `court-forms/` holds the password-gated preview builds that MLRI
-reviews internally; do not deploy those.
+one intended to ship, and the only one. The earlier Court Forms styled builds were retired
+to `archive/` on 2026-07-30 and are frozen.
 
 ## Deploy contract
 
@@ -35,9 +35,11 @@ If the Worker sits on the `masslegalhelp.org` origin, requests to this path will
 no request logging retains them. This tool asks about pregnancy, disability, domestic
 violence, and personal safety.
 
-## What differs from the preview build
+## Decisions worth knowing
 
-The chrome is MassLegalHelp's: navy header, gold rule, brand navy text, pale blue accents.
+The chrome is MassLegalHelp's: navy header, a 9px `#eab736` gold rule, brand navy text, and
+their page-header pattern, a pale blue gradient title panel with a solid block offset behind
+it, then a byline and a short heavy rule.
 Values and measured contrast ratios are in `MASSLEGALHELP-BRAND.md` in the MLRI source
 repository. (Paths to sibling documents are named rather than linked, because this folder is
 also published on its own as the deploy repository root, where a relative link out would
@@ -50,23 +52,33 @@ matching a host font. Revisit only if their font files are available to self-hos
 The top-bar control is **Quick exit**, not Back. It calls `location.replace()`, so it
 leaves no history entry and Back cannot return to a screen holding answers.
 
-The `?sample=` preview mode and its banner are gone. A public benefits page should not
-carry a hidden demo mode, and the banner linked to preview-site pages that do not exist
-here.
+`?sample=exempt|goodcause|notexempt` jumps straight to a result screen, and is gated to
+review hosts by `SAMPLE_HOSTS` and `samplesAllowed()`. It is inert on masslegalhelp.org. The
+team reviews every result screen before launch and reaching the good-cause one honestly means
+answering through four groups, so the mode earns its place; it must not work in front of the
+public, where a shared URL would show a reader a result that is not theirs. The gate is an
+allowlist rather than an exclusion of production, so a preview moving to a new host loses its
+samples, which is visible and harmless, instead of a production move silently switching a
+demo on.
 
-There is a footer, which the preview build has no need for.
+Answers live in `sessionStorage`, not `localStorage`: they survive a refresh and are erased
+when the tab closes. The questions cover pregnancy, disability, substance use treatment and
+domestic violence, and the working assumption is a shared or monitored phone, so a day of
+recoverable answers is a worse trade than losing resume-tomorrow on a three-minute screening.
+Quick exit erases them before it navigates.
 
-`vendor/lucide.min.js` is not copied here. Only the retired accessible-redesign variant
-used it; this one inlines its SVGs, so the 361KB dependency is dead weight.
+No `vendor/lucide.min.js`. This build inlines its SVGs, so that 361KB dependency would be
+dead weight.
 
 ## The logic module is a copy
 
-`snap-screening-logic.js` is byte-identical to `court-forms/snap-screening-logic.js`. Two
-deployables, two copies, and a test in `tests/render-smoke.test.js` fails if they diverge.
+`snap-screening-logic.js` lives here and nowhere else. Until 2026-07-30 there were two
+copies, one per build, with a test that failed if they drifted; it fired twice on real
+one-sided edits. Archiving `court-forms/` removed the second copy, so that failure is now
+impossible rather than detected, and the guard came out with it.
 
-Edit one and copy it over the other. Never edit them separately. A drifted copy is the
-worst failure available here: the preview a reviewer signs off on would stop matching the
-page the public gets, and without that test nothing would notice.
+`archive/` keeps its own frozen snapshot. That one is meant to fall behind and is not
+checked. If a second live build ever appears, restore the drift guard before the copy.
 
 ## Before this goes live
 
@@ -81,9 +93,9 @@ page the public gets, and without that test nothing would notice.
   `SCREENER-COPY.md` in the MLRI source repository, which lists every string and the open
   questions against it.
 - **Thresholds.** Last verified November 2025. MLRI's own ABAWD article on MassLegalHelp
-  was reviewed February 2026 and is therefore newer than this tool. They disagree about
-  the age range: this build says 18 through 64, the article says between 18 and 65. An SME
-  has to settle it.
+  was reviewed February 2026 and is therefore newer than this tool, so the income and hour
+  figures still need an SME. The age wording was settled on 2026-07-30 and now reads "18 or
+  older and under 65" everywhere; that reading of the federal cap is still worth confirming.
 - **Languages.** English only. MassLegalHelp publishes the ABAWD article in Spanish, and
   its language selector lives in the Drupal header, which a statically served tool at a
   path will not participate in.
@@ -97,10 +109,10 @@ repository holds, which is why this README makes sense read from either place.
 The split means there is no second copy to maintain. This folder stays the single source of
 truth, and publishing again is the same command.
 
-The script runs guards first and refuses on any of them: the logic module drifting from the
-preview copy, a parent-relative or rooted path that would 404 at the deploy root, a local
-reference that does not resolve, a service worker, the `?sample=` mode, password-gate code,
-or a `functions/` directory. It never pushes; it prints the push command and stops.
+The script runs guards first and refuses on any of them: a missing logic module, a
+parent-relative or rooted path that would 404 at the deploy root, a local reference that does
+not resolve, a service worker, password-gate code, a `functions/` directory, or `?sample=`
+mode present without its host gate. It never pushes; it prints the push command and stops.
 
 ## Verifying a change
 
@@ -111,6 +123,9 @@ No build step and no `npm` on the authoring machine. Run Node directly:
 "$LOCALAPPDATA/OpenAI/Codex/bin/node.exe" --test tests/snap-screening-logic.test.js tests/render-smoke.test.js
 ```
 
-Both cover this build. `check-pages.js` reads it because `masslegalhelp` is in its
-`PAGE_GLOBS`, and the render smoke test drives every result screen and button path through
-this page as well as the preview ones.
+Both cover this build, which since 2026-07-30 is the only one. `check-pages.js` reads it
+because `masslegalhelp` is in its `PAGE_GLOBS`, and the render smoke test drives every result
+screen and every button path through this page.
+
+There is also `node scripts/publish-mlh.js --check`, which runs the deploy guards above
+without changing anything. Worth running after any edit here.
