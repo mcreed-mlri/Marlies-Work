@@ -89,17 +89,13 @@ code: |
 question: |
   Did DTA tell you that you need to meet ABAWD Work Rules to keep getting SNAP?
 subquestion: |
-  Some adults on SNAP **ages 18 through 64** have to meet ABAWD work rules to get
-  SNAP for more than 3 months. **Many adults are exempt** from the work rules.
-  Being "exempt" means that you don't have to meet the work rules to keep getting
-  SNAP.
+  Some adults on SNAP who are **18 or older and under 65** have to meet ABAWD work rules to get SNAP for more than 3 months. **Many adults are exempt** from the work rules. Being "exempt" means that you don't have to meet the work rules to keep getting SNAP.
 
-  This short screening asks a few questions to check if you need to meet the ABAWD
-  work rules or if you are exempt. It takes about 3 minutes.
+  This short screening asks a few questions to check if you need to meet the ABAWD work rules or if you are exempt. It takes about 3 minutes.
 
   Your information is private. Nothing you type is shared with DTA by this tool.
 fields:
-  - "Are you between 18 and 64 years old?": ageRange
+  - "Are you 18 or older and under 65?": ageRange
     datatype: radio
     choices:
       - Yes: 'yes'
@@ -239,7 +235,7 @@ continue button field: good_cause_group
 event: age_screen
 question: "These work rules may not apply to your age group"
 subquestion: |
-  You said you are not between 18 and 64. The ABAWD work rules usually apply to adults in that age range. You may still have other SNAP rights. Contact DTA or a legal aid program to check your situation.
+  You said you are under 18, or 65 or older. The ABAWD work rules usually apply to adults 18 or older and under 65. You may still have other SNAP rights. Contact DTA or a legal aid program to check your situation.
 buttons:
   - Exit: exit
 ---

@@ -583,7 +583,7 @@
     "minimumWage": 15,
     "hoursAtMinimumWage": 14.5,
     "hoursBelowMinimumWage": 30,
-    "ageRange": "18 through 64",
+    "ageRange": "18 or older and under 65",
     "lastVerified": "2025-11"
   },
   "examples": [

@@ -43,7 +43,7 @@ const OPEN = {
   formTitleExempt: 'If the good cause heading goes, should this matching one go too?',
   formLeadExempt: 'Your doc says "fill out this form" where this says "fill in the blanks below." Change it?',
   whyInfoGoodCause: 'The wording in your doc reads "Telling DTA about your why you missed hours." The exempt version is "Telling DTA about your exemption," so the extra "your" looks like a typo. Confirm and we will drop it.',
-  ageInfoBody: 'This says "not between 18 and 64." The MLRI ABAWD article on MassLegalHelp, reviewed February 2026, says "between 18 and 65 years old." Which is right?',
+  ageInfoBody: 'Settled 2026-07-30. You asked for 18 and 65 to match the MassLegalHelp article. "Between 18 and 65" does not say whether a 65-year-old counts, and the federal rule caps at 64 with 65 and over exempt by age, so reading it literally would have told a 65-year-old the work rules might apply to them. Every place the range appears now says "18 or older and under 65": same range, no ambiguity. Say so if you would rather mirror the article word for word.',
   exemptReasonsIntro: 'Already applied: emptied, because the heading above now ends with "because of these reasons:" and this said it a second time.',
 };
 

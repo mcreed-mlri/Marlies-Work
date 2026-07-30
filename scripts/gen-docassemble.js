@@ -168,21 +168,41 @@ code: |
   reasons = exempt_reasons(collected_answers)
 ---`);
 
-/* ---- Start screen ---- */
-blocks.push(`question: |
-  Did DTA tell you that you need to meet ABAWD Work Rules to keep getting SNAP?
-subquestion: |
-  Some adults on SNAP **ages 18 through 64** have to meet ABAWD work rules to get
-  SNAP for more than 3 months. **Many adults are exempt** from the work rules.
-  Being "exempt" means that you don't have to meet the work rules to keep getting
-  SNAP.
+/* ---- Start screen ----
+ * Read from the shipping page, not typed here. These four strings were hardcoded
+ * until 2026-07-30, when the author changed the age range and the interview kept
+ * saying "18 through 64" while both web builds said otherwise. Nothing caught it,
+ * because a copy of a string cannot be checked against its original. */
+const SHIP_HTML = fs.readFileSync(
+  path.join(ROOT, 'masslegalhelp', 'index.html'), 'utf8');
 
-  This short screening asks a few questions to check if you need to meet the ABAWD
-  work rules or if you are exempt. It takes about 3 minutes.
+function fromShippingPage(id, re) {
+  const m = SHIP_HTML.match(re);
+  if (!m) {
+    console.error('gen-docassemble: could not find ' + id + ' in masslegalhelp/index.html.');
+    console.error('Fix the pattern here rather than pasting the text in, or the interview');
+    console.error('and the web builds drift apart silently.');
+    process.exit(1);
+  }
+  // Same conversion the help text gets: links and emphasis to markdown.
+  return help({ help: m[1] });
+}
+
+const introSummary = fromShippingPage('introSummary', /<p [^>]*>(Some adults on SNAP[\s\S]*?)<\/p>/);
+const timeEstimate = fromShippingPage('timeEstimate', /<p [^>]*>(This short screening asks[\s\S]*?)<\/p>/);
+const ageQuestion = fromShippingPage('ageQuestion', /<p id="age-q"[^>]*>([^<]+)<\/p>/);
+const pageH1 = fromShippingPage('h1', /<h1 class="h1">([^<]+)<\/h1>/);
+
+blocks.push(`question: |
+${indent(pageH1, 2)}
+subquestion: |
+${indent(introSummary, 2)}
+
+${indent(timeEstimate, 2)}
 
   Your information is private. Nothing you type is shared with DTA by this tool.
 fields:
-  - ${y('Are you between 18 and 64 years old?')}: ageRange
+  - ${y(ageQuestion)}: ageRange
     datatype: radio
     choices:
       - Yes: 'yes'

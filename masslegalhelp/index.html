@@ -531,7 +531,7 @@ function animClass(){ return state.animate ? 'card-in' : ''; }
 function renderIntro(){
   return `<div class="${animClass()}">
     <h1 class="h1">Did DTA tell you that you need to meet ABAWD Work Rules to keep getting SNAP?</h1>
-    <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 14px">Some adults on SNAP <strong>ages 18 through 64</strong> have to meet ABAWD work rules to get SNAP for more than 3 months. <strong>Many adults are exempt</strong> from the work rules. Being "exempt" means that you don't have to meet the work rules to keep getting SNAP.</p>
+    <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 14px">Some adults on SNAP who are <strong>18 or older and under 65</strong> have to meet ABAWD work rules to get SNAP for more than 3 months. <strong>Many adults are exempt</strong> from the work rules. Being "exempt" means that you don't have to meet the work rules to keep getting SNAP.</p>
     <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 14px">You only have to meet these rules, or tell DTA you are exempt, if DTA sends you a <a href="${LINKS.snapWorkNotice}" target="_blank" rel="noopener">SNAP and Work notice</a> that says you have to meet the ABAWD Work Rules. Check your mail and <a href="${LINKS.dtaConnect}" target="_blank" rel="noopener">DTAConnect</a> to see notes from DTA. DTA has to screen you for all exemptions <em>before</em> subjecting you to the rules.</p>
     <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 18px">If you lost your SNAP because of the work rules, you might be able to get back on if you have an exemption, or if you met or are currently meeting the work rules.</p>
 
@@ -553,8 +553,8 @@ function renderIntro(){
 
     <fieldset style="border:1px solid var(--panel);border-radius:var(--radius);padding:15px 17px;margin:0 0 22px;background:#fff">
       <legend style="display:block;float:left;width:100%;font-size:15px;font-weight:700;padding:0;margin:0 0 13px;color:var(--ink)">Before you start</legend>
-      <p id="age-q" style="clear:both;font-size:15px;line-height:1.55;color:var(--prose);margin:0 0 12px">Are you between 18 and 64 years old?</p>
-      <div role="radiogroup" aria-label="Are you between 18 and 64 years old?" style="display:flex;flex-direction:column;gap:6px">
+      <p id="age-q" style="clear:both;font-size:15px;line-height:1.55;color:var(--prose);margin:0 0 12px">Are you 18 or older and under 65?</p>
+      <div role="radiogroup" aria-label="Are you 18 or older and under 65?" style="display:flex;flex-direction:column;gap:6px">
         <label style="display:flex;gap:10px;align-items:center;min-height:44px;font-size:15px;cursor:pointer"><input type="radio" name="ageRange" value="yes" ${state.answers.ageRange === 'yes' ? 'checked' : ''} style="width:20px;height:20px;accent-color:var(--accent)"> Yes</label>
         <label style="display:flex;gap:10px;align-items:center;min-height:44px;font-size:15px;cursor:pointer"><input type="radio" name="ageRange" value="no" ${state.answers.ageRange === 'no' ? 'checked' : ''} style="width:20px;height:20px;accent-color:var(--accent)"> No</label>
       </div>

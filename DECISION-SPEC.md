@@ -209,11 +209,16 @@ Everything else is always shown, and may be left blank.
 | Massachusetts minimum wage | $15 an hour | |
 | Hours a week at minimum wage that exempt | 14.5 | |
 | Hours a week counted below minimum wage | 30 | |
-| Age range the rules apply to | 18 through 64 | |
+| Age the rules apply to | 18 or older and under 65 | |
 
-Last verified November 2025. MLRI's own ABAWD article on MassLegalHelp was reviewed
-February 2026 and says "between 18 and 65", which does not obviously agree with the age
-range above. That has to be settled before launch.
+Income and hours were last verified November 2025 and still need an expert. MLRI's ABAWD
+article on MassLegalHelp was reviewed February 2026 and is therefore newer than they are.
+
+The age wording was settled on 2026-07-30. The article says "between 18 and 65", which
+does not say whether a 65-year-old is included, and the federal rule caps at 64 with 65
+and over exempt by age. Reading the article literally would have screened a 65-year-old
+as subject to the rules, so the screener says "18 or older and under 65" instead. Same
+range, no ambiguity. Worth confirming that reading of the rule.
 
 ## Worked examples
 

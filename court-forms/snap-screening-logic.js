@@ -617,7 +617,14 @@
     otherWaysExemptLead: 'Fill out and send in DTA\u2019s exemption form or explain the information to DTA in a written, signed statement (handwritten note is fine):',
     otherWaysGoodCauseLead: 'Explain the information to DTA in a written, signed statement (handwritten note is fine):',
     ageInfoHeading: 'These work rules may not apply to your age group',
-    ageInfoBody: 'You said you are not between 18 and 64. The ABAWD work rules usually apply to adults in that age range. You may still have other SNAP rights. Contact DTA or a legal aid program to check your situation.',
+    /* 2026-07-30: was "not between 18 and 64". The author asked for 18 and 65 to
+     * match the MassLegalHelp ABAWD article. "Between 18 and 65" does not say
+     * whether a 65-year-old is included, and the federal rule caps at 64 with 65
+     * and over exempt by age, so a literal reading would have screened a
+     * 65-year-old as subject to the rules. "18 or older and under 65" carries the
+     * intended range without the ambiguity. Used in the same words everywhere the
+     * range appears; see the age question and the intro. */
+    ageInfoBody: 'You said you are under 18, or 65 or older. The ABAWD work rules usually apply to adults 18 or older and under 65. You may still have other SNAP rights. Contact DTA or a legal aid program to check your situation.',
     waysToReachDta: 'Ways to reach DTA'
   };
 

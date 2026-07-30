@@ -29,7 +29,7 @@ worth telling me about.
 
 **`page.introSummary`**
 
-> Some adults on SNAP **ages 18 through 64** have to meet ABAWD work rules to get SNAP for more than 3 months. **Many adults are exempt** from the work rules. Being "exempt" means that you don't have to meet the work rules to keep getting SNAP.
+> Some adults on SNAP who are **18 or older and under 65** have to meet ABAWD work rules to get SNAP for more than 3 months. **Many adults are exempt** from the work rules. Being "exempt" means that you don't have to meet the work rules to keep getting SNAP.
 
 **`page.introNotice`**
 
@@ -69,7 +69,7 @@ A collapsed "More on the SNAP ABAWD work rules" panel sits here:
 
 **`page.ageQuestion`**
 
-> Are you between 18 and 64 years old?
+> Are you 18 or older and under 65?
 
 The age question offers Yes and No. Answering it enables the button below.
 
@@ -488,9 +488,9 @@ The categories listed on this screen:
 
 **`ageInfoBody`**
 
-> You said you are not between 18 and 64. The ABAWD work rules usually apply to adults in that age range. You may still have other SNAP rights. Contact DTA or a legal aid program to check your situation.
+> You said you are under 18, or 65 or older. The ABAWD work rules usually apply to adults 18 or older and under 65. You may still have other SNAP rights. Contact DTA or a legal aid program to check your situation.
 
-> **Question for you:** This says "not between 18 and 64." The MLRI ABAWD article on MassLegalHelp, reviewed February 2026, says "between 18 and 65 years old." Which is right?
+> **Question for you:** Settled 2026-07-30. You asked for 18 and 65 to match the MassLegalHelp article. "Between 18 and 65" does not say whether a 65-year-old counts, and the federal rule caps at 64 with 65 and over exempt by age, so reading it literally would have told a 65-year-old the work rules might apply to them. Every place the range appears now says "18 or older and under 65": same range, no ambiguity. Say so if you would rather mirror the article word for word.
 
 ## 10. The printable "Tell DTA" statement
 
