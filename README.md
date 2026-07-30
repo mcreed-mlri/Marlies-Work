@@ -14,7 +14,6 @@ the homepage lists them.
 | `screener/index.html` | **Screener landing page** → `/screener/`. Lists both versions, the sample results, and the review documents. |
 | `masslegalhelp/` | The build that **ships**, styled for MassLegalHelp → `/masslegalhelp/`. See `masslegalhelp/README.md` for the deploy contract. |
 | `archive/` | Two earlier designs, frozen and untested. See `archive/README.md`. |
-| `court-forms/snap-screening.html` | The Court Forms styled tool and the how-it-works explainer. Sample results moved to `/screener/`. |
 | `court-forms/snap-screening-logic.js` | Shared screening logic (questions, thresholds, links, result engine). Exists twice, here and in `masslegalhelp/`, byte-identical, with a test that fails if they drift. |
 | `court-forms/snap-abawd-classic-v2.html` | SNAP ABAWD screening, **classic design, author's copy draft**. Same look as `snap-abawd.html`, rebuilt from the MLRI author's website copy draft (see [Classic v2](#classic-v2-the-authors-copy-draft) below). Supports `?sample=exempt\|goodcause\|notexempt` for hub sample result previews (demo only; nothing saved). |
 | `court-forms/snap-how-it-works.html` | Plain-language explainer of the screening. |
@@ -151,7 +150,7 @@ never shares state with `snap-abawd.html`.
 
 ## How to run it
 
-Open [`court-forms/snap-screening.html`](court-forms/snap-screening.html) in any browser, or any tool file directly. **No build step** is required for the tools themselves.
+Open [`masslegalhelp/index.html`](masslegalhelp/index.html) in any browser, or [`screener/index.html`](screener/index.html) for the list of everything. **No build step** is required for the tools themselves.
 
 For automated tests:
 
@@ -193,13 +192,13 @@ Before go-live:
 - Confirm **Terms of Use** wording matches the hosting organization.
 - Verify DTA contact info (phone, fax, mail) against current Mass.gov guidance.
 - Have an SME spot-check thresholds in `snap-screening-logic.js` (last verified Nov 2025: $217.50/week, 14.5×$15, 30 hrs/week below minimum wage, 20 hrs/week or 80 hrs/month requirement).
-- **Restore Quick exit on production.** This preview uses a **← Back** button to `snap-screening.html`. On the live Court Forms Online site, replace it with **Quick exit** that jumps to a neutral external URL (see `PRODUCTION_QUICK_EXIT_URL` in `snap-screening-logic.js` and the deploy note below).
+- **Quick exit** is live in `masslegalhelp/index.html` and clears storage before navigating. The preview build keeps a **← Back** button, now pointing at `/screener/`. Previously read: on the live Court Forms Online site, replace it with **Quick exit** that jumps to a neutral external URL (see `PRODUCTION_QUICK_EXIT_URL` in `snap-screening-logic.js` and the deploy note below).
 
 ### Preview vs production top bar
 
 | Environment | Top-bar control | Destination |
 |-------------|-----------------|-------------|
-| **This preview repo** | ← Back | `snap-screening.html` (screening hub) |
+| **This preview repo** | ← Back | `/screener/` (the screener landing page) |
 | **Production deploy** | Quick exit | Neutral external site (default: `https://www.weather.com/`) |
 
 **Done 2026-07-30** in `masslegalhelp/index.html`, which is the build that ships. The preview `snap-abawd-classic-v2.html` keeps its Back button on purpose. Previously read: in each tool, change the top-bar button from `data-action="go-back"` / “← Back” to `data-action="quick-exit"` / “Quick exit”, and handle `quick-exit` with `window.location.replace(PRODUCTION_QUICK_EXIT_URL)` instead of `go-back`. Update intro/privacy copy if it still says “Back.”
