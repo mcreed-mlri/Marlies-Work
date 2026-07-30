@@ -1,128 +1,67 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-29T00:00:00Z",
+  "generatedAt": "2026-07-30T00:00:00Z",
   "title": "Design System: Marlie's MLRI Work",
   "extensions": {
     "colorMeta": {
-      "court-navy": {
-        "role": "primary",
-        "displayName": "Court Navy",
-        "canonical": "#0a2b52",
-        "tonalRamp": ["oklch(15% 0.09 258)", "oklch(24% 0.09 258)", "oklch(35% 0.09 258)", "oklch(46% 0.09 258)", "oklch(57% 0.09 258)", "oklch(70% 0.07 258)", "oklch(84% 0.04 258)", "oklch(95% 0.02 258)"]
-      },
-      "action-blue": {
-        "role": "primary",
-        "displayName": "Action Blue",
-        "canonical": "#1a5fb4",
-        "tonalRamp": ["oklch(16% 0.09 260)", "oklch(25% 0.11 260)", "oklch(34% 0.13 260)", "oklch(44% 0.15 260)", "oklch(56% 0.14 260)", "oklch(70% 0.10 260)", "oklch(84% 0.06 260)", "oklch(95% 0.02 260)"]
-      },
-      "action-blue-deep": {
-        "role": "primary",
-        "displayName": "Action Blue Deep",
-        "canonical": "#124a8f",
-        "tonalRamp": ["oklch(15% 0.09 261)", "oklch(23% 0.11 261)", "oklch(31% 0.13 261)", "oklch(38% 0.14 261)", "oklch(52% 0.13 261)", "oklch(68% 0.10 261)", "oklch(83% 0.06 261)", "oklch(94% 0.02 261)"]
-      },
-      "link-blue": {
-        "role": "primary",
-        "displayName": "Link Blue",
-        "canonical": "#134a8e",
-        "tonalRamp": ["oklch(15% 0.09 259)", "oklch(23% 0.11 259)", "oklch(31% 0.13 259)", "oklch(39% 0.14 259)", "oklch(52% 0.13 259)", "oklch(68% 0.10 259)", "oklch(83% 0.06 259)", "oklch(94% 0.02 259)"]
-      },
-      "torch-gold": {
-        "role": "secondary",
-        "displayName": "Torch Gold",
-        "canonical": "#f4bd3f",
-        "tonalRamp": ["oklch(20% 0.06 85)", "oklch(32% 0.08 85)", "oklch(44% 0.10 85)", "oklch(56% 0.12 85)", "oklch(68% 0.14 85)", "oklch(82% 0.15 85)", "oklch(90% 0.10 85)", "oklch(96% 0.04 85)"]
-      },
-      "approval-green": {
-        "role": "tertiary",
-        "displayName": "Approval Green",
-        "canonical": "#1e7a45",
-        "tonalRamp": ["oklch(17% 0.05 155)", "oklch(26% 0.07 155)", "oklch(37% 0.10 155)", "oklch(48% 0.12 155)", "oklch(60% 0.11 155)", "oklch(73% 0.08 155)", "oklch(86% 0.05 155)", "oklch(95% 0.02 155)"]
-      },
-      "caution-ochre": {
-        "role": "tertiary",
-        "displayName": "Caution Ochre",
-        "canonical": "#9a6a00",
-        "tonalRamp": ["oklch(18% 0.04 80)", "oklch(28% 0.06 80)", "oklch(40% 0.09 80)", "oklch(52% 0.12 80)", "oklch(64% 0.13 80)", "oklch(77% 0.12 80)", "oklch(88% 0.07 80)", "oklch(96% 0.03 80)"]
-      },
-      "boundary": {
-        "role": "neutral",
-        "displayName": "Boundary",
-        "canonical": "#84909f",
-        "tonalRamp": ["oklch(20% 0.02 250)", "oklch(30% 0.02 250)", "oklch(41% 0.02 250)", "oklch(52% 0.02 250)", "oklch(63% 0.02 250)", "oklch(74% 0.02 250)", "oklch(85% 0.01 250)", "oklch(95% 0.01 250)"]
-      },
-      "ink-warm": {
-        "role": "neutral",
-        "displayName": "Ink Warm",
-        "canonical": "#1b1f27",
-        "tonalRamp": ["oklch(15% 0.01 260)", "oklch(23% 0.01 260)", "oklch(34% 0.01 260)", "oklch(45% 0.01 260)", "oklch(57% 0.01 260)", "oklch(70% 0.01 260)", "oklch(84% 0.01 260)", "oklch(95% 0.00 260)"]
-      },
-      "field": {
-        "role": "neutral",
-        "displayName": "Field",
-        "canonical": "#eef1f5",
-        "tonalRamp": ["oklch(20% 0.01 250)", "oklch(31% 0.01 250)", "oklch(42% 0.01 250)", "oklch(53% 0.01 250)", "oklch(65% 0.01 250)", "oklch(77% 0.01 250)", "oklch(88% 0.01 250)", "oklch(95% 0.01 250)"]
-      },
-      "selected-fill": {
-        "role": "primary",
-        "displayName": "Selected Fill",
-        "canonical": "#d7e6f9",
-        "tonalRamp": ["oklch(20% 0.03 250)", "oklch(31% 0.04 250)", "oklch(43% 0.05 250)", "oklch(55% 0.06 250)", "oklch(67% 0.06 250)", "oklch(79% 0.05 250)", "oklch(90% 0.04 250)", "oklch(96% 0.02 250)"]
-      },
-      "shell-paper": {
-        "role": "neutral",
-        "displayName": "Shell Paper",
-        "canonical": "#fbf8f1",
-        "tonalRamp": ["oklch(16% 0.01 90)", "oklch(27% 0.01 90)", "oklch(39% 0.01 90)", "oklch(51% 0.01 90)", "oklch(64% 0.01 90)", "oklch(77% 0.01 90)", "oklch(89% 0.01 90)", "oklch(98% 0.01 90)"]
-      },
-      "shell-edge": {
-        "role": "neutral",
-        "displayName": "Shell Edge",
-        "canonical": "#9e8e66",
-        "tonalRamp": ["oklch(19% 0.03 85)", "oklch(29% 0.04 85)", "oklch(40% 0.05 85)", "oklch(52% 0.06 85)", "oklch(64% 0.06 85)", "oklch(76% 0.05 85)", "oklch(87% 0.04 85)", "oklch(96% 0.02 85)"]
-      },
-      "shell-pine": {
-        "role": "primary",
-        "displayName": "Shell Pine",
-        "canonical": "#3a5a40",
-        "tonalRamp": ["oklch(18% 0.03 150)", "oklch(27% 0.04 150)", "oklch(40% 0.05 150)", "oklch(48% 0.05 150)", "oklch(60% 0.05 150)", "oklch(73% 0.05 150)", "oklch(86% 0.03 150)", "oklch(95% 0.02 150)"]
-      },
-      "shell-terracotta": {
-        "role": "secondary",
-        "displayName": "Shell Terracotta",
-        "canonical": "#a85a32",
-        "tonalRamp": ["oklch(19% 0.04 45)", "oklch(29% 0.06 45)", "oklch(41% 0.09 45)", "oklch(52% 0.11 45)", "oklch(64% 0.11 45)", "oklch(76% 0.09 45)", "oklch(87% 0.06 45)", "oklch(96% 0.02 45)"]
-      }
+      "accent-blue": { "role": "primary", "displayName": "MassLegalHelp Accent Blue", "canonical": "#0057a2", "tonalRamp": ["#031a30", "#062b4f", "#09406f", "#0057a2", "#2d79bd", "#6ba3d6", "#a8c9e9", "#dceaf7"] },
+      "brand-navy": { "role": "primary", "displayName": "Brand Navy", "canonical": "#1f2c5c", "tonalRamp": ["#0a0f21", "#131b39", "#1f2c5c", "#33447f", "#5468a4", "#8494c4", "#b6c0dd", "#e2e7f2"] },
+      "header-navy": { "role": "primary", "displayName": "Header Navy", "canonical": "#1e2e5f", "tonalRamp": ["#0a1023", "#131c3b", "#1e2e5f", "#324682", "#5369a6", "#8395c6", "#b5c1de", "#e1e6f2"] },
+      "strip-navy": { "role": "primary", "displayName": "Strip Navy", "canonical": "#0c1639", "tonalRamp": ["#050a1c", "#0c1639", "#152356", "#213476", "#3d5199", "#6a7cba", "#a3aed8", "#dbe0ef"] },
+      "rule-gold": { "role": "secondary", "displayName": "Rule Gold", "canonical": "#eab736", "tonalRamp": ["#3a2c05", "#5c470a", "#84660f", "#ad871a", "#d3a527", "#eab736", "#f3d276", "#fbeec1"] },
+      "pill-gold": { "role": "secondary", "displayName": "Pill Gold", "canonical": "#e8da8d", "tonalRamp": ["#3b3410", "#5c521c", "#7f7229", "#a3943a", "#c6b85c", "#e8da8d", "#f2ebbb", "#faf7e2"] },
+      "band-top": { "role": "tertiary", "displayName": "MassLegalHelp Pale Blue", "canonical": "#d3e7ff", "tonalRamp": ["#0d243c", "#153a60", "#1f5488", "#2f74b4", "#5b9bd8", "#96c2ec", "#d3e7ff", "#fafcff"] },
+      "band-edge": { "role": "tertiary", "displayName": "Band Edge Block", "canonical": "#a2c4f0", "tonalRamp": ["#0c1f36", "#143255", "#1e4a7c", "#2c68a8", "#5590cd", "#a2c4f0", "#cbdef7", "#eaf2fd"] },
+      "rule-ink": { "role": "tertiary", "displayName": "Byline Rule Ink", "canonical": "#192a65", "tonalRamp": ["#080d20", "#0f1a3f", "#192a65", "#28408f", "#4661b4", "#7b90cf", "#b2bfe4", "#e0e6f4"] },
+      "field": { "role": "neutral", "displayName": "Control Field", "canonical": "#eef1f5", "tonalRamp": ["#1b1f25", "#2e343d", "#464e59", "#646d7a", "#8b939e", "#b6bcc5", "#d8dde3", "#eef1f5"] },
+      "selected-fill": { "role": "neutral", "displayName": "Selected Fill", "canonical": "#d7e6f9", "tonalRamp": ["#0e2032", "#163350", "#204a75", "#2e68a1", "#5691c9", "#94bde6", "#d7e6f9", "#f2f8fe"] },
+      "boundary": { "role": "neutral", "displayName": "Clickable Boundary", "canonical": "#84909f", "tonalRamp": ["#141a20", "#232c35", "#36414d", "#4d5a68", "#6a7684", "#84909f", "#adb6c0", "#d9dee3"] },
+      "boundary-strong": { "role": "neutral", "displayName": "Mark and Stroke Boundary", "canonical": "#767f8c", "tonalRamp": ["#12161b", "#1f242c", "#30373f", "#454d57", "#5e6772", "#767f8c", "#a5acb5", "#d5d9de"] },
+      "panel-line": { "role": "neutral", "displayName": "Panel Line", "canonical": "#c8d2e0", "tonalRamp": ["#161c24", "#26303d", "#3a4859", "#526478", "#71849b", "#98a9bf", "#c8d2e0", "#eaeff5"] },
+      "muted-ink": { "role": "neutral", "displayName": "Muted Ink", "canonical": "#5b6470", "tonalRamp": ["#0e1013", "#191d22", "#282e35", "#3a424c", "#4c5561", "#5b6470", "#8e97a3", "#c6ccd4"] },
+      "exempt-fill": { "role": "tertiary", "displayName": "Exempt Green Fill", "canonical": "#e6f4ec", "tonalRamp": ["#0a1f14", "#0f3220", "#14532d", "#1b7343", "#27a061", "#63c795", "#a9e0c4", "#e6f4ec"] },
+      "caution-fill": { "role": "tertiary", "displayName": "Caution Ochre Fill", "canonical": "#fbf1dc", "tonalRamp": ["#2b1c02", "#472e04", "#66430a", "#7a4a00", "#b07c1f", "#d9ab52", "#eecf96", "#fbf1dc"] },
+      "danger": { "role": "tertiary", "displayName": "Danger Red", "canonical": "#a12b2b", "tonalRamp": ["#2a0a0a", "#451111", "#661a1a", "#a12b2b", "#c25252", "#d88585", "#ecb6b6", "#f8e2e2"] },
+      "shell-paper": { "role": "neutral", "displayName": "Warm Paper", "canonical": "#fbf8f1", "tonalRamp": ["#17150f", "#2a261b", "#413b2a", "#5e563d", "#867c5b", "#b4ab8b", "#ddd6c2", "#fbf8f1"] },
+      "shell-card": { "role": "neutral", "displayName": "Card Cream", "canonical": "#fffef9", "tonalRamp": ["#1e1b13", "#302c1f", "#48422e", "#655d41", "#8d8460", "#b9b190", "#e0dbc6", "#fffef9"] },
+      "shell-ink": { "role": "neutral", "displayName": "Warm Ink", "canonical": "#221f1a", "tonalRamp": ["#100e0b", "#221f1a", "#3a352c", "#544d40", "#726957", "#9d9382", "#c8c1b2", "#ece7db"] },
+      "shell-edge": { "role": "neutral", "displayName": "Surface Edge", "canonical": "#9e8e66", "tonalRamp": ["#1f1a0f", "#332c1a", "#4c4126", "#706755", "#9e8e66", "#bcae91", "#d8cfbb", "#f0eae0"] },
+      "shell-rule": { "role": "neutral", "displayName": "Inner Hairline", "canonical": "#e4ddcd", "tonalRamp": ["#191509", "#332e24", "#4c4534", "#6d6349", "#968b6c", "#bfb69c", "#e4ddcd", "#f6f3ec"] },
+      "shell-pine": { "role": "primary", "displayName": "Pine", "canonical": "#3a5a40", "tonalRamp": ["#0f180f", "#1d2f1f", "#2b4430", "#3a5a40", "#547f5c", "#7ba583", "#93b899", "#d2e2d6"] },
+      "shell-house-blue": { "role": "secondary", "displayName": "House Blue", "canonical": "#3d5a80", "tonalRamp": ["#0f1722", "#1d2b3d", "#2c4159", "#3d5a80", "#5c7ea9", "#88a3c6", "#9ab7d6", "#d5e2ee"] },
+      "shell-terracotta": { "role": "tertiary", "displayName": "Archive Terracotta", "canonical": "#a85a32", "tonalRamp": ["#2a1409", "#452113", "#66301b", "#a85a32", "#c37c52", "#dc9163", "#eebb9b", "#f8e6da"] }
     },
     "typographyMeta": {
-      "display": { "displayName": "Display", "purpose": "Fraunces 600. The root shell's page title and footer heading only. Never appears in court-forms/." },
-      "headline": { "displayName": "Headline", "purpose": "One per screener screen, carrying the question or the result rather than the product name." },
-      "title": { "displayName": "Title", "purpose": "Section headings and the result heading inside its colored card header." },
-      "body": { "displayName": "Body", "purpose": "Screener prose at 16.5px/1.6. Long explanation drops from full ink to Prose Ink #3a424e." },
-      "body-small": { "displayName": "Body Small", "purpose": "Nested lists, panel copy, and footnotes at 15px to 15.5px." },
-      "option": { "displayName": "Option", "purpose": "Answer tile labels. Bold because the tile is the control and its label is the thing being chosen." },
-      "label": { "displayName": "Label", "purpose": "Always-visible field labels above each write-in blank." },
-      "kicker": { "displayName": "Kicker", "purpose": "Shell only. Monospace, uppercase, wide tracking, above the page title." }
+      "display": { "displayName": "Display", "purpose": "Fraunces page titles on the preview site only. Never on the screener." },
+      "headline": { "displayName": "Headline", "purpose": "The screener's h1, set inside the pale blue title band." },
+      "title": { "displayName": "Title", "purpose": "Section and result headings on the screener." },
+      "question": { "displayName": "Question", "purpose": "A single screening question. Smaller than a section title on purpose: a question is a prompt, not a chapter." },
+      "body": { "displayName": "Body", "purpose": "Screener prose at 16.5px in brand navy, in a 660px column." },
+      "option": { "displayName": "Option", "purpose": "The answer tile label. Bold, because the tile is the decision." },
+      "label": { "displayName": "Label", "purpose": "Field labels and small bold prompts. Small type is quiet by size, never by weight." },
+      "byline": { "displayName": "Byline", "purpose": "The By-organisation line in the page-header pattern." },
+      "mono": { "displayName": "Mono", "purpose": "One small preview-site use. Not part of the screener's ramp." }
     },
     "shadows": [
-      { "name": "press-edge", "value": "0 2px 0 #124a8f", "purpose": "Primary and Next buttons. A hard bottom edge with no blur, read as a physical press affordance rather than a lift. The v2 page uses #0a2b52 under Link Blue buttons." },
-      { "name": "selection-halo", "value": "inset 0 0 0 1px #1a5fb4, 0 0 0 3px rgba(26,95,180,.16)", "purpose": "A selected option tile. The inset thickens the accent border optically; the outer ring stays translucent so it never reads as a glow. v2 uses a 4px ring at rgba(19,74,142,.16)." },
-      { "name": "floating-panel", "value": "0 8px 24px rgba(16,32,56,.12)", "purpose": "The desktop help popover only, which genuinely floats over content. Neutral and offset, never a colored halo. Removed entirely in the coarse-pointer accordion form." },
-      { "name": "shell-hover-lift", "value": "0 8px 22px -14px var(--lift)", "purpose": "Root shell cards on hover, paired with a 2px translate. Tokenized: pine-tinted rgba(58,90,64,.45) in light, plain rgba(0,0,0,.6) in dark, because a tinted glow on a near-black card reads as haze instead of depth. Does not exist in court-forms/, where rows lift 1px with a border color change and no shadow." },
-      { "name": "shell-hover-lift-house", "value": "0 6px 16px -10px var(--lift-house)", "purpose": "The theme toggle and the contact buttons on hover. Same tokenized treatment in house blue, also black in dark mode." }
+      { "name": "offset-block", "value": "8px 8px 0 0 #a2c4f0", "purpose": "The solid block behind the title band, 5px on phones. Reproduces MassLegalHelp's own absolutely positioned ::after inset 8px. A shadow is used because a pseudo-element would need z-index:-1 and .band creates no stacking context, and because a shadow never affects layout and so cannot push a horizontal scrollbar onto a narrow screen." },
+      { "name": "press-edge", "value": "0 2px 0 #1f2c5c", "purpose": "Primary and Next buttons. A hard bottom edge with no blur, read as a button with a physical bottom rather than a lifted card." },
+      { "name": "selection-halo", "value": "inset 0 0 0 1px #0057a2, 0 0 0 3px rgba(26,95,180,.16)", "purpose": "A selected option tile. The inset optically thickens the accent border; the outer ring stays translucent so it reads as a ring and not a glow." },
+      { "name": "floating-panel", "value": "0 8px 24px rgba(16,32,56,.12)", "purpose": "The desktop help popover, the only element that genuinely floats over content. Neutral and offset, never chromatic. Removed entirely in the coarse-pointer accordion form." },
+      { "name": "shell-hover-lift", "value": "0 8px 22px -14px var(--lift)", "purpose": "Preview-site cards on hover, paired with a 2px translate. Pine-tinted rgba(58,90,64,.45) in light and plain rgba(0,0,0,.6) in dark, because a tinted glow on a near-black card reads as haze instead of depth." },
+      { "name": "shell-hover-lift-house", "value": "0 6px 16px -10px var(--lift-house)", "purpose": "The theme toggle on hover. Same tokenized treatment in house blue, also black in dark mode." }
     ],
     "motion": [
-      { "name": "state", "value": "0.15s ease", "purpose": "Background, border-color, and box-shadow on option tiles, marks, and nav rows." },
-      { "name": "screen-in", "value": "0.3s to 0.35s ease both, opacity only", "purpose": "Screen entrance. Opacity alone, never a translate, so nothing shifts under a reader." },
+      { "name": "state", "value": "0.15s ease", "purpose": "Background, border-color, and box-shadow on option tiles and marks." },
+      { "name": "screen-in", "value": "0.3s ease both, opacity only", "purpose": "Screen entrance. Opacity alone, never a translate, so nothing shifts under a reader mid-sentence." },
       { "name": "progress", "value": "transform 0.3s ease", "purpose": "The progress fill animates scaleX so it stays off the layout path." },
-      { "name": "hint-panel", "value": "0.15s opacity, 0.2s max-height and padding", "purpose": "The coarse-pointer accordion form of the help tip. One small subtree on an explicit tap." },
-      { "name": "reduced-motion", "value": "prefers-reduced-motion: reduce disables all of the above", "purpose": "Card entrances, tile transitions, and hover lifts are all zeroed, not merely shortened." }
+      { "name": "hint-panel", "value": "0.15s opacity and visibility, 0.2s max-height, padding, and margin", "purpose": "The coarse-pointer accordion form of the help tip. One small subtree on an explicit tap." },
+      { "name": "shell-hover", "value": "0.18s ease", "purpose": "Preview-site card transform, border-color, and shadow, plus the 4px arrow slide on a Go link." },
+      { "name": "reduced-motion", "value": "prefers-reduced-motion: reduce disables all of the above", "purpose": "Card entrances, tile transitions, and hover lifts are zeroed, not merely shortened." }
     ],
     "breakpoints": [
       { "name": "phone", "value": "640px" },
-      { "name": "narrow-phone", "value": "380px" },
-      { "name": "pointer-fine", "value": "641px + (hover: hover) and (pointer: fine)" }
+      { "name": "pointer-coarse", "value": "(max-width: 640px), (hover: none), (pointer: coarse)" },
+      { "name": "pointer-fine", "value": "(hover: hover) and (min-width: 641px) and (pointer: fine)" }
     ]
   },
   "components": [
@@ -130,130 +69,130 @@
       "name": "Primary Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "The one action per screen. Full width below 640px.",
-      "html": "<button class=\"ds-btn-primary\" type=\"button\">Fill out the form &rarr;</button>",
-      "css": ".ds-btn-primary { font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; font-size: 17px; font-weight: 700; color: #fff; background: #1a5fb4; border: none; border-radius: 10px; padding: 15px 26px; min-height: 48px; cursor: pointer; box-shadow: 0 2px 0 #124a8f; } .ds-btn-primary:active { transform: translateY(1px); box-shadow: 0 1px 0 #124a8f; } .ds-btn-primary:focus-visible { outline: 3px solid #124a8f; outline-offset: 2px; }"
+      "description": "The start-and-continue action on the screener. Accent blue with a hard bottom press edge.",
+      "html": "<button class=\"ds-btn-primary\" type=\"button\">Start the screening</button>",
+      "css": ".ds-btn-primary { font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; font-size: 17px; font-weight: 700; color: #fff; background: #0057a2; border: none; border-radius: 10px; padding: 15px 26px; min-height: 48px; cursor: pointer; box-shadow: 0 2px 0 #1f2c5c; transition: background .15s ease; } .ds-btn-primary:hover { background: #1f2c5c; } .ds-btn-primary:focus-visible { outline: 3px solid #1f2c5c; outline-offset: 2px; } .ds-btn-primary:active { transform: translateY(1px); box-shadow: 0 1px 0 #1f2c5c; }"
     },
     {
       "name": "Ghost Button",
       "kind": "button",
       "refersTo": "button-ghost",
-      "description": "Back, Start over, Download, Email. Never competes with the primary action.",
-      "html": "<button class=\"ds-btn-ghost\" type=\"button\">&larr; Back</button>",
-      "css": ".ds-btn-ghost { font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; font-size: 15px; font-weight: 700; color: #1a5fb4; background: none; border: 2px solid #1a5fb4; border-radius: 10px; padding: 10px 18px; min-height: 48px; cursor: pointer; } .ds-btn-ghost:hover { background: #eef1f5; } .ds-btn-ghost:focus-visible { outline: 3px solid #124a8f; outline-offset: 2px; }"
+      "description": "Back and secondary actions. A 2px accent stroke, no fill.",
+      "html": "<button class=\"ds-btn-ghost\" type=\"button\">Back</button>",
+      "css": ".ds-btn-ghost { font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; font-size: 15px; font-weight: 700; color: #0057a2; background: none; border: 2px solid #0057a2; border-radius: 10px; padding: 10px 18px; min-height: 48px; cursor: pointer; transition: background .15s ease; } .ds-btn-ghost:hover { background: #eef1f5; } .ds-btn-ghost:focus-visible { outline: 3px solid #1f2c5c; outline-offset: 2px; }"
     },
     {
       "name": "Option Tile (unselected)",
       "kind": "custom",
       "refersTo": "option",
-      "description": "The signature control. A full-width answer tile with a 24px circular mark for single-select.",
-      "html": "<button class=\"ds-opt\" type=\"button\" role=\"radio\" aria-checked=\"false\"><span class=\"ds-opt-mark\" aria-hidden=\"true\"></span><span>No, I have not gotten a notice from DTA</span></button>",
-      "css": ".ds-opt { display: flex; align-items: center; gap: 13px; width: 100%; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; font-size: 16.5px; font-weight: 700; text-align: left; line-height: 1.35; color: #1b1f27; background: #fff; border: 2px solid #84909f; border-radius: 10px; padding: 16px 18px; min-height: 52px; cursor: pointer; box-shadow: 0 0 0 3px transparent; transition: background .15s ease, border-color .15s ease, box-shadow .15s ease; } .ds-opt:hover { border-color: #5b6675; background: #eef1f5; } .ds-opt:active { background: #e3e8f0; } .ds-opt:focus-visible { outline: 3px solid #124a8f; outline-offset: 2px; } .ds-opt-mark { width: 24px; height: 24px; flex: none; border-radius: 50%; border: 2px solid #767f8c; background: #fff; }"
+      "description": "An answer tile at rest: white on a white page, held by a 3.25:1 boundary. The round mark means one answer is possible.",
+      "html": "<button class=\"ds-opt\" type=\"button\"><span class=\"ds-opt-mark\" aria-hidden=\"true\"></span>Yes, DTA sent me a notice</button>",
+      "css": ".ds-opt { display: flex; align-items: center; gap: 13px; width: 100%; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; font-size: 16.5px; font-weight: 700; line-height: 1.35; text-align: left; color: #1f2c5c; background: #fff; padding: 16px 18px; min-height: 52px; border: 2px solid #84909f; border-radius: 10px; cursor: pointer; box-shadow: 0 0 0 3px transparent; transition: background .15s ease, border-color .15s ease, box-shadow .15s ease; } .ds-opt:hover { border-color: #5b6675; background: #eef1f5; } .ds-opt:active { background: #e3e8f0; } .ds-opt:focus-visible { outline: 3px solid #1f2c5c; outline-offset: 2px; } .ds-opt-mark { width: 24px; height: 24px; flex: none; border-radius: 50%; border: 2px solid #767f8c; background: #fff; }"
     },
     {
       "name": "Option Tile (selected)",
       "kind": "custom",
       "refersTo": "option-selected",
-      "description": "Selection is carried by the accent border and the filled mark, never by the fill alone.",
-      "html": "<button class=\"ds-opt ds-opt-selected\" type=\"button\" role=\"radio\" aria-checked=\"true\"><span class=\"ds-opt-mark\" aria-hidden=\"true\">&#9679;</span><span>Yes, DTA sent me a SNAP and Work notice</span></button>",
-      "css": ".ds-opt { display: flex; align-items: center; gap: 13px; width: 100%; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; font-size: 16.5px; font-weight: 700; text-align: left; line-height: 1.35; color: #1b1f27; background: #fff; border: 2px solid #84909f; border-radius: 10px; padding: 16px 18px; min-height: 52px; cursor: pointer; } .ds-opt-selected { border-color: #1a5fb4; background: #d7e6f9; box-shadow: inset 0 0 0 1px #1a5fb4, 0 0 0 3px rgba(26,95,180,.16); } .ds-opt-mark { width: 24px; height: 24px; flex: none; border-radius: 50%; border: 2px solid #767f8c; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #fff; } .ds-opt-selected .ds-opt-mark { border-color: #1a5fb4; background: #1a5fb4; }"
+      "description": "The same tile chosen. Selection is carried by the accent border and the filled mark; the tinted fill only agrees.",
+      "html": "<button class=\"ds-opt-sel\" type=\"button\" aria-pressed=\"true\"><span class=\"ds-opt-sel-mark\" aria-hidden=\"true\">●</span>Yes, DTA sent me a notice</button>",
+      "css": ".ds-opt-sel { display: flex; align-items: center; gap: 13px; width: 100%; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; font-size: 16.5px; font-weight: 700; line-height: 1.35; text-align: left; color: #1f2c5c; background: #d7e6f9; padding: 16px 18px; min-height: 52px; border: 2px solid #0057a2; border-radius: 10px; cursor: pointer; box-shadow: inset 0 0 0 1px #0057a2, 0 0 0 3px rgba(26,95,180,.16); } .ds-opt-sel:focus-visible { outline: 3px solid #1f2c5c; outline-offset: 2px; } .ds-opt-sel-mark { width: 24px; height: 24px; flex: none; border-radius: 50%; border: 2px solid #0057a2; background: #0057a2; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; }"
     },
     {
       "name": "Text Field",
       "kind": "input",
       "refersTo": "input",
-      "description": "Label always visible above the field. 16px minimum so iOS does not zoom on focus.",
-      "html": "<div class=\"ds-field\"><label class=\"ds-field-label\" for=\"ds-name\">Your full name</label><input class=\"ds-input\" id=\"ds-name\" type=\"text\" placeholder=\"Type here&hellip;\"></div>",
-      "css": ".ds-field-label { display: block; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; font-size: 14.5px; font-weight: 700; color: #1b1f27; margin: 0 0 7px; } .ds-input { width: 100%; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; font-size: 16px; color: #1b1f27; background: #fff; padding: 12px; border: 1.5px solid #767f8c; border-radius: 7px; min-height: 48px; } .ds-input:focus-visible { outline: 3px solid #124a8f; outline-offset: 2px; }"
+      "description": "A full-width field at the 16px floor, so focusing it never triggers iOS zoom.",
+      "html": "<label class=\"ds-label\" for=\"ds-name\">Your name</label><input class=\"ds-input\" id=\"ds-name\" type=\"text\" autocomplete=\"name\">",
+      "css": ".ds-label { display: block; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; font-size: 14px; font-weight: 700; color: #1f2c5c; margin: 0 0 6px; } .ds-input { width: 100%; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; font-size: 16px; color: #1f2c5c; background: #fff; padding: 12px; min-height: 48px; border: 1.5px solid #767f8c; border-radius: 7px; } .ds-input::placeholder { color: #6b7280; } .ds-input:focus-visible { outline: 3px solid #1f2c5c; outline-offset: 2px; }"
     },
     {
-      "name": "Result Card (exempt)",
-      "kind": "card",
-      "refersTo": "result-card-exempt",
-      "description": "Tinted header over a white body. The header fill, border, and heading ink form the status vocabulary.",
-      "html": "<div class=\"ds-result\"><div class=\"ds-result-head\"><h2 class=\"ds-result-title\">You are exempt and do not need to meet the ABAWD work rules</h2></div><div class=\"ds-result-body\"><p class=\"ds-result-lead\">You may not have to meet the work rules for these reasons:</p><ul class=\"ds-reasons\"><li><span class=\"ds-check\" aria-hidden=\"true\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20 6 9 17l-5-5\"/></svg></span><span>You live with a child under 14 years old</span></li></ul></div></div>",
-      "css": ".ds-result { border: 1px solid #cbe4d5; border-radius: 10px; overflow: hidden; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; } .ds-result-head { background: #e6f4ec; padding: 20px 22px; border-bottom: 1px solid #cbe4d5; } .ds-result-title { font-size: 24px; line-height: 1.25; font-weight: 400; color: #14532d; margin: 0; } .ds-result-body { background: #fff; padding: 20px 22px; } .ds-result-lead { font-size: 16px; line-height: 1.6; color: #3a424e; margin: 0 0 14px; } .ds-reasons { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 9px; } .ds-reasons li { display: flex; align-items: flex-start; gap: 11px; font-size: 16px; line-height: 1.5; color: #1b1f27; } .ds-check { width: 22px; height: 22px; flex: none; margin-top: 1px; border-radius: 50%; background: #1f7a4d; color: #fff; display: inline-flex; align-items: center; justify-content: center; } .ds-check svg { width: 13px; height: 13px; }"
+      "name": "Page Header Band",
+      "kind": "custom",
+      "refersTo": "band",
+      "description": "The signature pattern and the template for every future MLRI screener: gradient title panel with a solid offset block, byline, then a short heavy rule.",
+      "html": "<div class=\"ds-band\"><h1 class=\"ds-band-h1\">Did DTA tell you that you need to meet ABAWD Work Rules to keep getting SNAP?</h1></div><div class=\"ds-byline\"><span class=\"ds-byline-mark\" aria-hidden=\"true\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z\"/><path d=\"M14 2v4a2 2 0 0 0 2 2h4\"/></svg></span><div class=\"ds-byline-text\"><b>By</b> Massachusetts Law Reform Institute</div></div><div class=\"ds-byline-rule\" aria-hidden=\"true\"></div>",
+      "css": ".ds-band { background: linear-gradient(#d3e7ff, #fafcff); padding: 30px 26px 22px; margin: 0 0 22px; box-shadow: 8px 8px 0 0 #a2c4f0; } .ds-band-h1 { font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; font-size: clamp(24px, 6vw, 29px); font-weight: 700; line-height: 1.2; letter-spacing: -.01em; color: #1f2c5c; margin: 0; } .ds-byline { display: flex; align-items: flex-start; gap: 13px; margin: 0 0 22px; } .ds-byline-mark { flex: none; width: 40px; height: 40px; border-radius: 50%; background: #0057a2; color: #fff; display: flex; align-items: center; justify-content: center; } .ds-byline-mark svg { width: 20px; height: 20px; display: block; } .ds-byline-text { font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; font-size: 15.5px; line-height: 1.5; color: #1f2c5c; } .ds-byline-rule { width: 146px; height: 5px; background: #192a65; margin: 0 0 22px; } @media (max-width: 640px) { .ds-band { padding: 22px 18px 18px; box-shadow: 5px 5px 0 0 #a2c4f0; } }"
     },
     {
       "name": "Top Bar",
       "kind": "nav",
       "refersTo": "topbar",
-      "description": "Court Forms Online chrome: navy field, gold torch, and the exit pill. Focus rings inside it are Torch Gold.",
-      "html": "<div class=\"ds-topbar\"><div class=\"ds-brand\"><svg class=\"ds-torch\" viewBox=\"0 0 24 24\" width=\"26\" height=\"26\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z\"/></svg><div><div class=\"ds-brand-title\">Court Forms Online</div><div class=\"ds-brand-sub\">SNAP &middot; ABAWD Screening Tool</div></div></div><button class=\"ds-btn-exit\" type=\"button\">&larr; Back</button></div>",
-      "css": ".ds-topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; background: #0a2b52; color: #fff; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; } .ds-brand { display: flex; align-items: center; gap: 12px; min-width: 0; } .ds-torch { flex: none; stroke: #f4bd3f; } .ds-brand-title { font-size: 15px; font-weight: 700; line-height: 1.1; } .ds-brand-sub { font-size: 12px; line-height: 1.2; opacity: .85; } .ds-btn-exit { flex: none; font-family: inherit; font-size: 13px; font-weight: 700; color: #0a2b52; background: #fff; border: none; border-radius: 999px; padding: 10px 14px; min-height: 44px; cursor: pointer; } .ds-btn-exit:focus-visible { outline: 3px solid #f4bd3f; outline-offset: 2px; }"
+      "description": "The host chrome: header navy, a bold title with a subtitle that hides on phones, a white Quick exit pill, and the 9px gold rule that identifies the site.",
+      "html": "<div class=\"ds-topbar\"><div><div class=\"ds-topbar-title\">Mass Legal Help</div><div class=\"ds-topbar-sub\">Massachusetts Legal Information</div></div><button class=\"ds-btn-exit\" type=\"button\">Quick exit</button></div>",
+      "css": ".ds-topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; background: #1e2e5f; color: #fff; border-bottom: 9px solid #eab736; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; } .ds-topbar-title { font-size: 17px; font-weight: 700; line-height: 1.1; } .ds-topbar-sub { font-size: 12px; opacity: .9; line-height: 1.2; } .ds-btn-exit { flex: none; font-family: inherit; font-size: 13px; font-weight: 700; color: #1e2e5f; background: #fff; border: none; border-radius: 999px; padding: 10px 14px; min-height: 44px; cursor: pointer; } .ds-topbar :focus-visible { outline: 3px solid #e8da8d; outline-offset: 2px; border-radius: 4px; } @media (max-width: 640px) { .ds-topbar-sub { display: none; } }"
     },
     {
-      "name": "Nav Row",
-      "kind": "custom",
-      "refersTo": "nav-row",
-      "description": "The hub and index list item. The circular badge fill encodes the destination's status color.",
-      "html": "<a class=\"ds-row\" href=\"#\"><span class=\"ds-dot\" aria-hidden=\"true\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect width=\"8\" height=\"4\" x=\"8\" y=\"2\" rx=\"1\"/><path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\"/><path d=\"M12 11h4M12 16h4M8 11h.01M8 16h.01\"/></svg></span><span class=\"ds-row-body\"><span class=\"ds-row-t\">SNAP work rules screening</span><span class=\"ds-row-d\">Try the tool, see sample results, and read how it works.</span></span><span class=\"ds-row-arrow\" aria-hidden=\"true\">&rarr;</span></a>",
-      "css": ".ds-row { display: flex; align-items: center; gap: 15px; border: 1px solid #84909f; border-radius: 14px; padding: 19px 20px; text-decoration: none; color: #16202e; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; transition: border-color .15s ease, transform .15s ease; } .ds-row:hover { border-color: #134a8e; transform: translateY(-1px); } .ds-row:focus-visible { outline: 3px solid #0a2b52; outline-offset: 2px; } .ds-dot { width: 40px; height: 40px; flex: none; border-radius: 50%; background: #134a8e; color: #fff; display: flex; align-items: center; justify-content: center; } .ds-dot svg { width: 21px; height: 21px; } .ds-row-body { flex: 1; min-width: 0; } .ds-row-t { display: block; font-size: 17px; font-weight: 700; line-height: 1.25; } .ds-row-d { display: block; font-size: 15px; line-height: 1.45; color: #5b6675; margin-top: 2px; } .ds-row-arrow { flex: none; color: #134a8e; font-weight: 700; } @media (prefers-reduced-motion: reduce) { .ds-row { transition: none; } .ds-row:hover { transform: none; } }"
+      "name": "Result Card (exempt)",
+      "kind": "card",
+      "refersTo": "result-card-exempt",
+      "description": "An outcome: a colored header band over a white body, ringed by one status border, corners clipped so the band follows the card.",
+      "html": "<div class=\"ds-result\"><div class=\"ds-result-head\"><h2 class=\"ds-result-h\">You look exempt from the ABAWD work rules</h2></div><div class=\"ds-result-body\"><ul class=\"ds-result-list\"><li><span class=\"ds-check\" aria-hidden=\"true\">✓</span>You reported a disability that keeps you from working</li></ul></div></div>",
+      "css": ".ds-result { border-radius: 10px; overflow: hidden; border: 1px solid #cbe4d5; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; } .ds-result-head { background: #e6f4ec; padding: 20px 22px; border-bottom: 1px solid #cbe4d5; } .ds-result-h { font-size: clamp(21px, 5.5vw, 26px); font-weight: 700; line-height: 1.25; color: #14532d; margin: 0; } .ds-result-body { background: #fff; padding: 20px 22px; } .ds-result-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 11px; } .ds-result-list li { display: flex; align-items: flex-start; gap: 11px; font-size: 16px; line-height: 1.5; color: #1f2c5c; } .ds-check { flex: none; width: 22px; height: 22px; border-radius: 50%; background: #1e7a45; color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 1px; }"
     },
     {
       "name": "Progress Bar",
       "kind": "custom",
       "refersTo": "topbar",
-      "description": "A 6px full-bleed channel filled with scaleX, plus a section caption. Exposed as a real progressbar.",
-      "html": "<div class=\"ds-progress\"><div class=\"ds-progress-track\" role=\"progressbar\" aria-valuemin=\"0\" aria-valuemax=\"100\" aria-valuenow=\"50\" aria-label=\"Screening progress\"><div class=\"ds-progress-fill\"></div></div><div class=\"ds-progress-caption\">Section 2 of 4</div></div>",
-      "css": ".ds-progress-track { height: 6px; background: #dbe3ef; } .ds-progress-fill { height: 100%; width: 100%; background: #1a5fb4; transform: scaleX(.5); transform-origin: left; transition: transform .3s ease; } .ds-progress-caption { font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; font-size: 13px; font-weight: 700; color: #5b6470; padding: 10px 16px 0; } @media (prefers-reduced-motion: reduce) { .ds-progress-fill { transition: none; } }"
+      "description": "A 6px track with an accent fill that animates by scaleX, plus a bold muted section label. Built once and updated in place so its live region actually announces.",
+      "html": "<div class=\"ds-progress\" role=\"progressbar\" aria-valuemin=\"0\" aria-valuemax=\"100\" aria-valuenow=\"40\" aria-label=\"Screening progress\"><div class=\"ds-progress-fill\"></div></div><div class=\"ds-progress-label\" role=\"status\" aria-live=\"polite\">Section 2 of 5</div>",
+      "css": ".ds-progress { height: 6px; background: #dbe3ef; } .ds-progress-fill { height: 100%; width: 100%; transform: scaleX(.4); transform-origin: left; background: #0057a2; transition: transform .3s ease; } .ds-progress-label { font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; font-size: 13px; font-weight: 700; color: #5b6470; padding: 10px 16px 0; } @media (prefers-reduced-motion: reduce) { .ds-progress-fill { transition: none; } }"
+    },
+    {
+      "name": "Soft Info Panel",
+      "kind": "card",
+      "refersTo": "panel-soft",
+      "description": "Supporting information in the host's pale blue, borderless, often led by a navy circular mark.",
+      "html": "<div class=\"ds-soft\"><span class=\"ds-soft-mark\" aria-hidden=\"true\"><svg viewBox=\"0 0 24 24\" width=\"15\" height=\"15\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect width=\"18\" height=\"11\" x=\"3\" y=\"11\" rx=\"2\" ry=\"2\"/><path d=\"M7 11V7a5 5 0 0 1 10 0v4\"/></svg></span><p class=\"ds-soft-text\"><strong>Your information is private</strong> and will not automatically be saved on this device.</p></div>",
+      "css": ".ds-soft { display: flex; align-items: flex-start; gap: 12px; background: #d3e7ff; border-radius: 10px; padding: 15px 17px; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; } .ds-soft-mark { flex: none; width: 26px; height: 26px; border-radius: 50%; background: #1e2e5f; color: #fff; display: flex; align-items: center; justify-content: center; } .ds-soft-text { font-size: 14.5px; line-height: 1.55; color: #1f2c5c; margin: 0; }"
     },
     {
       "name": "Shell Entry Card",
       "kind": "card",
       "refersTo": "shell-entry",
-      "description": "The root index page's project card. Warm paper territory, theme-aware, and never used inside court-forms/.",
-      "html": "<div class=\"ds-entry\"><div class=\"ds-badge\" aria-hidden=\"true\">C</div><div class=\"ds-entry-body\"><div class=\"ds-entry-titlerow\"><h2 class=\"ds-entry-title\">Court Forms Online</h2><span class=\"ds-tag\">Prototype</span></div><p class=\"ds-entry-desc\">Accessible, plain-language redesigns of court and benefits tools.</p><a class=\"ds-go\" href=\"#\">Open project</a></div></div>",
-      "css": ".ds-entry { display: flex; gap: 16px; padding: 18px; background: #fffef9; border: 1px solid #9e8e66; border-radius: 14px; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; color: #221f1a; transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; } .ds-entry:hover { transform: translateY(-2px); border-color: #a85a32; box-shadow: 0 8px 22px -14px rgba(58,90,64,.45); } .ds-badge { width: 40px; height: 40px; flex: none; border-radius: 10px; background: #eef1e9; color: #a85a32; font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 20px; display: grid; place-items: center; } .ds-entry-titlerow { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0 0 6px; min-height: 40px; } .ds-entry-title { font-size: 20px; font-weight: 700; letter-spacing: -.01em; line-height: 1.25; margin: 0; } .ds-tag { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #6b6255; background: #eef1e9; border-radius: 999px; padding: 3px 9px; white-space: nowrap; } .ds-entry-desc { font-size: 15px; line-height: 1.45; color: #6b6255; margin: 0 0 10px; } .ds-go { font-size: 15px; font-weight: 700; color: #a85a32; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; margin-top: -11px; margin-bottom: -11px; } .ds-go::after { content: '\\2192'; transition: transform .18s ease; } .ds-go:hover { text-decoration: underline; text-underline-offset: 3px; } .ds-go:focus-visible { outline: 2.5px solid #3d5a80; outline-offset: 3px; border-radius: 3px; } .ds-go:hover::after { transform: translateX(4px); } @media (prefers-reduced-motion: reduce) { .ds-entry, .ds-go::after { transition: none; } .ds-entry:hover { transform: none; } .ds-go:hover::after { transform: none; } }"
+      "description": "The preview site's index row: cream card on warm paper, a Fraunces badge, and a Go link whose arrow slides on hover. Preview territory only.",
+      "html": "<li class=\"ds-entry\"><span class=\"ds-badge\" aria-hidden=\"true\">S</span><div><h3 class=\"ds-entry-h\">SNAP ABAWD screener</h3><p class=\"ds-entry-p\">One screening, styled for two different websites.</p><a class=\"ds-go\" href=\"#\">Open</a></div></li>",
+      "css": ".ds-entry { display: flex; gap: 16px; padding: 18px; list-style: none; background: #fffef9; border: 1px solid #9e8e66; border-radius: 14px; font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; color: #221f1a; transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease; } .ds-entry:hover { transform: translateY(-2px); border-color: #3a5a40; box-shadow: 0 8px 22px -14px rgba(58,90,64,.45); } .ds-badge { flex: none; width: 40px; height: 40px; border-radius: 10px; background: #eef1e9; color: #3a5a40; font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 20px; display: grid; place-items: center; line-height: 1; } .ds-entry-h { font-size: 17px; font-weight: 700; letter-spacing: -.01em; line-height: 1.25; margin: 0 0 6px; } .ds-entry-p { font-size: 15px; line-height: 1.45; color: #6b6255; margin: 0 0 10px; } .ds-go { display: inline-flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 700; color: #3a5a40; text-decoration: none; min-height: 44px; margin-top: -11px; margin-bottom: -11px; } .ds-go::after { content: \"→\"; transition: transform .18s ease; } .ds-go:hover { text-decoration: underline; text-underline-offset: 3px; } .ds-go:hover::after { transform: translateX(4px); } .ds-go:focus-visible { outline: 2.5px solid #3d5a80; outline-offset: 3px; } @media (prefers-reduced-motion: reduce) { .ds-entry, .ds-go::after { transition: none; } .ds-entry:hover { transform: none; } .ds-go:hover::after { transform: none; } }"
     }
   ],
   "narrative": {
     "northStar": "The Kitchen Table Form",
-    "overview": "Someone got a notice from DTA saying they might lose their food benefits. They are reading it on a phone, possibly at a kitchen table, possibly with a friend or an advocate beside them. The design's job is to sit in that chair patiently: one question at a time, in words that do not assume they already understand the rules, in controls large enough to hit without care. Nothing hurries them and nothing implies they should have known this already.\n\nThe tone that carries it is steady, trustworthy, and official. The screener borrows the authority of a real state-facing website on purpose, because a person deciding whether to trust a result about their benefits needs the page to look like it comes from an institution that will honor what it says. Warmth lives in the sentence lengths and the spacing, not in decoration.\n\nThis project holds two visual territories, and they are not meant to converge. The court-forms/ territory is a deliberate copy of the live Court Forms Online design system, adopted so a finished tool can be dropped into production without a redesign. It is inherited, not invented. The root shell (index.html) is Marlie's own style: warm paper, a serif display face, dark mode. It indexes the prototypes for colleagues and has no reason to look like Court Forms. Neither territory borrows from the other.",
+    "overview": "The shipped screener is a public-benefits form that has to survive being read on a borrowed phone, in a hurry, by someone whose SNAP is already at risk. Everything in the system serves that: one legibility-first typeface at 16.5px body copy, 48px minimum controls, a white page with tinted controls so nothing depends on a subtle fill, and a measured contrast ratio behind every boundary value. Nothing here is styled for effect. Where a decorative choice and a legibility choice conflicted, legibility won and the comment in the code says so.\n\nThere are two live territories and they do not mix. The screener at masslegalhelp/index.html wears MassLegalHelp's chrome: navy header bar, a 9px gold rule under it, one brand navy carrying both headings and body copy, and their pale blue page-title band with a solid block offset behind it. The chrome tokens are theirs, read off masslegalhelp.org and recorded with measured ratios in MASSLEGALHELP-BRAND.md, which is authoritative for those values and for what we deliberately do not copy. The preview site (root index.html, screener/index.html, screener/how-it-works.html) is the second territory and is deliberately unlike the first: warm paper, a Fraunces display face, pine and house-blue accents, and a full dark mode. It is a reviewer's index, not a host site, so it gets to have its own voice.\n\nThe Court Forms Online palette (court navy #0a2b52, action blue #1a5fb4, torch gold #f4bd3f) is retired. It survives only in archive/, frozen and untested, and is not available to new work. What did survive the rebrand is the control layer underneath the chrome: the page stayed white and only the chrome moved, so the field, boundary, and mark tokens carried over unchanged and with their ratios intact.",
     "keyCharacteristics": [
-      "One typeface across every tool screen, chosen for legibility rather than for style",
-      "A white page with tinted controls, never a tinted page with white controls",
-      "Flat by default: borders carry structure, and the only shadow at rest is a 2px press edge",
-      "44px to 52px minimum targets, and no input below 16px",
-      "Color is a status vocabulary (green exempt, ochre not exempt, blue informational), never decoration",
-      "Every contrast value in the system has a measured ratio behind it"
+      "One typeface, Atkinson Hyperlegible, chosen for low-vision readers rather than style",
+      "White page, tinted controls; separation comes from the control, never from the page",
+      "Every boundary and text value has a computed contrast ratio behind it",
+      "Host chrome reproduced faithfully, including its offset title band, but never its fonts",
+      "A warm paper shell with dark mode, kept strictly off the screener"
     ],
     "rules": [
-      { "name": "The Borrowed Chrome Rule", "body": "The court-forms/ palette is copied from a live production site. Court Navy, Torch Gold, and the blues are not available for restyling; changing one is a compatibility decision about dropping into production, never a taste decision.", "section": "colors" },
-      { "name": "The Tinted Control Rule", "body": "The page is white and the controls are tinted. Never invert it. An option reverted to a white fill disappears on a white page, and two pale tints sit near 1.05:1 against each other, so fill alone can never carry a selected state. Selection is carried by the accent border plus the filled mark.", "section": "colors" },
-      { "name": "The Measured Ratio Rule", "body": "Every boundary, mark, and text color in this system has a computed contrast ratio behind it, recorded in CLAUDE.md. Before changing any of them, compute the new ratio. #d3d9e2 was tried for option borders once and failed at 1.42:1.", "section": "colors" },
-      { "name": "The One Gold Rule", "body": "Torch Gold appears twice: the torch glyph and the focus ring on the navy bar. It is never a fill, never a status color, and never decoration.", "section": "colors" },
-      { "name": "The Two Territories Rule", "body": "The shell's warm paper palette and the tool's institutional palette never mix. No Fraunces in court-forms/, no navy chrome on the homepage.", "section": "colors" },
-      { "name": "The One Face Rule", "body": "Atkinson Hyperlegible carries every tool screen alone. A display pairing would work against the reason the face was chosen, and the source files carry an explicit impeccable-disable single-font comment recording that decision. Do not fix it.", "section": "typography" },
-      { "name": "The No-Zoom Rule", "body": "No input, textarea, or select goes below 16px. iOS Safari zooms the viewport on focus below that, which throws a person out of their place in the form.", "section": "typography" },
-      { "name": "The Bold-Means-Actionable Rule", "body": "In the tools, 700 marks something to act on or a result: buttons, option labels, field labels, headings. Emphasis inside prose uses strong sparingly, on the words that change what a person should do.", "section": "typography" },
-      { "name": "The One Question Rule", "body": "A screener page asks one grouped thing and shows its own Back and Continue. Do not consolidate sections onto a single scrolling page to save clicks.", "section": "layout" },
-      { "name": "The Thumb Rule", "body": "Below 640px, every action a person must take is full width or at least 140px wide, minimum 44px tall, and center-aligned.", "section": "layout" },
-      { "name": "The Flat-At-Rest Rule", "body": "Nothing on a court-forms/ page casts a shadow at rest except a button's press edge. If a new element needs to separate from the page, give it a border or a tinted fill.", "section": "elevation" },
-      { "name": "The Derived Radius Rule", "body": "New surfaces compute from --radius rather than introducing a new literal. A radius that does not trace back to 10px needs a reason.", "section": "shapes" },
-      { "name": "The Shape-Carries-Meaning Rule", "body": "Circle means choose one, rounded square means choose any. Never restyle one to match the other.", "section": "shapes" }
+      { "name": "The Tinted Control Rule", "body": "The page is white and the controls are tinted. Never invert it. An option reverted to a white fill disappears on a white page, and any two pale tints sit near 1.05:1 against each other, so fill can never carry a selected state on its own. Selection is carried by the accent border plus the filled mark; the fill only agrees.", "section": "colors" },
+      { "name": "The Two Golds Rule", "body": "There are two golds because MassLegalHelp has two: #eab736 is the saturated rule under the header and #e8da8d is their pale Legal Topics tone. Both are decorative and both fail contrast on white. Neither may carry meaning anywhere off the navy bar: no gold focus ring, selected state, or error indicator on the white page. Use accent blue at 7.28:1 for those.", "section": "colors" },
+      { "name": "The Measured Ratio Rule", "body": "Every boundary, mark, and text color here has a computed ratio behind it, in CLAUDE.md for the controls and MASSLEGALHELP-BRAND.md for the chrome. Compute the new ratio before changing one. #d3d9e2 was tried for option borders and failed at 1.42:1.", "section": "colors" },
+      { "name": "The Two Territories Rule", "body": "The screener's chrome and the preview site's paper never mix. No Fraunces, pine, or paper on the screener; no navy chrome or gold rule on the preview pages. A page belongs to one territory and reads entirely as that one.", "section": "colors" },
+      { "name": "The Legibility-First Rule", "body": "Atkinson Hyperlegible is not a style choice and does not lose an argument to a host font. MassLegalHelp sets body copy in Montserrat and headings in Domine; we match their color and their layout and keep our typeface. Revisit only with a self-hosted domine-700.woff2 in hand, and only for headings.", "section": "typography" },
+      { "name": "The Weight-Not-Size Rule", "body": "The screener's steps are close together (16.5px body, 18-21px question, 21-25px section) and separation comes from weight, color, and space. Do not open the ramp with a larger display size; a form is not an article.", "section": "typography" },
+      { "name": "The 16px Input Floor", "body": "Every input, textarea, and select is at least 16px, because anything smaller triggers iOS zoom on focus and throws the reader out of the form.", "section": "typography" },
+      { "name": "The Hard Edge Rule", "body": "Offset depth on the screener has zero blur and a real color: 8px 8px 0 behind the band, 0 2px 0 under a button. Blur belongs only to something that actually floats, which here is one help popover.", "section": "elevation" },
+      { "name": "The Motion-Is-Optional Rule", "body": "The only entrance is a 0.3s opacity fade, never a translate, so nothing shifts under a reader mid-sentence. The progress bar animates transform: scaleX() to stay off the layout path. prefers-reduced-motion: reduce zeroes card entrances, tile transitions, and hover lifts rather than shortening them.", "section": "elevation" },
+      { "name": "The Page-Header Rule", "body": "A new MLRI screener opens with the band, the byline, and the rule, in that order, before any prose. Nothing else goes inside the band except the h1.", "section": "components" }
     ],
     "dos": [
-      "Do treat the court-forms/ palette and chrome as inherited from production. Match it; do not improve it.",
-      "Do tint the control, not the page. Options are #eef1f5 at rest, #e3e8f0 on hover, #d7e6f9 when selected, on a #ffffff page.",
-      "Do compute a contrast ratio before changing any border, mark, or text color, and keep clickable boundaries at or above 3:1 on white.",
-      "Do derive new radii from --radius (10px) and new spacing from the 8 / 10 / 14 / 18 / 22 / 28px rhythm.",
-      "Do give every interactive element a 44px minimum target, 52px for option tiles, and keep inputs at 16px or larger.",
-      "Do use a Lucide line glyph in a filled circle for iconography: white stroke on Court Navy, Action Blue, Approval Green, or #9a6a00, matching the result screens.",
-      "Do pair every status color with an icon and a text label, so color is never the only channel carrying the outcome.",
-      "Do keep the answer tiles as the interaction pattern for questions."
+      "Do keep the page white and tint the control. Option fill #eef1f5, hover #e3e8f0, selected #d7e6f9, and a #84909f boundary at 3.25:1 around anything clickable.",
+      "Do carry a selected state with the accent border plus the filled mark. Two pale tints sit near 1.05:1, so fill alone communicates nothing.",
+      "Do compute the contrast ratio before changing any boundary, mark, or text value, and record it next to the token the way the existing ones are recorded.",
+      "Do open a new screener with the page-header pattern: band, byline, 146px rule.",
+      "Do set every interactive target at 48px, or 44px for a secondary control, and every text input at 16px or larger.",
+      "Do reproduce the host chrome exactly where it is reproduced at all: header navy, the 9px gold rule, one navy for headings and body, and their pale blue band.",
+      "Do keep both territories whole. Fraunces, paper, and pine belong to the preview site; navy chrome and the gold rule belong to the screener."
     ],
     "donts": [
-      "Don't copy production's Docassemble interview screens: Bootstrap carets, the flat sidebar step list, small dense radios. The tiles in this system replaced them on purpose.",
-      "Don't reach for consumer-app polish: gradients, glassy or blurred panels, floating cards, playful illustration, animated flourishes. A benefits decision is not a marketing page.",
-      "Don't build a dense government portal either: no small type, no wall-to-wall tables, no unexplained acronyms, and no showing every section at once.",
-      "Don't give an option a white fill, and don't let a fill alone carry the selected state.",
-      "Don't add an ambient shadow to a court-forms/ surface. The 2px press edge under primary buttons is the only shadow at rest.",
-      "Don't introduce a second typeface into the tools, and don't fix the single-font detector comment that documents why.",
-      "Don't use emoji in the UI. Use the Lucide-in-a-circle pattern instead. Note that snap-abawd.html and snap-abawd-classic-v2.html still carry a lock emoji in the privacy notice; that is a known exception to correct, not a precedent.",
-      "Don't use red for the may need to meet the work rules result. It is not a denial, and Caution Ochre (#9a6a00) is the deliberate choice.",
-      "Don't carry the shell's warm paper palette, Fraunces, or its dark mode into court-forms/, and don't push the Court Forms chrome onto the root index page.",
-      "Don't load a webfont or icon library from a CDN inside the tools. Atkinson Hyperlegible and Lucide are self-hosted under court-forms/fonts/ and court-forms/vendor/."
+      "Don't let gold carry meaning anywhere off the navy bar. #eab736 is 1.41:1 class decoration on white; a gold focus ring, selected state, or error mark fails outright.",
+      "Don't revive the Court Forms Online palette. It is archived, frozen, and untested, and a new surface inheriting court navy or torch gold would be inheriting a retired identity.",
+      "Don't substitute a second typeface on the screener for hierarchy. Use weight, size, and space; Atkinson Hyperlegible carries the whole ramp.",
+      "Don't animate a translate or a height on an entrance. Opacity only, scaleX for progress, and everything zeroed under prefers-reduced-motion.",
+      "Don't blur a shadow that is standing in for a solid offset block. 8px 8px 0 and 0 2px 0 are hard on purpose.",
+      "Don't use a class in markup with no CSS rule behind it. scripts/check-pages.js fails the build on it, and the guard only works while the page's own <style> block owns its classes.",
+      "Don't ship a control that is drawn but not wired. Print, Share, and Listen exist on the host site and are deliberately absent here for exactly that reason."
     ]
   }
 }

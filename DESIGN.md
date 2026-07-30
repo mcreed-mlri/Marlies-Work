@@ -1,36 +1,41 @@
 ---
 name: Marlie's MLRI Work
-description: Two visual territories: an inherited Court Forms Online tool chrome, and a warm paper shell that indexes the prototypes.
+description: One SNAP screener wearing MassLegalHelp's chrome, indexed by a warm paper preview shell.
 colors:
-  court-navy: "#0a2b52"
-  action-blue: "#1a5fb4"
-  action-blue-deep: "#124a8f"
-  link-blue: "#134a8e"
-  torch-gold: "#f4bd3f"
-  approval-green: "#1e7a45"
-  caution-ochre: "#9a6a00"
+  header-navy: "#1e2e5f"
+  brand-navy: "#1f2c5c"
+  strip-navy: "#0c1639"
+  accent-blue: "#0057a2"
+  rule-gold: "#eab736"
+  pill-gold: "#e8da8d"
+  band-top: "#d3e7ff"
+  band-bottom: "#fafcff"
+  band-edge: "#a2c4f0"
+  rule-ink: "#192a65"
   page-white: "#ffffff"
-  ink-warm: "#1b1f27"
-  ink-cool: "#16202e"
-  prose-ink: "#3a424e"
-  lead-ink: "#37414f"
-  muted-ink: "#5b6675"
-  boundary: "#84909f"
-  boundary-strong: "#767f8c"
-  panel-line: "#c8d2e0"
   field: "#eef1f5"
   field-hover: "#e3e8f0"
   selected-fill: "#d7e6f9"
-  soft-blue: "#e8f0fb"
-  soft-blue-cool: "#eaf1fb"
+  boundary: "#84909f"
+  boundary-hover: "#5b6675"
+  boundary-strong: "#767f8c"
+  panel-line: "#c8d2e0"
+  muted-ink: "#5b6470"
+  placeholder-ink: "#6b7280"
+  progress-track: "#dbe3ef"
   exempt-fill: "#e6f4ec"
+  exempt-bg: "#eef7f1"
   exempt-line: "#cbe4d5"
   exempt-ink: "#14532d"
-  notexempt-fill: "#fbf1dc"
-  notexempt-line: "#ecd9a8"
-  notexempt-ink: "#7a4a00"
-  progress-track: "#dbe3ef"
-  bar-link: "#cfe0f5"
+  exempt-strong: "#166534"
+  approval-green: "#1e7a45"
+  caution-fill: "#fbf1dc"
+  caution-bg: "#fff8e8"
+  caution-line: "#ecd9a8"
+  caution-ink: "#7a4a00"
+  info-line: "#c7d6f0"
+  danger: "#a12b2b"
+  danger-line: "#c58484"
   shell-paper: "#fbf8f1"
   shell-card: "#fffef9"
   shell-ink: "#221f1a"
@@ -70,55 +75,11 @@ typography:
     fontWeight: 700
     lineHeight: 1.25
     letterSpacing: "-0.01em"
-  body:
+  result-title:
     fontFamily: "Atkinson Hyperlegible, system-ui, -apple-system, sans-serif"
-    fontSize: "16.5px"
-    fontWeight: 400
-    lineHeight: 1.6
-  body-small:
-    fontFamily: "Atkinson Hyperlegible, system-ui, -apple-system, sans-serif"
-    fontSize: "15px"
-    fontWeight: 400
-    lineHeight: 1.6
-  option:
-    fontFamily: "Atkinson Hyperlegible, system-ui, -apple-system, sans-serif"
-    fontSize: "16.5px"
-    fontWeight: 700
-    lineHeight: 1.35
-  label:
-    fontFamily: "Atkinson Hyperlegible, system-ui, -apple-system, sans-serif"
-    fontSize: "14.5px"
-    fontWeight: 700
-    lineHeight: 1.35
-  kicker:
-    fontFamily: "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
-    fontSize: "12px"
-    fontWeight: 400
-    lineHeight: 1.2
-    letterSpacing: "0.14em"
-  shell-entry-title:
-    fontFamily: "Atkinson Hyperlegible, system-ui, -apple-system, sans-serif"
-    fontSize: "20px"
+    fontSize: "clamp(21px, 5.5vw, 26px)"
     fontWeight: 700
     lineHeight: 1.25
-    letterSpacing: "-0.01em"
-  shell-foot-title:
-    fontFamily: "Fraunces, Georgia, serif"
-    fontSize: "19px"
-    fontWeight: 600
-    lineHeight: 1.2
-    letterSpacing: "-0.01em"
-  shell-tool-title:
-    fontFamily: "Atkinson Hyperlegible, system-ui, -apple-system, sans-serif"
-    fontSize: "16px"
-    fontWeight: 700
-    lineHeight: 1.3
-  tag-label:
-    fontFamily: "Atkinson Hyperlegible, system-ui, -apple-system, sans-serif"
-    fontSize: "11px"
-    fontWeight: 400
-    lineHeight: 1.2
-    letterSpacing: "0.06em"
   question:
     fontFamily: "Atkinson Hyperlegible, system-ui, -apple-system, sans-serif"
     fontSize: "clamp(18px, 4.6vw, 21px)"
@@ -130,6 +91,31 @@ typography:
     fontSize: "18px"
     fontWeight: 700
     lineHeight: 1.3
+  body:
+    fontFamily: "Atkinson Hyperlegible, system-ui, -apple-system, sans-serif"
+    fontSize: "16.5px"
+    fontWeight: 400
+    lineHeight: 1.6
+  body-small:
+    fontFamily: "Atkinson Hyperlegible, system-ui, -apple-system, sans-serif"
+    fontSize: "15px"
+    fontWeight: 400
+    lineHeight: 1.6
+  byline:
+    fontFamily: "Atkinson Hyperlegible, system-ui, -apple-system, sans-serif"
+    fontSize: "15.5px"
+    fontWeight: 400
+    lineHeight: 1.5
+  option:
+    fontFamily: "Atkinson Hyperlegible, system-ui, -apple-system, sans-serif"
+    fontSize: "16.5px"
+    fontWeight: 700
+    lineHeight: 1.35
+  label:
+    fontFamily: "Atkinson Hyperlegible, system-ui, -apple-system, sans-serif"
+    fontSize: "14.5px"
+    fontWeight: 700
+    lineHeight: 1.35
   caption:
     fontFamily: "Atkinson Hyperlegible, system-ui, -apple-system, sans-serif"
     fontSize: "13px"
@@ -140,6 +126,23 @@ typography:
     fontSize: "13.5px"
     fontWeight: 700
     lineHeight: 1.3
+  shell-section:
+    fontFamily: "Fraunces, Georgia, serif"
+    fontSize: "19px"
+    fontWeight: 600
+    lineHeight: 1.2
+    letterSpacing: "-0.01em"
+  shell-entry-title:
+    fontFamily: "Atkinson Hyperlegible, system-ui, -apple-system, sans-serif"
+    fontSize: "17px"
+    fontWeight: 700
+    lineHeight: 1.25
+    letterSpacing: "-0.01em"
+  mono:
+    fontFamily: "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+    fontSize: "12px"
+    fontWeight: 400
+    lineHeight: 1.2
 rounded:
   focus: "3px"
   xs: "4px"
@@ -158,89 +161,122 @@ spacing:
   xl: "22px"
   xxl: "28px"
 components:
+  topbar:
+    backgroundColor: "{colors.header-navy}"
+    textColor: "{colors.page-white}"
+    padding: "12px 16px"
+  button-exit:
+    backgroundColor: "{colors.page-white}"
+    textColor: "{colors.header-navy}"
+    rounded: "{rounded.pill}"
+    padding: "10px 14px"
+    height: "44px"
+  band:
+    backgroundColor: "{colors.band-top}"
+    textColor: "{colors.brand-navy}"
+    padding: "30px 26px 22px"
+  byline-mark:
+    backgroundColor: "{colors.accent-blue}"
+    textColor: "{colors.page-white}"
+    rounded: "{rounded.circle}"
+    size: "40px"
   button-primary:
-    backgroundColor: "{colors.action-blue}"
+    backgroundColor: "{colors.accent-blue}"
     textColor: "{colors.page-white}"
     rounded: "{rounded.md}"
     padding: "15px 26px"
     height: "48px"
   button-next:
-    backgroundColor: "{colors.action-blue}"
+    backgroundColor: "{colors.accent-blue}"
     textColor: "{colors.page-white}"
     rounded: "{rounded.md}"
     padding: "12px 22px"
     height: "48px"
   button-ghost:
     backgroundColor: "transparent"
-    textColor: "{colors.action-blue}"
+    textColor: "{colors.accent-blue}"
     rounded: "{rounded.md}"
     padding: "10px 18px"
     height: "48px"
-  button-exit:
-    backgroundColor: "{colors.page-white}"
-    textColor: "{colors.court-navy}"
-    rounded: "{rounded.pill}"
-    padding: "10px 14px"
-    height: "44px"
+  button-danger-ghost:
+    backgroundColor: "transparent"
+    textColor: "{colors.danger}"
+    rounded: "{rounded.md}"
+    padding: "10px 18px"
+    height: "48px"
   option:
     backgroundColor: "{colors.page-white}"
-    textColor: "{colors.ink-warm}"
+    textColor: "{colors.brand-navy}"
     typography: "option"
     rounded: "{rounded.md}"
     padding: "16px 18px"
     height: "52px"
   option-hover:
     backgroundColor: "{colors.field}"
+  option-active:
+    backgroundColor: "{colors.field-hover}"
   option-selected:
     backgroundColor: "{colors.selected-fill}"
-    textColor: "{colors.ink-warm}"
+    textColor: "{colors.brand-navy}"
   option-mark:
     backgroundColor: "{colors.page-white}"
     rounded: "{rounded.circle}"
     size: "24px"
   option-mark-selected:
-    backgroundColor: "{colors.action-blue}"
+    backgroundColor: "{colors.accent-blue}"
     textColor: "{colors.page-white}"
     size: "24px"
   input:
     backgroundColor: "{colors.page-white}"
-    textColor: "{colors.ink-warm}"
+    textColor: "{colors.brand-navy}"
     rounded: "{rounded.sm}"
     padding: "12px"
     height: "48px"
-  topbar:
-    backgroundColor: "{colors.court-navy}"
-    textColor: "{colors.page-white}"
-    padding: "12px 16px"
+  panel-soft:
+    backgroundColor: "{colors.band-top}"
+    textColor: "{colors.brand-navy}"
+    rounded: "{rounded.md}"
+    padding: "18px 20px"
+  panel-white:
+    backgroundColor: "{colors.page-white}"
+    textColor: "{colors.brand-navy}"
+    rounded: "{rounded.md}"
+    padding: "18px"
   result-card-exempt:
     backgroundColor: "{colors.exempt-fill}"
     textColor: "{colors.exempt-ink}"
     rounded: "{rounded.md}"
     padding: "20px 22px"
-  result-card-notexempt:
-    backgroundColor: "{colors.notexempt-fill}"
-    textColor: "{colors.notexempt-ink}"
+  result-card-caution:
+    backgroundColor: "{colors.caution-fill}"
+    textColor: "{colors.caution-ink}"
     rounded: "{rounded.md}"
     padding: "20px 22px"
   result-card-info:
-    backgroundColor: "{colors.soft-blue}"
-    textColor: "{colors.action-blue-deep}"
+    backgroundColor: "{colors.band-top}"
+    textColor: "{colors.brand-navy}"
     rounded: "{rounded.md}"
     padding: "20px 22px"
-  panel-soft:
-    backgroundColor: "{colors.soft-blue}"
-    rounded: "{rounded.md}"
-    padding: "18px 20px"
-  nav-row:
+  hint-panel:
     backgroundColor: "{colors.page-white}"
-    textColor: "{colors.ink-cool}"
-    rounded: "{rounded.xl}"
-    padding: "19px 20px"
+    textColor: "{colors.brand-navy}"
+    rounded: "{rounded.lg}"
+    padding: "12px 14px"
   shell-entry:
     backgroundColor: "{colors.shell-card}"
     textColor: "{colors.shell-ink}"
     rounded: "{rounded.xl}"
     padding: "18px"
+  shell-badge:
+    backgroundColor: "{colors.shell-tag}"
+    textColor: "{colors.shell-pine}"
+    rounded: "{rounded.md}"
+    size: "40px"
+  shell-theme-toggle:
+    backgroundColor: "{colors.shell-card}"
+    textColor: "{colors.shell-house-blue}"
+    rounded: "{rounded.circle}"
+    size: "44px"
 ---
 
 # Design System: Marlie's MLRI Work
@@ -249,381 +285,341 @@ components:
 
 **Creative North Star: "The Kitchen Table Form"**
 
-Someone got a notice from DTA saying they might lose their food benefits. They are reading
-it on a phone, possibly at a kitchen table, possibly with a friend or an advocate beside
-them. The design's job is to sit in that chair patiently: one question at a time, in words
-that do not assume they already understand the rules, in controls large enough to hit
-without care. Nothing hurries them and nothing implies they should have known this already.
+The shipped screener is a public-benefits form that has to survive being read on a
+borrowed phone, in a hurry, by someone whose SNAP is already at risk. Everything in the
+system serves that: one legibility-first typeface at 16.5px body copy, 48px minimum
+controls, a white page with tinted controls so nothing depends on a subtle fill, and a
+measured contrast ratio behind every boundary value. Nothing here is styled for effect.
+Where a decorative choice and a legibility choice conflicted, legibility won and the
+comment in the code says so.
 
-The tone that carries it is steady, trustworthy, and official. The screener borrows the
-authority of a real state-facing website on purpose, because a person deciding whether to
-trust a result about their benefits needs the page to look like it comes from an institution
-that will honor what it says. Warmth lives in the sentence lengths and the spacing, not in
-decoration.
+There are two live territories and they do not mix. The screener at
+`masslegalhelp/index.html` wears MassLegalHelp's chrome: navy header bar, a 9px gold rule
+under it, one brand navy carrying both headings and body copy, and their pale blue
+page-title band with a solid block offset behind it. The chrome tokens are theirs, read
+off masslegalhelp.org and recorded with measured ratios in `MASSLEGALHELP-BRAND.md`, which
+is authoritative for those values and for what we deliberately do not copy. The preview
+site (root `index.html`, `screener/index.html`, `screener/how-it-works.html`) is the second
+territory and is deliberately unlike the first: warm paper, a Fraunces display face,
+pine and house-blue accents, and a full dark mode. It is a reviewer's index, not a host
+site, so it gets to have its own voice.
 
-This project holds **two visual territories, and they are not meant to converge.**
-The `court-forms/` territory is a deliberate copy of the live Court Forms Online design
-system, adopted so a finished tool can be dropped into production without a redesign. It is
-inherited, not invented. The root shell (`index.html`) is Marlie's own style: warm paper, a
-serif display face, dark mode. It indexes the prototypes for colleagues and has no reason to
-look like Court Forms. Neither territory borrows from the other.
+The Court Forms Online palette (court navy `#0a2b52`, action blue `#1a5fb4`, torch gold
+`#f4bd3f`) is retired. It survives only in `archive/`, frozen and untested, and is not
+available to new work. What did survive the rebrand is the control layer underneath the
+chrome: the page stayed white and only the chrome moved, so the field, boundary, and mark
+tokens carried over unchanged and with their ratios intact.
 
 **Key Characteristics:**
-- One typeface across every tool screen, chosen for legibility rather than for style
-- A white page with tinted controls, never a tinted page with white controls
-- Flat by default: borders carry structure, and the only shadow at rest is a 2px press edge
-- 44px to 52px minimum targets, and no input below 16px
-- Color is a status vocabulary (green exempt, ochre not exempt, blue informational), never decoration
-- Every contrast value in the system has a measured ratio behind it
+- One typeface, Atkinson Hyperlegible, chosen for low-vision readers rather than style
+- White page, tinted controls; separation comes from the control, never from the page
+- Every boundary and text value has a computed contrast ratio behind it
+- Host chrome reproduced faithfully, including its offset title band, but never its fonts
+- A warm paper shell with dark mode, kept strictly off the screener
 
 ## Colors
 
-Two palettes, held apart on purpose. The Court Forms territory is cool, institutional, and
-inherited; the shell territory is warm, papery, and personal.
+Institutional navy and blue on white for the tool, warm paper and pine for the shell, with
+a small status vocabulary of fill, border, and ink triplets.
 
 ### Primary
-
-- **Court Navy** (`#0a2b52`): The top bar of every `court-forms/` page, the torch mark's
-  field, focus rings on the white page, and link hover. It is the color that says "this is a
-  government-facing tool" before a single word is read.
-- **Action Blue** (`#1a5fb4`): Every primary action and selected state in the ABAWD screener.
-  It fills the Continue and Start buttons, draws the selected option border, fills the
-  radio and checkbox mark, and advances the progress bar. **Action Blue Deep** (`#124a8f`)
-  is its darker partner: the 2px press edge under primary buttons, the focus ring, and link
-  hover inside the tool.
-- **Link Blue** (`#134a8e`): The same role on the hub, the how-it-works page, and the v2
-  redesign, which declare their accent one step deeper than the screener does. Do not
-  cross-wire the two; each page's `:root` is the authority for that page.
+- **Accent Blue** (`#0057a2`): every actionable thing on the screener. Primary and Next
+  buttons, ghost button strokes, link text, the byline mark, the progress fill, the filled
+  radio and checkbox mark, and the selected option border. 7.28:1 on white, so it is also
+  the only accent allowed to carry meaning.
+- **Brand Navy** (`#1f2c5c`): MassLegalHelp sets headings and body copy in one navy and so
+  do we. 13.35:1 on white. Also the footer band and the hover color for links.
+- **Header Navy** (`#1e2e5f`): the top bar and the footer field only. Slightly lighter
+  than brand navy; it is a surface color, not a text color.
+- **Strip Navy** (`#0c1639`): the darker strip below the footer carrying the credit line.
 
 ### Secondary
-
-- **Torch Gold** (`#f4bd3f`): The Court Forms torch glyph, and the focus ring on the navy
-  bar where a navy or blue ring would vanish. It is chrome and focus only.
+- **Rule Gold** (`#eab736`): the 9px rule under the header bar. The strongest single cue
+  that a page belongs to MassLegalHelp.
+- **Pill Gold** (`#e8da8d`): their pale Legal Topics gold. Here it is the footer's top rule
+  and the focus ring inside the navy bar, where a dark blue ring would vanish.
 
 ### Tertiary
-
-- **Approval Green** (`#1e7a45`): Exemption results and the checkmark badges that list the
-  reasons someone qualifies. Its role is "good news, and here is what to do next."
-- **Caution Ochre** (`#9a6a00`): The "may need to meet the work rules" outcome and its hub
-  entry. It carries caution without the alarm of red, because that outcome is not a denial.
+- **Pale Blue** (`#d3e7ff`): the top of the title-band gradient, and the fill of every
+  soft information panel and help callout. 10.58:1 under brand navy text.
+- **Band Bottom** (`#fafcff`) and **Band Edge** (`#a2c4f0`): the bottom of that gradient
+  and the solid block offset behind the panel.
+- **Rule Ink** (`#192a65`): the short heavy rule under the byline, darker than body navy.
 
 ### Neutral
-
-- **Page White** (`#ffffff`): Every `court-forms/` page background, matching production.
-- **Ink Warm** (`#1b1f27`) and **Ink Cool** (`#16202e`): Body text. The two screener
-  variants use the warm value; the hub, the explainer, and the v2 redesign use the cool one.
-- **Prose Ink** (`#3a424e`) and **Lead Ink** (`#37414f`): Long-form paragraph and lead text,
-  a half step down from full ink so a wall of explanation reads softer without losing AA.
-- **Muted Ink** (`#5b6675`): Section labels, quiet notes, progress captions.
-- **Boundary** (`#84909f`): The border of anything clickable: option tiles, nav rows, cards.
-  Measured at 3.25:1 on white, so it satisfies WCAG 1.4.11 as a component boundary.
-- **Boundary Strong** (`#767f8c`): Radio and checkbox mark borders and input strokes,
+- **Field** (`#eef1f5`), **Field Hover** (`#e3e8f0`), **Selected Fill** (`#d7e6f9`): the
+  tint layer on controls. An option is white at rest, field on hover, field-hover while
+  pressed, selected-fill once chosen.
+- **Boundary** (`#84909f`): the border of anything clickable. 3.25:1 on white, which is
+  what WCAG 1.4.11 requires of a component boundary. Hover deepens it to `#5b6675`.
+- **Boundary Strong** (`#767f8c`): radio and checkbox mark borders and input strokes.
   3.58:1 on the tinted fill.
-- **Panel Line** (`#c8d2e0`): Non-interactive panel and disclosure borders.
-- **Field** (`#eef1f5`), **Field Hover** (`#e3e8f0`), **Selected Fill** (`#d7e6f9`): The
-  control tints that create separation on a white page.
-- **Soft Blue** (`#e8f0fb`) and **Soft Blue Cool** (`#eaf1fb`): Informational panel fills.
-- **Progress Track** (`#dbe3ef`) and **Bar Link** (`#cfe0f5`): The unfilled progress
-  channel, and link text on the navy bar where page-level blue is illegible.
+- **Panel Line** (`#c8d2e0`): the border of a non-interactive panel, fieldset, or
+  disclosure. Lighter than a control border on purpose: it bounds, it does not invite.
+- **Muted Ink** (`#5b6470`) at 6:1 for captions and quiet controls, **Placeholder Ink**
+  (`#6b7280`) at 4.83:1, **Progress Track** (`#dbe3ef`) behind the accent fill.
 
-### Shell territory (root `index.html`, not Court Forms)
+### Status
+- **Exempt** (fill `#e6f4ec`, tint `#eef7f1`, border `#cbe4d5`, ink `#14532d`, strong
+  `#166534`): a good outcome. **Approval Green** `#1e7a45` fills the numbered and checked
+  markers inside those cards.
+- **Caution** (fill `#fbf1dc`, tint `#fff8e8`, border `#ecd9a8`, ink `#7a4a00`): not
+  exempt, skipped questions, and the sample-result banner.
+- **Info** (border `#c7d6f0` over pale blue): a neutral outcome such as the out-of-age-range
+  result.
+- **Danger** (`#a12b2b`, border `#c58484` at 3:1): the delete-my-answers control, and
+  nothing else.
 
-- **Shell Paper** (`#fbf8f1`) on **Shell Card** (`#fffef9`): a warm off-white stack that
-  reads as paper rather than as screen.
-- **Shell Edge** (`#9e8e66`, `#706755` dark) and **Shell Rule** (`#e4ddcd`, `#332e24` dark):
-  two boundary weights doing two jobs. Shell Edge bounds a whole surface (project card,
-  footer panel, contact button, theme toggle) and is measured at 3.04:1 on paper and 3.19:1
-  on card, so the shell holds the same 3:1 boundary rule as the tools. Shell Rule stays the
-  hairline *inside* a card, dividing one LACE tool from the next, where a 3:1 line would
-  fight the paper.
-- **Shell Pine** (`#3a5a40`): the shell's accent and PWA theme color.
-  **Shell House Blue** (`#3d5a80`) carries kickers and focus.
-  **Shell Terracotta** (`#a85a32`) is scoped to the Court Forms entry card as its accent.
-- Dark mode swaps the whole set (`#17150f` paper, `#ece7db` ink, `#93b899` pine,
-  `#9ab7d6` house blue, `#dc9163` terracotta) under both `prefers-color-scheme` and an
-  explicit `data-theme` attribute.
+### Shell
+- **Paper** (`#fbf8f1`) and **Card** (`#fffef9`) with **Shell Ink** (`#221f1a`) and
+  **Shell Muted** (`#6b6255`).
+- **Edge** (`#9e8e66`) bounds a whole surface at 3.04:1 on paper. **Rule** (`#e4ddcd`) is
+  the hairline *inside* one, where a 3:1 line would fight the paper. Two weights, two jobs.
+- **Pine** (`#3a5a40`) is the shell accent, **House Blue** (`#3d5a80`) is navigation and
+  focus, **Terracotta** (`#a85a32`) marks the archived designs, **Tag** (`#eef1e9`) fills
+  the badge. Dark mode swaps every one of them at `:root[data-theme="dark"]` and again
+  under `prefers-color-scheme: dark`.
 
 ### Named Rules
+**The Tinted Control Rule.** The page is white and the controls are tinted. Never invert
+it. An option reverted to a white fill disappears on a white page, and any two pale tints
+sit near 1.05:1 against each other, so fill can never carry a selected state on its own.
+Selection is carried by the accent border plus the filled mark; the fill only agrees.
 
-**The Borrowed Chrome Rule.** The `court-forms/` palette is copied from a live production
-site. Court Navy, Torch Gold, and the blues are not available for restyling; changing one is
-a compatibility decision about dropping into production, never a taste decision.
+**The Two Golds Rule.** There are two golds because MassLegalHelp has two: `#eab736` is
+the saturated rule under the header and `#e8da8d` is their pale Legal Topics tone. Both are
+decorative and both fail contrast on white. Neither may carry meaning anywhere off the
+navy bar: no gold focus ring, selected state, or error indicator on the white page. Use
+accent blue at 7.28:1 for those.
 
-**The Tinted Control Rule.** The page is white and the controls are tinted. Never invert it.
-An option reverted to a white fill disappears on a white page, and two pale tints sit near
-1.05:1 against each other, so fill alone can never carry a selected state. Selection is
-carried by the accent border plus the filled mark.
+**The Measured Ratio Rule.** Every boundary, mark, and text color here has a computed
+ratio behind it, in `CLAUDE.md` for the controls and `MASSLEGALHELP-BRAND.md` for the
+chrome. Compute the new ratio before changing one. `#d3d9e2` was tried for option borders
+and failed at 1.42:1.
 
-**The Measured Ratio Rule.** Every boundary, mark, and text color in this system has a
-computed contrast ratio behind it, recorded in CLAUDE.md. Before changing any of them,
-compute the new ratio. `#d3d9e2` was tried for option borders once and failed at 1.42:1.
-
-**The One Gold Rule.** Torch Gold appears twice: the torch glyph and the focus ring on the
-navy bar. It is never a fill, never a status color, and never decoration.
-
-**The Two Territories Rule.** The shell's warm paper palette and the tool's institutional
-palette never mix. No Fraunces in `court-forms/`, no navy chrome on the homepage.
+**The Two Territories Rule.** The screener's chrome and the preview site's paper never
+mix. No Fraunces, pine, or paper on the screener; no navy chrome or gold rule on the
+preview pages. A page belongs to one territory and reads entirely as that one.
 
 ## Typography
 
-**Display Font:** Fraunces (with Georgia, serif), root shell only
-**Body Font:** Atkinson Hyperlegible (with system-ui, -apple-system, sans-serif)
-**Label/Mono Font:** `ui-monospace` stack, used only for the shell's kicker
+**Display Font:** Fraunces 600 (with Georgia, serif), preview site only
+**Body Font:** Atkinson Hyperlegible 400/700 (with system-ui, -apple-system, sans-serif)
+**Label/Mono Font:** ui-monospace stack, one small use on the preview site
 
-**Character:** Atkinson Hyperlegible was designed by the Braille Institute to make letterforms
-maximally distinguishable for low-vision readers, and it is here for that reason and not for
-its look. On the tool screens it works alone, at 700 for anything a person must act on and
-400 for prose. The shell allows itself one indulgence: Fraunces at 600 for the page title,
-which is why the two territories read as different voices at a glance.
+**Character:** The screener is single-face by design: Atkinson Hyperlegible everywhere, with
+weight and size doing all the hierarchy work. Its disambiguated letterforms are the point,
+not its personality. The preview site adds Fraunces for headings, a high-contrast serif that
+gives the index a hand-set editorial feel the tool is not allowed to have.
 
 ### Hierarchy
-
-- **Display** (600, `clamp(26px, 6vw, 32px)`, 1.15, -0.02em): Fraunces. The homepage title
-  and the footer heading. Never appears in `court-forms/`.
-- **Headline** (700, `clamp(24px, 6vw, 29px)`, 1.2, -0.01em): the `.h1` on a screener
-  screen. One per screen, and it is the question or the result, not the product name.
-- **Title** (700, `clamp(21px, 5.5vw, 25px)`, 1.25, -0.01em): `.h2` and `.h-result`, the
-  result heading inside its colored card header.
-- **Body** (400, 16.5px, 1.6): screener prose. Long explanation drops to Prose Ink.
-- **Body Small** (400, 15px to 15.5px, 1.6 to 1.7): nested lists, panel copy, footnotes.
-- **Option** (700, 16.5px, 1.35): the answer tiles. Bold because the tile is the control,
-  and its label is the thing being chosen.
-- **Label** (700, 14.5px, 1.35): field labels above each write-in blank.
-- **Kicker** (400, 12px, 0.14em, uppercase): shell only, monospace, above the page title.
+- **Display** (Fraunces 600, `clamp(26px, 6vw, 32px)`, 1.15, -0.02em): preview-site page
+  titles only.
+- **Headline** (700, `clamp(24px, 6vw, 29px)`, 1.2, -0.01em): the screener's `h1`, inside
+  the title band.
+- **Title** (700, `clamp(21px, 5.5vw, 25px)`, 1.25): section headings. Result headings run
+  slightly larger at `clamp(21px, 5.5vw, 26px)`.
+- **Question** (700, `clamp(18px, 4.6vw, 21px)`, 1.3): a single screening question. Smaller
+  than a section title because a question is a prompt, not a chapter.
+- **Body** (400, 16.5px, 1.6): screener prose, in brand navy, in a 660px column. Secondary
+  and in-panel prose drops to 15px at the same 1.6.
+- **Option** (700, 16.5px, 1.35): the answer tiles. Bold, because the tile is the decision.
+- **Label** (700, 14.5px) and **Caption** (700, 13px): field labels, progress text, and
+  print notes. Both bold; small type here is quiet by size, never by weight.
 
 ### Named Rules
+**The Legibility-First Rule.** Atkinson Hyperlegible is not a style choice and does not
+lose an argument to a host font. MassLegalHelp sets body copy in Montserrat and headings in
+Domine; we match their color and their layout and keep our typeface. Revisit only with a
+self-hosted `domine-700.woff2` in hand, and only for headings.
 
-**The One Face Rule.** Atkinson Hyperlegible carries every tool screen alone. A display
-pairing would work against the reason the face was chosen, and the source files carry an
-explicit `impeccable-disable single-font` comment recording that decision. Do not "fix" it.
+**The Weight-Not-Size Rule.** The screener's steps are close together (16.5px body, 18-21px
+question, 21-25px section) and separation comes from weight, color, and space. Do not open
+the ramp with a larger display size; a form is not an article.
 
-**The No-Zoom Rule.** No `input`, `textarea`, or `select` goes below 16px. iOS Safari zooms
-the viewport on focus below that, which throws a person out of their place in the form.
-
-**The Bold-Means-Actionable Rule.** In the tools, 700 marks something to act on or a result:
-buttons, option labels, field labels, headings. Emphasis inside prose uses `<strong>`
-sparingly, on the words that change what a person should do.
+**The 16px Input Floor.** Every `input`, `textarea`, and `select` is at least 16px, because
+anything smaller triggers iOS zoom on focus and throws the reader out of the form.
 
 ## Layout
 
-A single centered column, one thing at a time, no sidebars and no multi-column reading. The
-stage caps differ by surface and are deliberate: 660px for the ABAWD screener, 680px for the
-hub and the explainer, 760px for the v2 redesign, 560px for the shell index. The navy top bar
-spans full width with its own 1200px inner cap, so the chrome reads as site-wide while the
-content stays at reading measure.
+The screener is one centered column: `#stage` at `max-width:660px`, padded 22px top and
+60px bottom, with horizontal padding written as `max(16px, env(safe-area-inset-*))` so it
+clears a notch. The footer's inner block repeats the same 660px measure so the page reads
+as one column top to bottom. The preview site uses a narrower 560px `.wrap` with 40px of
+top padding.
 
-Horizontal padding is always `max(16px, env(safe-area-inset-*))`, dropping to 14px under
-640px, so content clears notches and rounded corners on a phone. Vertical rhythm runs on
-roughly 8 / 10 / 14 / 18 / 22 / 28px, with 40px to 44px between major sections on the hub.
+Spacing runs on a coarse rhythm of 8, 10, 14, 18, 22, and 28px. Panels are padded 18px to
+22px, option tiles 16px by 18px, and the vertical gap between blocks is usually 22px. The
+gaps are not a strict multiple-of-4 scale; the values sit where they landed and 13px gaps
+inside flex rows are common.
 
-Prose measure is capped where the container is wide enough to overrun it: the v2 result body
-holds `max-width: 68ch` because a 760px card at 17px ran about 83 characters per line.
+One breakpoint carries the responsive work: 640px. Below it the header subtitle hides, stage
+padding tightens to 16px and 14px, the two-column `.form-row` collapses to one, option type
+drops to 16px with 15px by 14px padding, nav buttons stretch to fill, and the title band's
+offset block shortens from 8px to 5px. A second axis matters more than width: at
+`(hover:none)` or `(pointer:coarse)` the help tip stops being a floating popover and becomes
+an inline accordion, and at `(hover:hover) and (min-width:641px) and (pointer:fine)` it
+becomes a fixed-position panel that flips above the trigger when it would overflow.
 
-Responsive behavior is one breakpoint doing most of the work at 640px: the top bar subtitle
-hides, two-column form rows collapse to one, option padding tightens, and every navigation
-button becomes full width and center-aligned so it is thumb-reachable. A second breakpoint at
-380px stacks the v2 Yes/No pair vertically. Pointer and hover queries, not width, decide
-whether help text is a popover or an inline accordion.
-
-### Named Rules
-
-**The One Question Rule.** A screener page asks one grouped thing and shows its own Back and
-Continue. Do not consolidate sections onto a single scrolling page to save clicks.
-
-**The Thumb Rule.** Below 640px, every action a person must take is full width or at least
-140px wide, minimum 44px tall, and center-aligned.
+Touch targets are 44px minimum for secondary controls and 48px for buttons and inputs;
+option tiles are 52px. Where a 44px minimum would add dead air, the build absorbs it with
+matching negative margins rather than shrinking the target.
 
 ## Elevation & Depth
 
-This system is flat. There are no ambient shadows on any page at rest, and no glass, gradient,
-or blur anywhere. Depth comes from three sources: a border, a tinted fill, and the navy bar
-sitting above a white page. A card is a 1px `#c8d2e0` outline, not a lift.
-
-The one shadow that appears at rest is not a shadow in spirit. Primary buttons carry
-`0 2px 0` in their own darker blue, a hard bottom edge with no blur and no offset spread. It
-reads as a physical press edge on a sturdy button, which is why it survives the flat rule.
+Depth is mostly not shadow. On the screener, surfaces are separated by fill and border:
+white panels with a `#c8d2e0` line, pale blue panels with no border at all, status cards
+with a colored header band over a white body. Only three shadows exist, and two of them are
+hard-edged with zero blur.
 
 ### Shadow Vocabulary
-
-- **Press edge** (`box-shadow: 0 2px 0 var(--accent-dark)`): Primary and Next buttons only.
-  The v2 page uses Court Navy for the same edge under Link Blue buttons.
-- **Selection halo** (`box-shadow: inset 0 0 0 1px var(--accent), 0 0 0 3px rgba(26,95,180,.16)`):
-  A selected option tile. The inset thickens the accent border optically while the outer ring
-  stays translucent, so it never reads as a glow. v2 uses a 4px ring at `rgba(19,74,142,.16)`.
-- **Floating panel** (`box-shadow: 0 8px 24px rgba(16,32,56,.12)`): Only the desktop help
-  popover, which genuinely floats over content. It is neutral and offset, never a colored
-  halo, and it is removed entirely in the coarse-pointer accordion form.
-- **Shell hover lift** (`0 8px 22px -14px var(--lift)`): Root shell cards on hover, paired
-  with a 2px translate. The color is a token, not a literal: pine-tinted
-  (`rgba(58,90,64,.45)`) in light, and plain `rgba(0,0,0,.6)` in dark, because a tinted glow
-  on a near-black card reads as haze instead of depth. `--lift-house` is the same idea in
-  house blue for the toggle and the contact buttons. Does not exist in `court-forms/`, where
-  rows lift 1px with a border color change and no shadow.
+- **Offset block** (`box-shadow: 8px 8px 0 0 #a2c4f0`, 5px on phones): the solid block
+  behind the title band. This is a reproduction of MassLegalHelp's own article-page chrome,
+  where it is an absolutely positioned `::after` inset 8px. A shadow is used instead because
+  a pseudo-element would need `z-index:-1` and `.band` creates no stacking context, and
+  because a shadow never affects layout and so cannot push a horizontal scrollbar onto a
+  narrow screen.
+- **Press edge** (`box-shadow: 0 2px 0 #1f2c5c`): under Primary and Next buttons. A hard
+  bottom edge, read as a button with a physical bottom rather than a floating card.
+- **Selection halo** (`box-shadow: inset 0 0 0 1px #0057a2, 0 0 0 3px rgba(26,95,180,.16)`):
+  a selected option. The inset optically thickens the accent border; the outer ring stays
+  translucent so it reads as a ring and not a glow.
+- **Floating panel** (`box-shadow: 0 8px 24px rgba(16,32,56,.12)`): the desktop help
+  popover, the only element that genuinely floats over content. Neutral and offset, never
+  chromatic. Removed entirely in the coarse-pointer accordion form.
+- **Shell hover lift** (`box-shadow: 0 8px 22px -14px var(--lift)`, and
+  `0 6px 16px -10px var(--lift-house)` on the theme toggle): preview-site cards on hover,
+  paired with a 2px translate. Tinted pine in light mode, plain black in dark, because a
+  tinted glow on a near-black card reads as haze instead of depth.
 
 ### Named Rules
+**The Hard Edge Rule.** Offset depth on the screener has zero blur and a real color:
+`8px 8px 0` behind the band, `0 2px 0` under a button. Blur belongs only to something that
+actually floats, which here is one help popover.
 
-**The Flat-At-Rest Rule.** Nothing on a `court-forms/` page casts a shadow at rest except a
-button's press edge. If a new element needs to separate from the page, give it a border or a
-tinted fill.
+**The Motion-Is-Optional Rule.** The only entrance is a 0.3s opacity fade, never a
+translate, so nothing shifts under a reader mid-sentence. The progress bar animates
+`transform: scaleX()` to stay off the layout path. `prefers-reduced-motion: reduce` zeroes
+card entrances, tile transitions, and hover lifts rather than shortening them.
 
 ## Shapes
 
-Rounded but not soft. The base radius is 10px, held in `--radius`, and the derivations are
-computed from it rather than picked: inputs and signature panels use `calc(var(--radius) - 3px)`
-(7px), and the help popover uses `calc(var(--radius) + 2px)` (12px) so it reads as sitting one
-layer above. Nav rows and shell cards go to 14px; the v2 redesign runs looser at 12px buttons,
-14px to 16px tiles, and 20px cards.
+One rounding family, moderate and consistent. The screener's `--radius:10px` is the default
+for buttons, option tiles, panels, and status cards. Inputs use `calc(var(--radius) - 3px)`
+so a field reads slightly tighter than the panel holding it, and the help popover uses
+`calc(var(--radius) + 2px)`. Focus rings round to 4px, checkbox marks to 6px, radio marks
+and the byline mark to a full circle, and the Quick exit pill to 999px. The preview site is
+softer at 14px for cards and panels, 10px for badges.
 
-Full circles are reserved for two jobs: the radio marks and the icon badges. Checkbox marks
-are the same 24px square with a 6px radius, so shape alone tells a person whether they can
-choose more than one answer. The pill radius (`999px`) appears exactly once, on the top-bar
-exit control, which is why it reads as chrome rather than as page content.
-
-Borders carry weight as meaning: 1px for a non-interactive panel, 1.5px for an input,
-2px for a clickable option tile, and 2.5px to 3px on the v2 tiles where the target is larger.
-
-The shell territory runs on two radii and nothing else: 14px for a surface (project card,
-footer panel) and 10px for a control or a badge. The pill radius covers the status tag, the
-circle covers the theme toggle, and 3px is the focus-ring radius on inline text.
-
-### Named Rules
-
-**The Derived Radius Rule.** New surfaces compute from `--radius` rather than introducing a
-new literal. A radius that does not trace back to 10px needs a reason.
-
-**The Shape-Carries-Meaning Rule.** Circle means "choose one," rounded square means "choose
-any." Never restyle one to match the other.
+Borders do the structural work: 2px on anything clickable, 1.5px on an input, 1px on a
+panel. A status card is a 1px colored ring around a colored header band and a white body,
+with `overflow:hidden` so the band's corners follow the card. There are no cut corners, no
+clipping, and no decorative dividers apart from the byline rule.
 
 ## Components
 
 ### Buttons
+- **Shape:** moderately rounded (10px), never a pill except the Quick exit control
+- **Primary:** accent blue fill, white 700 text at 17px, 15px by 26px padding, 48px minimum
+  height, with the hard `0 2px 0` brand-navy press edge. Next is the same at 16px and 12px
+  by 22px.
+- **Ghost:** transparent with a 2px accent-blue border and accent-blue 700 text at 15px, 10px
+  by 18px. Used for Back and for secondary actions on a result screen.
+- **Danger ghost:** same geometry with `#a12b2b` text and a `#c58484` border at 3:1. Only
+  the delete-answers control uses it.
+- **Link button:** an inline `button` styled as underlined bold accent-blue text at inherited
+  size, for actions that live inside a sentence.
+- **Quick exit:** white pill on the navy bar, navy 700 text at 13px, 44px tall.
+- **Focus:** a 3px brand-navy ring offset 2px everywhere, switching to pill gold inside the
+  navy top bar where a dark ring would disappear.
 
-- **Shape:** Base 10px radius (`{rounded.md}`), squared enough to read as a control rather
-  than a chip.
-- **Primary:** Action Blue fill, white 700 text at 17px, 15px by 26px padding, 48px minimum
-  height, and the 2px Action Blue Deep press edge. One per screen. Full width below 640px.
-- **Next:** The same treatment one step smaller (16px text, 12px by 22px padding) for
-  in-flow advancement, so it does not compete with a screen's real primary action.
-- **Hover / Focus:** Primary buttons have no hover fill change; the affordance is the press
-  edge and the label. Focus is a 3px Action Blue Deep ring at 2px offset, switching to Torch
-  Gold inside the navy bar. Disabled is `opacity: .5` plus `aria-disabled`, never a
-  `disabled` attribute that would drop the control out of the tab order.
-- **Ghost:** Transparent fill, 2px Action Blue border, Action Blue 700 label at 15px, 48px
-  minimum height. Carries Back, Start over, Download, and Email.
-- **Link button:** For an action that sits inside a sentence. Inherits size, 700 weight,
-  Action Blue, underlined at 3px offset, no padding and no border.
-- **Exit / Back (top bar):** White pill on navy, Court Navy 700 label at 13px, 44px minimum
-  height. In production this becomes Quick exit to a neutral external site.
+### Option Tiles
+- **Style:** a full-width row, 52px minimum, 2px `#84909f` border, white fill, bold 16.5px
+  navy label, with a 24px mark on the left. The mark is a circle for single-answer questions
+  and a 6px-rounded square for multi-select, so the shape says whether one or several
+  answers are possible before anything is read.
+- **States:** hover deepens the border to `#5b6675` and fills with `#eef1f5`; active goes
+  `#e3e8f0`; selected takes the accent border, the `#d7e6f9` fill, the selection halo, and a
+  mark filled solid accent blue with a white dot or check inside.
+- **Transitions:** 0.15s ease on background, border-color, and box-shadow; none under
+  reduced motion.
 
-### Option tiles (signature component)
+### Cards and Panels
+- **Result card:** a 10px `overflow:hidden` container with a 1px status border, a status-fill
+  header band padded 20px by 22px carrying the heading, and a white body padded the same.
+  Exempt is green, not-exempt is ochre, neutral outcomes are pale blue with `#c7d6f0`.
+- **Soft panel:** pale blue, 10px, 18px by 20px padding, no border. For supporting
+  information next to a result. A help callout is the same with a 4px accent-blue left bar.
+- **White panel:** white with a 1px `#c8d2e0` border and 18px padding, for the question card,
+  the printable form, and disclosures.
+- **Internal padding:** 18px to 22px; never below 15px on a phone.
 
-The single most important control in the system, and the reason the v2 pattern was kept over
-production's Docassemble radios.
-
-- **Style:** Full-width tile, white fill, 2px Boundary border, 10px radius, 16px by 18px
-  padding, 52px minimum height, and a 700 label at 16.5px left-aligned beside a 24px mark.
-- **Mark:** 24px circle for single-select, 6px-radius square for multi-select, white fill with
-  a 2px Boundary Strong border, filling with Action Blue and a white glyph when chosen.
-- **Hover:** Border darkens to Muted Ink and the fill takes the Field tint. **Active:** the
-  Field Hover tint.
-- **Selected:** Action Blue border, Selected Fill background, and the selection halo. The
-  border and the filled mark carry the state; the fill alone never does.
-- **Semantics:** Real `role="radio"` and `role="checkbox"` with `aria-checked`, so the tile
-  is announced as the control it looks like.
-
-### Help tips (signature component)
-
-One component with two physical forms, chosen by pointer type rather than by width. On a fine
-pointer above 641px it is a fixed-position popover, 300px wide, white on a Boundary Strong
-border with the floating-panel shadow, opening on hover, focus-within, or click. On a coarse
-pointer or below 640px it becomes an inline accordion that pushes content down, with the
-shadow removed and a 44px minimum trigger. The trigger is a dotted-underlined 12.5px label
-with a small ringed `i`, or the ring alone in icon-only mode.
-
-### Cards and result panels
-
-- **Corner Style:** 10px, `overflow: hidden` so the colored header bleeds to the edge.
-- **Structure:** A tinted header carrying the result heading over a white body carrying the
-  detail. The header fill, the border, and the heading ink are the status vocabulary:
-  Exempt Fill with Exempt Ink on Exempt Line for an exemption, Not-Exempt Fill with
-  Not-Exempt Ink on Not-Exempt Line for the work-rules outcome, Soft Blue with Action Blue
-  Deep on `#c7d6f0` for informational and good-cause results.
-- **Shadow Strategy:** None. See Elevation.
-- **Internal Padding:** 20px by 22px in result cards, 18px by 20px in nested panels, 22px in
-  the statement form.
-- **Nested panels:** A pale fill plus a matching 1px border and the base radius, used for
-  "how to meet the work rules" and "how to tell DTA" blocks inside a result body.
-
-### Inputs and fields
-
-- **Style:** White fill, 1.5px Boundary Strong stroke, 7px radius, 12px padding, 48px minimum
-  height, 16px text. Textareas add `resize: vertical` and 1.5 line height. Two-up fields sit
-  in a 1fr 1fr grid that collapses to one column below 640px.
-- **Labels:** Always visible above the field, 700 at 14.5px. Placeholders are examples only,
-  never the label.
-- **Focus:** The global 3px ring; no border-color-only focus states.
-- **Signature pad:** A 140px canvas in the same 1.5px stroke and 7px radius, with a Clear
-  ghost button and `role="img"` plus `aria-labelledby`.
+### Inputs
+- **Style:** white fill, 1.5px `#767f8c` stroke, 7px radius, 12px padding, 16px text, 48px
+  minimum height, full width. Labels are bold 14px to 14.5px directly above.
+- **Focus:** the global 3px brand-navy ring offset 2px. No border-color-only focus anywhere.
+- **Signature pad:** a canvas in the same stroke and radius, with placeholder-ink hint text
+  centered inside and a small ghost Clear button beside it.
 
 ### Navigation
+- **Top bar:** header navy, white, space-between, 12px padding, carrying a bold 17px title
+  and a 12px subtitle that hides below 640px, with the Quick exit pill at the right and a
+  9px gold rule along the bottom.
+- **Footer:** a pill-gold 4px rule, a brand-navy band with the same 660px measure holding the
+  disclaimer and three white underlined links, then a strip-navy bar with the credit line.
+- **Progress:** a 6px track in `#dbe3ef` with an accent-blue fill, built once and updated in
+  place so its live region actually announces, with a bold 13px muted "Section n of n" label
+  under it.
 
-- **Top bar:** Court Navy, white text, the gold torch glyph at 26px, a 700 title at 15px to
-  18px with a 12px subtitle at 0.85 opacity that hides below 640px, and the exit pill at the
-  right. Focus rings inside it are Torch Gold.
-- **Nav rows (hub and index):** A bordered 14px-radius row: 40px circular icon badge, 17px
-  700 title, 15px Muted Ink description, and a blue arrow. Hover darkens the border to the
-  accent and lifts 1px. The badge fill encodes the destination's status color.
-- **Progress:** A 6px full-bleed channel on Progress Track, filled with Action Blue via
-  `transform: scaleX()` over 0.3s so the animation stays off the layout path, plus a 13px
-  700 "Section N of M" caption in Muted Ink. Exposed as a real `role="progressbar"`.
+### The Page-Header Pattern
+The signature component, and the one intended for reuse. Four things in order: a pale blue
+gradient panel (`linear-gradient(#d3e7ff, #fafcff)`) holding the `h1`, padded 30px 26px 22px,
+with the solid `#a2c4f0` block offset 8px down and right behind it; a byline of a 40px
+accent-blue circle with an inline document glyph beside "By" and the organisation name; a
+146px by 5px `#192a65` rule; then body copy. It is implemented as reusable classes
+(`.band`, `.byline`, `.byline-mark`, `.byline-rule`), not inline styles, because the intent
+is a template for every screener MLRI puts on the site rather than one page's styling.
 
-### Motion
+**The Page-Header Rule.** A new MLRI screener opens with the band, the byline, and the rule,
+in that order, before any prose. Nothing else goes inside the band except the `h1`.
 
-State transitions are 0.15s ease on background, border, and box-shadow. Screens fade in over
-0.3s to 0.35s with opacity only, never a translate. The progress fill animates transform for
-0.3s. Every one of these is disabled under `prefers-reduced-motion: reduce`, including the
-card entrance and the tile transitions, and the hover lifts are zeroed too.
+### Shell Cards (preview site)
+A `.entry` is a 14px card in `#fffef9` on paper with a 1px `#9e8e66` edge, a 40px tag-filled
+Fraunces badge at the left, a bold 17px title, muted 15px prose, and a "Go" link whose arrow
+slides 4px on hover. Hover lifts the card 2px, shifts the border to the accent, and adds the
+tinted lift shadow. A secondary group is one `.panel` card with `#e4ddcd` hairline-divided
+rows instead of more cards. Archive entries override the accent to terracotta.
 
 ## Do's and Don'ts
 
 ### Do:
-
-- **Do** treat the `court-forms/` palette and chrome as inherited from production. Match it;
-  do not improve it.
-- **Do** tint the control, not the page. Options are `#eef1f5` at rest, `#e3e8f0` on hover,
-  `#d7e6f9` when selected, on a `#ffffff` page.
-- **Do** compute a contrast ratio before changing any border, mark, or text color, and keep
-  clickable boundaries at or above 3:1 on white.
-- **Do** derive new radii from `--radius` (10px) and new spacing from the 8 / 10 / 14 / 18 /
-  22 / 28px rhythm.
-- **Do** give every interactive element a 44px minimum target, 52px for option tiles, and
-  keep inputs at 16px or larger.
-- **Do** use a Lucide line glyph in a filled circle for iconography: white stroke on Court
-  Navy, Action Blue, Approval Green, or `#9a6a00`, matching the result screens.
-- **Do** pair every status color with an icon and a text label, so color is never the only
-  channel carrying the outcome.
-- **Do** keep the answer tiles as the interaction pattern for questions.
+- **Do** keep the page white and tint the control. Option fill `#eef1f5`, hover `#e3e8f0`,
+  selected `#d7e6f9`, and a `#84909f` boundary at 3.25:1 around anything clickable.
+- **Do** carry a selected state with the accent border plus the filled mark. Two pale tints
+  sit near 1.05:1, so fill alone communicates nothing.
+- **Do** compute the contrast ratio before changing any boundary, mark, or text value, and
+  record it next to the token the way the existing ones are recorded.
+- **Do** open a new screener with the page-header pattern: band, byline, 146px rule.
+- **Do** set every interactive target at 48px, or 44px for a secondary control, and every
+  text input at 16px or larger.
+- **Do** reproduce the host chrome exactly where it is reproduced at all: header navy, the
+  9px gold rule, one navy for headings and body, and their pale blue band.
+- **Do** keep both territories whole. Fraunces, paper, and pine belong to the preview site;
+  navy chrome and the gold rule belong to the screener.
 
 ### Don't:
-
-- **Don't** copy production's Docassemble interview screens: Bootstrap carets, the flat
-  sidebar step list, small dense radios. The tiles in this system replaced them on purpose.
-- **Don't** reach for consumer-app polish: gradients, glassy or blurred panels, floating
-  cards, playful illustration, animated flourishes. A benefits decision is not a marketing
-  page.
-- **Don't** build a dense government portal either: no small type, no wall-to-wall tables, no
-  unexplained acronyms, and no showing every section at once.
-- **Don't** give an option a white fill, and don't let a fill alone carry the selected state.
-- **Don't** add an ambient shadow to a `court-forms/` surface. The 2px press edge under
-  primary buttons is the only shadow at rest.
-- **Don't** introduce a second typeface into the tools, and don't "fix" the single-font
-  detector comment that documents why.
-- **Don't** use emoji in the UI. Use the Lucide-in-a-circle pattern instead. Note that
-  `snap-abawd.html` and `snap-abawd-classic-v2.html` still carry a lock emoji in the privacy
-  notice; that is a known exception to correct, not a precedent.
-- **Don't** use red for the "may need to meet the work rules" result. It is not a denial, and
-  Caution Ochre (`#9a6a00`) is the deliberate choice.
-- **Don't** carry the shell's warm paper palette, Fraunces, or its dark mode into
-  `court-forms/`, and don't push the Court Forms chrome onto the root index page.
-- **Don't** load a webfont or icon library from a CDN inside the tools. Atkinson Hyperlegible
-  and Lucide are self-hosted under `court-forms/fonts/` and `court-forms/vendor/`.
+- **Don't** let gold carry meaning anywhere off the navy bar. `#eab736` is 1.41:1 class
+  decoration on white; a gold focus ring, selected state, or error mark fails outright.
+- **Don't** revive the Court Forms Online palette. It is archived, frozen, and untested, and
+  a new surface inheriting court navy or torch gold would be inheriting a retired identity.
+- **Don't** substitute a second typeface on the screener for hierarchy. Use weight, size, and
+  space; Atkinson Hyperlegible carries the whole ramp.
+- **Don't** animate a translate or a height on an entrance. Opacity only, `scaleX` for
+  progress, and everything zeroed under `prefers-reduced-motion`.
+- **Don't** blur a shadow that is standing in for a solid offset block. `8px 8px 0` and
+  `0 2px 0` are hard on purpose.
+- **Don't** use a class in markup with no CSS rule behind it. `scripts/check-pages.js` fails
+  the build on it, and the guard only works while the page's own `<style>` block owns its
+  classes.
+- **Don't** ship a control that is drawn but not wired. Print, Share, and Listen exist on the
+  host site and are deliberately absent here for exactly that reason.
