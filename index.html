@@ -107,15 +107,6 @@
   h1{font-family:'Fraunces',Georgia,serif;font-weight:600;
     font-size:clamp(26px,6vw,32px);letter-spacing:-.02em;margin:0 0 8px;line-height:1.15}
   .lead{font-size:16px;line-height:1.45;color:var(--muted);margin:0}
-  /* The scope note above the list. The SNAP screener is going to two different
-     sites in two different technologies, which is not guessable from a list of
-     links, so it gets said once in plain words. */
-  .note{margin:24px 0 0;padding:16px 18px;background:var(--card);
-    border:1px solid var(--rule);border-radius:12px}
-  .note h2{font-size:14px;letter-spacing:.02em;margin:0 0 8px;color:var(--ink)}
-  .note p{font-size:14.5px;line-height:1.5;color:var(--muted);margin:0 0 8px}
-  .note p:last-child{margin-bottom:0}
-  .note strong{color:var(--ink);font-weight:700}
 
   .list{margin:28px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:14px}
   .entry{display:flex;gap:16px;padding:18px;background:var(--card);
@@ -222,41 +213,17 @@
     <p class="lead">Draft prototypes for feedback.</p>
   </header>
 
-  <section class="note">
-    <h2>About the SNAP screener</h2>
-    <p>It is <strong>one tool going to two different websites</strong>, which is why there
-    are two versions of it below. The questions and the logic are shared; only the wrapper
-    around them changes.</p>
-    <p><strong>MassLegalHelp</strong> takes it as a normal web page, styled to match their
-    site. That version is close to finished.</p>
-    <p><strong>Court Forms Online</strong> cannot take a web page. Everything on their site
-    is built with Docassemble, so that version has to be rebuilt as a guided interview. The
-    Court Forms sample below shows the design in their look; the interview itself is being
-    built separately and is not something you can click through yet.</p>
-  </section>
-
   <main>
   <ul class="list" role="list">
     <li class="entry">
-      <div class="badge" aria-hidden="true">M</div>
+      <div class="badge" aria-hidden="true">S</div>
       <div class="body">
         <div class="titlerow">
-          <h2>MassLegalHelp sample</h2>
-          <span class="tag">Close to done</span>
+          <h2>SNAP ABAWD screener</h2>
+          <span class="tag">Prototype</span>
         </div>
-        <p>The SNAP work rules screening as it would appear on MassLegalHelp. This is the one worth your attention. Answers stay on your device and nothing is sent anywhere.</p>
-        <a class="go" href="masslegalhelp/">Open the screening</a>
-      </div>
-    </li>
-    <li class="entry court">
-      <div class="badge" aria-hidden="true">C</div>
-      <div class="body">
-        <div class="titlerow">
-          <h2>Court Forms Online sample</h2>
-          <span class="tag">Design only</span>
-        </div>
-        <p>The same screening in Court Forms Online's look, plus two earlier designs kept for comparison. Useful for seeing how it would sit on their site, but the real version there will be a Docassemble interview rather than these pages.</p>
-        <a class="go" href="court-forms/">Open the samples</a>
+        <p>A short, private check of whether the DTA work rules apply to someone getting SNAP. Two versions to look at, in different site styles. Answers stay on the visitor's device and nothing is sent anywhere.</p>
+        <a class="go" href="screener/">Open the screener</a>
       </div>
     </li>
     <li class="entry">

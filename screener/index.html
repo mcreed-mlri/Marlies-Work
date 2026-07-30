@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SNAP ABAWD screener · Marlie's MLRI Work</title>
+<meta name="description" content="One SNAP work rules screening, being set up for two different websites. Samples and background.">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../favicon-32.png" type="image/png" sizes="32x32">
+<link rel="shortcut icon" href="../favicon.ico">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png" sizes="180x180">
+<meta name="theme-color" content="#3a5a40">
+<script>
+  // Apply saved theme before paint to avoid a flash. Same key as the homepage, so
+  // a reviewer's choice carries over. This page has no toggle of its own; it is a
+  // subpage and the control lives on the front door.
+  try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
+</script>
+<!-- impeccable-disable overused-font -- Fraunces is the preview site's own voice,
+     deliberately unlike the inherited chrome in court-forms/ and masslegalhelp/.
+     See DESIGN.md, two territories. -->
+<style>
+  /* Tokens and base styles are copied from index.html rather than shared through
+     a stylesheet. scripts/check-pages.js only validates classes against a page's
+     own <style> block, so moving these to an external file would silence the
+     check that catches a class used in markup with no rule behind it. Duplication
+     that keeps a guard working beats reuse that switches it off.
+
+     If these drift from the homepage, the homepage is the source of truth. */
+  @font-face{
+    font-family:'Atkinson Hyperlegible';font-style:normal;font-weight:400;
+    font-display:swap;src:url('../fonts/atkinson-400.woff2') format('woff2');
+  }
+  @font-face{
+    font-family:'Atkinson Hyperlegible';font-style:normal;font-weight:700;
+    font-display:swap;src:url('../fonts/atkinson-700.woff2') format('woff2');
+  }
+  @font-face{
+    font-family:'Fraunces';font-style:normal;font-weight:600;
+    font-display:swap;src:url('../fonts/fraunces-600.woff2') format('woff2');
+  }
+  :root{
+    color-scheme:light dark;
+    --paper:#fbf8f1;
+    --ink:#221f1a;
+    --muted:#6b6255;
+    --edge:#9e8e66;
+    --rule:#e4ddcd;
+    --accent:#3a5a40;
+    --house:#3d5a80;
+    --card:#fffef9;
+    --tag:#eef1e9;
+    --lift:rgba(58,90,64,.45);
+  }
+  :root[data-theme="light"]{color-scheme:light}
+  :root[data-theme="dark"]{
+    color-scheme:dark;
+    --paper:#17150f;
+    --ink:#ece7db;
+    --muted:#a39a87;
+    --edge:#706755;
+    --rule:#332e24;
+    --accent:#93b899;
+    --house:#9ab7d6;
+    --card:#1e1b13;
+    --tag:#242a20;
+    --lift:rgba(0,0,0,.6);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --paper:#17150f;
+      --ink:#ece7db;
+      --muted:#a39a87;
+      --edge:#706755;
+      --rule:#332e24;
+      --accent:#93b899;
+      --house:#9ab7d6;
+      --card:#1e1b13;
+      --tag:#242a20;
+      --lift:rgba(0,0,0,.6);
+    }
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  html,body{margin:0}
+  body{
+    font-family:'Atkinson Hyperlegible',system-ui,-apple-system,sans-serif;
+    color:var(--ink);background:var(--paper);min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit}
+  :focus-visible{outline:2.5px solid var(--house);outline-offset:3px;border-radius:3px}
+
+  .wrap{max-width:560px;margin:0 auto;padding:40px max(20px,env(safe-area-inset-left)) 56px max(20px,env(safe-area-inset-right))}
+
+  .back{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:700;
+    color:var(--house);text-decoration:none;margin:0 0 22px;min-height:44px}
+  .back:hover{text-decoration:underline}
+
+  header{margin-bottom:26px}
+  .kicker{font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--house);margin:0 0 10px}
+  h1{font-family:'Fraunces',Georgia,serif;font-weight:600;
+    font-size:clamp(26px,6vw,32px);letter-spacing:-.02em;margin:0 0 8px;line-height:1.15}
+  .lead{font-size:16px;line-height:1.45;color:var(--muted);margin:0}
+
+  h2.section{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:19px;
+    letter-spacing:-.01em;margin:34px 0 4px}
+  .section-note{font-size:14.5px;line-height:1.5;color:var(--muted);margin:0 0 14px}
+
+  .list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:14px}
+  .entry{display:flex;gap:16px;padding:18px;background:var(--card);
+    border:1px solid var(--edge);border-radius:14px;
+    transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease}
+  .entry:hover{transform:translateY(-2px);border-color:var(--accent);
+    box-shadow:0 6px 20px -12px var(--lift)}
+  .entry.court{--accent:#a85a32}
+  :root[data-theme="dark"] .entry.court{--accent:#dc9163}
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]) .entry.court{--accent:#dc9163}
+  }
+  .badge{flex:none;width:40px;height:40px;border-radius:11px;background:var(--tag);
+    border:1px solid var(--rule);display:flex;align-items:center;justify-content:center;
+    font-family:'Fraunces',Georgia,serif;font-size:19px;color:var(--accent)}
+  .body{min-width:0;flex:1}
+  .titlerow{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin:0 0 6px}
+  .entry h2{font-family:'Atkinson Hyperlegible',system-ui,-apple-system,sans-serif;
+    font-weight:700;font-size:16.5px;letter-spacing:-.01em;margin:0;line-height:1.25}
+  .entry p{font-size:15px;line-height:1.45;color:var(--muted);margin:0 0 10px}
+  .tag{font-size:11px;font-weight:400;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--muted);background:var(--tag);border:1px solid var(--rule);
+    border-radius:999px;padding:3px 9px;white-space:nowrap}
+  .go{display:inline-flex;align-items:center;gap:5px;font-size:14.5px;font-weight:700;
+    color:var(--accent);text-decoration:none;min-height:44px}
+  .go::after{content:"→";transition:transform .16s ease}
+  .go:hover{text-decoration:underline}
+  .go:hover::after{transform:translateX(3px)}
+
+  .docs{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:2px}
+  .docs li{font-size:15px;line-height:1.5}
+  .docs a{font-weight:700;color:var(--accent);min-height:44px;display:inline-flex;align-items:center}
+  .docs .what{color:var(--muted);font-weight:400}
+
+  @media (prefers-reduced-motion:reduce){
+    .go::after,.entry{transition:none}
+    .entry:hover{transform:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a class="back" href="../">← All projects</a>
+
+  <header>
+    <p class="kicker mono">MLRI · SNAP</p>
+    <h1>SNAP ABAWD screener</h1>
+    <p class="lead">A short, private check of whether the DTA work rules apply to someone
+    getting SNAP, or whether they may be exempt or had a good reason for missing hours.</p>
+  </header>
+
+  <!-- Deliberately no explanation here yet of which site is getting what, or when.
+       A draft note describing the two-site arrangement was written and pulled on
+       2026-07-30, because it stated things about two organisations' plans that are
+       not confirmed, and a page colleagues read makes anything on it look settled.
+       Restore it once the arrangement is agreed; it is in this file's git history.
+
+       What is left is verifiable from the code: the versions exist, they look
+       different, and they share one logic module. -->
+  <h2 class="section">Versions</h2>
+  <p class="section-note">Both run the same questions and the same decision logic, from one
+  shared module. Only the styling differs.</p>
+
+  <ul class="list" role="list">
+    <li class="entry">
+      <div class="badge" aria-hidden="true">M</div>
+      <div class="body">
+        <div class="titlerow">
+          <h2>In MassLegalHelp's style</h2>
+        </div>
+        <p>The screening styled to match MassLegalHelp. Answers stay on your device and
+        nothing is sent anywhere.</p>
+        <a class="go" href="../masslegalhelp/">Open the screening</a>
+      </div>
+    </li>
+    <li class="entry court">
+      <div class="badge" aria-hidden="true">C</div>
+      <div class="body">
+        <div class="titlerow">
+          <h2>In Court Forms Online's style</h2>
+        </div>
+        <p>The screening styled to match Court Forms Online, plus two earlier drafts kept for
+        comparison.</p>
+        <a class="go" href="../court-forms/snap-screening.html">Open the samples</a>
+      </div>
+    </li>
+  </ul>
+
+  <h2 class="section">Background</h2>
+  <p class="section-note">Plain explanation of what the screening does, for anyone who wants
+  it before clicking through.</p>
+
+  <ul class="list" role="list">
+    <li class="entry">
+      <div class="badge" aria-hidden="true">?</div>
+      <div class="body">
+        <div class="titlerow">
+          <h2>How the screening works</h2>
+        </div>
+        <p>What the questions are for, what each result means, and what happens to the
+        answers. No jargon.</p>
+        <a class="go" href="../court-forms/snap-how-it-works.html">Read how it works</a>
+      </div>
+    </li>
+  </ul>
+
+  <h2 class="section">For reviewers and developers</h2>
+  <p class="section-note">Plain text files. Depending on your browser these may open in a tab
+  or download.</p>
+
+  <ul class="docs" role="list">
+    <li>
+      <a href="../SCREENER-COPY.md">Every word the screener says</a>
+      <span class="what">, in the order someone meets it, with the open questions marked.
+      This is the file to edit when changing wording.</span>
+    </li>
+    <li>
+      <a href="../DECISION-SPEC.md">What the screening decides, and on what input</a>
+      <span class="what">, including every combination of the housing follow-up. Written for
+      someone checking the rules against SNAP policy.</span>
+    </li>
+  </ul>
+
+</div>
+</body>
+</html>
