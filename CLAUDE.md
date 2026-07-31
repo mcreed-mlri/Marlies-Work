@@ -100,8 +100,12 @@ not copy" section there before adding any of their chrome that is missing: the l
 breadcrumbs, Print, Share, and Listen are all absent on purpose, because drawing a control
 that does nothing is worse than not drawing it.
 
-The page-header pattern, `.band` plus `.byline` plus `.byline-rule`, is meant as the template
-for every screener MLRI puts on the site rather than one page's styling.
+The page-header pattern, `.band` plus `.byline-rule`, is meant as the template for every
+screener MLRI puts on the site rather than one page's styling. Two parts of it depart from
+the measured original on purpose, both recorded in `MASSLEGALHELP-BRAND.md`: the panel is a
+flat `#d3e7ff` rather than their gradient, because the gradient's 1.03:1 bottom edge left
+the offset block reading as a floating bar at our narrower column, and the byline row is
+gone. Do not restore either from the brand doc's measurements alone.
 
 Court Forms Online's own interview screens are dated Docassemble defaults (Bootstrap carets, a
 flat sidebar step list). The big Yes/No tiles in `archive/snap-screening-v2.html` are the

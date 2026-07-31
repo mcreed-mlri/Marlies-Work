@@ -17,6 +17,12 @@
 /masslegalhelp/*
   Cache-Control: no-cache
 
+/masslegalhelp/tool/*
+  Cache-Control: no-cache
+
+/tool/*
+  Cache-Control: no-cache
+
 # The screener landing page. `/*.html` above does not cover it: the request path
 # for a directory index is `/screener/`, which does not end in .html, so without
 # this rule the page a reviewer is sent to first was the one page that could be

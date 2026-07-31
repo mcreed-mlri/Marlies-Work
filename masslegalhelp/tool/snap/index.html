@@ -1,0 +1,1716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SNAP Work Rules Screening | Massachusetts Legal Help</title>
+<meta name="description" content="A short, private screening to check if you need to meet the SNAP ABAWD work rules or if you are exempt.">
+<!-- Preloaded, because the two faces are otherwise discovered only after
+     fonts/atkinson.css parses, which costs a round trip on the critical path of a
+     page whose entire body is script-rendered. -->
+<link rel="preload" href="../../fonts/atkinson-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../fonts/atkinson-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../fonts/atkinson.css">
+<!-- Headings are Atkinson, like everything else. This page carried a --serif token
+     reading 'Domine', Georgia, serif, on the theory that Domine was a missing font
+     file rather than a decision. In practice domine-700.woff2 never landed, so every
+     heading rendered in Georgia: a face nothing in this repository declared, sitting
+     over a body set in a typeface chosen specifically for low-vision readers.
+     DESIGN.md's typography block said the headings were Atkinson the whole time.
+
+     Reverted 2026-07-30 rather than papering over it by documenting Georgia. The
+     single-face rule is a legibility decision, and an accidental second face is not
+     the way to reopen it. If Domine is ever wanted, it needs the file, a measured
+     decision, and a DESIGN.md entry, in that order. -->
+<!-- impeccable-disable single-font -- Atkinson Hyperlegible is the legibility choice for this audience; a display-font pairing would work against it. -->
+<style>
+  /* MassLegalHelp build. Chrome tokens are theirs, read off masslegalhelp.org on
+     2026-07-30 and recorded with measured ratios in MASSLEGALHELP-BRAND.md.
+     The control tokens below the chrome are unchanged from the Court Forms
+     Online build, because the page is white in both and only the chrome moved.
+
+     Atkinson Hyperlegible stays. MassLegalHelp sets body copy in Montserrat and
+     headings in Domine, but Atkinson was chosen for low-vision readers and that
+     outranks matching a host font. Revisit only with their font files in hand. */
+  :root{
+    --accent:#0057a2;       /* 7.28:1, MLH accent blue. Was #1a5fb4 */
+    --navy:#1e2e5f;         /* MLH header bar */
+    /* Two golds, because MassLegalHelp uses two. --pill is the pale gold of the
+       Legal Topics button; --gold is the saturated rule under the header, measured
+       at #eab736 and 9.6px. An earlier version used the pale one for the rule,
+       which read as a hairline instead of the band it is. Both are decorative and
+       both fail contrast on white, so neither may carry meaning off the navy bar. */
+    --gold:#eab736;
+    --pill:#e8da8d;
+    --yellow:#e8da8d;       /* alias kept: the top-bar focus ring reads --yellow */
+    /* Title band, copied from their article pages: a pale blue gradient panel with
+       a solid block offset behind it down and to the right. --band-edge is that
+       block. */
+    --band-top:#eaf2ff;
+    --band-bottom:#f7fbff;
+    --band-edge:#c8daf5;
+    --rule-ink:#192a65;     /* the short heavy rule under their byline */
+    --accent-dark:#1f2c5c;  /* 13.35:1, MLH brand navy, result headings */
+    --soft:#eaf2ff;         /* MLH pale blue band */
+    --bg:#fbf9f4;
+    --card:#ffffff;
+    --field:#f4f7fb;
+    --field-hover:#eaf2ff;
+    --sel:#d7e6f9;
+    --ink:#1f2c5c;          /* 13.35:1, MLH sets headings and body in one navy */
+    /* Text and boundary values that used to be repeated as literals through the
+       render templates. Ratios are against --bg unless noted. */
+    --prose:#1f2c5c;        /* 13.35:1, matches MLH body copy. Was #3a424e at 10.15:1 */
+    --muted:#5b6470;        /* 6:1, captions and quiet controls */
+    --panel:#c8d2e0;        /* non-interactive panel border */
+    --stroke:#767f8c;       /* 4.05:1, input strokes and mark borders */
+    --line:#4f6b91;         /* option boundary on the warm page */
+    --line-hover:#1f2c5c;   /* option border on hover */
+    --placeholder:#6b7280;  /* 4.83:1 */
+    /* Status vocabulary. Each result state is a fill, a border, and an ink. */
+    --ok-fill:#e6f4ec;
+    --ok-line:#cbe4d5;
+    --ok-ink:#14532d;
+    --ok-bg:#eef7f1;
+    --ok-strong:#166534;
+    --green:#1e7a45;
+    --warn-fill:#fbf1dc;
+    --warn-bg:#fff8e8;
+    --warn-line:#ecd9a8;
+    --warn-ink:#7a4a00;
+    --info-line:#c7d6f0;
+    --danger:#a12b2b;
+    --danger-line:#c58484; /* 3:1, so the outline of a bare button is a real boundary */
+    --radius:10px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  html,body{margin:0}
+  body{
+    font-family:'Atkinson Hyperlegible',system-ui,-apple-system,sans-serif;
+    color:var(--ink);
+    background:var(--bg);
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+  a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+  a:hover{color:var(--accent-dark)}
+  button{font-family:inherit;touch-action:manipulation}
+  :focus-visible{outline:3px solid var(--accent-dark);outline-offset:2px;border-radius:4px}
+  /* A dark-blue ring vanishes against the navy bar, so focus goes gold there. */
+  .topbar :focus-visible{outline-color:var(--yellow)}
+  @keyframes cardIn{from{opacity:0}to{opacity:1}}
+  .card-in{animation:cardIn .3s ease both}
+  .opt{
+    display:flex;align-items:center;gap:13px;width:100%;
+    font-family:inherit;font-size:16.5px;font-weight:700;text-align:left;
+    padding:16px 18px;border:2px solid var(--line);border-radius:var(--radius);
+    background:var(--card);cursor:pointer;color:var(--ink);line-height:1.35;
+    box-shadow:0 0 0 3px transparent;min-height:52px;
+    transition:background .15s ease,border-color .15s ease,box-shadow .15s ease;
+    -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  }
+  .opt:hover{border-color:var(--line-hover);background:var(--field)}
+  .opt:active{background:var(--field-hover)}
+  .opt-selected{
+    border-color:var(--accent);background:var(--sel);
+    /* rgba of --accent. This was rgba(26,95,180,.16), the retired #1a5fb4 accent,
+       left behind when the rebrand moved --accent to #0057a2. */
+    box-shadow:inset 0 0 0 1px var(--accent),0 0 0 3px rgba(0,87,162,.16);
+  }
+  .opt-selected:hover{border-color:var(--accent);background:var(--sel)}
+  .opt-mark{
+    width:24px;height:24px;flex:none;border-radius:50%;
+    border:2px solid var(--stroke);background:#fff;color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-size:14px;font-weight:700;transition:border-color .15s ease,background .15s ease;
+  }
+  .opt-mark.square{border-radius:6px}
+  .opt-selected .opt-mark{border-color:var(--accent);background:var(--accent)}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  .topbar{
+    background:var(--navy);color:#fff;
+    /* The gold rule under the header is MassLegalHelp's strongest chrome cue.
+       Decorative only, which is why 1.41:1 against white is acceptable here. */
+    border-bottom:9px solid var(--gold);
+  }
+  .topbar-inner{
+    max-width:1040px;margin:0 auto;min-height:74px;width:100%;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding:10px max(18px, env(safe-area-inset-right)) 10px max(18px, env(safe-area-inset-left));
+  }
+  /* The dark strip above the header. On their site it holds the language
+     selector; here it holds the one link back to masslegalhelp.org, which is
+     what makes a tool served at a path read as part of the site rather than as
+     somewhere else. Add a language link beside it when a translation exists. */
+  /* The wordmark is the link home. Undecorated at rest, because a logo that
+     announces itself as a link with an underline looks broken; the pointer and the
+     hover underline carry it, and the aria-label names the destination for anyone
+     not seeing either. Focus is handled by the .topbar :focus-visible rule, which
+     switches the ring to gold so it stays visible on navy. */
+  a.topbar-brand{
+    display:flex;align-items:center;gap:12px;min-width:0;
+    color:inherit;text-decoration:none;
+  }
+  a.topbar-brand:hover .topbar-title{text-decoration:underline;text-underline-offset:3px}
+  /* Slot for the MassLegalHelp wordmark. The element removes itself if the file
+     is absent (see the onerror in the markup), so the text lockup stands alone
+     until the asset lands. */
+  .topbar-logo{flex:none;width:44px;height:44px;display:block;object-fit:contain}
+  .topbar-title{
+    font-family:"Libre Baskerville",Georgia,serif;font-size:30px;font-weight:700;
+    letter-spacing:-.01em;line-height:1;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    text-rendering:optimizeLegibility;font-synthesis:none;
+  }
+  .topbar-sub{font-size:14px;font-weight:700;opacity:1;line-height:1.12;color:#fff}
+  .btn-exit{
+    flex:none;font-size:14px;font-weight:700;color:var(--navy);background:#fff;border:none;
+    border-radius:6px;padding:10px 16px;cursor:pointer;min-height:44px;
+  }
+  .topbar-actions{flex:none;display:flex;align-items:center;gap:10px}
+  #stage{
+    max-width:760px;margin:0 auto;
+    padding:24px max(16px, env(safe-area-inset-right)) 64px max(16px, env(safe-area-inset-left));
+  }
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0 0}
+  /* Back / Next stay reachable without scrolling past four questions. Sticky
+     rather than fixed, so it sits in the flow at the end of a short page and
+     never covers the last option on a long one. */
+  .q-nav{
+    position:sticky;bottom:0;z-index:5;
+    display:flex;align-items:center;gap:12px;
+    margin:24px calc(-1 * max(16px, env(safe-area-inset-left))) 0 calc(-1 * max(16px, env(safe-area-inset-right)));
+    padding:12px max(16px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+    background:rgba(251,249,244,.96);border-top:1px solid var(--panel);
+    box-shadow:0 -6px 18px rgba(16,32,56,.07);
+  }
+  .q-nav > [data-action="back"]{flex:0 0 34%}
+  .q-nav > [data-action="next"]{flex:1}
+  .h1{font-weight:700;font-size:clamp(24px,6vw,29px);line-height:1.3;letter-spacing:-.01em;margin:8px 0 16px}
+
+  /* ---- MassLegalHelp page-header pattern ----------------------------------
+     Their article pages open with the title in a pale blue gradient panel that
+     has a solid block offset behind it, down and to the right, then a byline and
+     a short heavy rule. We take the panel, the block, and the rule, and skip the
+     byline; the note above .byline-rule says why. Reproduced so a screener reads as
+     part of the site rather than as a tool bolted onto it. Measured from their SNAP
+     ABAWD article on 2026-07-30; values in MASSLEGALHELP-BRAND.md.
+
+     Written as reusable classes, not inline styles, because the intent is a
+     pattern for every screener MLRI puts on the site, not a one-off. */
+  .band{
+    /* Flat, not their linear-gradient(#d3e7ff, #fafcff). This is the one measured
+       deviation from their page-title panel, and it is deliberate.
+       The gradient bottoms out at #fafcff, which is 1.03:1 against a white page:
+       the panel's bottom edge is invisible. The offset block behind it is #a2c4f0
+       at 1.80:1. So the ornament ends up 1.7x more visible than the thing it is
+       offset from, and the 8px strip reads as a bar floating under nothing instead
+       of as a block behind a panel.
+       It works on their site because their panel is 805px wide against our 628 and
+       carries a two-line byline underneath, which separates the strip from whatever
+       comes next. At our column width, with the byline gone, the strip landed 15px
+       above the navy rule and the header read as two stacked bars.
+       Solid --band-top gives the panel a 1.26:1 boundary on all four sides, which
+       is what makes an offset block legible as depth. Recorded in
+       MASSLEGALHELP-BRAND.md under what we deliberately do not copy. */
+    background:var(--band-top);
+    /* 51px of side padding is theirs, measured. This was 30px, which put the h1 on
+       a third left edge: the band at 0, the heading at 30, the byline and rule and
+       every paragraph below back at 0. Their heading is indented too, but by enough
+       that it reads as a deliberate inset rather than a near-miss. */
+    padding:34px 36px 24px;
+    /* 8px of the right is reserved for the offset block rather than let it overhang
+       the column. This is how theirs does it: the panel carries margin-right:8px and
+       the block fills the gap, so the ornament stays inside the text column and the
+       band's right edge lines up with the body copy underneath it. */
+    /* 32px, not 24. The box-shadow occupies the first 8px of it, so 24px left only
+       16px of visible air between the offset block and the navy rule below, and two
+       horizontal bars that close together read as one confused pair. */
+    margin:0 8px 32px 0;
+    /* The offset block, as a hard-edged shadow rather than a positioned
+       pseudo-element. Theirs is an absolutely positioned ::after inset 8px from
+       the top and left and 8px past the bottom and right; a shadow offset 8px
+       down and right is the same visible result, which is an 8px band along the
+       right edge and the bottom.
+       Two reasons for the shadow. A pseudo-element needs z-index:-1 to sit behind
+       the panel, and because .band creates no stacking context that would put it
+       behind the body's own white background, where it is invisible. And a
+       shadow never affects layout, so it cannot push a horizontal scrollbar onto
+       a narrow screen the way a negatively-inset absolute box can. */
+    box-shadow:8px 8px 0 0 var(--band-edge);
+  }
+  .band .h1{margin:0}
+  @media (max-width:640px){
+    .band{padding:22px 18px 18px;margin-right:5px;box-shadow:5px 5px 0 0 var(--band-edge)}
+  }
+
+  /* Their short heavy rule: 146px by 5px in a darker navy than the body text. It
+     closes the page header and separates it from the prose.
+
+     The byline that used to sit above it is gone as of 2026-07-30. Their article
+     pages carry one, a 40px navy circle with a document glyph beside "By
+     <organisation>" over "Reviewed <Month Year>", and we reproduced the first line
+     of it. It never earned its space here. A byline answers "who wrote this" on an
+     article; on a three-minute screening the reader's question is whether the work
+     rules apply to them, and MLRI is already named in the privacy note a screen
+     later. The circle made it worse: with only one line of text against a 40px mark
+     it sat visibly high, and the fix for that is not to invent the review date that
+     would fill it, because nobody has signed off on the thresholds.
+
+     If a review date is ever signed off, it comes back as a byline, not as a date
+     floating on its own. That is the pattern worth restoring; a lone date is not. */
+  .byline-rule{display:none}
+  .h2{font-weight:700;font-size:clamp(21px,5.5vw,25px);line-height:1.3;letter-spacing:-.01em;margin:6px 0 0}
+  .h-result{font-weight:700;font-size:clamp(21px,5.5vw,24px);line-height:1.35;margin:6px 0 0}
+  /* One question, in its own card. The card goes pale once the question has an
+     answer, so what is left to do is what still reads as white. */
+  .qcard{
+    background:var(--card);border:1.5px solid var(--panel);border-radius:12px;
+    padding:20px;box-shadow:6px 6px 0 0 var(--band-edge);
+    margin-right:6px;margin-bottom:6px;
+  }
+  .qcard-done{background:var(--band-bottom);border-color:var(--sel)}
+  .qcard h2{font-weight:700}
+  /* Options. Yes/No sits in one row, so a four-question section is about a
+     screen and a half on a phone instead of three. Anything longer than Yes/No
+     stays stacked, because two columns of sentence fragments is unreadable. */
+  .opt-group{display:flex;flex-direction:column;gap:11px;margin:18px 0 0}
+  .opt-group--yn{flex-direction:row}
+  .opt--yn{flex:1;justify-content:center;min-height:56px}
+  .opt--yn > span:last-child{flex:0 1 auto !important;text-align:center !important}
+  /* The age question, as two boxed choices rather than bare radios, so it has
+     the same hit target as every option that follows it. */
+  .age-row{display:flex;gap:10px}
+  .age-opt{
+    flex:1;display:flex;align-items:center;justify-content:center;gap:9px;
+    min-height:48px;font-size:16px;font-weight:700;cursor:pointer;
+    border:2px solid var(--line);border-radius:var(--radius);padding:0 12px;
+  }
+  .age-opt:hover{border-color:var(--line-hover);background:var(--field)}
+  .age-opt input{width:20px;height:20px;accent-color:var(--accent)}
+  input,textarea,select{font-size:16px;max-width:100%}
+  @media (max-width:640px){
+    /* The tagline stays. It is half of the masthead lockup, and hiding it left a
+       phone with three words of navy bar and no sign whose site this is. */
+    .topbar-inner{min-height:62px;padding:9px max(12px, env(safe-area-inset-right)) 9px max(12px, env(safe-area-inset-left));gap:10px}
+    .topbar-title{font-size:21px}
+    .topbar-sub{font-size:12px}
+    .btn-exit{font-size:13px;padding:9px 12px}
+    #stage{padding:16px max(14px, env(safe-area-inset-right)) 48px max(14px, env(safe-area-inset-left))}
+    .form-row{grid-template-columns:1fr}
+    .opt{font-size:16px;padding:15px 14px}
+    .opt-group--yn{flex-direction:column}
+    .qcard{padding:18px;box-shadow:5px 5px 0 0 var(--band-edge);margin-right:5px;margin-bottom:5px}
+    .q-nav{gap:10px;margin-left:0;margin-right:0;border:1px solid var(--panel);border-radius:12px}
+    .q-nav > [data-action="back"]{flex:0 0 36%}
+    #start-btn{width:100%}
+  }
+  @media (max-width:360px){
+    .topbar-title{font-size:20px}
+    .topbar-sub{font-size:11.5px}
+    .btn-exit{padding:8px 10px}
+    .q-nav{flex-direction:column}
+    .q-nav > [data-action="back"],.q-nav > [data-action="next"]{width:100%;flex:auto}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .card-in{animation:none}
+    .opt,.opt-mark{transition:none}
+    /* The progress fill's transition is written as an inline style in
+       renderProgress(), so overriding it from a stylesheet needs !important. It was
+       the one animation still running under reduced motion, along with the hint
+       panel's max-height, which on a coarse pointer animates an accordion open. */
+    [data-progress-fill]{transition:none !important}
+    .hint-tip-panel{transition:none}
+  }
+  .hint-tip{position:relative;display:inline-block;max-width:100%}
+  .hint-tip-btn{
+    display:inline-flex;align-items:center;gap:7px;font-family:inherit;font-size:12.5px;font-weight:700;
+    color:var(--muted);background:none;border:none;padding:8px 4px;cursor:help;min-height:44px;
+    text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;
+  }
+  .hint-tip-icon{
+    width:18px;height:18px;border-radius:50%;border:1.5px solid var(--accent);color:var(--accent);
+    display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:none;
+  }
+  .hint-tip-panel{
+    z-index:100;padding:12px 14px;font-size:12.5px;line-height:1.5;font-weight:400;
+    color:var(--ink);background:#fff;border:1px solid var(--stroke);border-radius:calc(var(--radius) + 2px);
+    /* A neutral elevation shadow, offset 8px, on a white panel on a white page.
+       The rule is aimed at zero-offset chromatic halos on dark surfaces. */
+    /* impeccable-disable-next-line dark-glow */
+    box-shadow:0 8px 24px rgba(16,32,56,.12);text-align:left;overflow-wrap:anywhere;
+    opacity:0;visibility:hidden;pointer-events:none;
+    /* On coarse pointers this panel is an inline accordion, so max-height and
+       padding really are animated. grid-template-rows would need an extra
+       wrapper inside a role="note" span and is newer than the browsers some
+       clients are on. One small subtree, on an explicit tap, is not thrash. */
+    /* impeccable-disable-next-line layout-transition */
+    transition:opacity .15s ease,visibility .15s ease,max-height .2s ease,padding .2s ease,margin .2s ease;
+  }
+  .hint-tip--icon{display:inline-flex;vertical-align:middle;width:auto}
+  .hint-tip-btn--icon{min-height:28px;padding:2px;text-decoration:none;gap:0}
+  .hint-tip-btn--icon .hint-tip-icon{width:20px;height:20px;font-size:13px}
+  .hint-tip-wrap{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  @media (max-width:640px),(hover:none),(pointer:coarse){
+    .hint-tip:not(.hint-tip--icon){display:block;width:100%;max-width:100%}
+    .hint-tip-wrap .hint-tip--icon.is-open{
+      flex:1 1 100%;display:flex;flex-direction:column;align-items:stretch;
+      max-width:100%;min-width:0;
+    }
+    .hint-tip-wrap .hint-tip--icon.is-open .hint-tip-btn{align-self:flex-start}
+    .hint-tip-btn--icon{min-height:44px;min-width:44px;justify-content:center}
+    .hint-tip-panel{
+      display:block;position:static;width:100%;max-width:100%;box-sizing:border-box;box-shadow:none;
+      max-height:0;overflow:hidden;padding:0 14px;margin:0;opacity:1;
+    }
+    .hint-tip.is-open .hint-tip-panel{
+      visibility:visible;pointer-events:auto;max-height:400px;overflow:visible;
+      padding:12px 14px;margin-top:8px;
+    }
+  }
+  @media (hover:hover) and (min-width:641px) and (pointer:fine){
+    .hint-tip-btn{min-height:auto;padding:4px 2px}
+    .hint-tip-panel{position:fixed;width:min(300px,calc(100vw - 32px))}
+    .hint-tip:hover .hint-tip-panel,.hint-tip:focus-within .hint-tip-panel,.hint-tip.is-open .hint-tip-panel{
+      opacity:1;visibility:visible;pointer-events:auto;
+    }
+  }
+  /* The no-script fallback. Body copy sizes, matching the prose the tool renders,
+     because someone reading this is reading it for the same reason and under worse
+     conditions. The URL and the phone number are duplicated from LINKS in
+     snap-screening-logic.js: a <noscript> cannot interpolate them, and the whole
+     point of the block is that the module never ran. Keep them in step. */
+  .ns-title{font-weight:700;font-size:clamp(24px,6vw,29px);line-height:1.3;letter-spacing:-.01em;margin:0}
+  .ns-p{font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 14px}
+  .ns-list{font-size:16.5px;line-height:1.7;color:var(--prose);margin:0 0 14px;padding-left:22px}
+
+  /* Off-screen (not display:none) so the signature image can decode before print. */
+  #print-root{position:fixed;left:-10000px;top:0;width:8.5in;pointer-events:none}
+  @media print{
+    @page{margin:0}
+    .no-print{display:none !important}
+    body{background:#fff !important}
+    body.printing-form > *{display:none !important}
+    body.printing-form > #print-root{
+      display:block !important;position:static !important;left:auto !important;
+      width:auto !important;pointer-events:auto;padding:0.6in;
+    }
+    #print-root img{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+
+<!-- Masthead: navy bar with the lockup, gold rule.
+     Their site puts a third layer above this, a dark strip holding the language
+     selector. Ours had one briefly, filled with a bare "masslegalhelp.org" link,
+     and it read as a stray label rather than a control: no icon, no verb, and
+     left-aligned to the 660px content column so on a wide screen it floated well
+     inside the page edge with nothing to anchor it.
+     Removed rather than decorated. The strip exists on their site to hold a
+     control we do not have, and the job it was doing here, a way back to the site,
+     is done better by the convention every site already uses: the wordmark links
+     home. That costs a little fidelity to their masthead and buys one less thing
+     competing with the question. -->
+<!-- A <header>, not a <div>. This bar holds the link home and Quick exit, and as a
+     bare div both of them sat outside every landmark on the page: a screen reader
+     user cycling landmarks got main and contentinfo and never reached the control
+     that exists for someone who needs to leave this page immediately. -->
+<header class="no-print topbar">
+  <div class="topbar-inner">
+    <a class="topbar-brand" href="https://www.masslegalhelp.org/" aria-label="Mass Legal Help home">
+      <!-- Wordmark slot. Uncomment once icons/mlh-logo.svg exists; left out rather
+           than left broken, because a missing src is a 404 on every page load.
+      <img class="topbar-logo" src="icons/mlh-logo.svg" alt=""> -->
+      <div style="min-width:0">
+        <div class="topbar-title">Mass Legal Help</div>
+        <div class="topbar-sub">Massachusetts Legal Information</div>
+      </div>
+    </a>
+    <div class="topbar-actions">
+      <button type="button" class="btn-exit" data-action="quick-exit">Quick exit</button>
+    </div>
+  </div>
+</header>
+
+<!-- Progress -->
+<div id="progress" class="no-print"></div>
+
+<!-- Stage -->
+<main id="stage">
+  <!-- Every view on this page is script-rendered into #stage, so if the script
+       fails, is blocked, or is mangled in transit, this element is all there is.
+       Without this block that failure is a navy bar, a gold rule, and a footer,
+       with nothing telling the reader what happened or where else to go. PRODUCT.md
+       assumes a borrowed phone on a bad connection, which is exactly the case that
+       lands here. The two routes below are the same ones the working tool points at,
+       so a reader who cannot run it is not sent anywhere new. -->
+  <noscript>
+    <!-- .ns-title, not .h1, and the distinction is load-bearing. copy-doc.js and
+         gen-docassemble.js both pull the intro heading out of this file with
+         /<h1 class="h1">([^<]+)<\/h1>/, and this element sits earlier in the source
+         than the template string they mean, so wearing .h1 here silently retitled
+         the generated Docassemble interview. Same type ramp, own class, no
+         collision. -->
+    <div class="band"><h1 class="ns-title">SNAP work rules screening</h1></div>
+    <p class="ns-p">This screening needs JavaScript, and it is turned off or did not load.</p>
+    <p class="ns-p">You can still get help with the SNAP work rules:</p>
+    <ul class="ns-list">
+      <li>Read <a href="https://www.masslegalhelp.org/public-benefits-ssi/snap-food-benefits/snap-3-month-time-limit-abawd-work-rules">SNAP 3-month time limit: the ABAWD Work Rules</a> on Mass Legal Help.</li>
+      <li>Call the DTA Assistance Line at <a href="tel:8773822363">(877) 382-2363</a>.</li>
+    </ul>
+    <p class="ns-p">Many adults are exempt from these rules. DTA has to screen you for every exemption before the rules apply to you.</p>
+  </noscript>
+</main>
+
+<!-- Footer. Deliberately minimal: its whole job is making sure someone who lands
+     here does not wonder whether they are on the right site. The gold rule, the navy
+     band, and the wordmark do that. Everything beyond it was cut on 2026-07-30.
+
+     What went, and why. Three nav links to Legal Topics, Contact Us, and the ABAWD
+     article: useful, but a person mid-screening is not browsing, and the article is
+     already linked from the intro. A funding credit reading "Funded by the
+     Massachusetts Legal Assistance Corporation", copied from MassLegalHelp's own
+     footer where it describes the site rather than this tool, so it was a claim
+     nobody here had checked. A copyright line asserting MLAC owns a page MLRI wrote.
+     And the darker sub-strip that held those two.
+
+     Their real footer also carries Terms of Use and Privacy Policy. Still absent,
+     still because their URLs are unknown, and a Terms link that 404s on a benefits
+     page is worse than none. See masslegalhelp/README.md.
+
+     The disclaimer that used to sit here came out on 2026-07-30, at Marlie's
+     request, pending a proper legal footer. It read: "This screening is part of
+     masslegalhelp.org. It gives you information about the SNAP work rules. It is
+     not legal advice, it does not tell DTA anything, and it does not change your
+     SNAP case." Nobody with the standing to approve that wording had seen it, and
+     an unreviewed disclaimer on a benefits tool is a liability claim written by
+     whoever typed fastest. It is recorded verbatim here so the replacement can be
+     compared against it rather than written from scratch.
+
+     THIS IS A LAUNCH BLOCKER. The tool now says nothing anywhere about not being
+     legal advice, and the three facts that sentence carried are all still true and
+     all still worth telling a reader: this is information and not advice, it sends
+     nothing to DTA, and it does not change their case. Whatever replaces it has to
+     carry them. Tracked in masslegalhelp/README.md under "Before this goes live". -->
+<footer class="no-print" style="border-top:9px solid var(--gold);background:var(--ink);color:#fff;margin-top:40px">
+  <div style="max-width:660px;margin:0 auto;padding:22px max(16px, env(safe-area-inset-right)) 24px max(16px, env(safe-area-inset-left))">
+    <div style="font-size:17px;font-weight:700;line-height:1.1">Mass Legal Help</div>
+    <div style="font-size:12px;opacity:.9;margin-top:3px">Massachusetts Legal Information</div>
+  </div>
+</footer>
+
+<script src="../../snap-screening-logic.js"></script>
+<script>
+"use strict";
+
+/* Shared screening logic (see snap-screening-logic.js).
+ * 'classic2' is the author's website copy draft in the classic design. */
+const S = SnapScreening.create('classic2');
+const { GOODCAUSE_CATEGORIES, GROUPS, NONE, PRODUCTION_QUICK_EXIT_URL, LINKS } = S;
+const { RESULT_COPY, exemptHeadingHtml, exemptProofNotes, buildDtaContactsHtml, buildResultsEmailContent, buildResultsMailto } = SnapScreening;
+
+/* ------------------------------------------------------------------ *
+ * State + logic (ports the DCLogic Component)
+ * ------------------------------------------------------------------ */
+
+const state = { view:'intro', step:0, gc:false, helpOpen:{}, answers:{}, animate:true };
+
+/* ---- Tab-scoped storage, nothing left behind --------------------- *
+ * sessionStorage, not localStorage. Answers survive a refresh or a stray
+ * navigation in this tab and are erased the moment the tab closes.
+ *
+ * Until court-forms/ was archived, the preview builds used localStorage and kept
+ * answers for a day so someone could come back tomorrow. This build never did. The questions
+ * cover pregnancy, disability, substance use treatment, and domestic
+ * violence, PRODUCT.md says to assume a shared or monitored phone, and a day
+ * of recoverable answers on a borrowed phone is a worse trade than losing
+ * resume-tomorrow on a screening that takes three minutes. Raised by the
+ * MassLegalHelp vendor, decided by Marlie, 2026-07-30.
+ *
+ * RETENTION_MS still applies. sessionStorage already ends with the tab, so
+ * this only bounds a tab left open for days.
+ *
+ * Own key, not the one the preview builds use. On the preview site every
+ * build is served from one origin, and this file previously carried the same
+ * key as snap-abawd-classic-v2.html, so the two overwrote each other's
+ * answers during review.
+ * ------------------------------------------------------------------ */
+const STORAGE_KEY = 'mlh-snap-work-rules-v1';
+const RETENTION_MS = 24 * 60 * 60 * 1000; // 1 day
+let SAMPLE_MODE = false; // true when showing a ?sample= preview result
+let sigCanvas = null, sigCtx = null, sigHint = null, sigDrawn = false; // finger/mouse signature pad
+
+function persist(){
+  if(SAMPLE_MODE) return; // a sample preview must never overwrite a real saved session
+  try{
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify({
+      view:state.view, step:state.step, gc:state.gc,
+      answers:state.answers, savedAt:Date.now()
+    }));
+  }catch(e){ /* storage unavailable or full; fail quietly */ }
+}
+
+function loadPersisted(){
+  try{
+    const raw = sessionStorage.getItem(STORAGE_KEY);
+    if(!raw) return;
+    const d = JSON.parse(raw);
+    if(!d || typeof d.savedAt !== 'number' || (Date.now() - d.savedAt) > RETENTION_MS){
+      sessionStorage.removeItem(STORAGE_KEY);
+      return;
+    }
+    state.view = d.view || 'intro';
+    state.step = typeof d.step === 'number' ? d.step : 0;
+    // Clamp in case saved data predates the themed grouping (step used to index questions).
+    state.step = Math.max(0, Math.min(state.step, GROUPS.length - 1));
+    state.gc = !!d.gc;
+    state.answers = (d.answers && typeof d.answers === 'object') ? S.migrateAnswers(d.answers) : {};
+  }catch(e){
+    try{ sessionStorage.removeItem(STORAGE_KEY); }catch(_){}
+  }
+}
+
+function deleteAnswers(){
+  try{ sessionStorage.removeItem(STORAGE_KEY); }catch(e){}
+  SAMPLE_MODE = false;
+  state.view = 'intro'; state.step = 0; state.gc = false;
+  state.helpOpen = {}; state.answers = {};
+  renderWithMotion();
+}
+
+function qById(id){ return S.qById(id); }
+function curGroup(){ return GROUPS[state.step]; }
+function pageQuestions(){ return S.pageQuestions(state.answers, state.step, state.gc); }
+function setAns(id, val){ state.answers[id] = val; }
+function clearAns(id){ delete state.answers[id]; }
+function reasons(){ return S.exemptReasons(state.answers); }
+function resultType(){ return S.resultType(state.answers); }
+
+function advance(){
+  if(state.gc){ state.view = 'results'; renderWithMotion(); return; }
+  if(state.step < GROUPS.length - 1){ state.step++; renderWithMotion(); return; }
+  if(S.shouldSkipGoodCause(state.answers)){ state.view = 'results'; }
+  else { state.gc = true; }
+  renderWithMotion();
+}
+
+function back(){
+  if(state.gc){ state.gc = false; state.step = GROUPS.length - 1; renderWithMotion(); return; }
+  if(state.step > 0){ state.step--; }
+  else { state.view = 'intro'; }
+  renderWithMotion();
+}
+
+function skipToEnd(){
+  if(S.shouldSkipGoodCause(state.answers)){
+    state.gc = false;
+    state.view = 'results';
+  } else {
+    state.gc = true;
+    state.view = 'question';
+  }
+  renderWithMotion();
+}
+
+/* ------------------------------------------------------------------ *
+ * Rendering
+ * ------------------------------------------------------------------ */
+
+function esc(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* Decorative arrow used as a visual bullet. Hidden from assistive tech, which
+ * would otherwise announce "right arrow" before each of these lines. */
+const arrow = '<span aria-hidden="true">→</span>';
+
+/* Numbered marker for the two ways to meet the work rules. The <ol> already
+ * conveys order and count, so the circle is decorative. */
+function optNum(n){
+  return `<span aria-hidden="true" style="width:26px;height:26px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none">${n}</span>`;
+}
+
+function hintTip(id, label, bodyHtml, iconOnly){
+  const tipClass = iconOnly ? 'hint-tip hint-tip--icon' : 'hint-tip';
+  const btnClass = iconOnly ? 'hint-tip-btn hint-tip-btn--icon' : 'hint-tip-btn';
+  const btnInner = iconOnly
+    ? `<span class="hint-tip-icon" aria-hidden="true">i</span>`
+    : `<span class="hint-tip-icon" aria-hidden="true">i</span><span>${esc(label)}</span>`;
+  const ariaLabel = iconOnly ? ` aria-label="${esc(label)}"` : '';
+  return `<span class="${tipClass}">
+    <button type="button" class="${btnClass}" aria-expanded="false" aria-controls="hint-${id}"${ariaLabel} data-action="toggle-hint" data-hint-id="${id}">
+      ${btnInner}
+    </button>
+    <span id="hint-${id}" class="hint-tip-panel" role="note">${bodyHtml}</span>
+  </span>`;
+}
+
+function prefersReducedMotion(){
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+function hintTipUsesInlinePanel(){
+  return window.matchMedia('(max-width: 640px), (hover: none), (pointer: coarse)').matches;
+}
+
+function hintTipUsesFloatingPanel(){
+  return window.matchMedia('(hover: hover) and (min-width: 641px) and (pointer: fine)').matches;
+}
+
+function clearHintPanelPosition(panel){
+  panel.style.top = panel.style.left = panel.style.width = panel.style.display = panel.style.visibility = '';
+}
+
+function setHintTipOpen(tip, open){
+  const btn = tip.querySelector('.hint-tip-btn');
+  const panel = tip.querySelector('.hint-tip-panel');
+  if(open){
+    if(panel && hintTipUsesInlinePanel()) clearHintPanelPosition(panel);
+    if(hintTipUsesFloatingPanel()) positionHintPanel(tip);
+    tip.classList.add('is-open');
+    if(btn) btn.setAttribute('aria-expanded', 'true');
+  } else {
+    tip.classList.remove('is-open');
+    if(btn) btn.setAttribute('aria-expanded', 'false');
+    if(panel) clearHintPanelPosition(panel);
+  }
+}
+
+function positionHintPanel(tip){
+  if(hintTipUsesInlinePanel()) return;
+  const btn = tip.querySelector('.hint-tip-btn');
+  const panel = tip.querySelector('.hint-tip-panel');
+  if(!btn || !panel) return;
+
+  const pad = 16;
+  const gap = 10;
+  const maxW = Math.min(300, window.innerWidth - pad * 2);
+  const rect = btn.getBoundingClientRect();
+
+  panel.style.width = maxW + 'px';
+  panel.style.left = '-9999px';
+  panel.style.top = '-9999px';
+  panel.style.visibility = 'hidden';
+  panel.style.display = 'block';
+
+  const panelH = panel.offsetHeight;
+  let left = rect.left + (rect.width - maxW) / 2;
+  left = Math.max(pad, Math.min(left, window.innerWidth - maxW - pad));
+
+  let top = rect.bottom + gap;
+  if(top + panelH > window.innerHeight - pad) top = rect.top - panelH - gap;
+  if(top < pad) top = Math.max(pad, window.innerHeight - panelH - pad);
+
+  panel.style.left = left + 'px';
+  panel.style.top = top + 'px';
+  panel.style.visibility = '';
+}
+
+function repositionVisibleHintPanels(){
+  document.querySelectorAll('.hint-tip-panel').forEach(panel => {
+    if(hintTipUsesInlinePanel()) clearHintPanelPosition(panel);
+  });
+  document.querySelectorAll('.hint-tip.is-open').forEach(positionHintPanel);
+  if(hintTipUsesFloatingPanel()){
+    document.querySelectorAll('.hint-tip:hover').forEach(positionHintPanel);
+  }
+}
+
+function initHintTips(){
+  document.addEventListener('mouseover', (e) => {
+    if(!hintTipUsesFloatingPanel()) return;
+    const tip = e.target.closest && e.target.closest('.hint-tip');
+    if(!tip) return;
+    if(e.relatedTarget && tip.contains(e.relatedTarget)) return;
+    positionHintPanel(tip);
+  });
+
+  document.addEventListener('focusin', (e) => {
+    const tip = e.target.closest && e.target.closest('.hint-tip');
+    if(tip && hintTipUsesFloatingPanel()) positionHintPanel(tip);
+  });
+
+  window.addEventListener('resize', repositionVisibleHintPanels, { passive: true });
+  window.addEventListener('scroll', repositionVisibleHintPanels, { passive: true, capture: true });
+
+  document.addEventListener('click', (e) => {
+    if(e.target.closest && e.target.closest('[data-action="toggle-hint"]')) return;
+    document.querySelectorAll('.hint-tip.is-open').forEach(t => setHintTipOpen(t, false));
+  });
+}
+
+const primaryBtn = "font-size:17px;font-weight:700;color:#fff;background:var(--navy);border:none;border-radius:var(--radius);padding:15px 26px;cursor:pointer;box-shadow:0 2px 0 var(--accent-dark);min-height:48px";
+const nextBtn    = "font-size:16px;font-weight:700;color:#fff;background:var(--navy);border:none;border-radius:var(--radius);padding:12px 22px;cursor:pointer;box-shadow:0 2px 0 var(--accent-dark);min-height:48px";
+const ghostBtn   = "font-size:15px;font-weight:700;color:var(--navy);background:#fff;border:2px solid var(--navy);border-radius:var(--radius);padding:10px 18px;cursor:pointer;min-height:48px";
+/* Inline text button that reads as a link (used inside result copy). */
+const linkBtn    = "font-family:inherit;font-size:inherit;font-weight:700;color:var(--accent);background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px";
+const inputStyle = "width:100%;font-family:inherit;font-size:16px;padding:12px;border:1.5px solid var(--stroke);border-radius:calc(var(--radius) - 3px);min-height:48px";
+
+// Returns an array of option descriptors for the current question.
+function buildOptions(q){
+  const a = state.answers[q.id];
+  const out = [];
+  if(q.type === 'yn'){
+    out.push({label:q.yesLabel || 'Yes', selected:a === 'yes', mark:a === 'yes' ? '●' : '', shape:'round', kind:'yn', val:'yes'});
+    out.push({label:q.noLabel  || 'No',  selected:a === 'no',  mark:a === 'no'  ? '●' : '', shape:'round', kind:'yn', val:'no'});
+  } else if(q.type === 'multi'){
+    const arr = Array.isArray(a) ? a : [];
+    q.options.forEach((o, i) => out.push({label:o.label, selected:arr.includes(o.id), mark:arr.includes(o.id) ? '✓' : '', shape:'square', kind:'multi', idx:i}));
+    out.push({label:q.noneLabel, selected:a === NONE, mark:a === NONE ? '✓' : '', shape:'square', kind:'multi-none'});
+  } else if(q.type === 'single'){
+    q.options.forEach((o, i) => out.push({label:o.label, selected:a === o.id, mark:a === o.id ? '●' : '', shape:'round', kind:'single', idx:i}));
+    out.push({label:q.noneLabel, selected:a === NONE, mark:a === NONE ? '●' : '', shape:'round', kind:'single-none'});
+  }
+  return out;
+}
+
+function renderProgress(){
+  const el = document.getElementById('progress');
+  if(state.view !== 'question'){ el.innerHTML = ''; return; }
+  const total = GROUPS.length;
+  let pct, label;
+  if(state.gc){ pct = 100; label = 'Last question'; }
+  else { const cur = state.step + 1; pct = Math.round((cur / total) * 100); label = `Section ${cur} of ${total}`; }
+  /* Built once, then updated in place.
+   *
+   * This used to reassign el.innerHTML on every render, which quietly defeated
+   * the announcement. A live region has to already exist in the DOM when its
+   * contents change; destroying and recreating it means a screen reader has
+   * nothing to compare against and stays silent. Someone using one got no word
+   * that the section had changed, even though the bar animated.
+   *
+   * Queried by data attribute rather than class because check-pages.js fails a
+   * class that appears in markup with no CSS rule behind it. */
+  if(!el.firstChild){
+    el.innerHTML =
+      `<div style="height:6px;background:#dbe3ef" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="Screening progress" data-progress-bar>`
+      + `<div style="height:100%;width:100%;transform-origin:left;background:var(--accent);transition:transform .3s ease" data-progress-fill></div></div>`
+      + `<div role="status" aria-live="polite" style="max-width:760px;margin:0 auto;padding:10px max(16px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left));font-size:13px;color:var(--muted);font-weight:700" data-progress-label></div>`;
+  }
+  el.querySelector('[data-progress-bar]').setAttribute('aria-valuenow', pct);
+  el.querySelector('[data-progress-fill]').style.transform = `scaleX(${pct / 100})`;
+  const lab = el.querySelector('[data-progress-label]');
+  if(lab.textContent !== label) lab.textContent = label;
+}
+
+function animClass(){ return state.animate ? 'card-in' : ''; }
+
+function renderIntro(){
+  return `<div class="${animClass()}">
+    <div class="band">
+      <h1 class="h1">Did DTA tell you that you need to meet ABAWD Work Rules to keep getting SNAP?</h1>
+    </div>
+    <div class="byline-rule" aria-hidden="true"></div>
+    <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 14px">Some adults on SNAP who are <strong>18 or older and under 65</strong> have to meet ABAWD work rules to get SNAP for more than 3 months. <strong>Many adults are exempt</strong> from the work rules. Being "exempt" means that you don't have to meet the work rules to keep getting SNAP.</p>
+    <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 14px">You only have to meet these rules, or tell DTA you are exempt, if DTA sends you a <a href="${LINKS.snapWorkNotice}" target="_blank" rel="noopener">SNAP and Work notice</a> that says you have to meet the ABAWD Work Rules. Check your mail and <a href="${LINKS.dtaConnect}" target="_blank" rel="noopener">DTAConnect</a> to see notes from DTA. DTA has to screen you for all exemptions <em>before</em> subjecting you to the rules.</p>
+    <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 18px">If you lost your SNAP because of the work rules, you might be able to get back on if you have an exemption, or if you met or are currently meeting the work rules.</p>
+
+    <details style="margin:0 0 20px;border:1px solid var(--panel);border-radius:var(--radius);background:#fff">
+      <summary style="cursor:pointer;padding:13px 16px;font-size:15px;font-weight:700;color:var(--accent)">More on the SNAP ABAWD work rules</summary>
+      <div style="padding:0 16px 15px;font-size:15px;line-height:1.6;color:var(--prose)">
+        <p style="margin:0 0 10px">Everyone has a different life situation. Many people have good reasons for why they aren't working, in school, or volunteering. During your application or recertification interview, DTA must ask you a list of questions to see if you're exempt, already meeting the work rules, or if you need to meet the work rules to keep getting SNAP.</p>
+        <p style="margin:0">To learn more about the ABAWD work rules, <a href="${LINKS.abawd}" target="_blank" rel="noopener">click here</a>.</p>
+      </div>
+    </details>
+
+    <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 22px">This short screening asks a few questions to check if you need to meet the ABAWD work rules or if you are exempt. It takes about 3 minutes.</p>
+    <div style="display:flex;align-items:flex-start;gap:12px;background:var(--soft);border-radius:var(--radius);padding:15px 17px;margin-bottom:22px">
+      <span aria-hidden="true" style="width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;flex:none">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </span>
+      <p style="font-size:14.5px;line-height:1.55;color:var(--prose);margin:0"><strong>Your information is private</strong> and will not automatically be saved on this device. MLRI does NOT have access to or save the information you share on this form.</p>
+    </div>
+
+    <fieldset style="border:1px solid var(--panel);border-radius:var(--radius);padding:15px 17px;margin:0 0 22px;background:#fff">
+      <legend style="display:block;float:left;width:100%;font-size:15px;font-weight:700;padding:0;margin:0 0 13px;color:var(--ink)">Before you start</legend>
+      <p id="age-q" style="clear:both;font-size:15px;line-height:1.55;color:var(--prose);margin:0 0 12px">Are you 18 or older and under 65?</p>
+      <div role="radiogroup" aria-label="Are you 18 or older and under 65?" class="age-row">
+        <label class="age-opt"><input type="radio" name="ageRange" value="yes" ${state.answers.ageRange === 'yes' ? 'checked' : ''}> Yes</label>
+        <label class="age-opt"><input type="radio" name="ageRange" value="no" ${state.answers.ageRange === 'no' ? 'checked' : ''}> No</label>
+      </div>
+    </fieldset>
+
+    <h2 class="h2" style="margin:0 0 14px">Check if the SNAP work rules apply to you.</h2>
+    <button type="button" id="start-btn" data-action="start" ${canStart() ? '' : 'aria-disabled="true" aria-describedby="age-q"'} style="${primaryBtn}${canStart() ? '' : ';opacity:.5;cursor:not-allowed'}">Fill out the form →</button>
+    <p style="font-size:14px;margin:18px 0 0"><a href="${LINKS.abawd}" target="_blank" rel="noopener">Learn more about the SNAP ABAWD work rules</a></p>
+  </div>`;
+}
+
+// Help disclosure for one question. `helpHtml` allows links inside the help text.
+function renderHelp(q){
+  const body = q.helpHtml || (q.help ? esc(q.help) : '');
+  if(!body) return '';
+  const open = !!state.helpOpen[q.id];
+  let help = `<div style="margin:14px 0 0">
+    <button type="button" data-action="toggle-help" data-q-id="${q.id}" aria-expanded="${open}" style="display:inline-flex;align-items:center;gap:7px;font-size:14px;font-weight:700;color:var(--accent);background:none;border:none;padding:0;cursor:pointer">
+      <span aria-hidden="true" style="width:18px;height:18px;border-radius:50%;border:2px solid var(--accent);display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex:none">i</span>
+      ${open ? 'Hide help' : 'What does this mean?'}
+    </button>`;
+  if(open){
+    // Inset text with a left rule is the long-standing convention for guidance
+    // callouts in government content (GOV.UK inset text, USWDS site alerts).
+    // impeccable-disable-next-line side-tab
+    help += `<p style="font-size:15px;line-height:1.6;color:var(--prose);margin:10px 0 0;padding:13px 15px;background:var(--soft);border-radius:var(--radius);border-left:4px solid var(--accent)">${body}</p>`;
+  }
+  help += `</div>`;
+  return help;
+}
+
+// Bulleted list shown inside the question itself (e.g. the state agencies).
+function renderQList(q){
+  if(!Array.isArray(q.listItems) || !q.listItems.length) return '';
+  const items = q.listItems.map(t => `<li>${esc(t)}</li>`).join('');
+  return `<ul style="margin:13px 0 0;padding-left:22px;font-size:15.5px;line-height:1.7;color:var(--prose)">${items}</ul>`;
+}
+
+// Footnote shown under the options (e.g. how to reach a DTA DV specialist).
+function renderQNote(q){
+  if(!q.note) return '';
+  return `<p style="font-size:14.5px;line-height:1.6;color:var(--prose);margin:14px 0 0">${q.note}</p>`;
+}
+
+// Option buttons for one question.
+//
+// A radiogroup owes the keyboard a single tab stop and arrow keys between the
+// options (ARIA radio group pattern). Checkboxes are the opposite: each one is
+// its own tab stop. So the roving tabindex below applies to radios only, and it
+// sits on the selected option when there is one, so tabbing back into a group
+// lands on the answer rather than at the top of it.
+function renderOptions(q){
+  const isRadio = q.type !== 'multi';
+  const groupRole = isRadio ? 'radiogroup' : 'group';
+  const opts = buildOptions(q);
+  const selectedIdx = opts.findIndex(o => o.selected);
+  const activeIdx = selectedIdx >= 0 ? selectedIdx : 0;
+  const buttons = opts.map((o, i) => {
+    const dataset = o.kind === 'yn' ? `data-opt-kind="yn" data-opt-val="${o.val}"`
+      : (o.kind === 'multi' || o.kind === 'single') ? `data-opt-kind="${o.kind}" data-opt-idx="${o.idx}"`
+      : `data-opt-kind="${o.kind}"`;
+    const role = isRadio ? 'radio' : 'checkbox';
+    const markClass = o.shape === 'square' ? 'opt-mark square' : 'opt-mark';
+    const tabindex = isRadio ? ` tabindex="${i === activeIdx ? '0' : '-1'}"` : '';
+    return `<button type="button" class="opt${q.type === 'yn' ? ' opt--yn' : ''}${o.selected ? ' opt-selected' : ''}" data-q-id="${q.id}" ${dataset} role="${role}" aria-checked="${o.selected}"${tabindex}>
+      <span aria-hidden="true" class="${markClass}">${o.mark}</span>
+      <span style="flex:1;text-align:left">${esc(o.label)}</span>
+    </button>`;
+  }).join('');
+  return `<div role="${groupRole}" aria-label="${esc(q.text)}" class="opt-group${q.type === 'yn' ? ' opt-group--yn' : ''}">${buttons}</div>`;
+}
+
+// One question, in its own bordered block (the good-cause question stands alone).
+/* Heading levels track the screen, not the visual size. On a section page the
+ * section title is the h1 and each question is an h2 under it; the good-cause
+ * question gets a screen to itself, so it is that screen's h1. The classes and
+ * inline sizes are unchanged, so nothing moves. */
+function renderQBlock(q){
+  const isGC = q.id === 'goodcause';
+  const head = isGC
+    ? `<h1 class="h2">${esc(q.text)}</h1>`
+    : `<h2 style="font-size:clamp(18px,4.6vw,21px);line-height:1.3;margin:0;letter-spacing:-.01em">${esc(q.text)}</h2>`;
+  const a = state.answers[q.id];
+  const answered = a !== undefined && !(Array.isArray(a) && a.length === 0);
+  const cls = isGC ? '' : (answered ? 'qcard qcard-done' : 'qcard');
+  return `<div class="${cls}">
+    ${head}
+    ${renderQList(q)}
+    ${renderHelp(q)}
+    ${renderOptions(q)}
+    ${renderQNote(q)}
+  </div>`;
+}
+
+function canStart(){ return state.answers.ageRange === 'yes' || state.answers.ageRange === 'no'; }
+
+function renderPage(){
+  const lastGroup = !state.gc && state.step === GROUPS.length - 1;
+  const nextLabel = (lastGroup || state.gc) ? 'See my results →' : 'Next →';
+  const skipWarn = lastGroup && !state.gc && reasons().length === 0
+    ? `<p style="font-size:14.5px;line-height:1.55;color:var(--warn-ink);margin:16px 0 0;padding:12px 14px;background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:var(--radius)">If you skipped questions, you may not see exemptions that apply to you.</p>`
+    : '';
+
+  /* The "every question is optional" line is the author's, and she asked for it
+     on the first group only. It used to repeat above all four, which read as
+     nagging by the third one. Someone who reaches group 2 has already answered
+     optional questions and knows how this works. */
+  const optionalNote = state.step === 0
+    ? `<p style="font-size:15.5px;line-height:1.55;color:var(--muted);margin:8px 0 0">Answer any that apply to you. Every question is optional.</p>`
+    : '';
+
+  const header = state.gc ? '' : `<div style="margin:0 0 20px">
+    <h1 class="h2">${esc(curGroup().title)}</h1>
+    ${optionalNote}
+  </div>`;
+
+  const blocks = pageQuestions().map(renderQBlock).join('');
+
+  return `<div class="${animClass()}">
+    ${header}
+    <div style="display:flex;flex-direction:column;gap:14px">${blocks}</div>
+    <div style="text-align:center;margin-top:16px">
+      ${skipWarn}
+      <button type="button" data-action="skip-end" style="font-family:inherit;font-size:14.5px;font-weight:700;color:var(--muted);background:none;border:none;padding:6px 8px;min-height:44px;cursor:pointer;text-decoration:underline;text-underline-offset:3px">Skip to results</button>
+    </div>
+    <div class="q-nav">
+      <button type="button" data-action="back" style="${ghostBtn}">← Back</button>
+      <button type="button" data-action="next" style="${nextBtn}">${nextLabel}</button>
+    </div>
+  </div>`;
+}
+
+function renderResults(){
+  const rt = resultType();
+  const rs = reasons();
+  const prompts = S.statementPrompts(state.answers);
+  const email = LINKS.advocacyEmail;
+  const C = RESULT_COPY;
+
+  const learnMore = `<p style="font-size:15px;line-height:1.6;margin:0"><a href="${LINKS.abawd}" target="_blank" rel="noopener">${C.learnMoreLabel}</a></p>`;
+  const lostSnap = `<p style="font-size:15px;line-height:1.6;margin:12px 0 0">${arrow} ${C.lostSnapIntro} <a href="mailto:${email}">${email}</a>.</p>`;
+  const privacyNote = `<p style="font-size:14.5px;line-height:1.55;color:var(--muted);margin:0 0 6px"><em><strong>${esc(C.privacyNote)}</strong></em></p>`;
+  const printLead = `<p style="font-size:14.5px;line-height:1.55;color:var(--muted);margin:0 0 18px">${esc(C.printLead)}</p>`;
+  const dtaContacts = buildDtaContactsHtml(LINKS);
+  const dtaContactsUpload = buildDtaContactsHtml(LINKS, {
+    uploadPrefix: `Upload a <strong>written, signed statement</strong> (handwritten note is fine) onto`
+  });
+
+  /* The results title sits in the same title band as the intro, because it is
+     the page title of the screen a reader lands on, and centring it in bare
+     white made the results read as a different page than the one they started. */
+  const resultsHead = `<div class="band"><h1 class="h1">${esc(C.resultsHeadTitle)}</h1></div>
+    <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 16px">${esc(C.resultsHeadLead)}</p>`;
+
+  let card = '';
+  if(rt === 'ageinfo'){
+    card = `<div style="border-radius:var(--radius);overflow:hidden;border:1px solid var(--info-line)">
+      <div style="background:var(--soft);padding:20px 22px;border-bottom:1px solid var(--info-line)">
+        <h2 class="h-result" style="color:var(--accent-dark)">${esc(C.ageInfoHeading)}</h2>
+      </div>
+      <div style="padding:20px 22px;background:#fff">
+        <p style="font-size:16px;line-height:1.6;color:var(--prose);margin:0">${esc(C.ageInfoBody)}</p>
+      </div></div>`;
+  } else if(rt === 'exempt'){
+    const items = rs.map(r => `<li style="display:flex;align-items:flex-start;gap:11px;font-size:16px;line-height:1.5;color:var(--ink);padding:12px 0;border-bottom:1px solid var(--field)">
+      <span aria-hidden="true" style="width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex:none;margin-top:1px">✓</span>
+      <span>${esc(r)}</span></li>`).join('');
+    card = `<div style="border-radius:var(--radius);overflow:hidden;border:1px solid var(--ok-line)">
+      <div style="background:var(--ok-fill);padding:20px 22px;border-bottom:1px solid var(--ok-line);display:flex;gap:12px;align-items:flex-start">
+        <span aria-hidden="true" style="flex:none;width:30px;height:30px;border-radius:50%;background:var(--ok-strong);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700">✓</span>
+        <h2 class="h-result" style="color:var(--ok-ink);font-weight:400">${exemptHeadingHtml()}</h2>
+      </div>
+      <div style="padding:20px 22px;background:#fff">
+        ${C.exemptReasonsIntro ? `<p style="font-size:16px;line-height:1.6;color:var(--prose);margin:0 0 14px">${esc(C.exemptReasonsIntro)}</p>` : ''}
+        <ul role="list" style="list-style:none;padding:0;margin:0 0 16px">${items}</ul>
+        ${exemptProofNotes(rs).map(n => `<p style="font-size:15.5px;line-height:1.6;color:var(--prose);margin:0 0 14px">${esc(n)}</p>`).join('')}
+        ${learnMore}
+      </div></div>`;
+  } else if(rt === 'goodcause'){
+    const cats = GOODCAUSE_CATEGORIES.map(c => {
+      const detail = c.detail.map(d => `<li>${esc(d)}</li>`).join('');
+      const more = c.moreExamplesUrl
+        ? `<li><a href="${c.moreExamplesUrl}" target="_blank" rel="noopener">More examples</a></li>` : '';
+      return `<li style="margin:0 0 14px">
+        <div style="font-size:16px;font-weight:700;color:var(--ink)">${esc(c.title)}</div>
+        <ul style="margin:5px 0 0;padding-left:22px;font-size:15.5px;line-height:1.6;color:var(--prose)">${detail}${more}</ul>
+      </li>`;
+    }).join('');
+    card = `<div style="border-radius:var(--radius);overflow:hidden;border:1px solid var(--info-line)">
+      <div style="background:var(--soft);padding:20px 22px;border-bottom:1px solid var(--info-line)">
+        <h2 class="h-result" style="color:var(--accent-dark)">${esc(C.goodCauseHeading)}</h2>
+      </div>
+      <div style="padding:20px 22px;background:#fff">
+        <p style="font-size:16px;line-height:1.6;color:var(--prose);margin:0 0 14px">${esc(C.goodCauseIntro)}</p>
+        <p style="font-size:16px;line-height:1.6;color:var(--ink);font-weight:700;margin:0 0 14px">${esc(C.goodCauseLead)}</p>
+        <ul role="list" style="list-style:none;padding:0;margin:0 0 14px">${cats}</ul>
+        ${learnMore}
+      </div></div>`;
+  } else {
+    card = `<div style="border-radius:var(--radius);overflow:hidden;border:1px solid var(--warn-line)">
+      <div style="background:var(--warn-fill);padding:20px 22px;border-bottom:1px solid var(--warn-line)">
+        <h2 class="h-result" style="color:var(--warn-ink)">${esc(C.notExemptHeading)}</h2>
+      </div>
+      <div style="padding:20px 22px;background:#fff">
+        <p style="font-size:16px;line-height:1.6;color:var(--prose);margin:0 0 12px">${esc(C.notExemptIntro)}</p>
+        <p style="font-size:16px;line-height:1.6;color:var(--prose);margin:0 0 16px">${arrow} <button type="button" data-action="restart" style="${linkBtn}">${esc(C.notExemptStartOver)}</button></p>
+        <p style="font-size:16px;line-height:1.6;color:var(--prose);margin:0 0 8px">${arrow} ${esc(C.notExemptReapplyLead)} <a href="${LINKS.reapply}" target="_blank" rel="noopener">${esc(C.notExemptReapplyLink)}</a> ${esc(C.notExemptReapplyEnd)}</p>
+        <ul style="margin:0 0 20px;padding-left:20px;font-size:15px;line-height:1.7;color:var(--prose)">
+          <li><a href="${LINKS.getSnapBack}" target="_blank" rel="noopener">${esc(C.notExemptSnapBack)}</a></li>
+          <li>${esc(C.notExemptEmail)} <a href="mailto:${email}">${email}</a> ${esc(C.notExemptEmailSuffix)}</li>
+        </ul>
+
+        <div style="padding:18px 20px;background:var(--ok-bg);border:1px solid var(--ok-line);border-radius:var(--radius)">
+          <h3 style="font-size:17px;margin:0 0 14px">To keep getting SNAP, you can meet the ABAWD work rules by doing <strong>one</strong> of these:</h3>
+          <ul role="list" style="list-style:none;padding:0;margin:0">
+            <li style="display:flex;gap:13px;align-items:flex-start">
+              ${optNum('1')}
+              <div>
+                <p style="margin:0;font-size:15.5px;line-height:1.55"><strong>${esc(C.workOption1)}</strong></p>
+                <ul style="margin:7px 0 0;padding-left:20px;font-size:15px;line-height:1.6;color:var(--prose)">
+                  <li>${esc(C.workOption1Unpaid)}</li>
+                  <li><a href="${LINKS.dtaTraining}" target="_blank" rel="noopener">${esc(C.workOption1Training)}</a></li>
+                </ul>
+              </div>
+            </li>
+            <li aria-hidden="true" style="text-align:center;font-weight:700;font-size:15px;color:var(--prose);margin:14px 0">OR</li>
+            <li style="display:flex;gap:13px;align-items:flex-start">
+              ${optNum('2')}
+              <p style="margin:0;font-size:15.5px;line-height:1.55"><strong>${esc(C.workOption2)}</strong></p>
+            </li>
+          </ul>
+        </div>
+
+        <div style="margin:20px 0 0;padding:18px 20px;background:var(--soft);border-radius:var(--radius)">
+          <h3 style="font-size:17px;margin:0 0 10px">${esc(C.meetingDtaHeading)}</h3>
+          <p style="font-size:15px;line-height:1.6;color:var(--prose);margin:0 0 12px">For <strong>paid work</strong>, send DTA proof of income and hours, such as pay stubs or an employer letter. For <strong>unpaid work</strong>, tell DTA how you are meeting the work rules and your hours.</p>
+          ${dtaContactsUpload}
+        </div>
+
+        <div style="margin:20px 0 0;padding:18px 20px;background:var(--warn-fill);border:1px solid var(--warn-line);border-radius:var(--radius)">
+          <h3 style="font-size:17px;margin:0 0 10px;color:var(--warn-ink)">${esc(C.goodCauseInNotExemptBold)}</h3>
+          <p style="font-size:15px;line-height:1.6;color:var(--prose);margin:0 0 10px">${esc(C.goodCauseInNotExemptIntro)}</p>
+          <p style="font-size:15px;line-height:1.6;color:var(--prose);margin:0">${esc(C.goodCauseInNotExemptBody)} <a href="${LINKS.goodCause}" target="_blank" rel="noopener">${esc(C.goodCauseInNotExemptLink)}</a>.</p>
+        </div>
+        <div style="margin:20px 0 0">${learnMore}</div>
+      </div></div>`;
+  }
+
+  let form = '';
+  if(rt === 'exempt' || rt === 'goodcause'){
+    const formTitle = rt === 'exempt' ? C.formTitleExempt : C.formTitleGoodCause;
+    const formLead = rt === 'exempt' ? C.formLeadExempt : C.formLeadGoodCause;
+    const whyInfo = rt === 'exempt' ? C.whyInfoExempt : C.whyInfoGoodCause;
+    const blanks = prompts.map((p, i) => `<div style="margin:0 0 16px">
+      <label for="f-explain-${i}" style="display:block;font-size:14.5px;font-weight:700;margin:0 0 7px">${esc(p)}</label>
+      <textarea id="f-explain-${i}" data-explain-prompt="${esc(p)}" rows="4" placeholder="Type here…" style="width:100%;font-family:inherit;font-size:16px;line-height:1.5;padding:11px 13px;border:1.5px solid var(--stroke);border-radius:calc(var(--radius) - 3px);resize:vertical"></textarea>
+    </div>`).join('');
+    /* The statement form is the working part of this screen, so it gets a
+       header band of its own rather than opening as one more paragraph. */
+    form = `<div style="margin:26px 0 0;background:#fff;border:1.5px solid var(--panel);border-radius:12px;overflow:hidden">
+      <div style="background:var(--field);border-bottom:1px solid var(--panel);padding:16px 20px">
+      <h3 style="font-size:19px;line-height:1.3;margin:0 0 8px">${esc(formTitle)}</h3>
+      <div class="hint-tip-wrap" style="margin:0">
+        <p style="font-size:15px;line-height:1.55;color:var(--prose);margin:0">${esc(formLead)}</p>
+        ${hintTip('why-info', C.whyInfoLabel, whyInfo, true)}
+      </div>
+      </div>
+      <div style="padding:20px">
+      ${privacyNote}
+      ${printLead}
+      <p style="font-size:15px;font-weight:700;margin:0 0 12px">${esc(C.formExplainHeading)}</p>
+      ${blanks}
+      <div class="form-row">
+        <div><label for="f-name" style="display:block;font-size:14px;font-weight:700;margin:0 0 6px">Your name</label><input id="f-name" autocomplete="name" style="${inputStyle}"></div>
+        <div><label for="f-agency" style="display:block;font-size:14px;font-weight:700;margin:0 0 6px">Client / Agency ID (if you have one)</label><input id="f-agency" style="${inputStyle}"></div>
+      </div>
+      <div style="margin:14px 0 0">
+        <div class="hint-tip-wrap" style="margin:0 0 6px">
+          <div id="sig-label" style="font-size:14px;font-weight:700;margin:0">Signature</div>
+          ${hintTip('sig', 'About signatures', 'Sign with your finger on a touch screen, or with your mouse. A typed signature won’t be accepted — this captures your real one.', true)}
+        </div>
+        <!-- Not role="img". A canvas you draw on is a control, and calling it an image
+             announced "Signature, image" and offered nothing to do about it. It is
+             still pointer-only, which is a real WCAG 2.1.1 limit we cannot close with
+             a drawing surface, so the way out is stated instead of implied: the
+             printed statement already renders a blank signature line whenever this
+             pad is empty (see buildStatementHTML in snap-screening-logic.js), so
+             leaving it alone and signing on paper produces a correct letter. That
+             route existed before; nothing on the page said so. -->
+        <div style="position:relative;border:1.5px solid var(--stroke);border-radius:calc(var(--radius) - 3px);background:#fff">
+          <canvas id="sig-pad" aria-labelledby="sig-label" aria-describedby="sig-note sig-alt" style="display:block;width:100%;height:140px;border-radius:calc(var(--radius) - 3px);cursor:crosshair;touch-action:none;-webkit-print-color-adjust:exact;print-color-adjust:exact"></canvas>
+          <span id="sig-hint" class="no-print" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--placeholder);font-size:14.5px;pointer-events:none">Sign here with your finger or mouse</span>
+        </div>
+        <div class="no-print" style="display:flex;justify-content:flex-end;margin:7px 0 0">
+          <button type="button" data-action="sig-clear" style="flex:none;font-family:inherit;font-size:13.5px;font-weight:700;color:var(--accent);background:none;border:2px solid var(--accent);border-radius:calc(var(--radius) - 3px);padding:8px 14px;cursor:pointer">Clear</button>
+        </div>
+        <p id="sig-note" style="font-size:14px;line-height:1.5;color:var(--muted);margin:8px 0 0;text-align:center">(DTA needs your actual signature, not a typed signature)</p>
+        <!-- Ours, not the author's, and kept as its own element for that reason.
+             sig-note above is her sentence and is still open in SCREENER-COPY.md, so
+             it stays word for word.
+             This line is the keyboard alternative. The pad is pointer-only and a
+             drawing surface cannot be made keyboard-operable, so the way out has to
+             be said rather than implied: buildStatementHTML already prints a blank
+             signature rule whenever the pad is empty, which means not signing here
+             produces a correct letter to sign on paper. That was true before and
+             nothing on the page mentioned it. Merging the two sentences is a copy
+             decision for the author; SCREENER-COPY.md carries it as a proposal. -->
+        <p id="sig-alt" style="font-size:14px;line-height:1.5;color:var(--muted);margin:4px 0 0;text-align:center">If you cannot sign here, leave it blank. The printed page has a line to sign by hand.</p>
+      </div>
+      <div class="no-print" style="display:flex;gap:12px;margin:20px 0 0;flex-wrap:wrap;align-items:center">
+        <button type="button" data-action="print" style="${nextBtn}">${esc(C.printFormLabel)}</button>
+        <button type="button" data-action="download-doc" style="${ghostBtn}">${esc(C.downloadWordLabel)}</button>
+        <button type="button" data-action="email-self" style="${ghostBtn}">${esc(C.emailSelfLabel)}</button>
+        <div style="width:100%;margin-top:2px">${hintTip('pdf-save', C.savingTipsTitle, C.savingTipsBody)}</div>
+      </div>
+      <div class="no-print" id="email-fallback" hidden style="margin:18px 0 0;padding:16px 18px;background:var(--soft);border-radius:12px">
+        <h4 style="font-size:16px;margin:0 0 6px">${esc(C.emailFallbackHeading)}</h4>
+        <p style="font-size:15px;line-height:1.55;color:var(--prose);margin:0 0 10px">${esc(C.emailFallbackBody)}</p>
+        <textarea id="email-text" readonly rows="6" aria-label="${esc(C.emailFallbackHeading)}" style="width:100%;font-family:inherit;font-size:15px;line-height:1.5;padding:10px 12px;border:1.5px solid var(--stroke);border-radius:10px;background:#fff;resize:vertical"></textarea>
+        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:10px 0 0">
+          <button type="button" data-action="copy-email-text" style="${ghostBtn}">${esc(C.emailCopyLabel)}</button>
+          <span id="email-copy-status" role="status" aria-live="polite" style="font-size:15px;font-weight:700;color:var(--ok-strong)"></span>
+        </div>
+      </div>
+      </div>
+    </div>`;
+  }
+
+  let nextSteps = '';
+  if(rt === 'exempt' || rt === 'goodcause'){
+    const stepsLead = rt === 'exempt'
+      ? `Fill out and send in <a href="${LINKS.exemptionForm}" target="_blank" rel="noopener">DTA\u2019s exemption form</a> or explain the information to DTA in a written, signed statement (handwritten note is fine):`
+      : C.otherWaysGoodCauseLead;
+    nextSteps = `<div style="margin:26px 0 0;padding:22px;background:var(--soft);border-radius:12px">
+      <h3 style="font-size:18px;line-height:1.3;margin:0 0 10px">${esc(C.otherWaysHeading)}</h3>
+      <p style="font-size:15px;line-height:1.6;color:var(--prose);margin:0 0 12px">${stepsLead}</p>
+      ${dtaContacts}
+    </div>`;
+  } else if(rt === 'ageinfo'){
+    nextSteps = `<div style="margin:26px 0 0;padding:22px;background:var(--soft);border-radius:var(--radius)">
+      <h3 style="font-size:18px;margin:0 0 12px">${esc(C.waysToReachDta)}</h3>
+      ${dtaContacts}
+    </div>`;
+  }
+
+  // Exempt/good-cause cards include learn-more; not-exempt includes it in the card.
+  const footer = `<div style="margin:24px 0 0">${rt === 'exempt' || rt === 'goodcause' || rt === 'notexempt' ? '' : learnMore}${rt === 'notexempt' ? '' : lostSnap}</div>`;
+
+  return `<div class="${animClass()}">${resultsHead}${card}${form}${nextSteps}${footer}
+    <div class="no-print" style="display:flex;flex-wrap:wrap;gap:12px;margin-top:22px">
+      <button type="button" data-action="restart" style="${ghostBtn}">↺ Start over</button>
+      <button type="button" data-action="delete-answers" style="font-size:15px;font-weight:700;color:var(--danger);background:none;border:2px solid var(--danger-line);border-radius:var(--radius);padding:10px 18px;cursor:pointer">Delete my answers</button>
+    </div>
+  </div>`;
+}
+
+/* ---- Finger / mouse signature pad (canvas) ----
+ * Drawn locally and never saved or uploaded. Prints as a real image, so
+ * DTA gets a genuine handwritten mark rather than a typed cursive font. */
+function initSignaturePad(){
+  const canvas = document.getElementById('sig-pad');
+  if(!canvas){ sigCanvas = sigCtx = sigHint = null; return; }
+  sigCanvas = canvas;
+  sigHint = document.getElementById('sig-hint');
+  sigDrawn = false;
+
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.clientWidth || 300;
+  const h = canvas.clientHeight || 140;
+  canvas.width = Math.round(w * dpr);
+  canvas.height = Math.round(h * dpr);
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.lineWidth = 2.2; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  /* Near-black, not var(--ink). This is a drawn signature that gets printed and
+     sent to a state agency; pen ink reads as ink, and navy reads as a graphic. */
+  ctx.strokeStyle = '#1b1f27'; ctx.fillStyle = '#1b1f27';
+  sigCtx = ctx;
+
+  let drawing = false, lastX = 0, lastY = 0;
+  const at = (e) => { const r = canvas.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+  const start = (e) => {
+    drawing = true;
+    const p = at(e); lastX = p.x; lastY = p.y;
+    if(!sigDrawn){ sigDrawn = true; if(sigHint) sigHint.style.display = 'none'; }
+    ctx.beginPath(); ctx.arc(lastX, lastY, ctx.lineWidth / 2, 0, Math.PI * 2); ctx.fill();
+    if(canvas.setPointerCapture && e.pointerId != null){ try{ canvas.setPointerCapture(e.pointerId); }catch(_){} }
+    e.preventDefault();
+  };
+  const move = (e) => {
+    if(!drawing) return;
+    const p = at(e);
+    ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(p.x, p.y); ctx.stroke();
+    lastX = p.x; lastY = p.y;
+    e.preventDefault();
+  };
+  const end = () => { drawing = false; };
+  canvas.addEventListener('pointerdown', start);
+  canvas.addEventListener('pointermove', move);
+  canvas.addEventListener('pointerup', end);
+  canvas.addEventListener('pointerleave', end);
+  canvas.addEventListener('pointercancel', end);
+}
+
+function clearSignature(){
+  if(!sigCtx || !sigCanvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  sigCtx.clearRect(0, 0, sigCanvas.width / dpr, sigCanvas.height / dpr);
+  sigDrawn = false;
+  if(sigHint) sigHint.style.display = '';
+}
+
+/* Export signature as a white-backed PNG so print/PDF keeps the ink. */
+function captureSignatureDataURL(){
+  if(!sigDrawn || !sigCanvas) return '';
+  try{
+    const out = document.createElement('canvas');
+    out.width = sigCanvas.width;
+    out.height = sigCanvas.height;
+    const ctx = out.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, out.width, out.height);
+    ctx.drawImage(sigCanvas, 0, 0);
+    return out.toDataURL('image/png');
+  }catch(_){ return ''; }
+}
+
+/* ---- Printable / downloadable "Statement to DTA" letter ---- */
+function statementInnerHTML(sigSrc){
+  const val = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
+  const sigImg = (sigSrc === undefined) ? captureSignatureDataURL() : sigSrc;
+  let today = '';
+  try{ today = new Date().toLocaleDateString('en-US', {year:'numeric', month:'long', day:'numeric'}); }catch(_){}
+  // One labelled blank per applicable exemption, in the order they were shown.
+  const explain = Array.from(document.querySelectorAll('[data-explain-prompt]'))
+    .map(el => ({ prompt: el.getAttribute('data-explain-prompt'), text: el.value }));
+  return SnapScreening.buildStatementHTML({
+    name: val('f-name'),
+    agency: val('f-agency'),
+    explain,
+    sigImg: sigImg || '',
+    rt: resultType(),
+    rs: reasons(),
+    gcText: S.goodCauseText(state.answers),
+    today
+  });
+}
+
+function buildPrintRoot(){
+  let root = document.getElementById('print-root');
+  if(!root){ root = document.createElement('div'); root.id = 'print-root'; document.body.appendChild(root); }
+  root.innerHTML = statementInnerHTML();
+}
+
+function printForm(){
+  buildPrintRoot();
+  const cleanup = () => document.body.classList.remove('printing-form');
+  window.addEventListener('afterprint', cleanup, { once:true });
+  document.body.classList.add('printing-form');
+  // Wait a frame so the signature image can decode before the print snapshot.
+  // Do not clear printing-form on a short timer. Chrome returns from print()
+  // immediately, and a 2s cleanup was wiping the form mid Save-as-PDF.
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => { window.print(); });
+  });
+}
+
+function downloadDoc(){
+  // Word ignores data: URLs in HTML .doc files. Package as MHTML so the
+  // signature PNG is a real related image part Word can display.
+  const dataUrl = captureSignatureDataURL();
+  const boundary = '----=_NextPart_CFO_SNAP_STMT';
+  const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><title>SNAP Work Rules Statement</title>
+<!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom></w:WordDocument></xml><![endif]-->
+</head>
+<body>${statementInnerHTML(dataUrl ? 'signature.png' : '')}</body>
+</html>`;
+
+  const wrap76 = (s) => (s.match(/.{1,76}/g) || []).join('\r\n');
+  const htmlB64 = wrap76(btoa(unescape(encodeURIComponent(html))));
+
+  const parts = [
+    'MIME-Version: 1.0',
+    'Content-Type: multipart/related; boundary="' + boundary + '"',
+    '',
+    '--' + boundary,
+    'Content-Type: text/html; charset="utf-8"',
+    'Content-Transfer-Encoding: base64',
+    'Content-Location: statement.htm',
+    '',
+    htmlB64
+  ];
+  if(dataUrl){
+    const pngB64 = dataUrl.replace(/^data:image\/png;base64,/, '');
+    parts.push(
+      '--' + boundary,
+      'Content-Type: image/png',
+      'Content-Transfer-Encoding: base64',
+      'Content-Location: signature.png',
+      '',
+      wrap76(pngB64)
+    );
+  }
+  parts.push('--' + boundary + '--', '');
+
+  const blob = new Blob([parts.join('\r\n')], { type: 'application/msword' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'SNAP-Work-Rules-Statement.doc';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
+/* mailto: is the only send path that keeps the promise in the privacy note:
+ * the text never reaches a server. It has two failure modes and both are
+ * handled here.
+ *
+ * A machine with no mail app registered does nothing at all when the link
+ * fires, and nothing in the browser reports that back, so the copy-and-paste
+ * panel is revealed every time instead of being guessed at with a timer.
+ *
+ * A long statement overflows the mailto length cap, which buildResultsMailto
+ * trims. The panel always holds the untrimmed text. */
+function emailResults(){
+  const val = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
+  const explain = Array.from(document.querySelectorAll('[data-explain-prompt]'))
+    .map(el => ({ prompt: el.getAttribute('data-explain-prompt'), text: el.value }));
+  const { subject, body } = buildResultsEmailContent({
+    rt: resultType(),
+    rs: reasons(),
+    gcText: S.goodCauseText(state.answers),
+    name: val('f-name'),
+    agency: val('f-agency'),
+    explain
+  });
+  const { url } = buildResultsMailto({ subject, body });
+  showEmailFallback(body);
+  window.location.href = url;
+}
+
+function showEmailFallback(text){
+  const panel = document.getElementById('email-fallback');
+  if(!panel) return;
+  const box = document.getElementById('email-text');
+  if(box) box.value = text;
+  const status = document.getElementById('email-copy-status');
+  if(status) status.textContent = '';
+  panel.hidden = false;
+}
+
+function copyEmailText(){
+  const box = document.getElementById('email-text');
+  if(!box) return;
+  const status = document.getElementById('email-copy-status');
+  const say = (msg) => { if(status) status.textContent = msg; };
+  /* Selecting the text covers an insecure origin or a browser that refuses the
+   * clipboard call, so there is always a way to get the text out. */
+  const selectInstead = () => {
+    if(typeof box.focus === 'function') box.focus();
+    if(typeof box.select === 'function') box.select();
+    say(RESULT_COPY.emailSelectedLabel);
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(box.value).then(() => say(RESULT_COPY.emailCopiedLabel), selectInstead);
+  } else {
+    selectInstead();
+  }
+}
+
+/* Every target="_blank" link says so, to a screen reader.
+ *
+ * Fifteen of them are spread across this file and snap-screening-logic.js as
+ * literal template strings, and annotating each one by hand is a rule that holds
+ * until the next link is added. Doing it in one pass after render means a link
+ * cannot be added without the announcement, which matters here because a reader
+ * who did not expect a new tab finds Back apparently broken, mid-screening, on a
+ * phone. Visually hidden, because the visible label is already the link text and
+ * sighted users get the tab switch itself as the cue. */
+function markExternalLinks(root){
+  root.querySelectorAll('a[target="_blank"]').forEach(a => {
+    if(a.querySelector('[data-newtab]')) return;
+    const note = document.createElement('span');
+    note.className = 'sr-only';
+    note.setAttribute('data-newtab', '');
+    note.textContent = ' (opens in a new tab)';
+    a.appendChild(note);
+  });
+}
+
+function render(){
+  renderProgress();
+  const stage = document.getElementById('stage');
+  if(state.view === 'intro') stage.innerHTML = renderIntro();
+  else if(state.view === 'question') stage.innerHTML = renderPage();
+  else stage.innerHTML = (SAMPLE_MODE ? sampleBanner() : '') + renderResults();
+  markExternalLinks(stage);
+
+  state.animate = false;
+  initSignaturePad();
+  persist();
+}
+
+/* Move focus to the heading of the view we just drew. innerHTML destroyed
+ * whatever the user clicked, so without this focus falls back to <body>: a
+ * screen reader announces nothing and a keyboard user tabs from the top of the
+ * document again. preventScroll leaves the scroll to the line after it. */
+function focusStageHeading(){
+  const stage = document.getElementById('stage');
+  const heading = stage && stage.querySelector('h1, h2');
+  if(!heading) return;
+  heading.setAttribute('tabindex', '-1');
+  heading.focus({ preventScroll: true });
+  window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+}
+
+/* Page-level navigation. Picking an answer goes through renderKeepingOption()
+ * instead, which holds scroll position and puts focus back on the option that
+ * was just activated. */
+function renderWithMotion(){
+  state.animate = true;
+  render();
+  focusStageHeading();
+}
+
+/* ------------------------------------------------------------------ *
+ * Event handling (delegation)
+ * ------------------------------------------------------------------ */
+
+/* An option's identity as a CSS selector. render() replaces the whole stage, so
+ * the clicked button is destroyed; this is how we find its replacement again. */
+function optSelector(btn){
+  const parts = ['.opt[data-q-id="' + btn.getAttribute('data-q-id') + '"]',
+                 '[data-opt-kind="' + btn.getAttribute('data-opt-kind') + '"]'];
+  const val = btn.getAttribute('data-opt-val');
+  const idx = btn.getAttribute('data-opt-idx');
+  if(val !== null) parts.push('[data-opt-val="' + val + '"]');
+  if(idx !== null) parts.push('[data-opt-idx="' + idx + '"]');
+  return parts.join('');
+}
+
+/* Answering used to drop focus on <body>, because innerHTML destroyed the button
+ * the user had just activated. A keyboard user then tabbed from the top of the
+ * document again on every answer, and a screen reader announced nothing at all,
+ * so there was no confirmation the answer registered. */
+function renderKeepingOption(sel){
+  render();
+  const again = sel && document.querySelector(sel);
+  if(again) again.focus({ preventScroll: true });
+}
+
+/* Arrow keys inside a radiogroup. The group also allows clearing an answer by
+ * reselecting it (every question is optional), so arrowing onto the option that
+ * is already selected moves focus without toggling it off. */
+document.addEventListener('keydown', (e) => {
+  if(e.altKey || e.ctrlKey || e.metaKey) return;
+  const cur = e.target.closest && e.target.closest('[role="radio"]');
+  if(!cur) return;
+  const group = cur.closest('[role="radiogroup"]');
+  if(!group) return;
+  const radios = Array.from(group.querySelectorAll('[role="radio"]'));
+  const i = radios.indexOf(cur);
+  let next;
+  switch(e.key){
+    case 'ArrowDown': case 'ArrowRight': next = (i + 1) % radios.length; break;
+    case 'ArrowUp':   case 'ArrowLeft':  next = (i - 1 + radios.length) % radios.length; break;
+    case 'Home': next = 0; break;
+    case 'End':  next = radios.length - 1; break;
+    default: return;
+  }
+  e.preventDefault();
+  const target = radios[next];
+  if(target.getAttribute('aria-checked') === 'true') target.focus({ preventScroll: true });
+  else target.click();
+});
+
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('button');
+  if(!btn) return;
+
+  // Option buttons within a question
+  const kind = btn.getAttribute('data-opt-kind');
+  if(kind){
+    const q = qById(btn.getAttribute('data-q-id'));
+    if(!q) return;
+    const keep = optSelector(btn);
+    // Selecting an answer no longer moves you forward. Use Next when ready.
+    // Every question is optional. Reclick a selected option to clear it.
+    if(kind === 'yn'){
+      const val = btn.getAttribute('data-opt-val');
+      if(state.answers[q.id] === val){
+        clearAns(q.id);
+        if(q.id === 'housing') clearAns('housingFollowup');
+      } else {
+        setAns(q.id, val);
+        if(q.id === 'housing' && val !== 'no') clearAns('housingFollowup');
+      }
+      renderKeepingOption(keep);
+    } else if(kind === 'multi'){
+      const o = q.options[+btn.getAttribute('data-opt-idx')];
+      const cur = Array.isArray(state.answers[q.id]) ? state.answers[q.id] : [];
+      const next = cur.includes(o.id) ? cur.filter(x => x !== o.id) : [...cur, o.id];
+      if(next.length) setAns(q.id, next);
+      else clearAns(q.id);
+      renderKeepingOption(keep);
+    } else if(kind === 'multi-none'){
+      if(state.answers[q.id] === NONE) clearAns(q.id);
+      else setAns(q.id, NONE);
+      renderKeepingOption(keep);
+    } else if(kind === 'single'){
+      const optId = q.options[+btn.getAttribute('data-opt-idx')].id;
+      if(state.answers[q.id] === optId) clearAns(q.id);
+      else setAns(q.id, optId);
+      renderKeepingOption(keep);
+    } else if(kind === 'single-none'){
+      if(state.answers[q.id] === NONE) clearAns(q.id);
+      else setAns(q.id, NONE);
+      renderKeepingOption(keep);
+    }
+    return;
+  }
+
+  const action = btn.getAttribute('data-action');
+  if(!action) return;
+  switch(action){
+    case 'start':
+      /* Blocked used to be a silent no-op: nothing said what was missing. Move
+       * focus to the question that gates the button so it gets announced. */
+      if(!canStart()){
+        const first = document.querySelector('input[name="ageRange"]');
+        if(first) first.focus();
+        return;
+      }
+      SAMPLE_MODE = false;
+      if(state.answers.ageRange === 'no'){ state.view = 'results'; renderWithMotion(); return; }
+      state.view = 'question'; state.step = 0; state.gc = false; state.helpOpen = {}; renderWithMotion(); break;
+    case 'back': back(); break;
+    case 'next': advance(); break;
+    case 'skip-end': skipToEnd(); break;
+    /* Re-render destroys this button too, so focus goes back to it: the whole
+     * point of aria-expanded is that you hear the state you just changed. */
+    case 'toggle-help': {
+      const id = btn.getAttribute('data-q-id');
+      if(id){
+        state.helpOpen[id] = !state.helpOpen[id];
+        render();
+        const again = document.querySelector('[data-action="toggle-help"][data-q-id="' + id + '"]');
+        if(again) again.focus({ preventScroll: true });
+      }
+      break;
+    }
+    case 'toggle-hint': {
+      const tip = btn.closest('.hint-tip');
+      if(!tip) break;
+      const willOpen = !tip.classList.contains('is-open');
+      if(willOpen){
+        document.querySelectorAll('.hint-tip.is-open').forEach(t => { if(t !== tip) setHintTipOpen(t, false); });
+        setHintTipOpen(tip, true);
+      } else {
+        setHintTipOpen(tip, false);
+      }
+      break;
+    }
+    case 'restart':
+      SAMPLE_MODE = false;
+      state.view = 'intro'; state.step = 0; state.gc = false; state.helpOpen = {}; state.answers = {}; renderWithMotion(); break;
+    case 'delete-answers': deleteAnswers(); break;
+    /* Quick exit has to leave nothing behind, not just navigate away.
+     *
+     * replace(), not href, so no history entry survives for Back to return to.
+     * And the stored answers go first: this control exists for someone who needs
+     * to stop being on this page right now, and leaving "pregnant: yes" or a
+     * domestic violence answer in storage for the next person on a shared
+     * phone defeats the entire point of it.
+     *
+     * Clearing before navigating, not after, because after does not run. */
+    case 'quick-exit':
+      try{ sessionStorage.removeItem(STORAGE_KEY); }catch(e){ /* storage blocked; nothing to clear */ }
+      window.location.replace(PRODUCTION_QUICK_EXIT_URL);
+      break;
+    case 'print': printForm(); break;
+    case 'download-doc': downloadDoc(); break;
+    case 'email-self': emailResults(); break;
+    case 'copy-email-text': copyEmailText(); break;
+    case 'sig-clear': clearSignature(); break;
+  }
+});
+
+// Age-range selection: enable/disable Start without a full re-render
+// so the radio buttons keep focus.
+document.addEventListener('change', (e) => {
+  if(e.target && e.target.name === 'ageRange'){
+    state.answers.ageRange = e.target.value;
+    persist();
+    updateStartBtn();
+  }
+});
+
+function updateStartBtn(){
+  const btn = document.getElementById('start-btn');
+  if(btn){
+    if(canStart()){
+      btn.style.opacity = ''; btn.style.cursor = 'pointer'; btn.removeAttribute('aria-disabled');
+    } else {
+      btn.style.opacity = '.5'; btn.style.cursor = 'not-allowed'; btn.setAttribute('aria-disabled', 'true');
+    }
+  }
+}
+
+/* Re-fit the signature canvas when the viewport changes (e.g. phone rotation).
+ * The bitmap is sized from clientWidth at draw time, so a later resize would
+ * otherwise leave pointer coordinates misaligned. Re-init clears any ink. */
+let sigResizeTimer = null;
+function refitSignatureOnResize(){
+  if(!document.getElementById('sig-pad')) return;
+  clearTimeout(sigResizeTimer);
+  sigResizeTimer = setTimeout(() => { if(document.getElementById('sig-pad')) initSignaturePad(); }, 200);
+}
+window.addEventListener('resize', refitSignatureOnResize, { passive: true });
+window.addEventListener('orientationchange', refitSignatureOnResize);
+
+/* ------------------------------------------------------------------ *
+ * Sample previews, review hosts only
+ *
+ * ?sample=exempt | goodcause | notexempt jumps straight to a result screen,
+ * reusing the real result rendering so a sample can never drift from the tool.
+ * Nothing is stored in this mode.
+ *
+ * The team reviews every screen before launch, and reaching the good-cause
+ * result honestly means answering through all four groups. So this exists for
+ * them, and it must not exist for the public: a hidden demo mode on a benefits
+ * page invites someone to share a URL that shows a result which is not theirs.
+ *
+ * Gated by an allowlist of review hosts rather than by excluding production.
+ * That is the safer failure direction. If the preview moves to a host not
+ * listed, samples stop working, which is visible and harmless. If it were
+ * written as "anything except masslegalhelp.org", then moving production to a
+ * new domain would silently switch the demo mode on in front of real users.
+ *
+ * Add a host here if the preview moves. `location.hostname` is empty for
+ * file:// URLs, which is why the empty string counts as local.
+ * ------------------------------------------------------------------ */
+const SAMPLE_HOSTS = ['localhost', '127.0.0.1', ''];
+
+function samplesAllowed(){
+  try{
+    const h = location.hostname;
+    return SAMPLE_HOSTS.indexOf(h) !== -1 || /\.pages\.dev$/.test(h);
+  }catch(e){ return false; }
+}
+
+function applySampleFromURL(){
+  if(!samplesAllowed()) return false;
+  let p = '';
+  try{ p = (new URLSearchParams(location.search).get('sample') || '').toLowerCase(); }catch(e){}
+  if(!p) return false;
+  if(p === 'exempt') state.answers = { child14:'yes', health:'yes', caretaker:'yes' };
+  else if(p === 'goodcause') state.answers = { goodcause:'transport' };
+  else if(p === 'notexempt') state.answers = { goodcause: NONE };
+  else return false;
+  SAMPLE_MODE = true;
+  state.view = 'results';
+  state.gc = false;
+  return true;
+}
+
+function sampleBanner(){
+  return `<div class="no-print" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:var(--radius);padding:14px 18px;margin:0 0 18px">
+    <span style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--warn-ink)">Sample result</span>
+    <span style="font-size:15px;line-height:1.5;color:var(--prose);flex:1;min-width:200px">An example of one outcome. No questions were answered, and nothing is saved.</span>
+    <!-- No link back to the sample index. It would be ../screener/, a parent path,
+         which does not exist at the deploy root, and the publish guard is right to
+         reject one even on a code path that should never run in production. Browser
+         Back does the job for a reviewer who arrived from that page. -->
+    <span style="font-size:14.5px"><a href="./" style="font-weight:700">Try it for real →</a></span>
+  </div>`;
+}
+
+if(!applySampleFromURL()){ loadPersisted(); }
+initHintTips();
+state.animate = true;
+render();
+</script>
+</body>
+</html>

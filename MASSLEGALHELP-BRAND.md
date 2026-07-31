@@ -76,7 +76,7 @@ anywhere on the white page would fail. Use `#0057a2` at 7.28:1 for those.
 
 This is the part that makes a page read as theirs, and it is worth treating as the template
 for every screener MLRI puts on the site rather than as one page's styling. Implemented as
-`.band`, `.byline`, and `.byline-rule` in `masslegalhelp/index.html`.
+`.band` and `.byline-rule` in `masslegalhelp/index.html`.
 
 Their article pages open with four things in order. A pale blue gradient panel holding the
 title, `linear-gradient(#d3e7ff, #fafcff)`, padded roughly `42px 51px 20px` at their column
@@ -91,9 +91,14 @@ the panel, and since `.band` creates no stacking context that puts it behind the
 white background where it is invisible. And a shadow never affects layout, so it cannot push
 a horizontal scrollbar onto a narrow screen the way a negatively inset absolute box can.
 
+Measured 2026-07-30, and worth copying: their panel carries `margin-right:8px`, so the block
+sits in reserved space and the panel's right edge lines up with the body copy underneath
+rather than overhanging it by 8px. Their panel's left edge is flush with the body column,
+and the `h1` is indented by the panel's own 51px of padding. Ours now matches all three.
+
 ## What we deliberately do not copy
 
-Three pieces of their chrome are absent on purpose, because faking them is worse than
+Five pieces of their chrome are absent on purpose, because faking them is worse than
 leaving them out.
 
 The dark top strip exists to hold a language selector. Until there is a Spanish version there
@@ -105,11 +110,27 @@ working control on their site. A screener that draws them without wiring them is
 button that does nothing, which is worse than a page that never promised it.
 
 Headings in Domine. Their `h1` is Domine 700 at 36px over 48px; ours is Atkinson Hyperlegible.
-This is the largest remaining visual difference, and it is a missing font file rather than a
-decision. Domine is OFL and self-hosted by their theme, so dropping `domine-700.woff2` into
-`masslegalhelp/fonts/` and pointing `.h1` and `.band .h1` at it would close most of the gap.
-Body copy stays Atkinson regardless: they use Montserrat, and Atkinson was chosen for
-low-vision readers, which outranks matching a host font.
+This is the largest remaining visual difference, and this document used to call it a missing
+font file rather than a decision. That framing cost us: the page carried a `--serif` token
+reading `'Domine', Georgia, serif`, the file never landed, and every heading shipped in
+Georgia, a face nothing in the repository declared, sitting over a body set in a typeface
+chosen specifically for low-vision readers. Reverted to Atkinson on 2026-07-30. Domine is
+OFL and self-hosted by their theme, so it is still available, but it needs the file, a
+decision, and a DESIGN.md entry in that order, not a fallback chain hoping for one. Body
+copy stays Atkinson regardless: they use Montserrat, and Atkinson was chosen for low-vision
+readers, which outranks matching a host font.
+
+The title panel's gradient. Theirs is `linear-gradient(#d3e7ff, #fafcff)` and ours is a flat
+`#d3e7ff`. The gradient bottoms out at 1.03:1 against a white page, so the panel's own
+bottom edge vanishes while the `#a2c4f0` block behind it holds 1.80:1: the ornament ends up
+1.7x more visible than the thing it is offset from, and the 8px strip reads as a bar
+floating under nothing. Their 805px column and the two-line byline underneath carry it;
+our 628px column with no byline does not. A flat fill gives the panel a 1.26:1 boundary on
+all four sides, which is what makes an offset block legible as depth. This is the only
+measured value in this document we knowingly diverge from.
+
+The byline row. See the section below on the review date, which is the part of it worth
+bringing back.
 
 ## Layout patterns worth matching
 
@@ -131,13 +152,23 @@ to reproduce that, but the resting and collapsed heights differ, so do not hardc
 Article bodies use collapsible accordion sections under Domine `h2` toggles. Worth knowing
 because it is the pattern a reader arriving from the ABAWD article will have just used.
 
-## Content pattern the screener should honour
+## Content pattern the screener does not honour, and the one open question in it
 
 Article pages carry a byline block: an icon, `By Massachusetts Law Reform Institute`, and a
 `Reviewed <Month Year>` date. The ABAWD article read `Reviewed February 2026` on the day this
 was captured.
 
-The screener should carry the same byline and review date, for two reasons. It matches the
-host site's convention, and it puts the staleness of the legal content on the page where a
-reader and an SME can both see it. That is strictly better than a threshold verified in
-November 2025 with no date shown anywhere.
+This document used to say the screener should carry the same block. It did, in a
+byline-shaped half: the icon and the organisation, with no review date, because nobody has
+signed off on the thresholds. The whole row came out on 2026-07-30. A byline answers "who
+wrote this" on an article, and on a three-minute screening the reader's question is whether
+the rules apply to them; MLRI is already named a screen later in the privacy note. One line
+of text against a 40px mark also sat visibly high, and the fix for that would have been the
+review date, which is exactly the thing we cannot assert.
+
+The half of the argument that survives is the review date. Content staleness belongs
+somewhere a reader and an SME can both see it, and a threshold last verified in November
+2025 with no date shown anywhere is worse than one carrying its age. MLRI's own ABAWD
+article was reviewed February 2026 and is therefore newer than this tool. When someone
+reviews, the date comes back as a full byline block above the rule, which is the pattern; a
+date floating alone is not.

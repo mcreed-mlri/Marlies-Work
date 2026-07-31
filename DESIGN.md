@@ -101,11 +101,6 @@ typography:
     fontSize: "15px"
     fontWeight: 400
     lineHeight: 1.6
-  byline:
-    fontFamily: "Atkinson Hyperlegible, system-ui, -apple-system, sans-serif"
-    fontSize: "15.5px"
-    fontWeight: 400
-    lineHeight: 1.5
   option:
     fontFamily: "Atkinson Hyperlegible, system-ui, -apple-system, sans-serif"
     fontSize: "16.5px"
@@ -174,12 +169,7 @@ components:
   band:
     backgroundColor: "{colors.band-top}"
     textColor: "{colors.brand-navy}"
-    padding: "30px 26px 22px"
-  byline-mark:
-    backgroundColor: "{colors.accent-blue}"
-    textColor: "{colors.page-white}"
-    rounded: "{rounded.circle}"
-    size: "40px"
+    padding: "42px 51px 20px"
   button-primary:
     backgroundColor: "{colors.accent-blue}"
     textColor: "{colors.page-white}"
@@ -324,7 +314,7 @@ a small status vocabulary of fill, border, and ink triplets.
 
 ### Primary
 - **Accent Blue** (`#0057a2`): every actionable thing on the screener. Primary and Next
-  buttons, ghost button strokes, link text, the byline mark, the progress fill, the filled
+  buttons, ghost button strokes, link text, the progress fill, the filled
   radio and checkbox mark, and the selected option border. 7.28:1 on white, so it is also
   the only accent allowed to carry meaning.
 - **Brand Navy** (`#1f2c5c`): MassLegalHelp sets headings and body copy in one navy and so
@@ -340,11 +330,13 @@ a small status vocabulary of fill, border, and ink triplets.
   and the focus ring inside the navy bar, where a dark blue ring would vanish.
 
 ### Tertiary
-- **Pale Blue** (`#d3e7ff`): the top of the title-band gradient, and the fill of every
+- **Pale Blue** (`#d3e7ff`): the whole title band, and the fill of every
   soft information panel and help callout. 10.58:1 under brand navy text.
-- **Band Bottom** (`#fafcff`) and **Band Edge** (`#a2c4f0`): the bottom of that gradient
-  and the solid block offset behind the panel.
-- **Rule Ink** (`#192a65`): the short heavy rule under the byline, darker than body navy.
+- **Band Bottom** (`#fafcff`): the low end of the host's title gradient, which the band no
+  longer uses. It survives as the fill of an answered question card (`.qcard-done`).
+- **Band Edge** (`#a2c4f0`): the solid block offset behind the title panel.
+- **Rule Ink** (`#192a65`): the short heavy rule that closes the page header, darker than
+  body navy.
 
 ### Neutral
 - **Field** (`#eef1f5`), **Field Hover** (`#e3e8f0`), **Selected Fill** (`#d7e6f9`): the
@@ -462,7 +454,12 @@ an inline accordion, and at `(hover:hover) and (min-width:641px) and (pointer:fi
 becomes a fixed-position panel that flips above the trigger when it would overflow.
 
 Touch targets are 44px minimum for secondary controls and 48px for buttons and inputs;
-option tiles are 52px. Where a 44px minimum would add dead air, the build absorbs it with
+option tiles are 52px. The one conditional exception is the help-tip trigger, which is 44px
+on a coarse pointer and relaxes to roughly 26px under
+`(hover:hover) and (min-width:641px) and (pointer:fine)`, where a mouse does not need the
+margin and the full height would open a hole in the line it sits in. That still clears
+WCAG 2.5.8's 24px at AA. Nothing else takes the exception, and nothing takes it on touch.
+Where a 44px minimum would add dead air, the build absorbs it with
 matching negative margins rather than shrinking the target.
 
 ## Elevation & Depth
@@ -508,13 +505,13 @@ One rounding family, moderate and consistent. The screener's `--radius:10px` is 
 for buttons, option tiles, panels, and status cards. Inputs use `calc(var(--radius) - 3px)`
 so a field reads slightly tighter than the panel holding it, and the help popover uses
 `calc(var(--radius) + 2px)`. Focus rings round to 4px, checkbox marks to 6px, radio marks
-and the byline mark to a full circle, and the Quick exit pill to 999px. The preview site is
+to a full circle, and the Quick exit pill to 999px. The preview site is
 softer at 14px for cards and panels, 10px for badges.
 
 Borders do the structural work: 2px on anything clickable, 1.5px on an input, 1px on a
 panel. A status card is a 1px colored ring around a colored header band and a white body,
 with `overflow:hidden` so the band's corners follow the card. There are no cut corners, no
-clipping, and no decorative dividers apart from the byline rule.
+clipping, and no decorative dividers apart from the rule under the page header.
 
 ## Components
 
@@ -572,16 +569,35 @@ clipping, and no decorative dividers apart from the byline rule.
   under it.
 
 ### The Page-Header Pattern
-The signature component, and the one intended for reuse. Four things in order: a pale blue
-gradient panel (`linear-gradient(#d3e7ff, #fafcff)`) holding the `h1`, padded 30px 26px 22px,
-with the solid `#a2c4f0` block offset 8px down and right behind it; a byline of a 40px
-accent-blue circle with an inline document glyph beside "By" and the organisation name; a
-146px by 5px `#192a65` rule; then body copy. It is implemented as reusable classes
-(`.band`, `.byline`, `.byline-mark`, `.byline-rule`), not inline styles, because the intent
-is a template for every screener MLRI puts on the site rather than one page's styling.
+The signature component, and the one intended for reuse. Three things in order: a solid
+`#d3e7ff` panel holding the `h1`, padded 42px 51px 20px, with the solid `#a2c4f0` block
+offset 8px down and right behind it and 8px of right margin reserved so the block sits
+inside the text column instead of overhanging it; a 146px by 5px `#192a65` rule; then body
+copy. It is implemented as reusable classes (`.band`, `.byline-rule`), not inline styles,
+because the intent is a template for every screener MLRI puts on the site rather than one
+page's styling.
 
-**The Page-Header Rule.** A new MLRI screener opens with the band, the byline, and the rule,
-in that order, before any prose. Nothing else goes inside the band except the `h1`.
+Two things changed on 2026-07-30 after the header was measured against the live article
+page, and both are deliberate departures from the host.
+
+The panel is a flat fill, not their `linear-gradient(#d3e7ff, #fafcff)`. That gradient
+bottoms out at 1.03:1 against a white page, so the panel's own bottom edge disappears while
+the `#a2c4f0` block behind it stays at 1.80:1. The ornament ends up more visible than the
+thing it is offset from, and the strip reads as a bar floating under nothing. It works at
+their 805px column and not at our 628px one. A solid fill gives the panel a 1.26:1 boundary
+on all four sides, which is what makes an offset block legible as depth.
+
+The byline is gone. Their article pages carry a 40px navy circle with a document glyph
+beside "By <organisation>" over "Reviewed <Month Year>", and we reproduced the first line of
+it. A byline answers "who wrote this" on an article; on a three-minute screening the
+reader's question is whether the rules apply to them. With one line of text against a 40px
+mark it also sat visibly high, and the honest fix for that is the review date that would
+fill the second line, which nobody has signed off. Removed rather than padded out.
+
+**The Page-Header Rule.** A new MLRI screener opens with the band and the rule, in that
+order, before any prose. Nothing else goes inside the band except the `h1`. If a reviewed
+date is ever approved, it returns as a full byline block above the rule; a date floating on
+its own is not the pattern.
 
 ### Shell Cards (preview site)
 A `.entry` is a 14px card in `#fffef9` on paper with a 1px `#9e8e66` edge, a 40px tag-filled
@@ -599,8 +615,9 @@ rows instead of more cards. Archive entries override the accent to terracotta.
   sit near 1.05:1, so fill alone communicates nothing.
 - **Do** compute the contrast ratio before changing any boundary, mark, or text value, and
   record it next to the token the way the existing ones are recorded.
-- **Do** open a new screener with the page-header pattern: band, byline, 146px rule.
-- **Do** set every interactive target at 48px, or 44px for a secondary control, and every
+- **Do** open a new screener with the page-header pattern: band, then the 146px rule.
+- **Do** set every interactive target at 48px, or 44px for a secondary control, dropping
+  below that only for a fine pointer and never under 24px, and every
   text input at 16px or larger.
 - **Do** reproduce the host chrome exactly where it is reproduced at all: header navy, the
   9px gold rule, one navy for headings and body, and their pale blue band.
