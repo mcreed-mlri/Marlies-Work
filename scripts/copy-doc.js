@@ -33,8 +33,6 @@ const C = S.RESULT_COPY;
 /* ---- Questions still open for the author. Keyed by copy id so each one
  * prints next to the text it is about, instead of in a list at the end. ---- */
 const OPEN = {
-  'footer.byline': 'The footer now reads "Written by the Massachusetts Law Reform Institute. Funded by the Massachusetts Legal Assistance Corporation." The first half is ours to say. The second is copied from MassLegalHelp\'s own footer, where it describes the site being funded by MLAC, not this screener. Is MLAC funding this tool? If not, the sentence should stop after the first part.',
-  'footer.copyright': 'This asserts that MLAC holds the copyright on this page. MassLegalHelp\'s footer says it because MLAC runs the site. MLRI wrote this tool, so the line may be wrong, or may need to be MLRI, or may not belong here at all. Worth checking with whoever handles that.',
   'page.answerAny': 'Applied: this now shows above group 1 only, per your note that it "only needs to be said once in section 1." It used to repeat above all four groups.',
   'page.privacyIntro': 'Your edit replaced this sentence. Separately, the note "Remove before you start question" is ambiguous: remove this paragraph from the start page, or something else?',
   'page.sigNote': 'Your note read "remove dta needs your actual signature line on all the results pages." That reads two opposite ways: delete this sentence, or add a signature line. Which?',
@@ -89,8 +87,6 @@ const INLINE = [
   { id: 'chrome.tagline', re: /class="topbar-sub">([^<]+)</ },
   { id: 'chrome.quickExit', re: /data-action="quick-exit"[^>]*>([^<]+)</ },
   { id: 'footer.disclaimer', re: /<p style="font-size:13\.5px[^>]*>\s*([\s\S]*?)\s*<\/p>/ },
-  { id: 'footer.byline', re: />\s*(Written by the Massachusetts Law Reform Institute\.[^<]*)</ },
-  { id: 'footer.copyright', re: />(\u00a92026 Massachusetts Legal Assistance Corporation)</ },
   { id: 'chrome.topstrip', re: /class="topstrip-inner">\s*<a [^>]*>([^<]+)</ }
 ];
 
@@ -99,7 +95,7 @@ const INLINE = [
  * these were written to fill a gap, not handed over for review. */
 const DEVELOPER_WRITTEN = new Set([
   'chrome.tabTitle', 'chrome.wordmark', 'chrome.tagline', 'chrome.quickExit',
-  'chrome.topstrip', 'footer.disclaimer', 'footer.byline', 'footer.copyright'
+  'chrome.topstrip', 'footer.disclaimer'
 ]);
 
 const html = fs.readFileSync(HTML, 'utf8');
@@ -431,8 +427,7 @@ w('The disclaimer is the one to look at hardest: it makes a claim about what thi
 w('and is not, which is not a developer\'s call to make.');
 blank();
 ['chrome.tabTitle', 'chrome.topstrip', 'chrome.wordmark', 'chrome.tagline',
-  'chrome.quickExit', 'footer.disclaimer', 'footer.byline', 'footer.copyright']
-  .forEach(id => item(id, inline[id]));
+  'chrome.quickExit', 'footer.disclaimer'].forEach(id => item(id, inline[id]));
 
 w('The footer also links out to three places. Wording is ours, destinations are real pages');
 w('on MassLegalHelp:');

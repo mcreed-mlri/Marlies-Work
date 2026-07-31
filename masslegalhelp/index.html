@@ -363,34 +363,30 @@
 <!-- Stage -->
 <main id="stage"></main>
 
-<!-- Footer, matching the MassLegalHelp pattern: gold rule, navy band, darker
-     strip. Every URL here was read off their live footer, except that Terms of
-     Use and Privacy Policy are NOT in their <footer> element and their URLs are
-     still unknown. They are deliberately absent rather than guessed, because a
-     Terms link that 404s on a public benefits page is worse than none. Add them
-     before launch; see masslegalhelp/README.md. -->
+<!-- Footer. Deliberately minimal: its whole job is making sure someone who lands
+     here does not wonder whether they are on the right site. The gold rule, the navy
+     band, and the wordmark do that. Everything beyond it was cut on 2026-07-30.
+
+     What went, and why. Three nav links to Legal Topics, Contact Us, and the ABAWD
+     article: useful, but a person mid-screening is not browsing, and the article is
+     already linked from the intro. A funding credit reading "Funded by the
+     Massachusetts Legal Assistance Corporation", copied from MassLegalHelp's own
+     footer where it describes the site rather than this tool, so it was a claim
+     nobody here had checked. A copyright line asserting MLAC owns a page MLRI wrote.
+     And the darker sub-strip that held those two.
+
+     Their real footer also carries Terms of Use and Privacy Policy. Still absent,
+     still because their URLs are unknown, and a Terms link that 404s on a benefits
+     page is worse than none. See masslegalhelp/README.md. -->
 <footer class="no-print" style="border-top:9px solid var(--gold);background:var(--ink);color:#fff;margin-top:40px">
-  <div style="max-width:660px;margin:0 auto;padding:22px max(16px, env(safe-area-inset-right)) 18px max(16px, env(safe-area-inset-left))">
+  <div style="max-width:660px;margin:0 auto;padding:22px max(16px, env(safe-area-inset-right)) 24px max(16px, env(safe-area-inset-left))">
     <div style="font-size:17px;font-weight:700;line-height:1.1">Mass Legal Help</div>
     <div style="font-size:12px;opacity:.9;margin-top:3px">Massachusetts Legal Information</div>
     <p style="font-size:13.5px;line-height:1.6;margin:14px 0 0">
-      This screening gives you information about the SNAP work rules. It is not legal
-      advice, it does not tell DTA anything, and it does not change your SNAP case.
+      This screening is part of <a href="https://www.masslegalhelp.org/" style="color:#fff">masslegalhelp.org</a>.
+      It gives you information about the SNAP work rules. It is not legal advice, it
+      does not tell DTA anything, and it does not change your SNAP case.
     </p>
-    <nav aria-label="Massachusetts Legal Help" style="display:flex;flex-wrap:wrap;gap:10px 20px;margin:16px 0 0;font-size:14px">
-      <a href="https://www.masslegalhelp.org/public-benefits-ssi/snap-food-benefits/snap-3-month-time-limit-abawd-work-rules" style="color:#fff">About the ABAWD work rules</a>
-      <a href="https://www.masslegalhelp.org/legal-topics" style="color:#fff">Legal Topics</a>
-      <a href="https://www.masslegalhelp.org/about/contact-us" style="color:#fff">Contact Us</a>
-    </nav>
-  </div>
-  <div style="background:#0c1639">
-    <!-- Their footer strip carries Terms of Use and Privacy Policy. Both are
-         still missing URLs (see masslegalhelp/README.md), so the strip ships
-         with the credit lines only and the links drop in beside them. -->
-    <div style="max-width:660px;margin:0 auto;padding:14px max(16px, env(safe-area-inset-right)) 14px max(16px, env(safe-area-inset-left));font-size:12.5px;line-height:1.7">
-      Written by the Massachusetts Law Reform Institute. Funded by the Massachusetts Legal Assistance Corporation.
-      <div style="opacity:.85;margin-top:4px">©2026 Massachusetts Legal Assistance Corporation</div>
-    </div>
   </div>
 </footer>
 

@@ -701,19 +701,7 @@ and is not, which is not a developer's call to make.
 
 **`footer.disclaimer`**  **[written by the developer, not you]**
 
-> This screening gives you information about the SNAP work rules. It is not legal advice, it does not tell DTA anything, and it does not change your SNAP case.
-
-**`footer.byline`**  **[written by the developer, not you]**
-
-> Written by the Massachusetts Law Reform Institute. Funded by the Massachusetts Legal Assistance Corporation.
-
-> **Question for you:** The footer now reads "Written by the Massachusetts Law Reform Institute. Funded by the Massachusetts Legal Assistance Corporation." The first half is ours to say. The second is copied from MassLegalHelp's own footer, where it describes the site being funded by MLAC, not this screener. Is MLAC funding this tool? If not, the sentence should stop after the first part.
-
-**`footer.copyright`**  **[written by the developer, not you]**
-
-> ©2026 Massachusetts Legal Assistance Corporation
-
-> **Question for you:** This asserts that MLAC holds the copyright on this page. MassLegalHelp's footer says it because MLAC runs the site. MLRI wrote this tool, so the line may be wrong, or may need to be MLRI, or may not belong here at all. Worth checking with whoever handles that.
+> This screening is part of [masslegalhelp.org](https://www.masslegalhelp.org/). It gives you information about the SNAP work rules. It is not legal advice, it does not tell DTA anything, and it does not change your SNAP case.
 
 The footer also links out to three places. Wording is ours, destinations are real pages
 on MassLegalHelp:
