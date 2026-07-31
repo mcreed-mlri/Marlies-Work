@@ -683,6 +683,10 @@ and is not, which is not a developer's call to make.
 
 > SNAP Work Rules Screening | Massachusetts Legal Help
 
+**`chrome.topstrip`**  **[written by the developer, not you]**
+
+> masslegalhelp.org
+
 **`chrome.wordmark`**  **[written by the developer, not you]**
 
 > Mass Legal Help
@@ -701,7 +705,15 @@ and is not, which is not a developer's call to make.
 
 **`footer.byline`**  **[written by the developer, not you]**
 
-> Written by the Massachusetts Law Reform Institute.
+> Written by the Massachusetts Law Reform Institute. Funded by the Massachusetts Legal Assistance Corporation.
+
+> **Question for you:** The footer now reads "Written by the Massachusetts Law Reform Institute. Funded by the Massachusetts Legal Assistance Corporation." The first half is ours to say. The second is copied from MassLegalHelp's own footer, where it describes the site being funded by MLAC, not this screener. Is MLAC funding this tool? If not, the sentence should stop after the first part.
+
+**`footer.copyright`**  **[written by the developer, not you]**
+
+> ©2026 Massachusetts Legal Assistance Corporation
+
+> **Question for you:** This asserts that MLAC holds the copyright on this page. MassLegalHelp's footer says it because MLAC runs the site. MLRI wrote this tool, so the line may be wrong, or may need to be MLRI, or may not belong here at all. Worth checking with whoever handles that.
 
 The footer also links out to three places. Wording is ours, destinations are real pages
 on MassLegalHelp:

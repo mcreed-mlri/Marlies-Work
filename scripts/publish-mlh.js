@@ -77,12 +77,28 @@ if (!fs.existsSync(here)) {
   problems.push(LOGIC + ' is missing. The page cannot decide anything without it.');
 }
 
+/* Strip HTML and CSS comments before scanning for references.
+ *
+ * A commented-out rule is not a reference. This build deliberately carries two of
+ * them: a Domine @font-face and a wordmark <img>, both parked until their asset
+ * files exist, both commented rather than deleted so enabling them is uncommenting
+ * rather than rewriting. Scanning raw text reported those as broken links and would
+ * have blocked publishing over code that does not run.
+ *
+ * Third time this distinction has come up in one day. check-pages.js learned it for
+ * CSS class names, and the localStorage guard in render-smoke.test.js learned it for
+ * a comment explaining what the code avoids. The rule generalises: prose about a
+ * thing, or a disabled copy of it, is not a use of it. */
+const live = src => src
+  .replace(/<!--[\s\S]*?-->/g, '')
+  .replace(/\/\*[\s\S]*?\*\//g, '');
+
 /* ---- Guard: nothing reaches outside the folder ----
  * At the deploy root there is no parent, so a ../ reference or a rooted path is
  * a 404 in production that works fine in the preview site. This is the failure
  * most likely to survive review. */
 for (const f of textFiles) {
-  const src = fs.readFileSync(f.abs, 'utf8');
+  const src = live(fs.readFileSync(f.abs, 'utf8'));
   for (const m of src.matchAll(/(?:src|href)="([^"]+)"/g)) {
     const url = m[1];
     if (url.startsWith('../')) problems.push(f.rel + ' references a parent path: ' + url);
@@ -95,7 +111,7 @@ for (const f of textFiles) {
 
 /* ---- Guard: local references resolve on disk ---- */
 for (const f of textFiles.filter(f => f.rel.endsWith('.html') || f.rel.endsWith('.css'))) {
-  const src = fs.readFileSync(f.abs, 'utf8');
+  const src = live(fs.readFileSync(f.abs, 'utf8'));
   const refs = [
     ...[...src.matchAll(/(?:src|href)="([^"]+)"/g)].map(m => m[1]),
     ...[...src.matchAll(/url\(([^)]+)\)/g)].map(m => m[1].replace(/['"]/g, ''))

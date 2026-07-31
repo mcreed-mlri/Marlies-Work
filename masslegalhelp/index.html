@@ -6,6 +6,30 @@
 <title>SNAP Work Rules Screening | Massachusetts Legal Help</title>
 <meta name="description" content="A short, private screening to check if you need to meet the SNAP ABAWD work rules or if you are exempt.">
 <link rel="stylesheet" href="fonts/atkinson.css">
+<!-- Headings in Domine, the host site's serif. MASSLEGALHELP-BRAND.md calls this
+     "a missing font file rather than a decision": Domine is OFL and self-hosted by
+     their Drupal theme. Drop domine-700.woff2 into fonts/ and it takes effect.
+     Until then --serif falls through to Georgia, which is the same class of face,
+     so nothing breaks and no external request is made either way. -->
+<style>
+  /* Commented out, not deleted, following the same convention this file already uses
+     for the wordmark slot below: a rule pointing at a file that is not here is a 404
+     on every page load, and scripts/publish-mlh.js refuses to publish an
+     unresolvable local reference. --serif already reads
+     'Domine', Georgia, 'Times New Roman', serif, so headings land on Georgia today
+     and switch to Domine the moment both this block and the file exist.
+
+     To enable: drop domine-700.woff2 into fonts/ and uncomment.
+
+  @font-face{
+    font-family:'Domine';
+    font-style:normal;
+    font-weight:700;
+    font-display:swap;
+    src:url('fonts/domine-700.woff2') format('woff2');
+  }
+  */
+</style>
 <!-- impeccable-disable single-font -- Atkinson Hyperlegible is the legibility choice for this audience; a display-font pairing would work against it. -->
 <style>
   /* MassLegalHelp build. Chrome tokens are theirs, read off masslegalhelp.org on
@@ -65,6 +89,9 @@
     --danger:#a12b2b;
     --danger-line:#c58484; /* 3:1, so the outline of a bare button is a real boundary */
     --radius:10px;
+    /* Headings only. Body copy stays Atkinson: it was chosen for low-vision
+       readers, which outranks matching the host font. */
+    --serif:'Domine',Georgia,'Times New Roman',serif;
   }
   *{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
@@ -111,13 +138,28 @@
   .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
   .topbar{
     display:flex;align-items:center;justify-content:space-between;gap:12px;
-    padding:12px max(16px, env(safe-area-inset-right)) 12px max(16px, env(safe-area-inset-left));
+    padding:14px max(16px, env(safe-area-inset-right)) 14px max(16px, env(safe-area-inset-left));
     background:var(--navy);color:#fff;
     /* The gold rule under the header is MassLegalHelp's strongest chrome cue.
        Decorative only, which is why 1.41:1 against white is acceptable here. */
     border-bottom:9px solid var(--gold);
   }
+  /* The dark strip above the header. On their site it holds the language
+     selector; here it holds the one link back to masslegalhelp.org, which is
+     what makes a tool served at a path read as part of the site rather than as
+     somewhere else. Add a language link beside it when a translation exists. */
+  .topstrip{
+    background:#0c1639;color:#fff;min-height:42px;display:flex;align-items:center;
+    padding:0 max(16px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left));
+  }
+  .topstrip-inner{max-width:660px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12.5px}
+  .topstrip a{color:#fff;font-weight:700;text-decoration:none}
+  .topstrip a:hover{color:#fff;text-decoration:underline;text-underline-offset:2px}
   .topbar-brand{display:flex;align-items:center;gap:12px;min-width:0}
+  /* Slot for the MassLegalHelp wordmark. The element removes itself if the file
+     is absent (see the onerror in the markup), so the text lockup stands alone
+     until the asset lands. */
+  .topbar-logo{flex:none;width:44px;height:44px;display:block;object-fit:contain}
   .topbar-title{font-size:17px;font-weight:700;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .topbar-sub{font-size:12px;opacity:.9;line-height:1.2}
   .btn-exit{
@@ -129,8 +171,20 @@
     padding:22px max(16px, env(safe-area-inset-right)) 60px max(16px, env(safe-area-inset-left));
   }
   .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0 0}
-  .q-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:28px 0 0;flex-wrap:wrap}
-  .h1{font-size:clamp(24px,6vw,29px);line-height:1.2;margin:8px 0 16px;letter-spacing:-.01em}
+  /* Back / Next stay reachable without scrolling past four questions. Sticky
+     rather than fixed, so it sits in the flow at the end of a short page and
+     never covers the last option on a long one. */
+  .q-nav{
+    position:sticky;bottom:0;z-index:5;
+    display:flex;align-items:center;gap:12px;
+    margin:24px calc(-1 * max(16px, env(safe-area-inset-left))) 0 calc(-1 * max(16px, env(safe-area-inset-right)));
+    padding:12px max(16px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+    background:var(--bg);border-top:1px solid var(--panel);
+    box-shadow:0 -6px 18px rgba(16,32,56,.07);
+  }
+  .q-nav > [data-action="back"]{flex:0 0 34%}
+  .q-nav > [data-action="next"]{flex:1}
+  .h1{font-family:var(--serif);font-weight:700;font-size:clamp(24px,6vw,29px);line-height:1.3;margin:8px 0 16px}
 
   /* ---- MassLegalHelp page-header pattern ----------------------------------
      Their article pages open with the title in a pale blue gradient panel that
@@ -143,8 +197,9 @@
      pattern for every screener MLRI puts on the site, not a one-off. */
   .band{
     background:linear-gradient(var(--band-top),var(--band-bottom));
-    padding:30px 26px 22px;
-    margin:0 0 22px;
+    /* Their article pages pad this roughly 42/51/20 at their column width. */
+    padding:38px 30px 20px;
+    margin:0 0 24px;
     /* The offset block, as a hard-edged shadow rather than a positioned
        pseudo-element. Theirs is an absolutely positioned ::after inset 8px from
        the top and left and 8px past the bottom and right; a shadow offset 8px
@@ -173,15 +228,38 @@
   .byline-text b{font-weight:700}
   /* Their short heavy rule: 146px by 5px in a darker navy than the body text. */
   .byline-rule{width:146px;height:5px;background:var(--rule-ink);margin:0 0 22px}
-  .h2{font-size:clamp(21px,5.5vw,25px);line-height:1.25;margin:6px 0 0;letter-spacing:-.01em}
-  .h-result{font-size:clamp(21px,5.5vw,26px);line-height:1.25;margin:6px 0 0}
+  .h2{font-family:var(--serif);font-weight:700;font-size:clamp(21px,5.5vw,25px);line-height:1.3;margin:6px 0 0}
+  .h-result{font-family:var(--serif);font-size:clamp(21px,5.5vw,24px);line-height:1.35;margin:6px 0 0}
+  /* One question, in its own card. The card goes pale once the question has an
+     answer, so what is left to do is what still reads as white. */
+  .qcard{background:#fff;border:1.5px solid var(--panel);border-radius:12px;padding:18px}
+  .qcard-done{background:var(--band-bottom);border-color:var(--sel)}
+  .qcard h2{font-family:var(--serif);font-weight:700}
+  /* Options. Yes/No sits in one row, so a four-question section is about a
+     screen and a half on a phone instead of three. Anything longer than Yes/No
+     stays stacked, because two columns of sentence fragments is unreadable. */
+  .opt-group{display:flex;flex-direction:column;gap:11px;margin:18px 0 0}
+  .opt-group--yn{flex-direction:row}
+  .opt--yn{flex:1;justify-content:center;min-height:56px}
+  .opt--yn > span:last-child{flex:0 1 auto !important;text-align:center !important}
+  /* The age question, as two boxed choices rather than bare radios, so it has
+     the same hit target as every option that follows it. */
+  .age-row{display:flex;gap:10px}
+  .age-opt{
+    flex:1;display:flex;align-items:center;justify-content:center;gap:9px;
+    min-height:48px;font-size:16px;font-weight:700;cursor:pointer;
+    border:2px solid var(--line);border-radius:var(--radius);padding:0 12px;
+  }
+  .age-opt:hover{border-color:var(--line-hover);background:var(--field)}
+  .age-opt input{width:20px;height:20px;accent-color:var(--accent)}
   input,textarea,select{font-size:16px;max-width:100%}
   @media (max-width:640px){
-    .topbar-sub{display:none}
+    /* The tagline stays. It is half of the masthead lockup, and hiding it left a
+       phone with three words of navy bar and no sign whose site this is. */
+    .topbar-sub{font-size:11.5px}
     #stage{padding:16px max(14px, env(safe-area-inset-right)) 48px max(14px, env(safe-area-inset-left))}
     .form-row{grid-template-columns:1fr}
     .opt{font-size:16px;padding:15px 14px}
-    .q-nav > button{flex:1 1 auto;min-width:min(100%,140px);text-align:center}
     #start-btn{width:100%}
   }
   @media (prefers-reduced-motion:reduce){
@@ -258,9 +336,19 @@
 </head>
 <body>
 
-<!-- Top bar -->
+<!-- Masthead: dark strip, navy bar with the lockup, gold rule. Their three
+     layers, in their order, so the page opens as MassLegalHelp rather than as a
+     tool wearing one navy band. -->
+<div class="no-print topstrip">
+  <div class="topstrip-inner">
+    <a href="https://www.masslegalhelp.org/">masslegalhelp.org</a>
+  </div>
+</div>
 <div class="no-print topbar">
   <div class="topbar-brand">
+    <!-- Wordmark slot. Uncomment once icons/mlh-logo.svg exists; left out rather
+         than left broken, because a missing src is a 404 on every page load.
+    <img class="topbar-logo" src="icons/mlh-logo.svg" alt=""> -->
     <div style="min-width:0">
       <div class="topbar-title">Mass Legal Help</div>
       <div class="topbar-sub">Massachusetts Legal Information</div>
@@ -281,7 +369,7 @@
      still unknown. They are deliberately absent rather than guessed, because a
      Terms link that 404s on a public benefits page is worse than none. Add them
      before launch; see masslegalhelp/README.md. -->
-<footer class="no-print" style="border-top:4px solid var(--yellow);background:var(--navy);color:#fff;margin-top:40px">
+<footer class="no-print" style="border-top:9px solid var(--gold);background:var(--ink);color:#fff;margin-top:40px">
   <div style="max-width:660px;margin:0 auto;padding:22px max(16px, env(safe-area-inset-right)) 18px max(16px, env(safe-area-inset-left))">
     <div style="font-size:17px;font-weight:700;line-height:1.1">Mass Legal Help</div>
     <div style="font-size:12px;opacity:.9;margin-top:3px">Massachusetts Legal Information</div>
@@ -296,8 +384,12 @@
     </nav>
   </div>
   <div style="background:#0c1639">
-    <div style="max-width:660px;margin:0 auto;padding:12px max(16px, env(safe-area-inset-right)) 12px max(16px, env(safe-area-inset-left));font-size:12.5px">
-      Written by the Massachusetts Law Reform Institute.
+    <!-- Their footer strip carries Terms of Use and Privacy Policy. Both are
+         still missing URLs (see masslegalhelp/README.md), so the strip ships
+         with the credit lines only and the links drop in beside them. -->
+    <div style="max-width:660px;margin:0 auto;padding:14px max(16px, env(safe-area-inset-right)) 14px max(16px, env(safe-area-inset-left));font-size:12.5px;line-height:1.7">
+      Written by the Massachusetts Law Reform Institute. Funded by the Massachusetts Legal Assistance Corporation.
+      <div style="opacity:.85;margin-top:4px">©2026 Massachusetts Legal Assistance Corporation</div>
     </div>
   </div>
 </footer>
@@ -322,8 +414,8 @@ const state = { view:'intro', step:0, gc:false, helpOpen:{}, answers:{}, animate
  * sessionStorage, not localStorage. Answers survive a refresh or a stray
  * navigation in this tab and are erased the moment the tab closes.
  *
- * The preview builds use localStorage and keep answers for a day, so someone
- * can come back tomorrow. This build deliberately does not. The questions
+ * Until court-forms/ was archived, the preview builds used localStorage and kept
+ * answers for a day so someone could come back tomorrow. This build never did. The questions
  * cover pregnancy, disability, substance use treatment, and domestic
  * violence, PRODUCT.md says to assume a shared or monitored phone, and a day
  * of recoverable answers on a borrowed phone is a worse trade than losing
@@ -637,9 +729,9 @@ function renderIntro(){
     <fieldset style="border:1px solid var(--panel);border-radius:var(--radius);padding:15px 17px;margin:0 0 22px;background:#fff">
       <legend style="display:block;float:left;width:100%;font-size:15px;font-weight:700;padding:0;margin:0 0 13px;color:var(--ink)">Before you start</legend>
       <p id="age-q" style="clear:both;font-size:15px;line-height:1.55;color:var(--prose);margin:0 0 12px">Are you 18 or older and under 65?</p>
-      <div role="radiogroup" aria-label="Are you 18 or older and under 65?" style="display:flex;flex-direction:column;gap:6px">
-        <label style="display:flex;gap:10px;align-items:center;min-height:44px;font-size:15px;cursor:pointer"><input type="radio" name="ageRange" value="yes" ${state.answers.ageRange === 'yes' ? 'checked' : ''} style="width:20px;height:20px;accent-color:var(--accent)"> Yes</label>
-        <label style="display:flex;gap:10px;align-items:center;min-height:44px;font-size:15px;cursor:pointer"><input type="radio" name="ageRange" value="no" ${state.answers.ageRange === 'no' ? 'checked' : ''} style="width:20px;height:20px;accent-color:var(--accent)"> No</label>
+      <div role="radiogroup" aria-label="Are you 18 or older and under 65?" class="age-row">
+        <label class="age-opt"><input type="radio" name="ageRange" value="yes" ${state.answers.ageRange === 'yes' ? 'checked' : ''}> Yes</label>
+        <label class="age-opt"><input type="radio" name="ageRange" value="no" ${state.answers.ageRange === 'no' ? 'checked' : ''}> No</label>
       </div>
     </fieldset>
 
@@ -702,12 +794,12 @@ function renderOptions(q){
     const role = isRadio ? 'radio' : 'checkbox';
     const markClass = o.shape === 'square' ? 'opt-mark square' : 'opt-mark';
     const tabindex = isRadio ? ` tabindex="${i === activeIdx ? '0' : '-1'}"` : '';
-    return `<button type="button" class="opt${o.selected ? ' opt-selected' : ''}" data-q-id="${q.id}" ${dataset} role="${role}" aria-checked="${o.selected}"${tabindex}>
+    return `<button type="button" class="opt${q.type === 'yn' ? ' opt--yn' : ''}${o.selected ? ' opt-selected' : ''}" data-q-id="${q.id}" ${dataset} role="${role}" aria-checked="${o.selected}"${tabindex}>
       <span aria-hidden="true" class="${markClass}">${o.mark}</span>
       <span style="flex:1;text-align:left">${esc(o.label)}</span>
     </button>`;
   }).join('');
-  return `<div role="${groupRole}" aria-label="${esc(q.text)}" style="display:flex;flex-direction:column;gap:11px;margin:20px 0 0">${buttons}</div>`;
+  return `<div role="${groupRole}" aria-label="${esc(q.text)}" class="opt-group${q.type === 'yn' ? ' opt-group--yn' : ''}">${buttons}</div>`;
 }
 
 // One question, in its own bordered block (the good-cause question stands alone).
@@ -720,8 +812,10 @@ function renderQBlock(q){
   const head = isGC
     ? `<h1 class="h2">${esc(q.text)}</h1>`
     : `<h2 style="font-size:clamp(18px,4.6vw,21px);line-height:1.3;margin:0;letter-spacing:-.01em">${esc(q.text)}</h2>`;
-  const wrap = isGC ? '' : 'background:#fff;border:1px solid var(--panel);border-radius:var(--radius);padding:18px';
-  return `<div style="${wrap}">
+  const a = state.answers[q.id];
+  const answered = a !== undefined && !(Array.isArray(a) && a.length === 0);
+  const cls = isGC ? '' : (answered ? 'qcard qcard-done' : 'qcard');
+  return `<div class="${cls}">
     ${head}
     ${renderQList(q)}
     ${renderHelp(q)}
@@ -744,10 +838,10 @@ function renderPage(){
      nagging by the third one. Someone who reaches group 2 has already answered
      optional questions and knows how this works. */
   const optionalNote = state.step === 0
-    ? `<p style="font-size:15.5px;line-height:1.55;color:var(--prose);margin:8px 0 0">Answer any that apply to you. Every question is optional.</p>`
+    ? `<p style="font-size:15.5px;line-height:1.55;color:var(--muted);margin:8px 0 0">Answer any that apply to you. Every question is optional.</p>`
     : '';
 
-  const header = state.gc ? '' : `<div style="margin:0 0 18px">
+  const header = state.gc ? '' : `<div style="margin:0 0 20px">
     <h1 class="h2">${esc(curGroup().title)}</h1>
     ${optionalNote}
   </div>`;
@@ -757,13 +851,13 @@ function renderPage(){
   return `<div class="${animClass()}">
     ${header}
     <div style="display:flex;flex-direction:column;gap:14px">${blocks}</div>
+    <div style="text-align:center;margin-top:16px">
+      ${skipWarn}
+      <button type="button" data-action="skip-end" style="font-family:inherit;font-size:14.5px;font-weight:700;color:var(--muted);background:none;border:none;padding:6px 8px;min-height:44px;cursor:pointer;text-decoration:underline;text-underline-offset:3px">Skip to results</button>
+    </div>
     <div class="q-nav">
       <button type="button" data-action="back" style="${ghostBtn}">← Back</button>
       <button type="button" data-action="next" style="${nextBtn}">${nextLabel}</button>
-    </div>
-    <div style="text-align:center;margin-top:14px">
-      ${skipWarn}
-      <button type="button" data-action="skip-end" style="font-family:inherit;font-size:14.5px;font-weight:700;color:var(--muted);background:none;border:none;padding:6px 8px;min-height:44px;cursor:pointer;text-decoration:underline;text-underline-offset:3px">Skip to results</button>
     </div>
   </div>`;
 }
@@ -784,7 +878,10 @@ function renderResults(){
     uploadPrefix: `Upload a <strong>written, signed statement</strong> (handwritten note is fine) onto`
   });
 
-  const resultsHead = `<h1 class="h1" style="text-align:center;margin:0 0 16px">${esc(C.resultsHeadTitle)}</h1>
+  /* The results title sits in the same title band as the intro, because it is
+     the page title of the screen a reader lands on, and centring it in bare
+     white made the results read as a different page than the one they started. */
+  const resultsHead = `<div class="band"><h1 class="h1">${esc(C.resultsHeadTitle)}</h1></div>
     <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 16px">${esc(C.resultsHeadLead)}</p>`;
 
   let card = '';
@@ -797,16 +894,17 @@ function renderResults(){
         <p style="font-size:16px;line-height:1.6;color:var(--prose);margin:0">${esc(C.ageInfoBody)}</p>
       </div></div>`;
   } else if(rt === 'exempt'){
-    const items = rs.map(r => `<li style="display:flex;align-items:flex-start;gap:11px;font-size:16px;line-height:1.5;color:var(--ink)">
+    const items = rs.map(r => `<li style="display:flex;align-items:flex-start;gap:11px;font-size:16px;line-height:1.5;color:var(--ink);padding:12px 0;border-bottom:1px solid var(--field)">
       <span aria-hidden="true" style="width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex:none;margin-top:1px">✓</span>
       <span>${esc(r)}</span></li>`).join('');
     card = `<div style="border-radius:var(--radius);overflow:hidden;border:1px solid var(--ok-line)">
-      <div style="background:var(--ok-fill);padding:20px 22px;border-bottom:1px solid var(--ok-line)">
+      <div style="background:var(--ok-fill);padding:20px 22px;border-bottom:1px solid var(--ok-line);display:flex;gap:12px;align-items:flex-start">
+        <span aria-hidden="true" style="flex:none;width:30px;height:30px;border-radius:50%;background:var(--ok-strong);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700">✓</span>
         <h2 class="h-result" style="color:var(--ok-ink);font-weight:400">${exemptHeadingHtml()}</h2>
       </div>
       <div style="padding:20px 22px;background:#fff">
         ${C.exemptReasonsIntro ? `<p style="font-size:16px;line-height:1.6;color:var(--prose);margin:0 0 14px">${esc(C.exemptReasonsIntro)}</p>` : ''}
-        <ul role="list" style="list-style:none;padding:0;margin:0 0 14px;display:flex;flex-direction:column;gap:9px">${items}</ul>
+        <ul role="list" style="list-style:none;padding:0;margin:0 0 16px">${items}</ul>
         ${exemptProofNotes(rs).map(n => `<p style="font-size:15.5px;line-height:1.6;color:var(--prose);margin:0 0 14px">${esc(n)}</p>`).join('')}
         ${learnMore}
       </div></div>`;
@@ -889,12 +987,17 @@ function renderResults(){
       <label for="f-explain-${i}" style="display:block;font-size:14.5px;font-weight:700;margin:0 0 7px">${esc(p)}</label>
       <textarea id="f-explain-${i}" data-explain-prompt="${esc(p)}" rows="4" placeholder="Type here…" style="width:100%;font-family:inherit;font-size:16px;line-height:1.5;padding:11px 13px;border:1.5px solid var(--stroke);border-radius:calc(var(--radius) - 3px);resize:vertical"></textarea>
     </div>`).join('');
-    form = `<div style="margin:26px 0 0;padding:22px;background:#fff;border:1px solid var(--panel);border-radius:var(--radius)">
-      <h3 style="font-size:19px;margin:0 0 10px">${esc(formTitle)}</h3>
-      <div class="hint-tip-wrap" style="margin:0 0 10px">
+    /* The statement form is the working part of this screen, so it gets a
+       header band of its own rather than opening as one more paragraph. */
+    form = `<div style="margin:26px 0 0;background:#fff;border:1.5px solid var(--panel);border-radius:12px;overflow:hidden">
+      <div style="background:var(--field);border-bottom:1px solid var(--panel);padding:16px 20px">
+      <h3 style="font-family:var(--serif);font-size:19px;line-height:1.3;margin:0 0 8px">${esc(formTitle)}</h3>
+      <div class="hint-tip-wrap" style="margin:0">
         <p style="font-size:15px;line-height:1.55;color:var(--prose);margin:0">${esc(formLead)}</p>
         ${hintTip('why-info', C.whyInfoLabel, whyInfo, true)}
       </div>
+      </div>
+      <div style="padding:20px">
       ${privacyNote}
       ${printLead}
       <p style="font-size:15px;font-weight:700;margin:0 0 12px">${esc(C.formExplainHeading)}</p>
@@ -932,6 +1035,7 @@ function renderResults(){
           <span id="email-copy-status" role="status" aria-live="polite" style="font-size:15px;font-weight:700;color:var(--ok-strong)"></span>
         </div>
       </div>
+      </div>
     </div>`;
   }
 
@@ -940,8 +1044,8 @@ function renderResults(){
     const stepsLead = rt === 'exempt'
       ? `Fill out and send in <a href="${LINKS.exemptionForm}" target="_blank" rel="noopener">DTA\u2019s exemption form</a> or explain the information to DTA in a written, signed statement (handwritten note is fine):`
       : C.otherWaysGoodCauseLead;
-    nextSteps = `<div style="margin:26px 0 0;padding:22px;background:var(--soft);border-radius:var(--radius)">
-      <h3 style="font-size:18px;margin:0 0 10px">${esc(C.otherWaysHeading)}</h3>
+    nextSteps = `<div style="margin:26px 0 0;padding:22px;background:var(--soft);border-radius:12px">
+      <h3 style="font-family:var(--serif);font-size:18px;line-height:1.3;margin:0 0 10px">${esc(C.otherWaysHeading)}</h3>
       <p style="font-size:15px;line-height:1.6;color:var(--prose);margin:0 0 12px">${stepsLead}</p>
       ${dtaContacts}
     </div>`;
