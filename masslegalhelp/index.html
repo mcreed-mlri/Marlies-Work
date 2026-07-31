@@ -148,14 +148,16 @@
      selector; here it holds the one link back to masslegalhelp.org, which is
      what makes a tool served at a path read as part of the site rather than as
      somewhere else. Add a language link beside it when a translation exists. */
-  .topstrip{
-    background:#0c1639;color:#fff;min-height:42px;display:flex;align-items:center;
-    padding:0 max(16px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left));
+  /* The wordmark is the link home. Undecorated at rest, because a logo that
+     announces itself as a link with an underline looks broken; the pointer and the
+     hover underline carry it, and the aria-label names the destination for anyone
+     not seeing either. Focus is handled by the .topbar :focus-visible rule, which
+     switches the ring to gold so it stays visible on navy. */
+  a.topbar-brand{
+    display:flex;align-items:center;gap:12px;min-width:0;
+    color:inherit;text-decoration:none;
   }
-  .topstrip-inner{max-width:660px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12.5px}
-  .topstrip a{color:#fff;font-weight:700;text-decoration:none}
-  .topstrip a:hover{color:#fff;text-decoration:underline;text-underline-offset:2px}
-  .topbar-brand{display:flex;align-items:center;gap:12px;min-width:0}
+  a.topbar-brand:hover .topbar-title{text-decoration:underline;text-underline-offset:3px}
   /* Slot for the MassLegalHelp wordmark. The element removes itself if the file
      is absent (see the onerror in the markup), so the text lockup stands alone
      until the asset lands. */
@@ -336,16 +338,19 @@
 </head>
 <body>
 
-<!-- Masthead: dark strip, navy bar with the lockup, gold rule. Their three
-     layers, in their order, so the page opens as MassLegalHelp rather than as a
-     tool wearing one navy band. -->
-<div class="no-print topstrip">
-  <div class="topstrip-inner">
-    <a href="https://www.masslegalhelp.org/">masslegalhelp.org</a>
-  </div>
-</div>
+<!-- Masthead: navy bar with the lockup, gold rule.
+     Their site puts a third layer above this, a dark strip holding the language
+     selector. Ours had one briefly, filled with a bare "masslegalhelp.org" link,
+     and it read as a stray label rather than a control: no icon, no verb, and
+     left-aligned to the 660px content column so on a wide screen it floated well
+     inside the page edge with nothing to anchor it.
+     Removed rather than decorated. The strip exists on their site to hold a
+     control we do not have, and the job it was doing here, a way back to the site,
+     is done better by the convention every site already uses: the wordmark links
+     home. That costs a little fidelity to their masthead and buys one less thing
+     competing with the question. -->
 <div class="no-print topbar">
-  <div class="topbar-brand">
+  <a class="topbar-brand" href="https://www.masslegalhelp.org/" aria-label="Mass Legal Help home">
     <!-- Wordmark slot. Uncomment once icons/mlh-logo.svg exists; left out rather
          than left broken, because a missing src is a 404 on every page load.
     <img class="topbar-logo" src="icons/mlh-logo.svg" alt=""> -->
@@ -353,7 +358,7 @@
       <div class="topbar-title">Mass Legal Help</div>
       <div class="topbar-sub">Massachusetts Legal Information</div>
     </div>
-  </div>
+  </a>
   <button type="button" class="btn-exit" data-action="quick-exit" title="Leave this page now">Quick exit</button>
 </div>
 

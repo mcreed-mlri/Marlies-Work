@@ -683,10 +683,6 @@ and is not, which is not a developer's call to make.
 
 > SNAP Work Rules Screening | Massachusetts Legal Help
 
-**`chrome.topstrip`**  **[written by the developer, not you]**
-
-> masslegalhelp.org
-
 **`chrome.wordmark`**  **[written by the developer, not you]**
 
 > Mass Legal Help

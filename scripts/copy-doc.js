@@ -86,8 +86,7 @@ const INLINE = [
   { id: 'chrome.wordmark', re: /class="topbar-title">([^<]+)</ },
   { id: 'chrome.tagline', re: /class="topbar-sub">([^<]+)</ },
   { id: 'chrome.quickExit', re: /data-action="quick-exit"[^>]*>([^<]+)</ },
-  { id: 'footer.disclaimer', re: /<p style="font-size:13\.5px[^>]*>\s*([\s\S]*?)\s*<\/p>/ },
-  { id: 'chrome.topstrip', re: /class="topstrip-inner">\s*<a [^>]*>([^<]+)</ }
+  { id: 'footer.disclaimer', re: /<p style="font-size:13\.5px[^>]*>\s*([\s\S]*?)\s*<\/p>/ }
 ];
 
 /* Copy that came from the developer rather than the author. Flagged separately
@@ -95,7 +94,7 @@ const INLINE = [
  * these were written to fill a gap, not handed over for review. */
 const DEVELOPER_WRITTEN = new Set([
   'chrome.tabTitle', 'chrome.wordmark', 'chrome.tagline', 'chrome.quickExit',
-  'chrome.topstrip', 'footer.disclaimer'
+  'footer.disclaimer'
 ]);
 
 const html = fs.readFileSync(HTML, 'utf8');
@@ -426,8 +425,8 @@ w('and they are on the page right now, so they need your review the same as anyt
 w('The disclaimer is the one to look at hardest: it makes a claim about what this tool is');
 w('and is not, which is not a developer\'s call to make.');
 blank();
-['chrome.tabTitle', 'chrome.topstrip', 'chrome.wordmark', 'chrome.tagline',
-  'chrome.quickExit', 'footer.disclaimer'].forEach(id => item(id, inline[id]));
+['chrome.tabTitle', 'chrome.wordmark', 'chrome.tagline', 'chrome.quickExit',
+  'footer.disclaimer'].forEach(id => item(id, inline[id]));
 
 w('The footer also links out to three places. Wording is ours, destinations are real pages');
 w('on MassLegalHelp:');
