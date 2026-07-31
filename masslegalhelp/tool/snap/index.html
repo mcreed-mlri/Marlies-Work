@@ -92,6 +92,7 @@
     background:var(--bg);
     min-height:100vh;
     overflow-x:hidden;
+    display:flex;flex-direction:column;
   }
   a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
   a:hover{color:var(--accent-dark)}
@@ -149,28 +150,32 @@
      not seeing either. Focus is handled by the .topbar :focus-visible rule, which
      switches the ring to gold so it stays visible on navy. */
   a.topbar-brand{
-    display:flex;align-items:center;gap:12px;min-width:0;
+    display:flex;align-items:center;flex:1 1 auto;min-width:0;
     color:inherit;text-decoration:none;
   }
-  a.topbar-brand:hover .topbar-title{text-decoration:underline;text-underline-offset:3px}
-  /* Slot for the MassLegalHelp wordmark. The element removes itself if the file
-     is absent (see the onerror in the markup), so the text lockup stands alone
-     until the asset lands. */
-  .topbar-logo{flex:none;width:44px;height:44px;display:block;object-fit:contain}
+  a.topbar-brand:hover .topbar-logo{opacity:.92}
+  .topbar-logo{display:block;width:272px;max-width:calc(100vw - 150px);height:auto}
   .topbar-title{
     font-family:"Libre Baskerville",Georgia,serif;font-size:30px;font-weight:700;
-    letter-spacing:-.01em;line-height:1;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    letter-spacing:-.01em;line-height:1.12;color:#fff;white-space:nowrap;padding-bottom:2px;
     text-rendering:optimizeLegibility;font-synthesis:none;
   }
-  .topbar-sub{font-size:14px;font-weight:700;opacity:1;line-height:1.12;color:#fff}
+  .topbar-sub{font-size:14px;font-weight:600;opacity:1;line-height:1.14;color:#fff;margin-top:2px}
   .btn-exit{
     flex:none;font-size:14px;font-weight:700;color:var(--navy);background:#fff;border:none;
     border-radius:6px;padding:10px 16px;cursor:pointer;min-height:44px;
   }
   .topbar-actions{flex:none;display:flex;align-items:center;gap:10px}
+  .btn-review{
+    display:none;align-items:center;justify-content:center;min-height:44px;
+    padding:9px 14px;border:2px solid rgba(255,255,255,.72);border-radius:6px;
+    color:#fff;background:transparent;font-size:14px;font-weight:700;text-decoration:none;
+  }
+  .btn-review:hover{background:rgba(255,255,255,.12);color:#fff}
   #stage{
     max-width:760px;margin:0 auto;
     padding:24px max(16px, env(safe-area-inset-right)) 64px max(16px, env(safe-area-inset-left));
+    width:100%;flex:1;
   }
   .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0 0}
   /* Back / Next stay reachable without scrolling past four questions. Sticky
@@ -186,7 +191,7 @@
   }
   .q-nav > [data-action="back"]{flex:0 0 34%}
   .q-nav > [data-action="next"]{flex:1}
-  .h1{font-weight:700;font-size:clamp(24px,6vw,29px);line-height:1.3;letter-spacing:-.01em;margin:8px 0 16px}
+  .h1{font-weight:600;font-size:clamp(23px,5.2vw,28px);line-height:1.38;letter-spacing:-.005em;margin:8px 0 16px}
 
   /* ---- MassLegalHelp page-header pattern ----------------------------------
      Their article pages open with the title in a pale blue gradient panel that
@@ -239,9 +244,10 @@
        a narrow screen the way a negatively-inset absolute box can. */
     box-shadow:8px 8px 0 0 var(--band-edge);
   }
-  .band .h1{margin:0}
+  .band .h1{margin:0;max-width:26em}
   @media (max-width:640px){
     .band{padding:22px 18px 18px;margin-right:5px;box-shadow:5px 5px 0 0 var(--band-edge)}
+    .band .h1{font-size:clamp(22px,7vw,25px);line-height:1.34}
   }
 
   /* Their short heavy rule: 146px by 5px in a darker navy than the body text. It
@@ -289,13 +295,19 @@
   .age-opt:hover{border-color:var(--line-hover);background:var(--field)}
   .age-opt input{width:20px;height:20px;accent-color:var(--accent)}
   input,textarea,select{font-size:16px;max-width:100%}
+  .site-footer{border-top:9px solid var(--gold);background:var(--ink);color:#fff;margin-top:40px}
+  .site-footer-inner{
+    max-width:760px;margin:0 auto;padding:28px max(16px, env(safe-area-inset-right)) 30px max(16px, env(safe-area-inset-left));
+    display:flex;align-items:center;justify-content:space-between;gap:24px;
+  }
+  .footer-logo{display:block;width:210px;max-width:100%;height:auto}
+  .footer-meta{text-align:right;color:rgba(255,255,255,.86)}
+  .footer-kicker{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+  .footer-note{font-size:13px;line-height:1.45;margin-top:6px}
   @media (max-width:640px){
-    /* The tagline stays. It is half of the masthead lockup, and hiding it left a
-       phone with three words of navy bar and no sign whose site this is. */
     .topbar-inner{min-height:62px;padding:9px max(12px, env(safe-area-inset-right)) 9px max(12px, env(safe-area-inset-left));gap:10px}
-    .topbar-title{font-size:21px}
-    .topbar-sub{font-size:12px}
     .btn-exit{font-size:13px;padding:9px 12px}
+    .btn-review{font-size:13px;padding:8px 10px}
     #stage{padding:16px max(14px, env(safe-area-inset-right)) 48px max(14px, env(safe-area-inset-left))}
     .form-row{grid-template-columns:1fr}
     .opt{font-size:16px;padding:15px 14px}
@@ -303,11 +315,18 @@
     .qcard{padding:18px;box-shadow:5px 5px 0 0 var(--band-edge);margin-right:5px;margin-bottom:5px}
     .q-nav{gap:10px;margin-left:0;margin-right:0;border:1px solid var(--panel);border-radius:12px}
     .q-nav > [data-action="back"]{flex:0 0 36%}
+    .site-footer-inner{padding:24px max(14px, env(safe-area-inset-right)) 26px max(14px, env(safe-area-inset-left));align-items:flex-start}
+    .footer-logo{width:185px}
+    .footer-meta{text-align:left}
     #start-btn{width:100%}
   }
+  @media (max-width:520px){
+    .site-footer-inner{flex-direction:column;gap:18px}
+  }
   @media (max-width:360px){
-    .topbar-title{font-size:20px}
-    .topbar-sub{font-size:11.5px}
+    .topbar-logo{max-width:calc(100vw - 142px)}
+    .topbar-actions{flex-direction:column;align-items:stretch;gap:6px}
+    .btn-review,.btn-exit{min-height:44px}
     .btn-exit{padding:8px 10px}
     .q-nav{flex-direction:column}
     .q-nav > [data-action="back"],.q-nav > [data-action="next"]{width:100%;flex:auto}
@@ -419,15 +438,10 @@
 <header class="no-print topbar">
   <div class="topbar-inner">
     <a class="topbar-brand" href="https://www.masslegalhelp.org/" aria-label="Mass Legal Help home">
-      <!-- Wordmark slot. Uncomment once icons/mlh-logo.svg exists; left out rather
-           than left broken, because a missing src is a 404 on every page load.
-      <img class="topbar-logo" src="icons/mlh-logo.svg" alt=""> -->
-      <div style="min-width:0">
-        <div class="topbar-title">Mass Legal Help</div>
-        <div class="topbar-sub">Massachusetts Legal Information</div>
-      </div>
+      <img class="topbar-logo" src="../assets/mlh-logo.svg" alt="">
     </a>
     <div class="topbar-actions">
+      <span id="review-home-slot"></span>
       <button type="button" class="btn-exit" data-action="quick-exit">Quick exit</button>
     </div>
   </div>
@@ -493,10 +507,15 @@
      all still worth telling a reader: this is information and not advice, it sends
      nothing to DTA, and it does not change their case. Whatever replaces it has to
      carry them. Tracked in masslegalhelp/README.md under "Before this goes live". -->
-<footer class="no-print" style="border-top:9px solid var(--gold);background:var(--ink);color:#fff;margin-top:40px">
-  <div style="max-width:660px;margin:0 auto;padding:22px max(16px, env(safe-area-inset-right)) 24px max(16px, env(safe-area-inset-left))">
-    <div style="font-size:17px;font-weight:700;line-height:1.1">Mass Legal Help</div>
-    <div style="font-size:12px;opacity:.9;margin-top:3px">Massachusetts Legal Information</div>
+<footer class="site-footer no-print">
+  <div class="site-footer-inner">
+    <a href="https://www.masslegalhelp.org/" aria-label="Mass Legal Help home">
+      <img class="footer-logo" src="../assets/mlh-logo.svg" alt="">
+    </a>
+    <div class="footer-meta">
+      <div class="footer-kicker">Interactive tools</div>
+      <div class="footer-note">A testing preview from Mass Legal Help.</div>
+    </div>
   </div>
 </footer>
 
@@ -1695,18 +1714,29 @@ function applySampleFromURL(){
   return true;
 }
 
+function initReviewHome(){
+  if(!samplesAllowed()) return;
+  const slot = document.getElementById('review-home-slot');
+  if(!slot) return;
+  const home = document.createElement('a');
+  home.className = 'btn-review';
+  home.href = ['..', '..', '..', 'screener', ''].join('/');
+  home.textContent = 'Screener home';
+  slot.appendChild(home);
+  home.style.display = 'inline-flex';
+}
+
 function sampleBanner(){
   return `<div class="no-print" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:var(--radius);padding:14px 18px;margin:0 0 18px">
     <span style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--warn-ink)">Sample result</span>
     <span style="font-size:15px;line-height:1.5;color:var(--prose);flex:1;min-width:200px">An example of one outcome. No questions were answered, and nothing is saved.</span>
-    <!-- No link back to the sample index. It would be ../screener/, a parent path,
-         which does not exist at the deploy root, and the publish guard is right to
-         reject one even on a code path that should never run in production. Browser
-         Back does the job for a reviewer who arrived from that page. -->
+    <!-- The development-only header action handles navigation back to the internal
+         screener home. -->
     <span style="font-size:14.5px"><a href="./" style="font-weight:700">Try it for real →</a></span>
   </div>`;
 }
 
+initReviewHome();
 if(!applySampleFromURL()){ loadPersisted(); }
 initHintTips();
 state.animate = true;

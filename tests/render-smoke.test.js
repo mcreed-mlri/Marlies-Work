@@ -22,9 +22,10 @@ const vm = require('node:vm');
 
 const MLH = path.join(__dirname, '..', 'masslegalhelp');
 const LOGIC_FILE = 'snap-screening-logic.js';
+const SHIP = path.join(MLH, 'tool', 'snap', 'index.html');
 
 /* One build. court-forms/ was archived on 2026-07-30 along with the two earlier
- * designs, so masslegalhelp/index.html is both the page reviewers look at and the
+ * designs, so masslegalhelp/tool/snap/index.html is both the page reviewers look at and the
  * page the public gets. That removes a whole class of risk rather than testing for
  * it: there is no second copy to drift, and no lookalike to approve by mistake.
  *
@@ -35,7 +36,7 @@ const LOGIC_FILE = 'snap-screening-logic.js';
  * PAGES stays a list rather than collapsing to one path, because the loops below
  * read naturally over it and the next screener MLRI adds will slot straight in. */
 const PAGES = [
-  { label: 'masslegalhelp/index.html', dir: MLH, file: 'index.html' }
+  { label: 'masslegalhelp/tool/snap/index.html', dir: path.join(MLH, 'tool', 'snap'), file: 'index.html' }
 ];
 
 /* Result screens to drive, as answer sets. Keyed so a failure names the screen. */
@@ -171,7 +172,7 @@ function buildContext() {
       removeItem: (k) => { delete store[k]; }
     },
     matchMedia: () => ({ matches: false, addEventListener() {}, removeEventListener() {}, addListener() {} }),
-    location: { href: 'https://example.test/masslegalhelp/', search: '', pathname: '/masslegalhelp/' },
+    location: { href: 'https://example.test/masslegalhelp/tool/snap/', search: '', pathname: '/masslegalhelp/tool/snap/' },
     requestAnimationFrame: (fn) => { fn(); return 1; },
     cancelAnimationFrame() {},
     setTimeout: () => 0,
@@ -287,7 +288,7 @@ describe('the optional-questions note appears above group 1 only', () => {
  * well-meaning change back to localStorage would restore the resume-tomorrow
  * behaviour and silently reintroduce the exposure, so it is asserted. */
 describe('the shipping build stores answers per tab only', () => {
-  const src = () => inlineScript(fs.readFileSync(path.join(MLH, 'index.html'), 'utf8'), 'masslegalhelp/index.html');
+  const src = () => inlineScript(fs.readFileSync(SHIP, 'utf8'), 'masslegalhelp/tool/snap/index.html');
 
   it('uses sessionStorage and never localStorage', () => {
     /* Comments stripped first. The block above this storage code explains why it
@@ -300,7 +301,7 @@ describe('the shipping build stores answers per tab only', () => {
 
     assert.doesNotMatch(
       code, /\blocalStorage\b/,
-      'masslegalhelp/index.html touches localStorage, which outlives the tab. Answers ' +
+      'masslegalhelp/tool/snap/index.html touches localStorage, which outlives the tab. Answers ' +
       'about pregnancy and domestic violence would stay recoverable on a shared phone.'
     );
     assert.match(code, /sessionStorage\.setItem\(STORAGE_KEY/, 'answers are not being stored at all');
@@ -317,8 +318,8 @@ describe('the shipping build stores answers per tab only', () => {
  * away correctly while leaving the answers behind. Only the shipping build has it;
  * the preview builds still use a Back button to the hub. */
 describe('Quick exit clears the stored answers', () => {
-  it('masslegalhelp/index.html', () => {
-    const src = inlineScript(fs.readFileSync(path.join(MLH, 'index.html'), 'utf8'), 'masslegalhelp/index.html');
+  it('masslegalhelp/tool/snap/index.html', () => {
+    const src = inlineScript(fs.readFileSync(SHIP, 'utf8'), 'masslegalhelp/tool/snap/index.html');
     const handler = /case 'quick-exit':[\s\S]*?break;/.exec(src);
     assert.ok(handler, 'no quick-exit handler found. The top-bar control is the only way out.');
 
@@ -345,7 +346,7 @@ describe('screener pages render without throwing', () => {
   for (const page of PAGES) {
     const html = fs.readFileSync(path.join(page.dir, page.file), 'utf8');
     const src = inlineScript(html, page.label);
-    const logic = fs.readFileSync(path.join(page.dir, LOGIC_FILE), 'utf8');
+    const logic = fs.readFileSync(path.join(MLH, LOGIC_FILE), 'utf8');
 
     it(page.label + ' parses as a script', () => {
       new vm.Script(src, { filename: page.label });

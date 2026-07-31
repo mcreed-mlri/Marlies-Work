@@ -10,10 +10,10 @@ the homepage lists them.
 |------|------------|
 | `index.html` | Homepage (**"Marlie's MLRI Work"**). Lists projects. **Start here.** |
 | `screener/index.html` | **Screener landing page** → `/screener/`. The screener, the sample results, and the review documents. |
-| `masslegalhelp/` | The build that **ships**, styled for MassLegalHelp → `/masslegalhelp/`. See `masslegalhelp/README.md` for the deploy contract. |
+| `masslegalhelp/tool/` | The MassLegalHelp interactive tools landing page → `/masslegalhelp/tool/`. |
 | `archive/` | Three earlier designs and the retired `court-forms/` project page, frozen and untested. See `archive/README.md`. |
 | `masslegalhelp/snap-screening-logic.js` | The screening logic: questions, thresholds, links, result engine. One copy, next to the one build that uses it. |
-| `masslegalhelp/index.html` | **The screener.** MassLegalHelp chrome, Quick exit, `sessionStorage`. Supports `?sample=exempt\|goodcause\|notexempt` on review hosts only. |
+| `masslegalhelp/tool/snap/index.html` | **The SNAP screener.** MassLegalHelp chrome, Quick exit, `sessionStorage`. Supports `?sample=exempt\|goodcause\|notexempt` on review hosts only. |
 | `screener/how-it-works.html` | Plain-language explainer of the screening, in the preview site's own look rather than Court Forms chrome. It is documentation about the tool, not part of it. |
 | `functions/_middleware.js` | Cloudflare Pages Function enforcing the site-wide password (see below). |
 | `sw.js` | Service worker. Offline support and update handling for the PWA. |
@@ -104,11 +104,11 @@ A short, private screening tool that helps someone on SNAP check whether the
 Massachusetts DTA **ABAWD work rules** apply to them, or whether they may be
 exempt or have good cause. Built by MLRI, for MassLegalHelp.
 
-One build, [`masslegalhelp/index.html`](masslegalhelp/index.html), selecting its copy variant via `SnapScreening.create('classic2')`. Three earlier designs and the `court-forms/` folder moved to `archive/` on 2026-07-30:
+One build, [`masslegalhelp/tool/snap/index.html`](masslegalhelp/tool/snap/index.html), selecting its copy variant via `SnapScreening.create('classic2')`. Three earlier designs and the `court-forms/` folder moved to `archive/` on 2026-07-30:
 
 | File | Variant | What it is |
 |------|---------|-----------|
-| [`masslegalhelp/index.html`](masslegalhelp/index.html) | `classic2` | **Ships.** MassLegalHelp chrome, Quick exit, `sessionStorage` |
+| [`masslegalhelp/tool/snap/index.html`](masslegalhelp/tool/snap/index.html) | `classic2` | **Ships.** MassLegalHelp chrome, Quick exit, `sessionStorage` |
 
 It walks through up to 14 questions plus a "good cause" follow-up and shows one
 of these results:
@@ -122,7 +122,7 @@ of these results:
 
 ## The author's copy draft
 
-The shipping build ([`masslegalhelp/index.html`](masslegalhelp/index.html))
+The shipping build ([`masslegalhelp/tool/snap/index.html`](masslegalhelp/tool/snap/index.html))
 is the classic design rebuilt from the MLRI author's **ABAWD Screening Tool
 website copy draft**, which also supplies every outbound URL. That draft is
 shared separately and is not tracked in this repo. It keeps the four grouped
@@ -149,7 +149,7 @@ never shares state with `snap-abawd.html`.
 
 ## How to run it
 
-Open [`masslegalhelp/index.html`](masslegalhelp/index.html) in any browser, or [`screener/index.html`](screener/index.html) for the list of everything. **No build step** is required for the tools themselves.
+Open [`masslegalhelp/tool/`](masslegalhelp/tool/index.html) for the tool landing page, [`masslegalhelp/tool/snap/index.html`](masslegalhelp/tool/snap/index.html) for the SNAP screener, or [`screener/index.html`](screener/index.html) for the review list. **No build step** is required for the tools themselves.
 
 For automated tests:
 
@@ -191,7 +191,7 @@ Before go-live:
 - Confirm **Terms of Use** wording matches the hosting organization.
 - Verify DTA contact info (phone, fax, mail) against current Mass.gov guidance.
 - Have an SME spot-check thresholds in `snap-screening-logic.js` (last verified Nov 2025: $217.50/week, 14.5×$15, 30 hrs/week below minimum wage, 20 hrs/week or 80 hrs/month requirement).
-- **Quick exit** is live in `masslegalhelp/index.html` and clears storage before navigating. The preview build keeps a **← Back** button, now pointing at `/screener/`. Previously read: on the live Court Forms Online site, replace it with **Quick exit** that jumps to a neutral external URL (see `PRODUCTION_QUICK_EXIT_URL` in `snap-screening-logic.js` and the deploy note below).
+- **Quick exit** is live in `masslegalhelp/tool/snap/index.html` and clears storage before navigating. The preview build keeps a **← Back** button, now pointing at `/screener/`. Previously read: on the live Court Forms Online site, replace it with **Quick exit** that jumps to a neutral external URL (see `PRODUCTION_QUICK_EXIT_URL` in `snap-screening-logic.js` and the deploy note below).
 
 ### Preview vs production top bar
 
@@ -200,7 +200,7 @@ Before go-live:
 | **This preview repo** | ← Back | `/screener/` (the screener landing page) |
 | **Production deploy** | Quick exit | Neutral external site (default: `https://www.weather.com/`) |
 
-**Done 2026-07-30** in `masslegalhelp/index.html`, which is the build that ships. The preview `snap-abawd-classic-v2.html` keeps its Back button on purpose. Previously read: in each tool, change the top-bar button from `data-action="go-back"` / “← Back” to `data-action="quick-exit"` / “Quick exit”, and handle `quick-exit` with `window.location.replace(PRODUCTION_QUICK_EXIT_URL)` instead of `go-back`. Update intro/privacy copy if it still says “Back.”
+**Done 2026-07-30** in `masslegalhelp/tool/snap/index.html`, which is the build that ships. The preview `snap-abawd-classic-v2.html` keeps its Back button on purpose. Previously read: in each tool, change the top-bar button from `data-action="go-back"` / “← Back” to `data-action="quick-exit"` / “Quick exit”, and handle `quick-exit` with `window.location.replace(PRODUCTION_QUICK_EXIT_URL)` instead of `go-back`. Update intro/privacy copy if it still says “Back.”
 
 ### SME verification checklist
 
@@ -225,7 +225,7 @@ Everything runs in the visitor's browser. There is **no backend, no analytics,
 and answers are never transmitted anywhere.**
 
 - **The shipping build keeps answers for the tab only.**
-  `masslegalhelp/index.html` uses `sessionStorage`, so answers survive a refresh
+  `masslegalhelp/tool/snap/index.html` uses `sessionStorage`, so answers survive a refresh
   or a stray navigation and are erased when the tab closes. Nothing is
   recoverable afterwards. Key: `mlh-snap-work-rules-v1`.
 

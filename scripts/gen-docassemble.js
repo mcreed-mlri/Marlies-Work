@@ -174,12 +174,12 @@ code: |
  * saying "18 through 64" while both web builds said otherwise. Nothing caught it,
  * because a copy of a string cannot be checked against its original. */
 const SHIP_HTML = fs.readFileSync(
-  path.join(ROOT, 'masslegalhelp', 'index.html'), 'utf8');
+  path.join(ROOT, 'masslegalhelp', 'tool', 'snap', 'index.html'), 'utf8');
 
 function fromShippingPage(id, re) {
   const m = SHIP_HTML.match(re);
   if (!m) {
-    console.error('gen-docassemble: could not find ' + id + ' in masslegalhelp/index.html.');
+    console.error('gen-docassemble: could not find ' + id + ' in masslegalhelp/tool/snap/index.html.');
     console.error('Fix the pattern here rather than pasting the text in, or the interview');
     console.error('and the web builds drift apart silently.');
     process.exit(1);

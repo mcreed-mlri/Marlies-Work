@@ -76,7 +76,7 @@ anywhere on the white page would fail. Use `#0057a2` at 7.28:1 for those.
 
 This is the part that makes a page read as theirs, and it is worth treating as the template
 for every screener MLRI puts on the site rather than as one page's styling. Implemented as
-`.band` and `.byline-rule` in `masslegalhelp/index.html`.
+`.band` and `.byline-rule` in `masslegalhelp/tool/snap/index.html`.
 
 Their article pages open with four things in order. A pale blue gradient panel holding the
 title, `linear-gradient(#d3e7ff, #fafcff)`, padded roughly `42px 51px 20px` at their column

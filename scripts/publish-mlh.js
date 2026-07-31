@@ -30,6 +30,8 @@ const ROOT = path.join(__dirname, '..');
 const PREFIX = 'masslegalhelp';
 const DIR = path.join(ROOT, PREFIX);
 const LOGIC = 'snap-screening-logic.js';
+const TOOL_INDEX = 'tool/index.html';
+const SHIP_HTML = 'tool/snap/index.html';
 
 const args = process.argv.slice(2);
 const checkOnly = args.includes('--check');
@@ -62,9 +64,12 @@ if (!fs.existsSync(DIR)) {
 const files = walk(DIR, '');
 const textFiles = files.filter(f => /\.(html|js|css|md)$/.test(f.rel));
 
-/* ---- Guard: the entry point exists ---- */
-if (!files.some(f => f.rel === 'index.html')) {
-  problems.push('No index.html at the root of ' + PREFIX + '/. The deploy repo root is the site root.');
+/* ---- Guard: the tool entry points exist ---- */
+if (!files.some(f => f.rel === TOOL_INDEX)) {
+  problems.push('No ' + TOOL_INDEX + ' in ' + PREFIX + '/. The public tools index lives at /tool/.');
+}
+if (!files.some(f => f.rel === SHIP_HTML)) {
+  problems.push('No ' + SHIP_HTML + ' in ' + PREFIX + '/. The SNAP screener lives at /tool/snap/.');
 }
 
 /* ---- Guard: the logic module is present ----
@@ -102,7 +107,12 @@ for (const f of textFiles) {
   const src = live(fs.readFileSync(f.abs, 'utf8'));
   for (const m of src.matchAll(/(?:src|href)="([^"]+)"/g)) {
     const url = m[1];
-    if (url.startsWith('../')) problems.push(f.rel + ' references a parent path: ' + url);
+    if (url.startsWith('../')) {
+      const target = path.normalize(path.join(path.dirname(f.abs), url.split(/[?#]/)[0]));
+      if (!(target === DIR || target.startsWith(DIR + path.sep))) {
+        problems.push(f.rel + ' references a parent path outside ' + PREFIX + '/: ' + url);
+      }
+    }
     else if (url.startsWith('/')) problems.push(f.rel + ' references a rooted path: ' + url + '. Use a relative path so the tool works at any subpath.');
   }
   for (const m of src.matchAll(/\]\((\.\.\/[^)]+)\)/g)) {
@@ -123,6 +133,7 @@ for (const f of textFiles) {
    * source, and the gate that makes it true is asserted separately below. */
   for (const line of src.split('\n')) {
     if (!/['"`]\.\.\//.test(line)) continue;
+    if (/(?:src|href)=["']\.\.\//.test(line)) continue;
     if (/review-only/.test(line)) {
       reviewOnlyPaths.push(f.rel);
       continue;
@@ -135,7 +146,7 @@ for (const f of textFiles) {
 
 /* A review-only exception is only honest if something actually restricts it. */
 if (reviewOnlyPaths.length && !/function samplesAllowed/.test(
-  fs.readFileSync(path.join(DIR, 'index.html'), 'utf8'))) {
+  fs.readFileSync(path.join(DIR, SHIP_HTML), 'utf8'))) {
   problems.push('a review-only parent path is present but samplesAllowed() is not, so'
     + ' nothing stops it rendering in production: ' + [...new Set(reviewOnlyPaths)].join(', '));
 }
@@ -184,10 +195,10 @@ if (fs.existsSync(path.join(DIR, 'functions'))) {
  * means answering through four groups, so the mode earns its place. What it must
  * not do is work in front of the public, where a shared URL would show a reader a
  * result that is not theirs. So the ban became a requirement that it be gated. */
-const shipHtml = fs.readFileSync(path.join(DIR, 'index.html'), 'utf8');
+const shipHtml = fs.readFileSync(path.join(DIR, SHIP_HTML), 'utf8');
 if (/function applySampleFromURL/.test(shipHtml)) {
   if (!/function samplesAllowed/.test(shipHtml)) {
-    problems.push('index.html has ?sample= mode with no samplesAllowed() host gate, so the demo would be live in production.');
+    problems.push(SHIP_HTML + ' has ?sample= mode with no samplesAllowed() host gate, so the demo would be live in production.');
   }
   const fn = /function applySampleFromURL\(\)\{[\s\S]*?\n\}/.exec(shipHtml);
   if (fn && !/^\s*if\(!samplesAllowed\(\)\) return false;/m.test(fn[0])) {
