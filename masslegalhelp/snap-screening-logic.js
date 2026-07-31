@@ -12,7 +12,11 @@
   'use strict';
 
   const NONE = '__none';
-  const SCREENING_HUB_URL = '../screener/';
+  /* SCREENING_HUB_URL was removed on 2026-07-30. It held '../screener/' for the
+     Back button in the Court Forms styled preview, which is now frozen in archive/
+     with its own copy of this file. Nothing in the shipping build read it, and a
+     parent path in the module that ships is a 404 waiting for someone to use it.
+     scripts/publish-mlh.js found it. */
   /** Production deploy: swap the top-bar Back button for Quick exit using this URL (neutral external site). See README. */
   const PRODUCTION_QUICK_EXIT_URL = 'https://www.weather.com/';
 
@@ -904,7 +908,6 @@
 
     return {
       NONE,
-      SCREENING_HUB_URL,
       PRODUCTION_QUICK_EXIT_URL,
       LINKS,
       WORK_INCOME_THRESHOLD,
@@ -939,7 +942,6 @@
 
   return {
     NONE,
-    SCREENING_HUB_URL,
     PRODUCTION_QUICK_EXIT_URL,
     LINKS,
     VARIANTS,

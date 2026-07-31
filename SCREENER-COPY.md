@@ -558,7 +558,13 @@ The fields someone fills in:
 
 > (DTA needs your actual signature, not a typed signature)
 
-> **Question for you:** Your note read "remove dta needs your actual signature line on all the results pages." That reads two opposite ways: delete this sentence, or add a signature line. Which?
+> **Question for you:** Your note read "remove dta needs your actual signature line on all the results pages." That reads two opposite ways: delete this sentence, or add a signature line. Which? Note the new line below it, which may answer the same need.
+
+**`page.sigAlt`**  (under the signature pad, below the line above)  **[written by the developer, not you]**
+
+> If you cannot sign here, leave it blank. The printed page has a line to sign by hand.
+
+> **Question for you:** Added 2026-07-30, and not yours, so overwrite it freely. The signature pad only works with a finger or a mouse, so someone using a keyboard, a switch, or a screen reader cannot sign in the browser at all. The printed statement already leaves a ruled line when the pad is empty, so that route worked; nothing on the page said so. This sentence says it. If you would rather fold it into the line above, that is one sentence instead of two and we will make the swap.
 
 An explainer opens next to the signature box:
 
@@ -568,7 +574,7 @@ An explainer opens next to the signature box:
 
 **`hint.signatures.body`**
 
-> Sign with your finger on a touch screen, or with your mouse. A typed signature won\u2019t be accepted \u2014 this captures your real one.
+> Sign with your finger on a touch screen, or with your mouse. A typed signature won’t be accepted — this captures your real one.
 
 **`whyInfoLabel`**
 
@@ -676,8 +682,12 @@ exempt. Last checked November 2025.
 Everything above came from you or from the earlier MLRI draft. The strings in this
 section did not. They were written to fill gaps while building the MassLegalHelp version,
 and they are on the page right now, so they need your review the same as anything else.
-The disclaimer is the one to look at hardest: it makes a claim about what this tool is
-and is not, which is not a developer's call to make.
+The footer disclaimer used to head this list, and it is gone as of 2026-07-30, pending a
+legal footer. It read: "This screening is part of masslegalhelp.org. It gives you
+information about the SNAP work rules. It is not legal advice, it does not tell DTA
+anything, and it does not change your SNAP case." It made a claim about what this tool is
+and is not, which was never a developer's call to make. The tool now says none of that
+anywhere, so whatever replaces it still owes a reader those three facts.
 
 **`chrome.tabTitle`**  **[written by the developer, not you]**
 
@@ -695,21 +705,22 @@ and is not, which is not a developer's call to make.
 
 > Quick exit
 
-**`footer.disclaimer`**  **[written by the developer, not you]**
+**`page.sigAlt`**  **[written by the developer, not you]**
 
-> This screening is part of [masslegalhelp.org](https://www.masslegalhelp.org/). It gives you information about the SNAP work rules. It is not legal advice, it does not tell DTA anything, and it does not change your SNAP case.
+> If you cannot sign here, leave it blank. The printed page has a line to sign by hand.
 
-The footer also links out to three places. Wording is ours, destinations are real pages
-on MassLegalHelp:
+> **Question for you:** Added 2026-07-30, and not yours, so overwrite it freely. The signature pad only works with a finger or a mouse, so someone using a keyboard, a switch, or a screen reader cannot sign in the browser at all. The printed statement already leaves a ruled line when the pad is empty, so that route worked; nothing on the page said so. This sentence says it. If you would rather fold it into the line above, that is one sentence instead of two and we will make the swap.
 
-- "About the ABAWD work rules" goes to the ABAWD article
-- "Legal Topics" goes to the Legal Topics index
-- "Contact Us" goes to the contact page
+The footer has no copy left in it. It is the gold rule, the navy band, and the wordmark,
+and its whole job is telling a reader whose site this is. It used to carry three links
+out, to the ABAWD article, Legal Topics, and Contact Us; those went on 2026-07-30 because
+someone mid-screening is not browsing. The disclaimer went the same day, quoted above.
 
-**Not in the footer yet:** Terms of Use and Privacy Policy. Those links are missing
-because their URLs were not available, and a Terms link that goes nowhere on a public
-benefits page is worse than no link. Separately, this version has no Terms of Use
-checkbox at all, which earlier versions did.
+**Still missing, and still blocking launch:** Terms of Use and Privacy Policy links,
+because their URLs were never supplied and a Terms link that goes nowhere on a public
+benefits page is worse than no link. This version also has no Terms of Use checkbox at
+all, which earlier versions did. And with the disclaimer gone the tool no longer says
+anywhere that it is not legal advice.
 
 ## 15. Every link the screener sends people to
 

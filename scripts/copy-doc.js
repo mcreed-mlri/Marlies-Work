@@ -35,7 +35,8 @@ const C = S.RESULT_COPY;
 const OPEN = {
   'page.answerAny': 'Applied: this now shows above group 1 only, per your note that it "only needs to be said once in section 1." It used to repeat above all four groups.',
   'page.privacyIntro': 'Your edit replaced this sentence. Separately, the note "Remove before you start question" is ambiguous: remove this paragraph from the start page, or something else?',
-  'page.sigNote': 'Your note read "remove dta needs your actual signature line on all the results pages." That reads two opposite ways: delete this sentence, or add a signature line. Which?',
+  'page.sigNote': 'Your note read "remove dta needs your actual signature line on all the results pages." That reads two opposite ways: delete this sentence, or add a signature line. Which? Note the new line below it, which may answer the same need.',
+  'page.sigAlt': 'Added 2026-07-30, and not yours, so overwrite it freely. The signature pad only works with a finger or a mouse, so someone using a keyboard, a switch, or a screen reader cannot sign in the browser at all. The printed statement already leaves a ruled line when the pad is empty, so that route worked; nothing on the page said so. This sentence says it. If you would rather fold it into the line above, that is one sentence instead of two and we will make the swap.',
   privacyNote: 'Applying your edit literally leaves the clause twice: "MLRI will not save any personal information you type on this form. save the information you type on this form." Confirm it should end after the first sentence.',
   goodCauseIntro: 'Is "work, school, or volunteer hours" replacing the old sentence, or inserting into it? In other words, does it end at "volunteer hours." or continue "...volunteer hours before or after your start date."?',
   goodCauseInNotExemptIntro: 'This is a second copy of the good cause sentence, shown on the "may need to meet the work rules" screen. Your note did not mention it. Should it change the same way?',
@@ -64,6 +65,7 @@ const INLINE = [
   { id: 'page.startButton', re: />(Fill out the form[^<]*)<\/button>/ },
   { id: 'page.answerAny', re: /<p [^>]*>(Answer any that apply to you\. Every question is optional\.)<\/p>/ },
   { id: 'page.sigNote', re: /<p id="sig-note"[^>]*>(\([^<]+\))<\/p>/ },
+  { id: 'page.sigAlt', re: /<p id="sig-alt"[^>]*>([^<]+)<\/p>/ },
   // Buttons and navigation
   { id: 'btn.next', re: /nextLabel = [^?]+\? '[^']+' : '([^']+)'/ },
   { id: 'btn.seeResults', re: /nextLabel = [^?]+\? '([^']+)'/ },
@@ -85,8 +87,11 @@ const INLINE = [
   { id: 'chrome.tabTitle', re: /<title>(SNAP Work Rules Screening[^<]*)<\/title>/ },
   { id: 'chrome.wordmark', re: /class="topbar-title">([^<]+)</ },
   { id: 'chrome.tagline', re: /class="topbar-sub">([^<]+)</ },
-  { id: 'chrome.quickExit', re: /data-action="quick-exit"[^>]*>([^<]+)</ },
-  { id: 'footer.disclaimer', re: /<p style="font-size:13\.5px[^>]*>\s*([\s\S]*?)\s*<\/p>/ }
+  { id: 'chrome.quickExit', re: /data-action="quick-exit"[^>]*>([^<]+)</ }
+  /* footer.disclaimer was here. The footer paragraph came out on 2026-07-30 pending
+     a legal footer nobody has drafted yet, so there is no string left to extract.
+     The wording is preserved in the footer comment in index.html rather than here,
+     because this file only reports what the tool currently says. */
 ];
 
 /* Copy that came from the developer rather than the author. Flagged separately
@@ -94,7 +99,7 @@ const INLINE = [
  * these were written to fill a gap, not handed over for review. */
 const DEVELOPER_WRITTEN = new Set([
   'chrome.tabTitle', 'chrome.wordmark', 'chrome.tagline', 'chrome.quickExit',
-  'footer.disclaimer'
+  'page.sigAlt'
 ]);
 
 const html = fs.readFileSync(HTML, 'utf8');
@@ -379,6 +384,7 @@ blank();
 ['statement.nameLabel', 'statement.agencyLabel', 'statement.sigLabel', 'statement.sigHint']
   .forEach(id => item(id, inline[id]));
 item('page.sigNote', inline['page.sigNote'], { note: 'under the signature pad' });
+item('page.sigAlt', inline['page.sigAlt'], { note: 'under the signature pad, below the line above' });
 w('An explainer opens next to the signature box:');
 blank();
 ['hint.signatures.title', 'hint.signatures.body'].forEach(id => item(id, inline[id]));
@@ -422,23 +428,26 @@ section('Copy the developer wrote, which needs your approval');
 w('Everything above came from you or from the earlier MLRI draft. The strings in this');
 w('section did not. They were written to fill gaps while building the MassLegalHelp version,');
 w('and they are on the page right now, so they need your review the same as anything else.');
-w('The disclaimer is the one to look at hardest: it makes a claim about what this tool is');
-w('and is not, which is not a developer\'s call to make.');
+w('The footer disclaimer used to head this list, and it is gone as of 2026-07-30, pending a');
+w('legal footer. It read: "This screening is part of masslegalhelp.org. It gives you');
+w('information about the SNAP work rules. It is not legal advice, it does not tell DTA');
+w('anything, and it does not change your SNAP case." It made a claim about what this tool is');
+w('and is not, which was never a developer\'s call to make. The tool now says none of that');
+w('anywhere, so whatever replaces it still owes a reader those three facts.');
 blank();
 ['chrome.tabTitle', 'chrome.wordmark', 'chrome.tagline', 'chrome.quickExit',
-  'footer.disclaimer'].forEach(id => item(id, inline[id]));
+  'page.sigAlt'].forEach(id => item(id, inline[id]));
 
-w('The footer also links out to three places. Wording is ours, destinations are real pages');
-w('on MassLegalHelp:');
+w('The footer has no copy left in it. It is the gold rule, the navy band, and the wordmark,');
+w('and its whole job is telling a reader whose site this is. It used to carry three links');
+w('out, to the ABAWD article, Legal Topics, and Contact Us; those went on 2026-07-30 because');
+w('someone mid-screening is not browsing. The disclaimer went the same day, quoted above.');
 blank();
-w('- "About the ABAWD work rules" goes to the ABAWD article');
-w('- "Legal Topics" goes to the Legal Topics index');
-w('- "Contact Us" goes to the contact page');
-blank();
-w('**Not in the footer yet:** Terms of Use and Privacy Policy. Those links are missing');
-w('because their URLs were not available, and a Terms link that goes nowhere on a public');
-w('benefits page is worse than no link. Separately, this version has no Terms of Use');
-w('checkbox at all, which earlier versions did.');
+w('**Still missing, and still blocking launch:** Terms of Use and Privacy Policy links,');
+w('because their URLs were never supplied and a Terms link that goes nowhere on a public');
+w('benefits page is worse than no link. This version also has no Terms of Use checkbox at');
+w('all, which earlier versions did. And with the disclaimer gone the tool no longer says');
+w('anywhere that it is not legal advice.');
 blank();
 
 /* ---- Leftovers, so nothing can go missing ---- */

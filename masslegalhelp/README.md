@@ -38,16 +38,20 @@ violence, and personal safety.
 ## Decisions worth knowing
 
 The chrome is MassLegalHelp's: navy header, a 9px `#eab736` gold rule, brand navy text, and
-their page-header pattern, a pale blue gradient title panel with a solid block offset behind
-it, then a byline and a short heavy rule.
+their page-header pattern, a pale blue title panel with a solid block offset behind it, then
+a short heavy rule. Two deliberate departures: the panel is a flat `#d3e7ff` rather than
+their `linear-gradient(#d3e7ff, #fafcff)`, whose 1.03:1 bottom edge left the offset block
+reading as a bar floating under nothing at this column width, and there is no byline row.
 Values and measured contrast ratios are in `MASSLEGALHELP-BRAND.md` in the MLRI source
 repository. (Paths to sibling documents are named rather than linked, because this folder is
 also published on its own as the deploy repository root, where a relative link out would
 break.)
 
-Atkinson Hyperlegible stays as the typeface. MassLegalHelp sets body copy in Montserrat
-and headings in Domine, but Atkinson was chosen for low-vision readers and that outranks
-matching a host font. Revisit only if their font files are available to self-host.
+Atkinson Hyperlegible stays as the typeface, headings included. MassLegalHelp sets body copy
+in Montserrat and headings in Domine, but Atkinson was chosen for low-vision readers and that
+outranks matching a host font. Headings briefly pointed at a `--serif` token reading
+`'Domine', Georgia, serif` against a font file that never arrived, so they shipped in Georgia
+until 2026-07-30. Revisit only with the file in hand and a decision to go with it.
 
 The top-bar control is **Quick exit**, not Back. It calls `location.replace()`, so it
 leaves no history entry and Back cannot return to a screen holding answers.
@@ -84,11 +88,22 @@ checked. If a second live build ever appears, restore the drift guard before the
 
 - **Quick exit destination.** Currently `weather.com`, set in `PRODUCTION_QUICK_EXIT_URL`
   in the logic module. Confirm that is the right neutral site.
+- **The legal footer.** This is now the largest gap. The footer disclaimer came out on
+  2026-07-30 pending proper wording, so the tool no longer says anywhere that it is not
+  legal advice, that it sends nothing to DTA, or that it does not change a SNAP case. All
+  three were true and all three are worth telling a reader. The removed sentence is quoted
+  verbatim in the footer comment in `index.html` and in `SCREENER-COPY.md` so the
+  replacement can be compared against it.
 - **Terms of Use and Privacy Policy.** The footer has no links to either, because they are
   not in MassLegalHelp's `<footer>` element and their URLs are unknown. Get them from the
   vendor. Separately, this build has no Terms of Use checkbox at all, unlike the other
   variants, so decide whether the tool inherits the host site's terms or needs its own
   gate.
+- **Signing without a pointer.** The signature pad is a canvas and only takes a finger or a
+  mouse, so it cannot be operated by keyboard, switch, or screen reader. The printed
+  statement already leaves a ruled line when the pad is empty, and the page now says so, but
+  the underlying limit stands. If DTA ever accepts a typed or checkbox attestation, that is
+  the real fix.
 - **Author copy edits.** Several are applied; several are waiting on the author. See
   `SCREENER-COPY.md` in the MLRI source repository, which lists every string and the open
   questions against it.

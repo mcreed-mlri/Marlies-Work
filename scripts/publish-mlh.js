@@ -37,6 +37,7 @@ const branch = (args.find(a => a.startsWith('--branch=')) || '--branch=mlh-deplo
 
 const problems = [];
 const notes = [];
+const reviewOnlyPaths = [];
 
 function git(...a) {
   return execFileSync('git', a, { cwd: ROOT, encoding: 'utf8' }).trim();
@@ -107,6 +108,36 @@ for (const f of textFiles) {
   for (const m of src.matchAll(/\]\((\.\.\/[^)]+)\)/g)) {
     problems.push(f.rel + ' has a markdown link to a parent path: ' + m[1]);
   }
+
+  /* Parent paths in JS strings, which the attribute scan above cannot see.
+   *
+   * This hole was found on 2026-07-30 while adding a review-only link back to
+   * /screener/. The attribute scan catches href="../screener/" and misses
+   * const HOME = '../screener/' entirely, so the easy way to add that link would
+   * have been to hide the path in a const and let the guard sail past it. Closing
+   * the hole is better than using it.
+   *
+   * One documented exception, marked `review-only` on the same line. It exists
+   * because a link that renders only on a review host cannot 404 in production,
+   * which is the failure this guard is for. The marker has to be visible in the
+   * source, and the gate that makes it true is asserted separately below. */
+  for (const line of src.split('\n')) {
+    if (!/['"`]\.\.\//.test(line)) continue;
+    if (/review-only/.test(line)) {
+      reviewOnlyPaths.push(f.rel);
+      continue;
+    }
+    problems.push(f.rel + ' holds a parent path in a string: ' + line.trim().slice(0, 70)
+      + '. It would 404 at the deploy root. Gate it on samplesAllowed() and mark the'
+      + ' line review-only, or drop it.');
+  }
+}
+
+/* A review-only exception is only honest if something actually restricts it. */
+if (reviewOnlyPaths.length && !/function samplesAllowed/.test(
+  fs.readFileSync(path.join(DIR, 'index.html'), 'utf8'))) {
+  problems.push('a review-only parent path is present but samplesAllowed() is not, so'
+    + ' nothing stops it rendering in production: ' + [...new Set(reviewOnlyPaths)].join(', '));
 }
 
 /* ---- Guard: local references resolve on disk ---- */
@@ -117,7 +148,12 @@ for (const f of textFiles.filter(f => f.rel.endsWith('.html') || f.rel.endsWith(
     ...[...src.matchAll(/url\(([^)]+)\)/g)].map(m => m[1].replace(/['"]/g, ''))
   ];
   for (const url of refs) {
-    if (/^(https?:|mailto:|data:|#|\$\{)/.test(url)) continue;
+    /* Absolute URI schemes are somebody else's to resolve. `tel:` joined this list
+       when the no-script fallback added the DTA Assistance Line: the guard read
+       `tel:8773822363` as a relative path and refused to publish a working phone
+       link. The guard is looking for parent-relative and rooted paths that 404 at
+       the deploy root, and a URI scheme is neither. */
+    if (/^(https?:|mailto:|tel:|sms:|data:|#|\$\{)/.test(url)) continue;
     const target = path.join(path.dirname(f.abs), url.split(/[?#]/)[0]);
     if (!fs.existsSync(target)) problems.push(f.rel + ' references a file that is not here: ' + url);
   }

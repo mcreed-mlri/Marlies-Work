@@ -5,31 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SNAP Work Rules Screening | Massachusetts Legal Help</title>
 <meta name="description" content="A short, private screening to check if you need to meet the SNAP ABAWD work rules or if you are exempt.">
+<!-- Preloaded, because the two faces are otherwise discovered only after
+     fonts/atkinson.css parses, which costs a round trip on the critical path of a
+     page whose entire body is script-rendered. -->
+<link rel="preload" href="fonts/atkinson-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/atkinson-700.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="fonts/atkinson.css">
-<!-- Headings in Domine, the host site's serif. MASSLEGALHELP-BRAND.md calls this
-     "a missing font file rather than a decision": Domine is OFL and self-hosted by
-     their Drupal theme. Drop domine-700.woff2 into fonts/ and it takes effect.
-     Until then --serif falls through to Georgia, which is the same class of face,
-     so nothing breaks and no external request is made either way. -->
-<style>
-  /* Commented out, not deleted, following the same convention this file already uses
-     for the wordmark slot below: a rule pointing at a file that is not here is a 404
-     on every page load, and scripts/publish-mlh.js refuses to publish an
-     unresolvable local reference. --serif already reads
-     'Domine', Georgia, 'Times New Roman', serif, so headings land on Georgia today
-     and switch to Domine the moment both this block and the file exist.
+<!-- Headings are Atkinson, like everything else. This page carried a --serif token
+     reading 'Domine', Georgia, serif, on the theory that Domine was a missing font
+     file rather than a decision. In practice domine-700.woff2 never landed, so every
+     heading rendered in Georgia: a face nothing in this repository declared, sitting
+     over a body set in a typeface chosen specifically for low-vision readers.
+     DESIGN.md's typography block said the headings were Atkinson the whole time.
 
-     To enable: drop domine-700.woff2 into fonts/ and uncomment.
-
-  @font-face{
-    font-family:'Domine';
-    font-style:normal;
-    font-weight:700;
-    font-display:swap;
-    src:url('fonts/domine-700.woff2') format('woff2');
-  }
-  */
-</style>
+     Reverted 2026-07-30 rather than papering over it by documenting Georgia. The
+     single-face rule is a legibility decision, and an accidental second face is not
+     the way to reopen it. If Domine is ever wanted, it needs the file, a measured
+     decision, and a DESIGN.md entry, in that order. -->
 <!-- impeccable-disable single-font -- Atkinson Hyperlegible is the legibility choice for this audience; a display-font pairing would work against it. -->
 <style>
   /* MassLegalHelp build. Chrome tokens are theirs, read off masslegalhelp.org on
@@ -89,9 +81,6 @@
     --danger:#a12b2b;
     --danger-line:#c58484; /* 3:1, so the outline of a bare button is a real boundary */
     --radius:10px;
-    /* Headings only. Body copy stays Atkinson: it was chosen for low-vision
-       readers, which outranks matching the host font. */
-    --serif:'Domine',Georgia,'Times New Roman',serif;
   }
   *{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
@@ -124,7 +113,9 @@
   .opt:active{background:var(--field-hover)}
   .opt-selected{
     border-color:var(--accent);background:var(--sel);
-    box-shadow:inset 0 0 0 1px var(--accent),0 0 0 3px rgba(26,95,180,.16);
+    /* rgba of --accent. This was rgba(26,95,180,.16), the retired #1a5fb4 accent,
+       left behind when the rebrand moved --accent to #0057a2. */
+    box-shadow:inset 0 0 0 1px var(--accent),0 0 0 3px rgba(0,87,162,.16);
   }
   .opt-selected:hover{border-color:var(--accent);background:var(--sel)}
   .opt-mark{
@@ -168,6 +159,23 @@
     flex:none;font-size:13px;font-weight:700;color:var(--navy);background:#fff;border:none;
     border-radius:999px;padding:10px 14px;cursor:pointer;min-height:44px;
   }
+  .topbar-actions{flex:none;display:flex;align-items:center;gap:10px}
+  /* Review-only sibling of Quick exit. Outlined rather than solid so the one control
+     a person in trouble needs stays the emphatic one: this is scaffolding, and it
+     should not compete with the exit. White on navy at 13.03:1, and the border is
+     white at the same ratio, so it clears 1.4.11 as a control boundary. */
+  .btn-review{
+    flex:none;font-size:13px;font-weight:700;color:#fff;background:transparent;
+    border:2px solid #fff;border-radius:999px;padding:8px 13px;min-height:44px;
+    display:inline-flex;align-items:center;text-decoration:none;white-space:nowrap;
+  }
+  .btn-review:hover{background:rgba(255,255,255,.14)}
+  @media (max-width:640px){
+    /* Two pills plus the lockup overflow a narrow bar. The label drops to an arrow;
+       aria-label keeps the destination for anyone not reading the glyph. */
+    .btn-review{padding:8px 11px}
+    .btn-review .btn-review-label{display:none}
+  }
   #stage{
     max-width:660px;margin:0 auto;
     padding:22px max(16px, env(safe-area-inset-right)) 60px max(16px, env(safe-area-inset-left));
@@ -186,22 +194,47 @@
   }
   .q-nav > [data-action="back"]{flex:0 0 34%}
   .q-nav > [data-action="next"]{flex:1}
-  .h1{font-family:var(--serif);font-weight:700;font-size:clamp(24px,6vw,29px);line-height:1.3;margin:8px 0 16px}
+  .h1{font-weight:700;font-size:clamp(24px,6vw,29px);line-height:1.3;letter-spacing:-.01em;margin:8px 0 16px}
 
   /* ---- MassLegalHelp page-header pattern ----------------------------------
      Their article pages open with the title in a pale blue gradient panel that
      has a solid block offset behind it, down and to the right, then a byline and
-     a short heavy rule. Reproduced here so a screener reads as part of the site
-     rather than as a tool bolted onto it. Measured from their SNAP ABAWD article
-     on 2026-07-30; values in MASSLEGALHELP-BRAND.md.
+     a short heavy rule. We take the panel, the block, and the rule, and skip the
+     byline; the note above .byline-rule says why. Reproduced so a screener reads as
+     part of the site rather than as a tool bolted onto it. Measured from their SNAP
+     ABAWD article on 2026-07-30; values in MASSLEGALHELP-BRAND.md.
 
      Written as reusable classes, not inline styles, because the intent is a
      pattern for every screener MLRI puts on the site, not a one-off. */
   .band{
-    background:linear-gradient(var(--band-top),var(--band-bottom));
-    /* Their article pages pad this roughly 42/51/20 at their column width. */
-    padding:38px 30px 20px;
-    margin:0 0 24px;
+    /* Flat, not their linear-gradient(#d3e7ff, #fafcff). This is the one measured
+       deviation from their page-title panel, and it is deliberate.
+       The gradient bottoms out at #fafcff, which is 1.03:1 against a white page:
+       the panel's bottom edge is invisible. The offset block behind it is #a2c4f0
+       at 1.80:1. So the ornament ends up 1.7x more visible than the thing it is
+       offset from, and the 8px strip reads as a bar floating under nothing instead
+       of as a block behind a panel.
+       It works on their site because their panel is 805px wide against our 628 and
+       carries a two-line byline underneath, which separates the strip from whatever
+       comes next. At our column width, with the byline gone, the strip landed 15px
+       above the navy rule and the header read as two stacked bars.
+       Solid --band-top gives the panel a 1.26:1 boundary on all four sides, which
+       is what makes an offset block legible as depth. Recorded in
+       MASSLEGALHELP-BRAND.md under what we deliberately do not copy. */
+    background:var(--band-top);
+    /* 51px of side padding is theirs, measured. This was 30px, which put the h1 on
+       a third left edge: the band at 0, the heading at 30, the byline and rule and
+       every paragraph below back at 0. Their heading is indented too, but by enough
+       that it reads as a deliberate inset rather than a near-miss. */
+    padding:42px 51px 20px;
+    /* 8px of the right is reserved for the offset block rather than let it overhang
+       the column. This is how theirs does it: the panel carries margin-right:8px and
+       the block fills the gap, so the ornament stays inside the text column and the
+       band's right edge lines up with the body copy underneath it. */
+    /* 32px, not 24. The box-shadow occupies the first 8px of it, so 24px left only
+       16px of visible air between the offset block and the navy rule below, and two
+       horizontal bars that close together read as one confused pair. */
+    margin:0 8px 32px 0;
     /* The offset block, as a hard-edged shadow rather than a positioned
        pseudo-element. Theirs is an absolutely positioned ::after inset 8px from
        the top and left and 8px past the bottom and right; a shadow offset 8px
@@ -216,27 +249,32 @@
   }
   .band .h1{margin:0}
   @media (max-width:640px){
-    .band{padding:22px 18px 18px;box-shadow:5px 5px 0 0 var(--band-edge)}
+    .band{padding:22px 18px 18px;margin-right:5px;box-shadow:5px 5px 0 0 var(--band-edge)}
   }
 
-  .byline{display:flex;align-items:flex-start;gap:13px;margin:0 0 22px}
-  .byline-mark{
-    flex:none;width:40px;height:40px;border-radius:50%;
-    background:var(--accent);color:#fff;
-    display:flex;align-items:center;justify-content:center;
-  }
-  .byline-mark svg{width:20px;height:20px;display:block}
-  .byline-text{font-size:15.5px;line-height:1.5;color:var(--prose);min-width:0}
-  .byline-text b{font-weight:700}
-  /* Their short heavy rule: 146px by 5px in a darker navy than the body text. */
+  /* Their short heavy rule: 146px by 5px in a darker navy than the body text. It
+     closes the page header and separates it from the prose.
+
+     The byline that used to sit above it is gone as of 2026-07-30. Their article
+     pages carry one, a 40px navy circle with a document glyph beside "By
+     <organisation>" over "Reviewed <Month Year>", and we reproduced the first line
+     of it. It never earned its space here. A byline answers "who wrote this" on an
+     article; on a three-minute screening the reader's question is whether the work
+     rules apply to them, and MLRI is already named in the privacy note a screen
+     later. The circle made it worse: with only one line of text against a 40px mark
+     it sat visibly high, and the fix for that is not to invent the review date that
+     would fill it, because nobody has signed off on the thresholds.
+
+     If a review date is ever signed off, it comes back as a byline, not as a date
+     floating on its own. That is the pattern worth restoring; a lone date is not. */
   .byline-rule{width:146px;height:5px;background:var(--rule-ink);margin:0 0 22px}
-  .h2{font-family:var(--serif);font-weight:700;font-size:clamp(21px,5.5vw,25px);line-height:1.3;margin:6px 0 0}
-  .h-result{font-family:var(--serif);font-size:clamp(21px,5.5vw,24px);line-height:1.35;margin:6px 0 0}
+  .h2{font-weight:700;font-size:clamp(21px,5.5vw,25px);line-height:1.3;letter-spacing:-.01em;margin:6px 0 0}
+  .h-result{font-weight:700;font-size:clamp(21px,5.5vw,24px);line-height:1.35;margin:6px 0 0}
   /* One question, in its own card. The card goes pale once the question has an
      answer, so what is left to do is what still reads as white. */
   .qcard{background:#fff;border:1.5px solid var(--panel);border-radius:12px;padding:18px}
   .qcard-done{background:var(--band-bottom);border-color:var(--sel)}
-  .qcard h2{font-family:var(--serif);font-weight:700}
+  .qcard h2{font-weight:700}
   /* Options. Yes/No sits in one row, so a four-question section is about a
      screen and a half on a phone instead of three. Anything longer than Yes/No
      stays stacked, because two columns of sentence fragments is unreadable. */
@@ -267,6 +305,12 @@
   @media (prefers-reduced-motion:reduce){
     .card-in{animation:none}
     .opt,.opt-mark{transition:none}
+    /* The progress fill's transition is written as an inline style in
+       renderProgress(), so overriding it from a stylesheet needs !important. It was
+       the one animation still running under reduced motion, along with the hint
+       panel's max-height, which on a coarse pointer animates an accordion open. */
+    [data-progress-fill]{transition:none !important}
+    .hint-tip-panel{transition:none}
   }
   .hint-tip{position:relative;display:inline-block;max-width:100%}
   .hint-tip-btn{
@@ -321,6 +365,15 @@
       opacity:1;visibility:visible;pointer-events:auto;
     }
   }
+  /* The no-script fallback. Body copy sizes, matching the prose the tool renders,
+     because someone reading this is reading it for the same reason and under worse
+     conditions. The URL and the phone number are duplicated from LINKS in
+     snap-screening-logic.js: a <noscript> cannot interpolate them, and the whole
+     point of the block is that the module never ran. Keep them in step. */
+  .ns-title{font-weight:700;font-size:clamp(24px,6vw,29px);line-height:1.3;letter-spacing:-.01em;margin:0}
+  .ns-p{font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 14px}
+  .ns-list{font-size:16.5px;line-height:1.7;color:var(--prose);margin:0 0 14px;padding-left:22px}
+
   /* Off-screen (not display:none) so the signature image can decode before print. */
   #print-root{position:fixed;left:-10000px;top:0;width:8.5in;pointer-events:none}
   @media print{
@@ -349,7 +402,11 @@
      is done better by the convention every site already uses: the wordmark links
      home. That costs a little fidelity to their masthead and buys one less thing
      competing with the question. -->
-<div class="no-print topbar">
+<!-- A <header>, not a <div>. This bar holds the link home and Quick exit, and as a
+     bare div both of them sat outside every landmark on the page: a screen reader
+     user cycling landmarks got main and contentinfo and never reached the control
+     that exists for someone who needs to leave this page immediately. -->
+<header class="no-print topbar">
   <a class="topbar-brand" href="https://www.masslegalhelp.org/" aria-label="Mass Legal Help home">
     <!-- Wordmark slot. Uncomment once icons/mlh-logo.svg exists; left out rather
          than left broken, because a missing src is a 404 on every page load.
@@ -359,14 +416,46 @@
       <div class="topbar-sub">Massachusetts Legal Information</div>
     </div>
   </a>
-  <button type="button" class="btn-exit" data-action="quick-exit" title="Leave this page now">Quick exit</button>
-</div>
+  <div class="topbar-actions">
+    <!-- Filled in by JS on review hosts only, and left empty everywhere else. The
+         link goes to /screener/, which is a parent of this folder and does not exist
+         at the deploy root, so the URL lives in a JS const rather than in this
+         markup: the shipped HTML must not contain a path that 404s in production
+         even inside an element nobody sees. -->
+    <span id="review-nav"></span>
+    <button type="button" class="btn-exit" data-action="quick-exit">Quick exit</button>
+  </div>
+</header>
 
 <!-- Progress -->
 <div id="progress" class="no-print"></div>
 
 <!-- Stage -->
-<main id="stage"></main>
+<main id="stage">
+  <!-- Every view on this page is script-rendered into #stage, so if the script
+       fails, is blocked, or is mangled in transit, this element is all there is.
+       Without this block that failure is a navy bar, a gold rule, and a footer,
+       with nothing telling the reader what happened or where else to go. PRODUCT.md
+       assumes a borrowed phone on a bad connection, which is exactly the case that
+       lands here. The two routes below are the same ones the working tool points at,
+       so a reader who cannot run it is not sent anywhere new. -->
+  <noscript>
+    <!-- .ns-title, not .h1, and the distinction is load-bearing. copy-doc.js and
+         gen-docassemble.js both pull the intro heading out of this file with
+         /<h1 class="h1">([^<]+)<\/h1>/, and this element sits earlier in the source
+         than the template string they mean, so wearing .h1 here silently retitled
+         the generated Docassemble interview. Same type ramp, own class, no
+         collision. -->
+    <div class="band"><h1 class="ns-title">SNAP work rules screening</h1></div>
+    <p class="ns-p">This screening needs JavaScript, and it is turned off or did not load.</p>
+    <p class="ns-p">You can still get help with the SNAP work rules:</p>
+    <ul class="ns-list">
+      <li>Read <a href="https://www.masslegalhelp.org/public-benefits-ssi/snap-food-benefits/snap-3-month-time-limit-abawd-work-rules">SNAP 3-month time limit: the ABAWD Work Rules</a> on Mass Legal Help.</li>
+      <li>Call the DTA Assistance Line at <a href="tel:8773822363">(877) 382-2363</a>.</li>
+    </ul>
+    <p class="ns-p">Many adults are exempt from these rules. DTA has to screen you for every exemption before the rules apply to you.</p>
+  </noscript>
+</main>
 
 <!-- Footer. Deliberately minimal: its whole job is making sure someone who lands
      here does not wonder whether they are on the right site. The gold rule, the navy
@@ -382,16 +471,26 @@
 
      Their real footer also carries Terms of Use and Privacy Policy. Still absent,
      still because their URLs are unknown, and a Terms link that 404s on a benefits
-     page is worse than none. See masslegalhelp/README.md. -->
+     page is worse than none. See masslegalhelp/README.md.
+
+     The disclaimer that used to sit here came out on 2026-07-30, at Marlie's
+     request, pending a proper legal footer. It read: "This screening is part of
+     masslegalhelp.org. It gives you information about the SNAP work rules. It is
+     not legal advice, it does not tell DTA anything, and it does not change your
+     SNAP case." Nobody with the standing to approve that wording had seen it, and
+     an unreviewed disclaimer on a benefits tool is a liability claim written by
+     whoever typed fastest. It is recorded verbatim here so the replacement can be
+     compared against it rather than written from scratch.
+
+     THIS IS A LAUNCH BLOCKER. The tool now says nothing anywhere about not being
+     legal advice, and the three facts that sentence carried are all still true and
+     all still worth telling a reader: this is information and not advice, it sends
+     nothing to DTA, and it does not change their case. Whatever replaces it has to
+     carry them. Tracked in masslegalhelp/README.md under "Before this goes live". -->
 <footer class="no-print" style="border-top:9px solid var(--gold);background:var(--ink);color:#fff;margin-top:40px">
   <div style="max-width:660px;margin:0 auto;padding:22px max(16px, env(safe-area-inset-right)) 24px max(16px, env(safe-area-inset-left))">
     <div style="font-size:17px;font-weight:700;line-height:1.1">Mass Legal Help</div>
     <div style="font-size:12px;opacity:.9;margin-top:3px">Massachusetts Legal Information</div>
-    <p style="font-size:13.5px;line-height:1.6;margin:14px 0 0">
-      This screening is part of <a href="https://www.masslegalhelp.org/" style="color:#fff">masslegalhelp.org</a>.
-      It gives you information about the SNAP work rules. It is not legal advice, it
-      does not tell DTA anything, and it does not change your SNAP case.
-    </p>
   </div>
 </footer>
 
@@ -696,16 +795,6 @@ function renderIntro(){
     <div class="band">
       <h1 class="h1">Did DTA tell you that you need to meet ABAWD Work Rules to keep getting SNAP?</h1>
     </div>
-    <div class="byline">
-      <span class="byline-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg></span>
-      <div class="byline-text"><b>By</b> Massachusetts Law Reform Institute</div>
-    </div>
-    <!-- No "Reviewed <Month Year>" line yet, though their article pages carry one
-         next to the byline and it is the thing that puts content staleness where a
-         reader can see it. Left out because nobody has signed off on this content:
-         the thresholds were last checked in November 2025 and the copy is still in
-         review. A date here would assert a review that has not happened. Add it,
-         and only it, when someone actually reviews. -->
     <div class="byline-rule" aria-hidden="true"></div>
     <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 14px">Some adults on SNAP who are <strong>18 or older and under 65</strong> have to meet ABAWD work rules to get SNAP for more than 3 months. <strong>Many adults are exempt</strong> from the work rules. Being "exempt" means that you don't have to meet the work rules to keep getting SNAP.</p>
     <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 14px">You only have to meet these rules, or tell DTA you are exempt, if DTA sends you a <a href="${LINKS.snapWorkNotice}" target="_blank" rel="noopener">SNAP and Work notice</a> that says you have to meet the ABAWD Work Rules. Check your mail and <a href="${LINKS.dtaConnect}" target="_blank" rel="noopener">DTAConnect</a> to see notes from DTA. DTA has to screen you for all exemptions <em>before</em> subjecting you to the rules.</p>
@@ -992,7 +1081,7 @@ function renderResults(){
        header band of its own rather than opening as one more paragraph. */
     form = `<div style="margin:26px 0 0;background:#fff;border:1.5px solid var(--panel);border-radius:12px;overflow:hidden">
       <div style="background:var(--field);border-bottom:1px solid var(--panel);padding:16px 20px">
-      <h3 style="font-family:var(--serif);font-size:19px;line-height:1.3;margin:0 0 8px">${esc(formTitle)}</h3>
+      <h3 style="font-size:19px;line-height:1.3;margin:0 0 8px">${esc(formTitle)}</h3>
       <div class="hint-tip-wrap" style="margin:0">
         <p style="font-size:15px;line-height:1.55;color:var(--prose);margin:0">${esc(formLead)}</p>
         ${hintTip('why-info', C.whyInfoLabel, whyInfo, true)}
@@ -1009,17 +1098,36 @@ function renderResults(){
       </div>
       <div style="margin:14px 0 0">
         <div class="hint-tip-wrap" style="margin:0 0 6px">
-          <label id="sig-label" style="font-size:14px;font-weight:700;margin:0">Signature</label>
-          ${hintTip('sig', 'About signatures', 'Sign with your finger on a touch screen, or with your mouse. A typed signature won\u2019t be accepted \u2014 this captures your real one.', true)}
+          <div id="sig-label" style="font-size:14px;font-weight:700;margin:0">Signature</div>
+          ${hintTip('sig', 'About signatures', 'Sign with your finger on a touch screen, or with your mouse. A typed signature won’t be accepted — this captures your real one.', true)}
         </div>
+        <!-- Not role="img". A canvas you draw on is a control, and calling it an image
+             announced "Signature, image" and offered nothing to do about it. It is
+             still pointer-only, which is a real WCAG 2.1.1 limit we cannot close with
+             a drawing surface, so the way out is stated instead of implied: the
+             printed statement already renders a blank signature line whenever this
+             pad is empty (see buildStatementHTML in snap-screening-logic.js), so
+             leaving it alone and signing on paper produces a correct letter. That
+             route existed before; nothing on the page said so. -->
         <div style="position:relative;border:1.5px solid var(--stroke);border-radius:calc(var(--radius) - 3px);background:#fff">
-          <canvas id="sig-pad" role="img" aria-labelledby="sig-label" aria-describedby="sig-note" style="display:block;width:100%;height:140px;border-radius:calc(var(--radius) - 3px);cursor:crosshair;touch-action:none;-webkit-print-color-adjust:exact;print-color-adjust:exact"></canvas>
+          <canvas id="sig-pad" aria-labelledby="sig-label" aria-describedby="sig-note sig-alt" style="display:block;width:100%;height:140px;border-radius:calc(var(--radius) - 3px);cursor:crosshair;touch-action:none;-webkit-print-color-adjust:exact;print-color-adjust:exact"></canvas>
           <span id="sig-hint" class="no-print" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--placeholder);font-size:14.5px;pointer-events:none">Sign here with your finger or mouse</span>
         </div>
         <div class="no-print" style="display:flex;justify-content:flex-end;margin:7px 0 0">
           <button type="button" data-action="sig-clear" style="flex:none;font-family:inherit;font-size:13.5px;font-weight:700;color:var(--accent);background:none;border:2px solid var(--accent);border-radius:calc(var(--radius) - 3px);padding:8px 14px;cursor:pointer">Clear</button>
         </div>
         <p id="sig-note" style="font-size:14px;line-height:1.5;color:var(--muted);margin:8px 0 0;text-align:center">(DTA needs your actual signature, not a typed signature)</p>
+        <!-- Ours, not the author's, and kept as its own element for that reason.
+             sig-note above is her sentence and is still open in SCREENER-COPY.md, so
+             it stays word for word.
+             This line is the keyboard alternative. The pad is pointer-only and a
+             drawing surface cannot be made keyboard-operable, so the way out has to
+             be said rather than implied: buildStatementHTML already prints a blank
+             signature rule whenever the pad is empty, which means not signing here
+             produces a correct letter to sign on paper. That was true before and
+             nothing on the page mentioned it. Merging the two sentences is a copy
+             decision for the author; SCREENER-COPY.md carries it as a proposal. -->
+        <p id="sig-alt" style="font-size:14px;line-height:1.5;color:var(--muted);margin:4px 0 0;text-align:center">If you cannot sign here, leave it blank. The printed page has a line to sign by hand.</p>
       </div>
       <div class="no-print" style="display:flex;gap:12px;margin:20px 0 0;flex-wrap:wrap;align-items:center">
         <button type="button" data-action="print" style="${nextBtn}">${esc(C.printFormLabel)}</button>
@@ -1029,7 +1137,7 @@ function renderResults(){
       </div>
       <div class="no-print" id="email-fallback" hidden style="margin:18px 0 0;padding:16px 18px;background:var(--soft);border-radius:12px">
         <h4 style="font-size:16px;margin:0 0 6px">${esc(C.emailFallbackHeading)}</h4>
-        <p style="font-size:15px;line-height:1.55;color:#37414f;margin:0 0 10px">${esc(C.emailFallbackBody)}</p>
+        <p style="font-size:15px;line-height:1.55;color:var(--prose);margin:0 0 10px">${esc(C.emailFallbackBody)}</p>
         <textarea id="email-text" readonly rows="6" aria-label="${esc(C.emailFallbackHeading)}" style="width:100%;font-family:inherit;font-size:15px;line-height:1.5;padding:10px 12px;border:1.5px solid var(--stroke);border-radius:10px;background:#fff;resize:vertical"></textarea>
         <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:10px 0 0">
           <button type="button" data-action="copy-email-text" style="${ghostBtn}">${esc(C.emailCopyLabel)}</button>
@@ -1046,7 +1154,7 @@ function renderResults(){
       ? `Fill out and send in <a href="${LINKS.exemptionForm}" target="_blank" rel="noopener">DTA\u2019s exemption form</a> or explain the information to DTA in a written, signed statement (handwritten note is fine):`
       : C.otherWaysGoodCauseLead;
     nextSteps = `<div style="margin:26px 0 0;padding:22px;background:var(--soft);border-radius:12px">
-      <h3 style="font-family:var(--serif);font-size:18px;line-height:1.3;margin:0 0 10px">${esc(C.otherWaysHeading)}</h3>
+      <h3 style="font-size:18px;line-height:1.3;margin:0 0 10px">${esc(C.otherWaysHeading)}</h3>
       <p style="font-size:15px;line-height:1.6;color:var(--prose);margin:0 0 12px">${stepsLead}</p>
       ${dtaContacts}
     </div>`;
@@ -1285,12 +1393,33 @@ function copyEmailText(){
   }
 }
 
+/* Every target="_blank" link says so, to a screen reader.
+ *
+ * Fifteen of them are spread across this file and snap-screening-logic.js as
+ * literal template strings, and annotating each one by hand is a rule that holds
+ * until the next link is added. Doing it in one pass after render means a link
+ * cannot be added without the announcement, which matters here because a reader
+ * who did not expect a new tab finds Back apparently broken, mid-screening, on a
+ * phone. Visually hidden, because the visible label is already the link text and
+ * sighted users get the tab switch itself as the cue. */
+function markExternalLinks(root){
+  root.querySelectorAll('a[target="_blank"]').forEach(a => {
+    if(a.querySelector('[data-newtab]')) return;
+    const note = document.createElement('span');
+    note.className = 'sr-only';
+    note.setAttribute('data-newtab', '');
+    note.textContent = ' (opens in a new tab)';
+    a.appendChild(note);
+  });
+}
+
 function render(){
   renderProgress();
   const stage = document.getElementById('stage');
   if(state.view === 'intro') stage.innerHTML = renderIntro();
   else if(state.view === 'question') stage.innerHTML = renderPage();
   else stage.innerHTML = (SAMPLE_MODE ? sampleBanner() : '') + renderResults();
+  markExternalLinks(stage);
 
   state.animate = false;
   initSignaturePad();
@@ -1570,6 +1699,29 @@ function sampleBanner(){
          Back does the job for a reviewer who arrived from that page. -->
     <span style="font-size:14.5px"><a href="./" style="font-weight:700">Try it for real →</a></span>
   </div>`;
+}
+
+/* Review-only navigation back to the screener index.
+ *
+ * `../screener/` is a parent of this folder. It exists on the preview site and does
+ * not exist at the deploy root, which is exactly what scripts/publish-mlh.js refuses
+ * to publish, so this is gated on the same host allowlist as ?sample= mode and the
+ * string is kept out of the markup.
+ *
+ * The `review-only` marker is not decoration: the publish guard scans for parent
+ * paths in JS strings too, and treats that marker as the one documented exception.
+ * Remove the gate and the guard stops the publish. */
+const REVIEW_HOME = '../screener/';  // review-only
+/* The marker above is a // comment on purpose. The guard strips block comments
+   before scanning, so a /* review-only *\/ marker was erased along with them and
+   the exception never applied. Found immediately, by the guard refusing. */
+
+if(samplesAllowed()){
+  const slot = document.getElementById('review-nav');
+  if(slot){
+    slot.innerHTML = `<a class="btn-review" href="${REVIEW_HOME}" aria-label="Back to the screener index">`
+      + `<span aria-hidden="true">\u2190</span>&nbsp;<span class="btn-review-label">Screener home</span></a>`;
+  }
 }
 
 if(!applySampleFromURL()){ loadPersisted(); }
