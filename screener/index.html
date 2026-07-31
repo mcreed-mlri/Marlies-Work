@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SNAP ABAWD screener · Marlie's MLRI Work</title>
-<meta name="description" content="One SNAP work rules screening, styled for two different websites. Samples and background.">
+<meta name="description" content="The SNAP work rules screening, styled for MassLegalHelp. Sample results and background.">
 <link rel="icon" href="../icons/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="../icons/favicon-32.png" type="image/png" sizes="32x32">
 <link rel="shortcut icon" href="../icons/favicon.ico">
@@ -135,6 +135,15 @@
     background:var(--tag);color:var(--accent);
     font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:20px;
     display:grid;place-items:center;line-height:1}
+  /* The badge holds either a Fraunces initial or a line glyph. The screener's entry
+     used to show "M", for MassLegalHelp, back when a "C" for Court Forms sat beside
+     it; with one version left the letter named nothing. An icon says what the thing
+     is instead of which of two it was.
+     Inline SVG rather than the vendored Lucide bundle, per CLAUDE.md: only the
+     archived redesign loads that 361KB file, and every other page inlines. Stroke is
+     currentColor so it picks up the badge's --accent, including in dark mode. */
+  .badge svg{width:22px;height:22px;display:block;stroke:currentColor;fill:none;
+    stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .body{min-width:0;flex:1}
   .entry h3{font-family:'Atkinson Hyperlegible',system-ui,-apple-system,sans-serif;
     font-weight:700;font-size:17px;letter-spacing:-.01em;margin:0 0 6px;line-height:1.25}
@@ -206,13 +215,13 @@
     <h1>SNAP ABAWD screener</h1>
     <!-- The lead carries what used to be three separate blocks: what the tool is,
          the note under "Versions" saying the two builds share their logic, and the
-         privacy sentence. That sentence used to sit on the MassLegalHelp card
-         only, which implied the Court Forms build behaved differently. Both are
-         local-only, so it is stated once, for both. -->
+         privacy sentence, which used to sit on one of two cards and now belongs to
+         the only one. Corrected 2026-07-30: the lead described "two versions, styled
+         for two different sites", which stopped being true when court-forms/ was
+         archived and left one build. -->
     <p class="lead">A short check of whether the DTA work rules apply to someone getting
-    SNAP, or whether they may be exempt or had a good reason for missing hours. Two
-    versions, styled for two different sites, ask the same questions and run the same
-    decision logic. Answers stay on the visitor's device.</p>
+    SNAP, or whether they may be exempt or had a good reason for missing hours. Answers
+    stay in the browser tab and are erased when it closes.</p>
   </header>
 
   <!-- Deliberately no explanation here yet of which site is getting what, or when.
@@ -221,15 +230,19 @@
        not confirmed, and a page colleagues read makes anything on it look settled.
        Restore it once the arrangement is agreed; it is in this file's git history.
 
-       What is left is verifiable from the code: the versions exist, they look
-       different, and they share one logic module. Card descriptions are held to
-       that same test, which is why neither one says where it is headed. -->
+       What is left is verifiable from the code: the screening exists and it runs the
+       shared logic module. The card is held to that same test, which is why it does
+       not say where it is headed. -->
   <main>
     <h2 class="section">The screening</h2>
 
     <ul class="list" role="list">
       <li class="entry">
-        <div class="badge" aria-hidden="true">M</div>
+        <!-- Lucide clipboard-list: a form with lines to fill in, which is what this
+             is. aria-hidden because the heading beside it already names the thing. -->
+        <div class="badge" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg>
+        </div>
         <div class="body">
           <h3>The SNAP work rules screening</h3>
           <a class="go" href="../masslegalhelp/">Open the screening</a>
