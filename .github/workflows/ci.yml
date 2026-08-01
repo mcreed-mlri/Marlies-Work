@@ -58,9 +58,10 @@ jobs:
         run: python docassemble-snap-abawd/tests/test_good_cause_text.py
 
   # Several files in the repo are generated from the code, and going stale is
-  # silent. SCREENER-COPY.md going stale is the worst case: the author would be
-  # reviewing copy the tool no longer has. Regenerating on a clean checkout must
-  # produce no diff.
+  # silent. The two copy documents going stale is the worst case: the author
+  # would be reviewing copy the tool no longer has, and SCREENER-WALKTHROUGH.md
+  # would be demonstrating a letter it no longer writes. Regenerating on a clean
+  # checkout must produce no diff.
   #
   # Together with decision-parity above this closes the loop. Change a rule and
   # forget to regenerate the spec, this job fails. Regenerate the spec and forget
@@ -80,6 +81,7 @@ jobs:
       - name: Regenerate
         run: |
           node scripts/copy-doc.js
+          node scripts/copy-walkthrough.js
           node scripts/decision-spec.js
           node scripts/gen-docassemble.js
 

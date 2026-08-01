@@ -28,11 +28,34 @@ and publish jobs exist because both failures are silent. A stale `SCREENER-COPY.
 means the author reviews copy the tool no longer has, and a parent-relative path
 works in the preview site and 404s in production.
 
+## The two copy documents
+
+Both are generated from the same code and neither is optional.
+
+`SCREENER-COPY.md` lists every string with the `code.name` that finds it in the source.
+Those ids are how an edit gets back to the right string, so they stay, and they are also
+what makes the document hard to read straight through. This is the one to write edits into.
+
+`SCREENER-WALKTHROUGH.md` is the same wording with no ids, in the order someone meets it,
+followed by worked examples showing the letter being assembled one answer at a time. It is
+for reading and for showing people. Two conventions hold it together: narration is italic
+and the screener's own words never are, and the screener's own bold is carried through
+rather than stripped, because which half of a sentence is emphasised is a decision someone
+made. Both are stated in a legend at the top.
+
+Add copy to the walkthrough through `say()` if it is narration and `quote()` if it is the
+tool's words. Writing a raw `w('> ...')` puts a blockquote past both the italics rule and
+the `--docs` conversion, which is how two stray `>` lines once reached the Google Docs
+export as literal text.
+
 Generators and the publish path, same binary. All four are safe to re-run; each
 overwrites its own output and nothing else:
 
 ```
 scripts/copy-doc.js                 regenerates SCREENER-COPY.md from the code
+scripts/copy-walkthrough.js         regenerates SCREENER-WALKTHROUGH.md from the code
+scripts/copy-walkthrough.js --docs  the same, rebuilt for pasting into Google Docs,
+                                    written to _local/ and not tracked
 scripts/decision-spec.js            regenerates DECISION-SPEC.md and decision-spec.json
 scripts/gen-docassemble.js          regenerates the interview YAML and ALKiln feature file
 scripts/publish-mlh.js --check      guards on the shipping build, changes nothing
