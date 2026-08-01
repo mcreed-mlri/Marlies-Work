@@ -570,13 +570,26 @@
         { id: 'd_work_jobs', type: 'single', text: 'How many jobs do you have?', options: GUIDED_WORK_JOBS, noneLabel: 'I am not sure' },
         { id: 'd_work_proof', type: 'multi', text: 'What can you send DTA as proof of your work?', help: 'Pick every one you can send.', options: GUIDED_WORK_PROOF, noneLabel: 'None of these' }
       ],
+      /* Opens with the exemption claim itself, because in the letter this
+       * paragraph replaces the fixed one that used to make the claim. Without
+       * it the letter would give hours and proof and never say what they are
+       * for. See the `composed` branch of buildStatementHTML. */
       compose: (a) => {
-        const hours = fragmentFor(GUIDED_WORK_HOURS, pickOne(a, 'd_work_hours'));
+        const isHours30 = !!a && a.working === 'hours_30';
+        const claim = isHours30
+          ? 'I work 30 or more hours a week while earning less than minimum wage.'
+          : 'I earn enough income to be exempt from the ABAWD work rules.';
+
+        const hoursId = pickOne(a, 'd_work_hours');
+        // The 30-hours claim has already given the hours; saying "I usually
+        // work 30 or more hours a week" straight after it is the same sentence.
+        const hours = (isHours30 && hoursId === 'h30plus')
+          ? '' : fragmentFor(GUIDED_WORK_HOURS, hoursId);
         const jobs = fragmentFor(GUIDED_WORK_JOBS, pickOne(a, 'd_work_jobs'));
-        let opening = '';
-        if (hours && jobs) opening = 'I usually work ' + hours + ' at ' + jobs + '.';
-        else if (hours) opening = 'I usually work ' + hours + '.';
-        else if (jobs) opening = 'I work ' + jobs + '.';
+        let detail = '';
+        if (hours && jobs) detail = 'I usually work ' + hours + ' at ' + jobs + '.';
+        else if (hours) detail = 'I usually work ' + hours + '.';
+        else if (jobs) detail = 'I have ' + jobs + '.';
 
         const picked = pickMany(a, 'd_work_proof');
         const docs = GUIDED_WORK_PROOF.filter(o => !o.help && picked.indexOf(o.id) !== -1).map(o => o.text);
@@ -586,7 +599,7 @@
         else if (docs.length) proof = 'I can send you ' + andList(docs) + '.';
         else if (wantsHelp) proof = 'I need help getting proof of my work hours and pay.';
 
-        return joinSentences([opening, proof]);
+        return joinSentences([claim, detail, proof]);
       }
     },
     {
@@ -596,11 +609,21 @@
       questions: [
         { id: 'd_disability_other', type: 'single', text: 'Which benefit or payment is it?', options: GUIDED_DISABILITY_OTHER, noneLabel: 'Something not on this list' }
       ],
+      /* "also" only when there is something for it to refer to.
+       *
+       * Picking a named benefit alongside "Other" leaves the named one in the
+       * letter's bullet list, so "I also receive" follows on from it. Picking
+       * "Other" on its own leaves no bullet at all in composed mode, and the
+       * sentence opened by referring back to nothing. */
       compose: (a) => {
+        const picked = (a && Array.isArray(a.disability)) ? a.disability : [];
+        const hasNamedBenefit = DISABILITY_OPTION_DEFS
+          .some(o => o.exempt && !o.other && picked.indexOf(o.id) !== -1);
+        const lead = hasNamedBenefit ? 'I also receive ' : 'I receive ';
         const named = fragmentFor(GUIDED_DISABILITY_OTHER, pickOne(a, 'd_disability_other'));
         return named
-          ? 'I also receive ' + named + '. Please review it as part of my exemption screening.'
-          : 'I also receive another disability benefit or payment that was not on the list. I will bring the paperwork so you can review it.';
+          ? lead + named + '. Please review it as part of my exemption screening.'
+          : lead + 'a disability benefit or payment that was not on the list. I will bring the paperwork so you can review it.';
       }
     },
     {
@@ -619,7 +642,11 @@
           'I do not have a regular place to sleep.',
           where ? 'I usually sleep ' + where + '.' : '',
           barriers.length ? 'This makes it hard for me to work.' : '',
-          barriers.join(' ')
+          barriers.join(' '),
+          /* Carries the ask that the fixed housing paragraph used to make. That
+           * paragraph is suppressed in composed mode, and without this the
+           * letter would describe the situation and never request anything. */
+          'Please review my situation to decide whether I am unable to work under the ABAWD screening.'
         ]);
       }
     }
@@ -640,12 +667,24 @@
       qs.push({ id: 'd_gc_now', type: 'single', text: 'Is this still going on?', options: GUIDED_GOODCAUSE_NOW, noneLabel: 'I am not sure' });
       return qs;
     },
+    /* What happened, then when, then whether it is over.
+     *
+     * This used to open "I could not meet the ABAWD work rules{months}.", which
+     * is the letter's own first sentence: the good-cause letter already says "I
+     * am writing to explain why I could not meet the ABAWD work rules for one or
+     * more months" and then quotes the category. Saying it a third time read as
+     * padding. The months are the only thing that paragraph adds, so it leads
+     * with the person's own account and states them plainly.
+     *
+     * Composes to nothing when none of the three are answered, which leaves the
+     * quoted category standing on its own rather than restating it. */
     compose: (a, today) => {
       const category = (a && a.goodcause) || '';
       const what = GUIDED_GOODCAUSE_WHAT[category] || [];
+      const months = guidedMonthPhrase(a, today);
       return joinSentences([
-        'I could not meet the ABAWD work rules' + guidedMonthPhrase(a, today) + '.',
         fragmentFor(what, pickOne(a, 'd_gc_what')),
+        months ? 'I missed hours' + months + '.' : '',
         fragmentFor(GUIDED_GOODCAUSE_NOW, pickOne(a, 'd_gc_now'))
       ]);
     }
@@ -692,10 +731,17 @@
   function composeStatementFor(reasons, resultType, answers, today) {
     const when = today instanceof Date ? today : new Date();
     const a = answers || {};
+    const rs = Array.isArray(reasons) ? reasons : [];
     const out = [];
     guidedBlocksFor(reasons, resultType).forEach(b => {
       const text = b.compose(a, when);
-      if (text) out.push({ prompt: b.label, text });
+      if (!text) return;
+      /* Which exemptions this paragraph speaks for, so the letter can drop the
+       * bullet and the fixed paragraph that would otherwise say the same thing
+       * two more times. Only the reasons the person actually has, since a block
+       * can be gated on either of the two work reasons. */
+      const covers = (b.reasons || []).filter(r => rs.indexOf(r) !== -1);
+      out.push({ prompt: b.label, text, reasons: covers });
     });
     return out;
   }
@@ -1161,26 +1207,65 @@
         <td style="padding:5px 0;border-bottom:1px solid #bbb;color:#111">${value ? esc(value) : blank('280px')}</td>
       </tr>`;
 
+    /* `explain` is either a plain string or, for pages that show one labelled
+     * blank per exemption, an array of { prompt, text }. Composed entries also
+     * carry { reasons }, which is what the coverage check below reads. Resolved
+     * here rather than further down because the body needs it. */
+    const explainEntries = Array.isArray(explain)
+      ? explain.filter(e => e && (e.prompt || e.text))
+      : [{ prompt: '', text: explain }];
+
+    /* Which reasons a composed paragraph already speaks for.
+     *
+     * The letter states a reason in up to three places: the bulleted list, a
+     * fixed paragraph for the four reasons that need one, and the person's own
+     * explanation. In the write-in version the third is a blank box, so the
+     * repetition never showed. Composed, it does: a letter came out saying "I do
+     * not have a regular place to sleep" twice, and listing "Take care of a
+     * child under 6 years old" as a bullet directly above a paragraph opening
+     * with the same words.
+     *
+     * So in composed mode the paragraph is the only statement of its reason,
+     * and the bullet and the fixed paragraph both drop out. The compose
+     * functions carry the claim and the request the fixed paragraphs used to
+     * make, which is why the work block opens by stating the exemption and the
+     * housing block closes by asking for a review.
+     *
+     * Reasons with no composed paragraph, which is most of them, are untouched
+     * and still appear as bullets. */
+    const covered = new Set();
+    if (composed) {
+      explainEntries.forEach(e => {
+        if (String(e.text == null ? '' : e.text).trim()) {
+          (e.reasons || []).forEach(r => covered.add(r));
+        }
+      });
+    }
+
     let body;
     if (rt === 'exempt') {
       const specialReasons = [WORK_REASON_INCOME, WORK_REASON_HOURS_30, DISABILITY_OTHER_REASON, HOUSING_EXEMPT_REASON];
-      const exemptReasons = rs.filter(r => !specialReasons.includes(r));
+      const exemptReasons = rs.filter(r => !specialReasons.includes(r) && !covered.has(r));
       let inner = `<p style="margin:0 0 14px">Dear DTA,</p>
         <p style="margin:0 0 14px">I am writing to ask that you update my SNAP case. I believe I am exempt from the ABAWD work rules and should not have to meet them for the following reason(s):</p>`;
       if (exemptReasons.length) {
         const items = exemptReasons.map(r => `<li style="margin:0 0 6px">${esc(r)}</li>`).join('');
         inner += `<ul style="margin:0 0 16px;padding-left:22px">${items}</ul>`;
       }
-      if (rs.includes(WORK_REASON_INCOME)) {
+      /* Each of these four is skipped when a composed paragraph already covers
+       * the reason, because that paragraph says the same thing and more. In
+       * write-in mode `covered` is always empty and all four behave as before. */
+      const fixedFor = (reason) => rs.includes(reason) && !covered.has(reason);
+      if (fixedFor(WORK_REASON_INCOME)) {
         inner += `<p style="margin:0 0 14px">I earn enough income to be exempt from the ABAWD work rules. I can send proof of my income and hours, such as pay stubs or a letter from my employer.</p>`;
       }
-      if (rs.includes(WORK_REASON_HOURS_30)) {
+      if (fixedFor(WORK_REASON_HOURS_30)) {
         inner += `<p style="margin:0 0 14px">I work 30 or more hours per week while earning less than minimum wage. I can send proof of my hours and pay.</p>`;
       }
-      if (rs.includes(DISABILITY_OTHER_REASON)) {
+      if (fixedFor(DISABILITY_OTHER_REASON)) {
         inner += `<p style="margin:0 0 14px">I receive a disability benefit or payment that is not listed above. Please review it as part of my exemption screening.</p>`;
       }
-      if (rs.includes(HOUSING_EXEMPT_REASON)) {
+      if (fixedFor(HOUSING_EXEMPT_REASON)) {
         inner += `<p style="margin:0 0 14px">I do not have a regular place to sleep. Please review the information I provide about my situation to decide whether I am unable to work under the ABAWD screening.</p>`;
       }
       body = inner;
@@ -1193,11 +1278,6 @@
         <p style="margin:0 0 14px">I am writing about my SNAP case and the ABAWD work rules.</p>`;
     }
 
-    // `explain` is either a plain string or, for pages that show one labelled
-    // blank per exemption, an array of { prompt, text }.
-    const explainEntries = Array.isArray(explain)
-      ? explain.filter(e => e && (e.prompt || e.text))
-      : [{ prompt: '', text: explain }];
     const box = (content) =>
       `<div style="border:1px solid #999;padding:12px 14px;min-height:72px;white-space:pre-wrap;background:#fff">${content}</div>`;
 

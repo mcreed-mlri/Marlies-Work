@@ -539,18 +539,38 @@ describe('snap-screening-logic', () => {
         'I take care of a child under 6 years old. The child lives with me. '
         + 'I care for them most days of the week.'
       );
+      /* Opens with the exemption claim, because in the letter this paragraph
+       * replaces the fixed one that used to make it. */
       assert.equal(
         compose({ working: 'income_weekly', d_work_hours: 'h20_29', d_work_jobs: 'one',
           d_work_proof: ['paystubs', 'employer_letter'] }),
-        'I usually work about 20 to 29 hours a week at one job. '
+        'I earn enough income to be exempt from the ABAWD work rules. '
+        + 'I usually work about 20 to 29 hours a week at one job. '
         + 'I can send you my pay stubs and a letter from my employer.'
       );
+      /* Closes with the request the fixed housing paragraph used to make. */
       assert.equal(
         compose({ housing: 'no', housingFollowup: NONE, d_housing_where: 'shelter',
           d_housing_barriers: ['no_address', 'no_transport'] }),
         'I do not have a regular place to sleep. I usually sleep in a shelter. '
         + 'This makes it hard for me to work. I have no address or phone to give an employer. '
-        + 'I have no reliable way to get to a job.'
+        + 'I have no reliable way to get to a job. '
+        + 'Please review my situation to decide whether I am unable to work under the ABAWD screening.'
+      );
+    });
+
+    /* The 30-hours claim states the hours, so the generic hours sentence would
+     * say the same thing a second time. */
+    it('does not state the hours twice for the 30-hours exemption', () => {
+      assert.equal(
+        compose({ working: 'hours_30', d_work_hours: 'h30plus', d_work_jobs: 'one' }),
+        'I work 30 or more hours a week while earning less than minimum wage. I have one job.'
+      );
+      // A different band is real information and is kept.
+      assert.equal(
+        compose({ working: 'hours_30', d_work_hours: 'h20_29' }),
+        'I work 30 or more hours a week while earning less than minimum wage. '
+        + 'I usually work about 20 to 29 hours a week.'
       );
     });
 
@@ -573,25 +593,31 @@ describe('snap-screening-logic', () => {
       );
       assert.equal(compose({ caretaker: 'yes' }), 'I take care of someone who cannot care for themselves.');
       assert.equal(compose({ child6: 'yes' }), 'I take care of a child under 6 years old.');
-      assert.equal(compose({ housing: 'no', housingFollowup: NONE }), 'I do not have a regular place to sleep.');
-      // No hours and no jobs picked leaves only what the proof answer supports.
+      assert.equal(
+        compose({ housing: 'no', housingFollowup: NONE }),
+        'I do not have a regular place to sleep. '
+        + 'Please review my situation to decide whether I am unable to work under the ABAWD screening.'
+      );
+      // No hours and no jobs picked leaves the claim and what the proof supports.
       assert.equal(
         compose({ working: 'income_weekly', d_work_proof: ['paystubs'] }),
-        'I can send you my pay stubs.'
+        'I earn enough income to be exempt from the ABAWD work rules. I can send you my pay stubs.'
       );
     });
 
     it('asks for help with proof rather than promising documents that do not exist', () => {
+      const claim30 = 'I work 30 or more hours a week while earning less than minimum wage. ';
       assert.equal(
         compose({ working: 'hours_30', d_work_proof: ['need_help'] }),
-        'I need help getting proof of my work hours and pay.'
+        claim30 + 'I need help getting proof of my work hours and pay.'
       );
       // Picking help alongside a real document must not claim both are coming.
       assert.equal(
         compose({ working: 'hours_30', d_work_proof: ['paystubs', 'need_help'] }),
-        'I can send you my pay stubs. I may need help getting the rest.'
+        claim30 + 'I can send you my pay stubs. I may need help getting the rest.'
       );
-      assert.equal(compose({ working: 'hours_30', d_work_proof: NONE }), '');
+      // The claim stands alone; it is the exemption, not a detail.
+      assert.equal(compose({ working: 'hours_30', d_work_proof: NONE }), claim30.trim());
     });
 
     /* The one place a pick-list is weaker than the box it replaces. A named
@@ -601,34 +627,54 @@ describe('snap-screening-logic', () => {
     it('names the disability benefit when it can, and promises paperwork when it cannot', () => {
       assert.equal(
         compose({ disability: ['other'], d_disability_other: 'masshealth' }),
-        'I also receive MassHealth based on a disability determination. '
+        'I receive MassHealth based on a disability determination. '
         + 'Please review it as part of my exemption screening.'
       );
       for (const v of [NONE, undefined]) {
         assert.equal(
           compose({ disability: ['other'], d_disability_other: v }),
-          'I also receive another disability benefit or payment that was not on the list. '
+          'I receive a disability benefit or payment that was not on the list. '
           + 'I will bring the paperwork so you can review it.'
         );
       }
+    });
+
+    /* "also" needs something to refer back to. A named benefit stays in the
+     * letter's bullet list; "Other" on its own leaves no bullet at all in
+     * composed mode, and the sentence opened by pointing at nothing. */
+    it('says "also" only when a named benefit is listed above it', () => {
+      assert.match(
+        compose({ disability: ['ssi_ssdi', 'other'], d_disability_other: 'masshealth' }),
+        /^I also receive MassHealth/
+      );
+      assert.match(
+        compose({ disability: ['other'], d_disability_other: 'masshealth' }),
+        /^I receive MassHealth/
+      );
     });
 
     it('names the months for a good-cause statement', () => {
       const gc = (when, today) =>
         compose({ goodcause: 'transport', d_gc_what: 'car_broke', d_gc_when: when, d_gc_now: 'still' }, today);
       // Same year: the year is said once, not after every month.
-      assert.match(gc(['this_month', 'last_month']),
-        /^I could not meet the ABAWD work rules in July and August 2026\./);
-      assert.match(gc(['last_month']), /rules in July 2026\./);
+      assert.match(gc(['this_month', 'last_month']), /I missed hours in July and August 2026\./);
+      assert.match(gc(['last_month']), /I missed hours in July 2026\./);
       // Across a year boundary it has to be repeated or the sentence is wrong.
       assert.match(gc(['this_month', 'last_month'], new Date(2026, 0, 15)),
-        /rules in December 2025 and January 2026\./);
-      assert.match(gc(['longer']), /rules for more than three months\./);
+        /I missed hours in December 2025 and January 2026\./);
+      assert.match(gc(['longer']), /I missed hours for more than three months\./);
       // Oldest first, whatever order they were picked in.
       assert.match(gc(['two_months', 'this_month', 'last_month']),
-        /in June, July, and August 2026\./);
+        /I missed hours in June, July, and August 2026\./);
       // No month picked still leaves a true sentence.
-      assert.match(gc(NONE), /^I could not meet the ABAWD work rules\. My car broke down/);
+      assert.equal(gc(NONE),
+        'My car broke down and I had no other way to get there. This is still going on.');
+      /* The good-cause letter already opens "I am writing to explain why I could
+       * not meet the ABAWD work rules for one or more months" and then quotes
+       * the category, so this paragraph saying it a third time was padding. */
+      assert.doesNotMatch(gc(['last_month']), /I could not meet the ABAWD work rules/);
+      // Nothing answered leaves the quoted category standing on its own.
+      assert.equal(compose({ goodcause: 'transport' }), '');
     });
 
     it('month options stay relative so the copy does not change every month', () => {
@@ -639,6 +685,91 @@ describe('snap-screening-logic', () => {
           'a month name in an option label would change SCREENER-COPY.md every month and fail CI'
         );
       }
+    });
+
+    /* The letter can state a reason in three places: the bulleted list, a fixed
+     * paragraph for the four reasons that get one, and the person's own
+     * explanation. In write-in mode the third is a blank box so the repetition
+     * never showed. Composed, it did: one letter said "I do not have a regular
+     * place to sleep" twice, and another listed "Take care of a child under 6
+     * years old" as a bullet directly above a paragraph opening with the same
+     * words. Composed, the paragraph is the only statement of its reason. */
+    describe('a composed letter states each reason once', () => {
+      const letterFor = (answers) => SnapScreening.buildStatementHTML({
+        name: 'Test Person',
+        rt: classic2.resultType(answers),
+        rs: classic2.exemptReasons(answers),
+        gcText: classic2.goodCauseText(answers),
+        explain: classic2.composeStatement(answers, AUG),
+        composed: true,
+        today: 'August 1, 2026'
+      });
+      const times = (haystack, needle) => haystack.split(needle).length - 1;
+
+      it('drops the bullet for a reason a paragraph already covers', () => {
+        const letter = letterFor({
+          child14: 'yes', child6: 'yes', caretaker: 'yes',
+          d_child6_live: 'yes', d_care_who: 'child'
+        });
+        // The two explained reasons lose their bullets...
+        assert.doesNotMatch(letter, /<li[^>]*>Take care of a child under 6 years old<\/li>/);
+        assert.doesNotMatch(letter, /<li[^>]*>Take care of a child or adult who cannot care for themselves<\/li>/);
+        // ...and the unexplained one keeps its bullet, since nothing repeats it.
+        assert.match(letter, /<li[^>]*>Live with a child under 14 years old<\/li>/);
+        assert.equal(times(letter, 'I take care of a child under 6 years old'), 1);
+      });
+
+      it('drops the fixed paragraph for a reason a composed one covers', () => {
+        const housing = letterFor({
+          housing: 'no', housingFollowup: NONE, d_housing_where: 'shelter'
+        });
+        assert.equal(times(housing, 'I do not have a regular place to sleep'), 1);
+        assert.doesNotMatch(housing, /Please review the information I provide/);
+
+        const work = letterFor({ working: 'income_weekly', d_work_hours: 'h20_29' });
+        assert.equal(times(work, 'I earn enough income to be exempt from the ABAWD work rules'), 1);
+        assert.doesNotMatch(work, /I can send proof of my income and hours/);
+
+        const disability = letterFor({ disability: ['other'], d_disability_other: 'masshealth' });
+        assert.equal(times(disability, 'Please review it as part of my exemption screening'), 1);
+        assert.doesNotMatch(disability, /a disability benefit or payment that is not listed above/);
+      });
+
+      it('does not repeat its own opening line in a good-cause letter', () => {
+        const letter = letterFor({
+          goodcause: 'transport', d_gc_what: 'car_broke', d_gc_when: ['last_month'], d_gc_now: 'still'
+        });
+        assert.equal(times(letter, 'I could not meet the ABAWD work rules'), 1);
+      });
+
+      /* The whole point of the coverage rule is that it only fires for reasons a
+       * paragraph actually speaks for. Everything else must be untouched. */
+      it('leaves reasons with no composed paragraph exactly as they were', () => {
+        const letter = letterFor({ pregnant: 'yes', tafdc: 'yes', tribe: 'yes' });
+        assert.match(letter, /<li[^>]*>Pregnant<\/li>/);
+        assert.match(letter, /<li[^>]*>Get or applying for TAFDC cash assistance<\/li>/);
+        assert.match(letter, /<li[^>]*>Alaska Native or member of a Tribe<\/li>/);
+      });
+
+      /* None of this may reach the write-in letter, where the fixed paragraphs
+       * and the full bullet list are the only thing stating the reasons. */
+      it('changes nothing in the write-in letter', () => {
+        const answers = {
+          child14: 'yes', child6: 'yes', housing: 'no', housingFollowup: NONE,
+          working: 'income_weekly', disability: ['other']
+        };
+        const writein = SnapScreening.buildStatementHTML({
+          rt: 'exempt',
+          rs: classic2.exemptReasons(answers),
+          explain: classic2.statementPrompts(answers).map(p => ({ prompt: p, text: '' })),
+          today: 'August 1, 2026'
+        });
+        assert.match(writein, /<li[^>]*>Live with a child under 14 years old<\/li>/);
+        assert.match(writein, /<li[^>]*>Take care of a child under 6 years old<\/li>/);
+        assert.match(writein, /I earn enough income to be exempt from the ABAWD work rules\. I can send proof/);
+        assert.match(writein, /I receive a disability benefit or payment that is not listed above/);
+        assert.match(writein, /I do not have a regular place to sleep\. Please review the information I provide/);
+      });
     });
 
     it('the composed letter reads as prose, and the write-in one still has boxes', () => {

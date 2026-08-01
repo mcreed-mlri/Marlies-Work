@@ -109,7 +109,8 @@ if (missing.length) {
 const UNESCAPE = { '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;': "'", '&nbsp;': ' ' };
 
 /**
- * HTML to readable text. Links keep their destination so it can be checked.
+ * HTML to readable text. Links become markdown `[text](url)` so preview renders
+ * them behind the words instead of printing the raw address inline.
  *
  * Emphasis is carried over rather than stripped. Where the screener bolds words
  * on screen it is doing something deliberate, and a reviewer approving the
@@ -122,7 +123,7 @@ function plain(s, opts) {
   return String(s)
     .replace(/\s*\n\s*/g, ' ')
     .replace(/\$\{LINKS\.([A-Za-z0-9_]+)\}/g, (m, k) => S.LINKS[k] || m)
-    .replace(/<a [^>]*href="([^"]+)"[^>]*>(.*?)<\/a>/g, keepLinks ? '$2 ($1)' : '$2')
+    .replace(/<a [^>]*href="([^"]+)"[^>]*>(.*?)<\/a>/g, keepLinks ? '[$2]($1)' : '$2')
     .replace(/<br\s*\/?>\s*<br\s*\/?>/g, '\n\n')
     .replace(/<br\s*\/?>/g, '\n')
     .replace(/<li>/g, '\n  - ')
@@ -299,8 +300,8 @@ w('| `__________` in a letter | A line to sign by hand, when the person did not 
 w('| Version A | The tool as it works today: the person writes their own statement. |');
 w('| Version B | The proposed version: the tool writes the statement from their answers. |');
 blank();
-say('Links are printed with their web address in brackets after them, so they can be checked',
-  'without clicking.');
+say('Links are clickable behind the link text in markdown preview. Every outbound URL',
+  'is also listed at the end of the document for checking.');
 
 say('**This document is for reading.** There is a second one, `SCREENER-COPY.md`, which lists',
   'the same wording with a short code beside each piece. Those codes are how an edit gets back',
@@ -424,7 +425,7 @@ blank();
 // into the Google Docs export as literal text. They are a sub-list on the page
 // anyway, so this is what the screen actually shows.
 w('- ' + plain(C.workOption1Unpaid));
-w('- ' + plain(C.workOption1Training) + ' (' + S.LINKS.dtaTraining + ')');
+w('- [' + plain(C.workOption1Training) + '](' + S.LINKS.dtaTraining + ')');
 blank();
 say('or');
 quote(bold(C.workOption2));

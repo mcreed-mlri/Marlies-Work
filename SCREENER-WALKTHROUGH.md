@@ -18,7 +18,7 @@ _One rule covers most of it: **anything in italics is explanation and is not par
 | Version A | The tool as it works today: the person writes their own statement. |
 | Version B | The proposed version: the tool writes the statement from their answers. |
 
-_Links are printed with their web address in brackets after them, so they can be checked without clicking._
+_Links are clickable behind the link text in markdown preview. Every outbound URL is also listed at the end of the document for checking._
 
 _**This document is for reading.** There is a second one, `SCREENER-COPY.md`, which lists the same wording with a short code beside each piece. Those codes are how an edit gets back to the right place in the software, so that is the one to write changes into. This one has no codes in it and is meant to be read straight through._
 
@@ -32,7 +32,7 @@ _A note on what this tool is not. It does not send anything to DTA, it does not 
 
 > Some adults on SNAP who are **18 or older and under 65** have to meet ABAWD work rules to get SNAP for more than 3 months. **Many adults are exempt** from the work rules. Being "exempt" means that you don't have to meet the work rules to keep getting SNAP.
 
-> You only have to meet these rules, or tell DTA you are exempt, if DTA sends you a SNAP and Work notice (https://eohhs.ehs.state.ma.us/DTA/PolicyOnline/olg%20docs/Consolidated%20Notice%20Sample.pdf) that says you have to meet the ABAWD Work Rules. Check your mail and DTAConnect (https://dtaconnect.eohhs.mass.gov/) to see notes from DTA. DTA has to screen you for all exemptions *before* subjecting you to the rules.
+> You only have to meet these rules, or tell DTA you are exempt, if DTA sends you a [SNAP and Work notice](https://eohhs.ehs.state.ma.us/DTA/PolicyOnline/olg%20docs/Consolidated%20Notice%20Sample.pdf) that says you have to meet the ABAWD Work Rules. Check your mail and [DTAConnect](https://dtaconnect.eohhs.mass.gov/) to see notes from DTA. DTA has to screen you for all exemptions *before* subjecting you to the rules.
 
 > If you lost your SNAP because of the work rules, you might be able to get back on if you have an exemption, or if you met or are currently meeting the work rules.
 
@@ -61,7 +61,7 @@ _Nothing is required, and clicking an answer a second time clears it. The questi
 
 **Do you live with a child under 14 years old?**
 
-If you live with a child under 14 who should be part of your SNAP household (https://www.masslegalhelp.org/public-benefits-ssi/snap-food-benefits/34-what-snap-household-or-assistance-unit), even if they are not eligible (for example, because of immigration status or if they are a foster child), select “Yes.”
+If you live with a child under 14 who should be part of your [SNAP household](https://www.masslegalhelp.org/public-benefits-ssi/snap-food-benefits/34-what-snap-household-or-assistance-unit), even if they are not eligible (for example, because of immigration status or if they are a foster child), select “Yes.”
 
 - Yes
 - No
@@ -77,7 +77,7 @@ You do not need to be related to them, live with them, or provide care full-time
 
 You do not need to be related to them, live with them, or provide care full-time.
 
-Caring for someone means you regularly do things like make food, help with daily tasks like bathing and personal care, run errands for them, and monitor their health and wellbeing. If you are an Adult Foster Care provider (https://www.masslegalhelp.org/public-benefits-ssi/snap-food-benefits/adult-foster-care-and-snap), answer “Yes.”
+Caring for someone means you regularly do things like make food, help with daily tasks like bathing and personal care, run errands for them, and monitor their health and wellbeing. If you are an [Adult Foster Care provider](https://www.masslegalhelp.org/public-benefits-ssi/snap-food-benefits/adult-foster-care-and-snap), answer “Yes.”
 
 - Yes
 - No
@@ -116,7 +116,7 @@ _Only shown when the answer to "Do you have a regular place to sleep at night?" 
 
 **Has a domestic violence or safety situation made it hard for you to work?**
 
-This includes stalking, harassment, abuse, assault, or any health/safety concerns that make it hard for you to work. DTA has domestic violence specialists in each local office who can help. Find their contact info here (https://www.mass.gov/info-details/dta-domestic-violence-services). Your answer stays private.
+This includes stalking, harassment, abuse, assault, or any health/safety concerns that make it hard for you to work. DTA has domestic violence specialists in each local office who can help. Find their [contact info here](https://www.mass.gov/info-details/dta-domestic-violence-services). Your answer stays private.
 
 - Yes
 - No
@@ -269,7 +269,7 @@ _Then the two ways to meet the rules. Both option headings are bold on the scree
 > **Paid work, unpaid work, or training program for 20 hours a week (80 hours a month).**
 
 - Examples of unpaid work can include internships or caring for family or friends who are not disabled or under age 6.
-- Find a DTA training program (https://snappathtowork.org/)
+- [Find a DTA training program](https://snappathtowork.org/)
 
 _or_
 
@@ -420,8 +420,6 @@ Dear DTA,
 
 I am writing to ask that you update my SNAP case. I believe I am exempt from the ABAWD work rules and should not have to meet them for the following reason(s):
 
-  - Have a health reason that makes it hard to work 30 or more hours a week
-
 I have a physical health condition that makes it hard for me to work 30 or more hours a week. It has lasted 6 months or more, or I expect it to. I see a health care provider for it regularly, and I can ask them for a letter if you need one.
 
 Sincerely,
@@ -500,8 +498,6 @@ Dear DTA,
 
 I am writing to ask that you update my SNAP case. I believe I am exempt from the ABAWD work rules and should not have to meet them for the following reason(s):
 
-  - Take care of a child or adult who cannot care for themselves
-
 I take care of an adult who cannot care for themselves. I do this every day. I am the only person providing this care.
 
 Sincerely,
@@ -546,7 +542,7 @@ _The letter is built up one answer at a time. After each question, what is shown
 
 _The letter now reads:_
 
-> I usually work about 20 to 29 hours a week.
+> I earn enough income to be exempt from the ABAWD work rules. I usually work about 20 to 29 hours a week.
 
 **How many jobs do you have?**
 
@@ -556,7 +552,7 @@ _The letter now reads:_
 
 _The letter now reads:_
 
-> I usually work about 20 to 29 hours a week at one job.
+> I earn enough income to be exempt from the ABAWD work rules. I usually work about 20 to 29 hours a week at one job.
 
 **What can you send DTA as proof of your work?**
 
@@ -568,7 +564,7 @@ _The letter now reads:_
 
 _The letter now reads:_
 
-> I usually work about 20 to 29 hours a week at one job. I can send you my pay stubs and a letter from my employer.
+> I earn enough income to be exempt from the ABAWD work rules. I usually work about 20 to 29 hours a week at one job. I can send you my pay stubs and a letter from my employer.
 
 _**The letter they get**_
 
@@ -582,9 +578,7 @@ Dear DTA,
 
 I am writing to ask that you update my SNAP case. I believe I am exempt from the ABAWD work rules and should not have to meet them for the following reason(s):
 
-I earn enough income to be exempt from the ABAWD work rules. I can send proof of my income and hours, such as pay stubs or a letter from my employer.
-
-I usually work about 20 to 29 hours a week at one job. I can send you my pay stubs and a letter from my employer.
+I earn enough income to be exempt from the ABAWD work rules. I usually work about 20 to 29 hours a week at one job. I can send you my pay stubs and a letter from my employer.
 
 Sincerely,
 
@@ -629,7 +623,7 @@ _The letter is built up one answer at a time. After each question, what is shown
 
 _The letter now reads:_
 
-> I do not have a regular place to sleep. I usually sleep in a shelter.
+> I do not have a regular place to sleep. I usually sleep in a shelter. Please review my situation to decide whether I am unable to work under the ABAWD screening.
 
 **What makes it hard for you to work?**
 
@@ -643,7 +637,7 @@ _The letter now reads:_
 
 _The letter now reads:_
 
-> I do not have a regular place to sleep. I usually sleep in a shelter. This makes it hard for me to work. I have no address or phone to give an employer. I have no reliable way to get to a job.
+> I do not have a regular place to sleep. I usually sleep in a shelter. This makes it hard for me to work. I have no address or phone to give an employer. I have no reliable way to get to a job. Please review my situation to decide whether I am unable to work under the ABAWD screening.
 
 _**The letter they get**_
 
@@ -657,9 +651,7 @@ Dear DTA,
 
 I am writing to ask that you update my SNAP case. I believe I am exempt from the ABAWD work rules and should not have to meet them for the following reason(s):
 
-I do not have a regular place to sleep. Please review the information I provide about my situation to decide whether I am unable to work under the ABAWD screening.
-
-I do not have a regular place to sleep. I usually sleep in a shelter. This makes it hard for me to work. I have no address or phone to give an employer. I have no reliable way to get to a job.
+I do not have a regular place to sleep. I usually sleep in a shelter. This makes it hard for me to work. I have no address or phone to give an employer. I have no reliable way to get to a job. Please review my situation to decide whether I am unable to work under the ABAWD screening.
 
 Sincerely,
 
@@ -702,7 +694,7 @@ _The letter is built up one answer at a time. After each question, what is shown
 
 _The letter now reads:_
 
-> I could not meet the ABAWD work rules. My car broke down and I had no other way to get there.
+> My car broke down and I had no other way to get there.
 
 **Which months did this affect?**
 
@@ -714,7 +706,7 @@ _The letter now reads:_
 
 _The letter now reads:_
 
-> I could not meet the ABAWD work rules in July and August 2026. My car broke down and I had no other way to get there.
+> My car broke down and I had no other way to get there. I missed hours in July and August 2026.
 
 **Is this still going on?**
 
@@ -724,7 +716,7 @@ _The letter now reads:_
 
 _The letter now reads:_
 
-> I could not meet the ABAWD work rules in July and August 2026. My car broke down and I had no other way to get there. This is still going on.
+> My car broke down and I had no other way to get there. I missed hours in July and August 2026. This is still going on.
 
 _**The letter they get**_
 
@@ -740,7 +732,7 @@ I am writing to explain why I could not meet the ABAWD work rules for one or mor
 
 No transportation — a temporary loss of transportation, like a broken down car or temporary public transportation shutdown.
 
-I could not meet the ABAWD work rules in July and August 2026. My car broke down and I had no other way to get there. This is still going on.
+My car broke down and I had no other way to get there. I missed hours in July and August 2026. This is still going on.
 
 Sincerely,
 
@@ -806,11 +798,11 @@ _One case is worth deciding on deliberately rather than discovering later._
 
 _When someone says they get a disability benefit that was not on the screening list, the write-in version asks them to name it, and can take any answer. A multiple-choice list cannot hold every disability payment there is, so it offers the common ones and then has to fall back. Naming one:_
 
-> I also receive MassHealth based on a disability determination. Please review it as part of my exemption screening.
+> I receive MassHealth based on a disability determination. Please review it as part of my exemption screening.
 
 _and not naming one:_
 
-> I also receive another disability benefit or payment that was not on the list. I will bring the paperwork so you can review it.
+> I receive a disability benefit or payment that was not on the list. I will bring the paperwork so you can review it.
 
 _The second is weaker than what a written answer could have said. The choices offered before it gets there:_
 
@@ -860,31 +852,31 @@ _The full set, for anyone who wants to read the wording without walking through 
 
 **Working**
 
-> I usually work 30 or more hours a week at more than one job. I can send you my pay stubs, a letter from my employer, and my work schedule.
+> I earn enough income to be exempt from the ABAWD work rules. I usually work 30 or more hours a week at more than one job. I can send you my pay stubs, a letter from my employer, and my work schedule.
 
 **Working, but needs help getting proof**
 
-> I usually work a different number of hours each week. I need help getting proof of my work hours and pay.
+> I work 30 or more hours a week while earning less than minimum wage. I usually work a different number of hours each week. I need help getting proof of my work hours and pay.
 
 **Another disability benefit**
 
-> I also receive private or employer disability insurance. Please review it as part of my exemption screening.
+> I receive private or employer disability insurance. Please review it as part of my exemption screening.
 
 **No regular place to sleep**
 
-> I do not have a regular place to sleep. I usually sleep outside, or in a car. This makes it hard for me to work. I have no address or phone to give an employer. I have no safe place to keep my things. I have no reliable way to get to a job. I have health problems. I have to move often. I do not feel safe.
+> I do not have a regular place to sleep. I usually sleep outside, or in a car. This makes it hard for me to work. I have no address or phone to give an employer. I have no safe place to keep my things. I have no reliable way to get to a job. I have health problems. I have to move often. I do not feel safe. Please review my situation to decide whether I am unable to work under the ABAWD screening.
 
 **A good reason: transportation**
 
-> I could not meet the ABAWD work rules in July 2026. Public transportation was not running when I needed it. This has since been resolved.
+> Public transportation was not running when I needed it. I missed hours in July 2026. This has since been resolved.
 
 **A good reason: an emergency**
 
-> I could not meet the ABAWD work rules in August 2026. I had to take care of someone who needed me. This is still going on.
+> I had to take care of someone who needed me. I missed hours in August 2026. This is still going on.
 
 **A good reason: a job situation**
 
-> I could not meet the ABAWD work rules for more than three months. My employer treated me unfairly because of who I am. This is still going on.
+> My employer treated me unfairly because of who I am. I missed hours for more than three months. This is still going on.
 
 ## What the person still has to do themselves
 

@@ -747,7 +747,7 @@ Writes:
 
 Writes:
 
-> I usually work about 20 to 29 hours a week at one job. I can send you my pay stubs and a letter from my employer.
+> I earn enough income to be exempt from the ABAWD work rules. I usually work about 20 to 29 hours a week at one job. I can send you my pay stubs and a letter from my employer.
 
 #### Working, but cannot get proof
 
@@ -777,7 +777,7 @@ Writes:
 
 Writes:
 
-> I usually work a different number of hours each week. I need help getting proof of my work hours and pay.
+> I work 30 or more hours a week while earning less than minimum wage. I usually work a different number of hours each week. I need help getting proof of my work hours and pay.
 
 #### Another disability benefit
 
@@ -793,7 +793,7 @@ Writes:
 
 Writes:
 
-> I also receive MassHealth based on a disability determination. Please review it as part of my exemption screening.
+> I receive MassHealth based on a disability determination. Please review it as part of my exemption screening.
 
 #### Another disability benefit, not on the list
 
@@ -809,7 +809,7 @@ Writes:
 
 Writes:
 
-> I also receive another disability benefit or payment that was not on the list. I will bring the paperwork so you can review it.
+> I receive a disability benefit or payment that was not on the list. I will bring the paperwork so you can review it.
 
 #### No regular place to sleep
 
@@ -835,7 +835,7 @@ Writes:
 
 Writes:
 
-> I do not have a regular place to sleep. I usually sleep in a shelter. This makes it hard for me to work. I have no address or phone to give an employer. I have no reliable way to get to a job.
+> I do not have a regular place to sleep. I usually sleep in a shelter. This makes it hard for me to work. I have no address or phone to give an employer. I have no reliable way to get to a job. Please review my situation to decide whether I am unable to work under the ABAWD screening.
 
 #### A good reason for missing hours
 
@@ -864,7 +864,7 @@ Writes:
 
 Writes:
 
-> I could not meet the ABAWD work rules in July and August 2026. My car broke down and I had no other way to get there. This is still going on.
+> My car broke down and I had no other way to get there. I missed hours in July and August 2026. This is still going on.
 
 #### When there is nothing to ask
 

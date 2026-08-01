@@ -1248,7 +1248,7 @@ function renderResults(){
           ${composedEntries.map(e => `<p style="font-size:16px;line-height:1.6;color:var(--prose);margin:0 0 12px">${esc(e.text)}</p>`).join('')}
           <p style="margin:0"><button type="button" data-action="edit-details" style="${linkBtn}">${esc(C.composedChangeLabel)}</button></p>
         </div>
-        ${composedEntries.map((e, i) => `<input type="hidden" id="f-explain-${i}" data-explain-prompt="${esc(e.prompt)}" value="${esc(e.text)}">`).join('')}`
+        ${composedEntries.map((e, i) => `<input type="hidden" id="f-explain-${i}" data-explain-prompt="${esc(e.prompt)}" data-explain-reasons="${esc(JSON.stringify(e.reasons || []))}" value="${esc(e.text)}">`).join('')}`
       : prompts.map((p, i) => `<div style="margin:0 0 16px">
       <label for="f-explain-${i}" style="display:block;font-size:14.5px;font-weight:700;margin:0 0 7px">${esc(p)}</label>
       <textarea id="f-explain-${i}" data-explain-prompt="${esc(p)}" rows="4" placeholder="Type here…" style="width:100%;font-family:inherit;font-size:16px;line-height:1.5;padding:11px 13px;border:1.5px solid var(--stroke);border-radius:calc(var(--radius) - 3px);resize:vertical"></textarea>
@@ -1430,8 +1430,16 @@ function statementInnerHTML(sigSrc){
   let today = '';
   try{ today = new Date().toLocaleDateString('en-US', {year:'numeric', month:'long', day:'numeric'}); }catch(_){}
   // One labelled blank per applicable exemption, in the order they were shown.
+  // In guided mode these are hidden inputs holding the composed sentences, and
+  // data-explain-reasons says which exemptions each one speaks for, so the
+  // letter can drop the bullet and the fixed paragraph that would repeat it.
   const explain = Array.from(document.querySelectorAll('[data-explain-prompt]'))
-    .map(el => ({ prompt: el.getAttribute('data-explain-prompt'), text: el.value }));
+    .map(el => {
+      const raw = el.getAttribute('data-explain-reasons');
+      let reasons = [];
+      if(raw){ try{ reasons = JSON.parse(raw); }catch(_){} }
+      return { prompt: el.getAttribute('data-explain-prompt'), text: el.value, reasons };
+    });
   return SnapScreening.buildStatementHTML({
     name: val('f-name'),
     agency: val('f-agency'),
