@@ -261,6 +261,445 @@
     return out.length ? out : [STATEMENT_PROMPT_FALLBACK];
   }
 
+  /* ---- Guided mode: pick-lists that compose the statement ------------------
+   *
+   * The write-in form above hands someone a blank box and a prompt. Guided mode
+   * replaces each box with two or three pick-lists and writes the sentence from
+   * the picks. Same exemptions, same letter, no typing.
+   *
+   * Every block below is gated on the same reason constant its write-in prompt
+   * uses, and appears in the same order, so the two versions cover exactly the
+   * same ground and can be compared honestly.
+   *
+   * Rules these compose functions all follow, because the output is a sentence
+   * someone signs and sends to a state agency:
+   *
+   *   Nothing is asserted that was not picked. An unanswered question drops its
+   *   clause; it never falls back to a likely-sounding default. Answering one of
+   *   three questions produces a shorter true sentence, not a padded guess.
+   *
+   *   Every "I would rather not say" degrades to the general form the screening
+   *   already established. Declining to say whether a health reason is physical
+   *   or mental still yields "I have a health condition that makes it hard for
+   *   me to work 30 or more hours a week", which is what the exemption rests on
+   *   anyway.
+   *
+   * Question ids carry a `d_` prefix so they cannot collide with a screening
+   * question id in the same flat answers object.
+   */
+
+  /** Join sentence fragments, dropping the ones that composed to nothing. */
+  function joinSentences(parts) {
+    return parts.filter(p => p && String(p).trim()).join(' ').trim();
+  }
+
+  /** The chosen option's id for a single-choice guided question. */
+  function pickOne(answers, id) {
+    const v = answers ? answers[id] : null;
+    return (v == null || v === NONE) ? '' : v;
+  }
+
+  /** Chosen ids for a multi-choice guided question; the none sentinel is []. */
+  function pickMany(answers, id) {
+    const v = answers ? answers[id] : null;
+    if (v == null || v === NONE || !Array.isArray(v)) return [];
+    return v;
+  }
+
+  /** "a, b, and c" for a list already in the author's order. */
+  function andList(items) {
+    const xs = items.filter(Boolean);
+    if (!xs.length) return '';
+    if (xs.length === 1) return xs[0];
+    if (xs.length === 2) return xs[0] + ' and ' + xs[1];
+    return xs.slice(0, -1).join(', ') + ', and ' + xs[xs.length - 1];
+  }
+
+  /** Look up a composed fragment by option id from an [{id,label,text}] list. */
+  function fragmentFor(options, id) {
+    const found = (options || []).find(o => o.id === id);
+    return found ? (found.text || '') : '';
+  }
+
+  const HOW_OFTEN_OPTIONS = [
+    { id: 'daily', label: 'Every day', text: 'every day' },
+    { id: 'most_days', label: 'Most days of the week', text: 'most days of the week' },
+    { id: 'few_days', label: 'A few days a week', text: 'a few days a week' },
+    { id: 'as_needed', label: 'Whenever they need me', text: 'whenever they need me' }
+  ];
+
+  /* No "rather not say" or "not sure" entries in these lists.
+   *
+   * Every single-choice question already renders a `noneLabel` after its
+   * options, so an opt-out inside the list is a second one, and the pair read as
+   * a distinction the person has to work out ("I do not know" above "I am not
+   * sure"). There is only ever one way to decline, it is the last option, and
+   * its wording is chosen per question. Declining composes nothing, which for
+   * these lists degrades to the general sentence the screening already
+   * established rather than to silence. */
+  const GUIDED_HEALTH_KIND = [
+    { id: 'physical', label: 'A physical health reason', text: 'a physical health condition' },
+    { id: 'mental', label: 'A mental health reason', text: 'a mental health condition' },
+    { id: 'both', label: 'Both', text: 'physical and mental health conditions' }
+  ];
+
+  const GUIDED_HEALTH_LENGTH = [
+    { id: 'short', label: 'Less than 6 months', text: 'I expect it to last less than 6 months.' },
+    { id: 'long', label: '6 months or more', text: 'It has lasted 6 months or more, or I expect it to.' }
+  ];
+
+  const GUIDED_HEALTH_CARE = [
+    { id: 'regularly', label: 'Yes, regularly', text: 'I see a health care provider for it regularly, and I can ask them for a letter if you need one.' },
+    { id: 'sometimes', label: 'Yes, sometimes', text: 'I see a health care provider for it sometimes, and I can ask them for a letter if you need one.' },
+    { id: 'no', label: 'No', text: 'I am not seeing a health care provider for it right now.' }
+  ];
+
+  const GUIDED_CARE_WHO = [
+    { id: 'child', label: 'A child', text: 'a child who cannot care for themselves' },
+    { id: 'adult', label: 'An adult', text: 'an adult who cannot care for themselves' },
+    { id: 'more', label: 'More than one person', text: 'more than one person who cannot care for themselves' }
+  ];
+
+  const GUIDED_CARE_ALONE = [
+    { id: 'alone', label: 'I am the only one', text: 'I am the only person providing this care.' },
+    { id: 'shared', label: 'I share it with someone else', text: 'I share this care with someone else.' }
+  ];
+
+  const GUIDED_WORK_HOURS = [
+    { id: 'lt10', label: 'Less than 10 hours', text: 'less than 10 hours a week' },
+    { id: 'h10_19', label: 'About 10 to 19 hours', text: 'about 10 to 19 hours a week' },
+    { id: 'h20_29', label: 'About 20 to 29 hours', text: 'about 20 to 29 hours a week' },
+    { id: 'h30plus', label: '30 hours or more', text: '30 or more hours a week' },
+    { id: 'varies', label: 'It changes week to week', text: 'a different number of hours each week' }
+  ];
+
+  const GUIDED_WORK_JOBS = [
+    { id: 'one', label: 'One job', text: 'one job' },
+    { id: 'more', label: 'More than one job', text: 'more than one job' }
+  ];
+
+  /* `help: true` marks the option that is a request rather than a document.
+   * Picking it alone composes an ask; picking it alongside real proof composes
+   * a caveat. Someone who can send pay stubs but not an employer letter should
+   * not have the tool tell DTA they can send both. */
+  const GUIDED_WORK_PROOF = [
+    { id: 'paystubs', label: 'Pay stubs', text: 'my pay stubs' },
+    { id: 'employer_letter', label: 'A letter from my employer', text: 'a letter from my employer' },
+    { id: 'schedule', label: 'My work schedule', text: 'my work schedule' },
+    { id: 'need_help', label: 'I need help getting proof', text: '', help: true }
+  ];
+
+  /* The one place a pick-list is weaker than the blank box it replaces. The
+   * write-in version asks the person to name their benefit and can take any
+   * answer; no list can hold every disability payment in the country, so the
+   * last option composes a promise to bring paperwork instead of a name. Worth
+   * showing the team rather than smoothing over. */
+  const GUIDED_DISABILITY_OTHER = [
+    { id: 'masshealth', label: 'MassHealth based on a disability determination', text: 'MassHealth based on a disability determination' },
+    { id: 'private', label: 'Private or employer disability insurance', text: 'private or employer disability insurance' },
+    { id: 'va_pension', label: 'A VA pension', text: 'a VA pension' },
+    { id: 'railroad', label: 'Railroad Retirement disability benefits', text: 'Railroad Retirement disability benefits' },
+    { id: 'tribal', label: 'A Tribal disability payment', text: 'a Tribal disability payment' },
+    { id: 'other_state', label: 'A disability payment from another state', text: 'a disability payment from another state' }
+  ];
+
+  const GUIDED_HOUSING_WHERE = [
+    { id: 'shelter', label: 'In a shelter', text: 'in a shelter' },
+    { id: 'outside', label: 'Outside, or in a car', text: 'outside, or in a car' },
+    { id: 'couch', label: 'At other people’s homes', text: 'at other people’s homes' },
+    { id: 'motel', label: 'In a motel or hotel', text: 'in a motel or hotel' },
+    { id: 'varies', label: 'Somewhere different from night to night', text: 'in a different place from night to night' }
+  ];
+
+  /* Composed as separate sentences rather than folded into a list, because each
+   * is already a full first-person clause and reads as one in the letter. */
+  const GUIDED_HOUSING_BARRIERS = [
+    { id: 'no_address', label: 'I have no address or phone to give an employer', text: 'I have no address or phone to give an employer.' },
+    { id: 'no_storage', label: 'I have no safe place to keep my things', text: 'I have no safe place to keep my things.' },
+    { id: 'no_transport', label: 'I have no reliable way to get to a job', text: 'I have no reliable way to get to a job.' },
+    { id: 'health', label: 'I have health problems', text: 'I have health problems.' },
+    { id: 'moving', label: 'I have to move often', text: 'I have to move often.' },
+    { id: 'unsafe', label: 'I do not feel safe', text: 'I do not feel safe.' }
+  ];
+
+  /* Good cause branches on the category already picked on the good-cause
+   * screen, so nobody is shown transportation options for a family emergency. */
+  const GUIDED_GOODCAUSE_WHAT = {
+    transport: [
+      { id: 'car_broke', label: 'My car broke down', text: 'My car broke down and I had no other way to get there.' },
+      { id: 'lost_ride', label: 'I lost my ride', text: 'I lost the ride I had been depending on.' },
+      { id: 'transit', label: 'Public transportation was not running', text: 'Public transportation was not running when I needed it.' },
+      { id: 'afford', label: 'I could not afford to get there', text: 'I could not afford to get there.' }
+    ],
+    emergency: [
+      { id: 'family_ill', label: 'Someone in my family got sick or was hurt', text: 'Someone in my family got sick or was hurt.' },
+      { id: 'death', label: 'There was a death in my family', text: 'There was a death in my family.' },
+      { id: 'caregiving', label: 'I had to take care of someone', text: 'I had to take care of someone who needed me.' },
+      { id: 'housing', label: 'I lost my housing', text: 'I lost my housing.' },
+      { id: 'other_emergency', label: 'Another emergency came up', text: 'Another emergency came up that I could not plan for.' }
+    ],
+    employment: [
+      { id: 'discrimination', label: 'My employer treated me unfairly because of who I am', text: 'My employer treated me unfairly because of who I am.' },
+      { id: 'hours_cut', label: 'My hours were cut', text: 'My hours were cut and I could not make them up.' },
+      { id: 'unsafe', label: 'The working conditions were unsafe or unreasonable', text: 'The working conditions were unsafe or unreasonable.' },
+      { id: 'harassment', label: 'I was harassed at work', text: 'I was harassed at work.' }
+    ]
+  };
+
+  /* Relative labels, not month names.
+   *
+   * "June 2026" in an option label would make this module's copy change every
+   * month, and SCREENER-COPY.md is regenerated and diffed in CI, so the build
+   * would start failing on the first of every month for no reason anyone could
+   * act on. The label stays relative and the month name is resolved against a
+   * reference date only at compose time, where it belongs: the letter needs to
+   * name the months, the question does not. */
+  const GUIDED_GOODCAUSE_WHEN = [
+    { id: 'this_month', label: 'This month', back: 0 },
+    { id: 'last_month', label: 'Last month', back: 1 },
+    { id: 'two_months', label: 'The month before that', back: 2 },
+    { id: 'longer', label: 'More than three months', back: null }
+  ];
+
+  const GUIDED_GOODCAUSE_NOW = [
+    { id: 'still', label: 'Yes, it is still going on', text: 'This is still going on.' },
+    { id: 'over', label: 'No, it is over now', text: 'This has since been resolved.' }
+  ];
+
+  const MONTH_NAMES = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+
+  /** The month `back` months before the reference date. */
+  function monthBack(today, back) {
+    const d = new Date(today.getFullYear(), today.getMonth() - back, 1);
+    return { name: MONTH_NAMES[d.getMonth()], year: d.getFullYear() };
+  }
+
+  /* "July and August 2026", not "July 2026 and August 2026". The year is
+   * repeated only across a year boundary, where dropping it would be wrong. */
+  function monthListPhrase(months) {
+    if (!months.length) return '';
+    const sameYear = months.every(m => m.year === months[0].year);
+    if (sameYear) return andList(months.map(m => m.name)) + ' ' + months[0].year;
+    return andList(months.map(m => m.name + ' ' + m.year));
+  }
+
+  function guidedMonthPhrase(answers, today) {
+    const picked = pickMany(answers, 'd_gc_when');
+    if (!picked.length) return '';
+    if (picked.indexOf('longer') !== -1) return ' for more than three months';
+    const months = GUIDED_GOODCAUSE_WHEN
+      .filter(o => o.back != null && picked.indexOf(o.id) !== -1)
+      .sort((a, b) => b.back - a.back)
+      .map(o => monthBack(today, o.back));
+    const phrase = monthListPhrase(months);
+    return phrase ? ' in ' + phrase : '';
+  }
+
+  /**
+   * The guided blocks, in the same order as `STATEMENT_PROMPTS`.
+   *
+   * `reasons` gates the block. `questions` are rendered with the same option
+   * widgets the screening already uses, so the page needs no new question type.
+   * `compose` turns the answers into the sentence that goes in the letter.
+   */
+  const GUIDED_BLOCKS = [
+    {
+      id: 'health',
+      reasons: [REASONS.health],
+      label: 'Your health reason',
+      questions: [
+        { id: 'd_health_kind', type: 'single', text: 'Is this a physical health reason, a mental health reason, or both?', options: GUIDED_HEALTH_KIND, noneLabel: 'I would rather not say' },
+        { id: 'd_health_length', type: 'single', text: 'How long has this been going on, or how long do you expect it to last?', options: GUIDED_HEALTH_LENGTH, noneLabel: 'I do not know' },
+        { id: 'd_health_care', type: 'single', text: 'Do you see a doctor, therapist, or other provider for it?', options: GUIDED_HEALTH_CARE, noneLabel: 'I am not sure' }
+      ],
+      compose: (a) => joinSentences([
+        'I have ' + (fragmentFor(GUIDED_HEALTH_KIND, pickOne(a, 'd_health_kind')) || 'a health condition')
+          + ' that makes it hard for me to work 30 or more hours a week.',
+        fragmentFor(GUIDED_HEALTH_LENGTH, pickOne(a, 'd_health_length')),
+        fragmentFor(GUIDED_HEALTH_CARE, pickOne(a, 'd_health_care'))
+      ])
+    },
+    {
+      id: 'caretaker',
+      reasons: [REASONS.caretaker],
+      label: 'The person you care for',
+      questions: [
+        { id: 'd_care_who', type: 'single', text: 'Who do you take care of?', options: GUIDED_CARE_WHO, noneLabel: 'I would rather not say' },
+        /* GUIDED_CARE_WHO has no "rather not say" of its own; the noneLabel
+           above is it, and declining still composes "someone who cannot care
+           for themselves", which is the exemption itself. */
+        { id: 'd_care_often', type: 'single', text: 'How often do you provide this care?', options: HOW_OFTEN_OPTIONS, noneLabel: 'I am not sure' },
+        { id: 'd_care_alone', type: 'single', text: 'Is anyone else helping with this care?', options: GUIDED_CARE_ALONE, noneLabel: 'I am not sure' }
+      ],
+      compose: (a) => {
+        const often = fragmentFor(HOW_OFTEN_OPTIONS, pickOne(a, 'd_care_often'));
+        return joinSentences([
+          'I take care of ' + (fragmentFor(GUIDED_CARE_WHO, pickOne(a, 'd_care_who')) || 'someone who cannot care for themselves') + '.',
+          often ? 'I do this ' + often + '.' : '',
+          fragmentFor(GUIDED_CARE_ALONE, pickOne(a, 'd_care_alone'))
+        ]);
+      }
+    },
+    {
+      id: 'child6',
+      reasons: [REASONS.child6],
+      label: 'The child under 6 you care for',
+      questions: [
+        { id: 'd_child6_live', type: 'yn', text: 'Does this child live with you?' },
+        { id: 'd_child6_often', type: 'single', text: 'How often do you take care of them?', options: HOW_OFTEN_OPTIONS, noneLabel: 'I am not sure' }
+      ],
+      compose: (a) => {
+        const lives = a && a.d_child6_live;
+        const often = fragmentFor(HOW_OFTEN_OPTIONS, pickOne(a, 'd_child6_often'));
+        return joinSentences([
+          'I take care of a child under 6 years old.',
+          lives === 'yes' ? 'The child lives with me.' : (lives === 'no' ? 'The child does not live with me.' : ''),
+          often ? 'I care for them ' + often + '.' : ''
+        ]);
+      }
+    },
+    {
+      id: 'work',
+      reasons: [WORK_REASON_INCOME, WORK_REASON_HOURS_30],
+      label: 'Your work',
+      questions: [
+        { id: 'd_work_hours', type: 'single', text: 'About how many hours a week do you usually work?', options: GUIDED_WORK_HOURS, noneLabel: 'I am not sure' },
+        { id: 'd_work_jobs', type: 'single', text: 'How many jobs do you have?', options: GUIDED_WORK_JOBS, noneLabel: 'I am not sure' },
+        { id: 'd_work_proof', type: 'multi', text: 'What can you send DTA as proof of your work?', help: 'Pick every one you can send.', options: GUIDED_WORK_PROOF, noneLabel: 'None of these' }
+      ],
+      compose: (a) => {
+        const hours = fragmentFor(GUIDED_WORK_HOURS, pickOne(a, 'd_work_hours'));
+        const jobs = fragmentFor(GUIDED_WORK_JOBS, pickOne(a, 'd_work_jobs'));
+        let opening = '';
+        if (hours && jobs) opening = 'I usually work ' + hours + ' at ' + jobs + '.';
+        else if (hours) opening = 'I usually work ' + hours + '.';
+        else if (jobs) opening = 'I work ' + jobs + '.';
+
+        const picked = pickMany(a, 'd_work_proof');
+        const docs = GUIDED_WORK_PROOF.filter(o => !o.help && picked.indexOf(o.id) !== -1).map(o => o.text);
+        const wantsHelp = picked.indexOf('need_help') !== -1;
+        let proof = '';
+        if (docs.length && wantsHelp) proof = 'I can send you ' + andList(docs) + '. I may need help getting the rest.';
+        else if (docs.length) proof = 'I can send you ' + andList(docs) + '.';
+        else if (wantsHelp) proof = 'I need help getting proof of my work hours and pay.';
+
+        return joinSentences([opening, proof]);
+      }
+    },
+    {
+      id: 'disabilityOther',
+      reasons: [DISABILITY_OTHER_REASON],
+      label: 'Your other disability benefit',
+      questions: [
+        { id: 'd_disability_other', type: 'single', text: 'Which benefit or payment is it?', options: GUIDED_DISABILITY_OTHER, noneLabel: 'Something not on this list' }
+      ],
+      compose: (a) => {
+        const named = fragmentFor(GUIDED_DISABILITY_OTHER, pickOne(a, 'd_disability_other'));
+        return named
+          ? 'I also receive ' + named + '. Please review it as part of my exemption screening.'
+          : 'I also receive another disability benefit or payment that was not on the list. I will bring the paperwork so you can review it.';
+      }
+    },
+    {
+      id: 'housing',
+      reasons: [HOUSING_EXEMPT_REASON],
+      label: 'Where you sleep',
+      questions: [
+        { id: 'd_housing_where', type: 'single', text: 'Where do you usually sleep?', options: GUIDED_HOUSING_WHERE, noneLabel: 'I would rather not say' },
+        { id: 'd_housing_barriers', type: 'multi', text: 'What makes it hard for you to work?', help: 'Pick every one that is true for you.', options: GUIDED_HOUSING_BARRIERS, noneLabel: 'None of these' }
+      ],
+      compose: (a) => {
+        const where = fragmentFor(GUIDED_HOUSING_WHERE, pickOne(a, 'd_housing_where'));
+        const picked = pickMany(a, 'd_housing_barriers');
+        const barriers = GUIDED_HOUSING_BARRIERS.filter(o => picked.indexOf(o.id) !== -1).map(o => o.text);
+        return joinSentences([
+          'I do not have a regular place to sleep.',
+          where ? 'I usually sleep ' + where + '.' : '',
+          barriers.length ? 'This makes it hard for me to work.' : '',
+          barriers.join(' ')
+        ]);
+      }
+    }
+  ];
+
+  /** Good cause is its own block: gated on the result, not on an exempt reason. */
+  const GUIDED_GOODCAUSE_BLOCK = {
+    id: 'goodcause',
+    label: 'Why you missed hours',
+    questions: (answers) => {
+      const category = (answers && answers.goodcause) || '';
+      const what = GUIDED_GOODCAUSE_WHAT[category];
+      const qs = [];
+      if (what) {
+        qs.push({ id: 'd_gc_what', type: 'single', text: 'What happened?', options: what, noneLabel: 'Something else' });
+      }
+      qs.push({ id: 'd_gc_when', type: 'multi', text: 'Which months did this affect?', help: 'Pick every month you could not meet the work rules.', options: GUIDED_GOODCAUSE_WHEN, noneLabel: 'I am not sure' });
+      qs.push({ id: 'd_gc_now', type: 'single', text: 'Is this still going on?', options: GUIDED_GOODCAUSE_NOW, noneLabel: 'I am not sure' });
+      return qs;
+    },
+    compose: (a, today) => {
+      const category = (a && a.goodcause) || '';
+      const what = GUIDED_GOODCAUSE_WHAT[category] || [];
+      return joinSentences([
+        'I could not meet the ABAWD work rules' + guidedMonthPhrase(a, today) + '.',
+        fragmentFor(what, pickOne(a, 'd_gc_what')),
+        fragmentFor(GUIDED_GOODCAUSE_NOW, pickOne(a, 'd_gc_now'))
+      ]);
+    }
+  };
+
+  /** The blocks that apply, in author order. Good cause replaces the rest. */
+  function guidedBlocksFor(reasons, resultType) {
+    if (resultType === 'goodcause') return [GUIDED_GOODCAUSE_BLOCK];
+    if (resultType !== 'exempt') return [];
+    const rs = Array.isArray(reasons) ? reasons : [];
+    return GUIDED_BLOCKS.filter(b => b.reasons.some(r => rs.indexOf(r) !== -1));
+  }
+
+  /**
+   * Every guided question to ask, flattened and ready for the same option
+   * widgets the screening questions use.
+   *
+   * Empty when the exemptions all speak for themselves (pregnant, TAFDC, tribe,
+   * school, unemployment, domestic violence, substance use treatment, a named
+   * disability benefit). Those need no explaining, so guided mode asks nothing
+   * extra and the letter carries its reason list alone. This is the case where
+   * the write-in form shows `STATEMENT_PROMPT_FALLBACK`: an empty box under
+   * "Explain your reasons in your own words", which is the least answerable
+   * prompt in the tool.
+   */
+  function guidedQuestionsFor(reasons, resultType, answers) {
+    const out = [];
+    guidedBlocksFor(reasons, resultType).forEach(b => {
+      const qs = typeof b.questions === 'function' ? b.questions(answers || {}) : b.questions;
+      qs.forEach(q => out.push(q));
+    });
+    return out;
+  }
+
+  /**
+   * The composed statement, in the shape the write-in path already produces:
+   * an array of `{ prompt, text }`. `prompt` is a short section label rather
+   * than a write-in instruction, and the letter drops it entirely under
+   * `composed: true`.
+   *
+   * `today` is passed in rather than read from the clock so the same answers
+   * always compose the same sentence in tests and in generated documentation.
+   */
+  function composeStatementFor(reasons, resultType, answers, today) {
+    const when = today instanceof Date ? today : new Date();
+    const a = answers || {};
+    const out = [];
+    guidedBlocksFor(reasons, resultType).forEach(b => {
+      const text = b.compose(a, when);
+      if (text) out.push({ prompt: b.label, text });
+    });
+    return out;
+  }
+
   const GROUPS = [
     { title: 'Children and people you care for', ids: ['child14', 'child6', 'caretaker', 'pregnant'], classic2Title: 'Your Family and Household' },
     { title: 'Your health, housing, and safety', ids: ['health', 'housing', 'housingFollowup', 'dv'] },
@@ -602,6 +1041,20 @@
     formLeadExempt: 'To tell DTA you are exempt, you can fill in the blanks below with your results and send it to DTA.',
     formLeadGoodCause: 'To tell DTA why you missed work hours, you can fill in the blanks below with your results and send it to DTA.',
     formExplainHeading: 'In a few sentences:',
+    /* ---- Guided mode ----
+     * Every string below belongs to the version that composes the statement
+     * from pick-lists instead of asking for it in a blank box. The write-in
+     * strings above stay untouched, because both versions are in front of the
+     * team at once and the comparison is only fair if neither has drifted. */
+    detailsStepHeading: 'A few more details for your letter',
+    detailsStepLead: 'These answers write your letter for you. Every question is optional, and anything you skip is simply left out.',
+    detailsStepPrivacy: 'Your answers stay on this device. MLRI does not see them.',
+    composedStatementHeading: 'What your letter says:',
+    composedFormLeadExempt: 'We wrote this from your answers. Read it over, then print or download it to send to DTA.',
+    composedFormLeadGoodCause: 'We wrote this from your answers. Read it over, then print or download it to send to DTA.',
+    composedChangeLabel: 'Change my answers',
+    composedWhyInfoExempt: 'Telling DTA about your exemption can help them update your SNAP case more quickly. DTA needs to know why the work rules should not apply to you. This tool wrote the statement below from the answers you gave, so you can print or save it and send it to DTA. MLRI never sees your answers.',
+    composedWhyInfoGoodCause: 'Telling DTA about your good reason can help them update your SNAP case more quickly. DTA needs to know why you could not meet the work rules. This tool wrote the statement below from the answers you gave, so you can print or save it and send it to DTA. MLRI never sees your answers.',
     whyInfoLabel: 'Why are we asking for more information?',
     whyInfoExempt: 'Telling DTA about your exemption can help them update your SNAP case more quickly. DTA needs to know why the work rules should not apply to you, and this form puts your answers in writing so you can print or save them and send them to DTA. MLRI never sees what you type.',
     whyInfoGoodCause: 'Telling DTA about your good reason can help them update your SNAP case more quickly. DTA needs to know why you could not meet the work rules, and this form puts your answers in writing so you can print or save them and send them to DTA. MLRI never sees what you type.',
@@ -696,7 +1149,8 @@
       rt = 'exempt',
       rs = [],
       gcText = '',
-      today = ''
+      today = '',
+      composed = false
     } = opts || {};
     const esc = escHtml;
     const blank = (w) => `<span style="border-bottom:1px solid #111;display:inline-block;min-width:${w};padding:0 2px 2px">${'&nbsp;'.repeat(8)}</span>`;
@@ -746,18 +1200,35 @@
       : [{ prompt: '', text: explain }];
     const box = (content) =>
       `<div style="border:1px solid #999;padding:12px 14px;min-height:72px;white-space:pre-wrap;background:#fff">${content}</div>`;
-    const explainContent = explainEntries.length
-      ? explainEntries.map(e => {
-        const text = String(e.text == null ? '' : e.text);
-        const inner = text.trim()
-          ? esc(text)
-          : '&nbsp;';
-        const label = e.prompt
-          ? `<div style="font-size:10.5pt;color:#333;margin:0 0 6px">${esc(e.prompt)}</div>`
-          : '';
-        return label + box(inner);
-      }).join('<div style="height:14px"></div>')
-      : box('&nbsp;');
+
+    /* Guided mode composed these sentences from pick-lists, so they are prose
+     * and have to look like it. A caption above a ruled box is right for
+     * something handwritten and wrong here: it makes a finished letter read as
+     * a form someone filled in, which is the opposite of what this version is
+     * trying to show. Captions and borders both go, and an entry that composed
+     * to nothing is dropped rather than printed as an empty box to write in. */
+    let explainContent;
+    if (composed) {
+      const paras = explainEntries
+        .map(e => String(e.text == null ? '' : e.text).trim())
+        .filter(Boolean);
+      explainContent = paras
+        .map(t => `<p style="margin:0 0 14px">${esc(t)}</p>`)
+        .join('');
+    } else {
+      explainContent = explainEntries.length
+        ? explainEntries.map(e => {
+          const text = String(e.text == null ? '' : e.text);
+          const inner = text.trim()
+            ? esc(text)
+            : '&nbsp;';
+          const label = e.prompt
+            ? `<div style="font-size:10.5pt;color:#333;margin:0 0 6px">${esc(e.prompt)}</div>`
+            : '';
+          return label + box(inner);
+        }).join('<div style="height:14px"></div>')
+        : box('&nbsp;');
+    }
 
     const sigBlock = sigImg
       ? `<img src="${sigImg}" alt="Signature" width="320" height="72" style="display:block;width:320px;height:72px;max-width:100%;margin:0 0 4px">`
@@ -774,7 +1245,7 @@
 
       ${body}
 
-      <div style="margin:20px 0 0;break-inside:avoid;page-break-inside:avoid">
+      <div style="margin:${composed ? '0' : '20px 0 0'};break-inside:avoid;page-break-inside:avoid">
         ${explainContent}
       </div>
 
@@ -796,6 +1267,7 @@
       name = '',
       agency = '',
       explain = '',
+      composed = false,
       copy = RESULT_COPY
     } = opts || {};
     const lines = [];
@@ -821,11 +1293,15 @@
     const hasExplain = explainEntries.some(e => String(e.text || '').trim());
     if (hasExplain) {
       lines.push('');
-      lines.push(copy.formExplainHeading);
+      /* "In a few sentences:" introduces blanks someone is about to fill in.
+       * Guided mode has already written the sentences, so the heading changes
+       * and the per-blank labels come out: the summary reads as the statement
+       * it is rather than as a half-filled form. */
+      lines.push(composed ? copy.composedStatementHeading : copy.formExplainHeading);
       explainEntries.forEach(e => {
         const text = String(e.text == null ? '' : e.text).trim();
         if (!text) return;
-        if (e.prompt) lines.push(e.prompt);
+        if (e.prompt && !composed) lines.push(e.prompt);
         lines.push(text);
         lines.push('');
       });
@@ -931,6 +1407,12 @@
       shouldSkipGoodCause: (answers) => shouldSkipGoodCause(answers, QUESTIONS),
       goodCauseText: (answers) => goodCauseText(answers, GC_TEXT),
       statementPrompts: (answers) => statementPromptsFor(exemptReasonsFor(answers, QUESTIONS), resultTypeFor(answers, QUESTIONS)),
+      /* Guided mode. Both read the same reasons the write-in prompts do, so a
+       * change to who counts as exempt moves the two versions together. */
+      guidedQuestions: (answers) => guidedQuestionsFor(
+        exemptReasonsFor(answers, QUESTIONS), resultTypeFor(answers, QUESTIONS), answers),
+      composeStatement: (answers, today) => composeStatementFor(
+        exemptReasonsFor(answers, QUESTIONS), resultTypeFor(answers, QUESTIONS), answers, today),
       pageQuestions: (answers, step, gc) => pageQuestionsFor(answers, step, gc, GROUPS_V, Q_BY_ID, GOODCAUSE),
       qById: (id) => (id === 'goodcause' ? GOODCAUSE : Q_BY_ID[id]),
       workOptionKind: (id) => {
@@ -971,6 +1453,11 @@
     buildGcText,
     goodCauseCategories,
     statementPromptsFor,
+    GUIDED_BLOCKS,
+    GUIDED_GOODCAUSE_BLOCK,
+    guidedBlocksFor,
+    guidedQuestionsFor,
+    composeStatementFor,
     buildStatementHTML,
     DTA_SUBMISSION,
     RESULT_COPY,

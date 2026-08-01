@@ -447,6 +447,10 @@
   </div>
 </header>
 
+<!-- Review-only strip naming which version of the statement form this is.
+     Filled by initModeBanner() and only on a review host; empty in production. -->
+<div id="mode-banner" class="no-print"></div>
+
 <!-- Progress -->
 <div id="progress" class="no-print"></div>
 
@@ -533,7 +537,45 @@ const { RESULT_COPY, exemptHeadingHtml, exemptProofNotes, buildDtaContactsHtml, 
  * State + logic (ports the DCLogic Component)
  * ------------------------------------------------------------------ */
 
-const state = { view:'intro', step:0, gc:false, helpOpen:{}, answers:{}, animate:true };
+const state = { view:'intro', step:0, gc:false, details:false, helpOpen:{}, answers:{}, animate:true };
+
+/* ---- Guided mode ------------------------------------------------- *
+ * Two versions of the statement form are in the page at once, and `?v=guided`
+ * picks between them:
+ *
+ *   writein  the form as it ships: one blank box per exemption, the person
+ *            writes the letter body themselves.
+ *   guided   two or three pick-lists per exemption, asked as a step before the
+ *            results, and the tool writes the letter body from the answers.
+ *
+ * Both are in front of the team so they can be compared on whether DTA would
+ * accept a statement written in the tool's words. Neither is the default yet,
+ * so `writein` stays the one the public would get.
+ *
+ * Gated by samplesAllowed(), the same allowlist ?sample= uses, for the same
+ * reason: an unreleased version of a legal form must not be reachable from a
+ * shared URL in production. Set at init rather than here, because
+ * samplesAllowed() reads SAMPLE_HOSTS, which is declared further down and is
+ * still in its temporal dead zone at this point in the script.
+ * ------------------------------------------------------------------ */
+let MODE = 'writein';
+
+function guided(){ return MODE === 'guided'; }
+
+function applyModeFromURL(){
+  if(!samplesAllowed()) return false;
+  let v = '';
+  try{ v = (new URLSearchParams(location.search).get('v') || '').toLowerCase(); }catch(e){}
+  if(v !== 'guided') return false;
+  MODE = 'guided';
+  return true;
+}
+
+/** Guided questions for the current answers; empty when nothing needs asking. */
+function detailQuestions(){ return guided() ? S.guidedQuestions(state.answers) : []; }
+
+/** True when guided mode has a details step to show before the results. */
+function hasDetailsStep(){ return detailQuestions().length > 0; }
 
 /* ---- Tab-scoped storage, nothing left behind --------------------- *
  * sessionStorage, not localStorage. Answers survive a refresh or a stray
@@ -564,7 +606,7 @@ function persist(){
   if(SAMPLE_MODE) return; // a sample preview must never overwrite a real saved session
   try{
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify({
-      view:state.view, step:state.step, gc:state.gc,
+      view:state.view, step:state.step, gc:state.gc, details:state.details,
       answers:state.answers, savedAt:Date.now()
     }));
   }catch(e){ /* storage unavailable or full; fail quietly */ }
@@ -584,6 +626,11 @@ function loadPersisted(){
     // Clamp in case saved data predates the themed grouping (step used to index questions).
     state.step = Math.max(0, Math.min(state.step, GROUPS.length - 1));
     state.gc = !!d.gc;
+    /* A session saved in guided mode and reopened without the flag would restore
+       a details step this build is not rendering, so it is gated on the mode
+       rather than trusted from storage. The stray d_* answers it leaves behind
+       are ignored by everything else. */
+    state.details = guided() && !!d.details;
     state.answers = (d.answers && typeof d.answers === 'object') ? S.migrateAnswers(d.answers) : {};
   }catch(e){
     try{ sessionStorage.removeItem(STORAGE_KEY); }catch(_){}
@@ -593,28 +640,67 @@ function loadPersisted(){
 function deleteAnswers(){
   try{ sessionStorage.removeItem(STORAGE_KEY); }catch(e){}
   SAMPLE_MODE = false;
-  state.view = 'intro'; state.step = 0; state.gc = false;
+  state.view = 'intro'; state.step = 0; state.gc = false; state.details = false;
   state.helpOpen = {}; state.answers = {};
   renderWithMotion();
 }
 
-function qById(id){ return S.qById(id); }
+/* Resolves a question id to its definition, for the click and keyboard handlers.
+ *
+ * S.qById only knows the screening questions and the good-cause one. The guided
+ * questions are built per person from whichever exemptions applied, so they are
+ * not in that table and have to be looked up in the set currently on screen;
+ * without this, every option on the details step rendered correctly and did
+ * nothing at all when clicked. */
+function qById(id){
+  const q = S.qById(id);
+  if(q) return q;
+  return detailQuestions().find(x => x.id === id) || null;
+}
 function curGroup(){ return GROUPS[state.step]; }
-function pageQuestions(){ return S.pageQuestions(state.answers, state.step, state.gc); }
+function pageQuestions(){
+  if(state.details) return detailQuestions();
+  return S.pageQuestions(state.answers, state.step, state.gc);
+}
 function setAns(id, val){ state.answers[id] = val; }
 function clearAns(id){ delete state.answers[id]; }
 function reasons(){ return S.exemptReasons(state.answers); }
 function resultType(){ return S.resultType(state.answers); }
 
+/* The details step sits after good cause rather than beside it, because its
+ * questions branch on the good-cause category the person just picked. It is
+ * deliberately not a fifth entry in GROUPS: scripts/gen-docassemble.js indexes
+ * a fixed four-element GROUP_VARS by position in that array and exits on a
+ * fifth. Modelling it on state.gc, which is also a step outside the groups,
+ * keeps the interview generator working untouched. */
+function toResultsOrDetails(){
+  if(hasDetailsStep()){ state.details = true; state.view = 'question'; }
+  else { state.details = false; state.view = 'results'; }
+}
+
 function advance(){
-  if(state.gc){ state.view = 'results'; renderWithMotion(); return; }
+  /* Nothing to advance to from the results, and in guided mode this is not the
+     no-op it looks like: state.step is still on the last group, so falling
+     through would route back into the details step and bounce someone off the
+     results screen they had just reached. No button on that screen calls this,
+     but the state machine should not depend on that staying true. */
+  if(state.view === 'results') return;
+  if(state.details){ state.view = 'results'; state.details = false; renderWithMotion(); return; }
+  if(state.gc){ toResultsOrDetails(); renderWithMotion(); return; }
   if(state.step < GROUPS.length - 1){ state.step++; renderWithMotion(); return; }
-  if(S.shouldSkipGoodCause(state.answers)){ state.view = 'results'; }
+  if(S.shouldSkipGoodCause(state.answers)){ toResultsOrDetails(); }
   else { state.gc = true; }
   renderWithMotion();
 }
 
 function back(){
+  if(state.details){
+    state.details = false;
+    if(S.shouldSkipGoodCause(state.answers)){ state.gc = false; state.step = GROUPS.length - 1; }
+    else { state.gc = true; }
+    renderWithMotion();
+    return;
+  }
   if(state.gc){ state.gc = false; state.step = GROUPS.length - 1; renderWithMotion(); return; }
   if(state.step > 0){ state.step--; }
   else { state.view = 'intro'; }
@@ -624,11 +710,22 @@ function back(){
 function skipToEnd(){
   if(S.shouldSkipGoodCause(state.answers)){
     state.gc = false;
-    state.view = 'results';
+    toResultsOrDetails();
   } else {
     state.gc = true;
+    state.details = false;
     state.view = 'question';
   }
+  renderWithMotion();
+}
+
+/* "Change my answers" on the results screen. Returns to the details step rather
+ * than restarting, because the only thing being changed is the wording of a
+ * letter the person has just read. */
+function editDetails(){
+  if(!hasDetailsStep()) return;
+  state.details = true;
+  state.view = 'question';
   renderWithMotion();
 }
 
@@ -789,7 +886,11 @@ function renderProgress(){
   if(state.view !== 'question'){ el.innerHTML = ''; return; }
   const total = GROUPS.length;
   let pct, label;
-  if(state.gc){ pct = 100; label = 'Last question'; }
+  /* The details step is the last thing before the results in guided mode, so it
+     takes the full bar. Good cause keeps "Last question" only when nothing
+     follows it; otherwise it would claim to be last and then not be. */
+  if(state.details){ pct = 100; label = 'Last step'; }
+  else if(state.gc){ pct = 100; label = hasDetailsStep() ? 'Almost done' : 'Last question'; }
   else { const cur = state.step + 1; pct = Math.round((cur / total) * 100); label = `Section ${cur} of ${total}`; }
   /* Built once, then updated in place.
    *
@@ -941,7 +1042,33 @@ function renderQBlock(q){
 
 function canStart(){ return state.answers.ageRange === 'yes' || state.answers.ageRange === 'no'; }
 
+/* The guided details step.
+ *
+ * Its own function rather than a branch inside renderPage, because almost
+ * nothing on that screen carries over: no section title, no "answer any that
+ * apply" note, no skip warning (there is nothing left to skip to), and no
+ * "Skip to results" link. What it does share is renderQBlock, so the pick-lists
+ * look and behave exactly like the screening questions the person just
+ * answered. */
+function renderDetails(){
+  const C = RESULT_COPY;
+  const blocks = pageQuestions().map(renderQBlock).join('');
+  return `<div class="${animClass()}">
+    <div style="margin:0 0 20px">
+      <h1 class="h2">${esc(C.detailsStepHeading)}</h1>
+      <p style="font-size:15.5px;line-height:1.55;color:var(--muted);margin:8px 0 0">${esc(C.detailsStepLead)}</p>
+      <p style="font-size:14.5px;line-height:1.55;color:var(--muted);margin:6px 0 0">${esc(C.detailsStepPrivacy)}</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">${blocks}</div>
+    <div class="q-nav">
+      <button type="button" data-action="back" style="${ghostBtn}">← Back</button>
+      <button type="button" data-action="next" style="${nextBtn}">See my letter →</button>
+    </div>
+  </div>`;
+}
+
 function renderPage(){
+  if(state.details) return renderDetails();
   const lastGroup = !state.gc && state.step === GROUPS.length - 1;
   const nextLabel = (lastGroup || state.gc) ? 'See my results →' : 'Next →';
   const skipWarn = lastGroup && !state.gc && reasons().length === 0
@@ -1096,9 +1223,33 @@ function renderResults(){
   let form = '';
   if(rt === 'exempt' || rt === 'goodcause'){
     const formTitle = rt === 'exempt' ? C.formTitleExempt : C.formTitleGoodCause;
-    const formLead = rt === 'exempt' ? C.formLeadExempt : C.formLeadGoodCause;
-    const whyInfo = rt === 'exempt' ? C.whyInfoExempt : C.whyInfoGoodCause;
-    const blanks = prompts.map((p, i) => `<div style="margin:0 0 16px">
+    const formLead = guided()
+      ? (rt === 'exempt' ? C.composedFormLeadExempt : C.composedFormLeadGoodCause)
+      : (rt === 'exempt' ? C.formLeadExempt : C.formLeadGoodCause);
+    const whyInfo = guided()
+      ? (rt === 'exempt' ? C.composedWhyInfoExempt : C.composedWhyInfoGoodCause)
+      : (rt === 'exempt' ? C.whyInfoExempt : C.whyInfoGoodCause);
+
+    /* Guided mode composed the statement already, so this shows it back rather
+       than asking for it.
+     *
+     * Nobody signs a letter they have not read, so the composed text is on the
+     * screen in full, above the signature, with a way back to the answers that
+     * produced it. That is the whole safeguard for putting sentences in
+     * somebody's mouth: they see the sentences.
+     *
+     * The hidden inputs carry the same [data-explain-prompt] contract the
+     * textareas do, which is how statementInnerHTML, downloadDoc, and
+     * emailResults find what the person wrote. Satisfying it here means print,
+     * Word, and email need no guided branch at all. */
+    const composedEntries = guided() ? S.composeStatement(state.answers) : [];
+    const blanks = guided()
+      ? `<div style="margin:0 0 18px;padding:18px 20px;background:var(--soft);border:1px solid var(--panel);border-radius:var(--radius)">
+          ${composedEntries.map(e => `<p style="font-size:16px;line-height:1.6;color:var(--prose);margin:0 0 12px">${esc(e.text)}</p>`).join('')}
+          <p style="margin:0"><button type="button" data-action="edit-details" style="${linkBtn}">${esc(C.composedChangeLabel)}</button></p>
+        </div>
+        ${composedEntries.map((e, i) => `<input type="hidden" id="f-explain-${i}" data-explain-prompt="${esc(e.prompt)}" value="${esc(e.text)}">`).join('')}`
+      : prompts.map((p, i) => `<div style="margin:0 0 16px">
       <label for="f-explain-${i}" style="display:block;font-size:14.5px;font-weight:700;margin:0 0 7px">${esc(p)}</label>
       <textarea id="f-explain-${i}" data-explain-prompt="${esc(p)}" rows="4" placeholder="Type here…" style="width:100%;font-family:inherit;font-size:16px;line-height:1.5;padding:11px 13px;border:1.5px solid var(--stroke);border-radius:calc(var(--radius) - 3px);resize:vertical"></textarea>
     </div>`).join('');
@@ -1115,7 +1266,7 @@ function renderResults(){
       <div style="padding:20px">
       ${privacyNote}
       ${printLead}
-      <p style="font-size:15px;font-weight:700;margin:0 0 12px">${esc(C.formExplainHeading)}</p>
+      <p style="font-size:15px;font-weight:700;margin:0 0 12px">${esc(guided() ? C.composedStatementHeading : C.formExplainHeading)}</p>
       ${blanks}
       <div class="form-row">
         <div><label for="f-name" style="display:block;font-size:14px;font-weight:700;margin:0 0 6px">Your name</label><input id="f-name" autocomplete="name" style="${inputStyle}"></div>
@@ -1289,7 +1440,11 @@ function statementInnerHTML(sigSrc){
     rt: resultType(),
     rs: reasons(),
     gcText: S.goodCauseText(state.answers),
-    today
+    today,
+    /* Guided text is prose, so the letter prints it as paragraphs instead of
+       captioned boxes. Left off in write-in mode, where the boxes are the
+       point: an empty one prints as a ruled area to fill in by hand. */
+    composed: guided()
   });
 }
 
@@ -1382,7 +1537,8 @@ function emailResults(){
     gcText: S.goodCauseText(state.answers),
     name: val('f-name'),
     agency: val('f-agency'),
-    explain
+    explain,
+    composed: guided()
   });
   const { url } = buildResultsMailto({ subject, body });
   showEmailFallback(body);
@@ -1583,10 +1739,11 @@ document.addEventListener('click', (e) => {
       }
       SAMPLE_MODE = false;
       if(state.answers.ageRange === 'no'){ state.view = 'results'; renderWithMotion(); return; }
-      state.view = 'question'; state.step = 0; state.gc = false; state.helpOpen = {}; renderWithMotion(); break;
+      state.view = 'question'; state.step = 0; state.gc = false; state.details = false; state.helpOpen = {}; renderWithMotion(); break;
     case 'back': back(); break;
     case 'next': advance(); break;
     case 'skip-end': skipToEnd(); break;
+    case 'edit-details': editDetails(); break;
     /* Re-render destroys this button too, so focus goes back to it: the whole
      * point of aria-expanded is that you hear the state you just changed. */
     case 'toggle-help': {
@@ -1613,7 +1770,7 @@ document.addEventListener('click', (e) => {
     }
     case 'restart':
       SAMPLE_MODE = false;
-      state.view = 'intro'; state.step = 0; state.gc = false; state.helpOpen = {}; state.answers = {}; renderWithMotion(); break;
+      state.view = 'intro'; state.step = 0; state.gc = false; state.details = false; state.helpOpen = {}; state.answers = {}; renderWithMotion(); break;
     case 'delete-answers': deleteAnswers(); break;
     /* Quick exit has to leave nothing behind, not just navigate away.
      *
@@ -1726,6 +1883,30 @@ function initReviewHome(){
   home.style.display = 'inline-flex';
 }
 
+/* Names the version and links to the other one.
+ *
+ * Two URLs that look identical until the last screen are hard to review, and
+ * harder to talk about in a meeting. This says which one is on screen and makes
+ * switching one click, so the team can compare the same answers both ways.
+ *
+ * Review hosts only, like everything else about the mode flag. In production
+ * there is one version and nothing to name. */
+function initModeBanner(){
+  if(!samplesAllowed()) return;
+  const slot = document.getElementById('mode-banner');
+  if(!slot) return;
+  const g = guided();
+  const label = g ? 'Guided: the tool writes the letter' : 'Write-in: you write the letter';
+  const other = g ? 'See the write-in version' : 'See the guided version';
+  const href = g ? './' : './?v=guided';
+  slot.innerHTML =
+    `<div style="max-width:760px;margin:0 auto;padding:9px max(16px, env(safe-area-inset-right)) 9px max(16px, env(safe-area-inset-left));`
+    + `display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;font-size:13.5px">`
+    + `<span style="font-weight:700;color:var(--muted)">${esc(label)}</span>`
+    + `<a href="${href}" style="font-weight:700">${esc(other)}</a>`
+    + `</div>`;
+}
+
 function sampleBanner(){
   return `<div class="no-print" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:var(--radius);padding:14px 18px;margin:0 0 18px">
     <span style="font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--warn-ink)">Sample result</span>
@@ -1737,6 +1918,10 @@ function sampleBanner(){
 }
 
 initReviewHome();
+/* Before loadPersisted, which consults guided() to decide whether a restored
+   details step is one this build can render. */
+applyModeFromURL();
+initModeBanner();
 if(!applySampleFromURL()){ loadPersisted(); }
 initHintTips();
 state.animate = true;

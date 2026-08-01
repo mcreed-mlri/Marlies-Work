@@ -395,6 +395,310 @@ describe('snap-screening-logic', () => {
     assert.doesNotMatch(merged, /Upload on/);
   });
 
+  /* ---- Guided mode -------------------------------------------------------
+   *
+   * ?v=guided replaces the write-in boxes with pick-lists and composes the
+   * statement from the answers. Everything it writes ends up above someone's
+   * signature on a letter to a state agency, so the properties below are the
+   * ones worth holding still. */
+  describe('guided mode composes the statement from pick-lists', () => {
+    // Fixed, because the good-cause sentence names months.
+    const AUG = new Date(2026, 7, 1);
+    const compose = (answers, today) =>
+      classic2.composeStatement(answers, today || AUG).map(e => e.text).join(' ');
+
+    /* The load-bearing one. Guided mode may add as many questions as it likes so
+     * long as none of them decides anything: decision-spec.json is generated
+     * from this module and the Python parity suite reads that JSON, so an answer
+     * that leaked into the decision would put the two implementations out of
+     * step without either test noticing it was a guided question that did it. */
+    it('no guided answer changes who is exempt or what the result is', () => {
+      const bases = [
+        { health: 'yes' },
+        { caretaker: 'yes' },
+        { child6: 'yes' },
+        { working: 'income_weekly' },
+        { working: 'hours_30' },
+        { disability: ['other'] },
+        { housing: 'no', housingFollowup: NONE },
+        { housing: 'no', housingFollowup: ['diploma', 'steady_job'] },
+        { goodcause: 'transport' },
+        { goodcause: NONE },
+        { pregnant: 'yes' },
+        { ageRange: 'no' },
+        {}
+      ];
+      for (const base of bases) {
+        const before = { rt: classic2.resultType(base), rs: classic2.exemptReasons(base) };
+        // Answer every guided question this case reaches, both ways.
+        for (const fill of ['first', 'none']) {
+          const filled = { ...base };
+          for (const q of classic2.guidedQuestions(base)) {
+            if (fill === 'none') { filled[q.id] = NONE; continue; }
+            if (q.type === 'yn') filled[q.id] = 'yes';
+            else if (q.type === 'multi') filled[q.id] = q.options.map(o => o.id);
+            else filled[q.id] = q.options[0].id;
+          }
+          assert.equal(classic2.resultType(filled), before.rt,
+            `guided answers (${fill}) changed the result for ${JSON.stringify(base)}`);
+          assert.deepEqual(classic2.exemptReasons(filled), before.rs,
+            `guided answers (${fill}) changed the exempt reasons for ${JSON.stringify(base)}`);
+          assert.equal(classic2.shouldSkipGoodCause(filled), classic2.shouldSkipGoodCause(base));
+        }
+      }
+    });
+
+    it('asks nothing when every exemption speaks for itself', () => {
+      // Pregnant, TAFDC, a Tribe, school, unemployment, DV, substance use, and a
+      // named disability benefit all need no explaining.
+      for (const answers of [
+        { pregnant: 'yes' }, { tafdc: 'yes' }, { tribe: 'yes' }, { school: 'yes' },
+        { unemployment: 'yes' }, { dv: 'yes' }, { substanceUse: 'yes' },
+        { disability: ['ssi_ssdi'] }, { child14: 'yes' }
+      ]) {
+        assert.equal(classic2.guidedQuestions(answers).length, 0, JSON.stringify(answers));
+        assert.equal(classic2.composeStatement(answers, AUG).length, 0, JSON.stringify(answers));
+      }
+    });
+
+    it('asks nothing at all when nobody is exempt and there is no good cause', () => {
+      for (const answers of [{}, { child14: 'no' }, { goodcause: NONE }, { ageRange: 'no' }]) {
+        assert.equal(classic2.guidedQuestions(answers).length, 0, JSON.stringify(answers));
+        assert.equal(classic2.composeStatement(answers, AUG).length, 0, JSON.stringify(answers));
+      }
+    });
+
+    it('asks only about the exemptions the person actually has', () => {
+      const ids = (a) => classic2.guidedQuestions(a).map(q => q.id);
+      assert.deepEqual(ids({ health: 'yes' }), ['d_health_kind', 'd_health_length', 'd_health_care']);
+      assert.deepEqual(ids({ child6: 'yes' }), ['d_child6_live', 'd_child6_often']);
+      assert.deepEqual(ids({ disability: ['other'] }), ['d_disability_other']);
+      // A named benefit needs no explaining; "other" alongside it still does.
+      assert.deepEqual(ids({ disability: ['ssi_ssdi', 'other'] }), ['d_disability_other']);
+      // Both work exemptions share one block rather than asking twice.
+      assert.deepEqual(ids({ working: 'income_weekly' }), ['d_work_hours', 'd_work_jobs', 'd_work_proof']);
+      assert.deepEqual(ids({ working: 'hours_30' }), ['d_work_hours', 'd_work_jobs', 'd_work_proof']);
+    });
+
+    it('good cause replaces the exemption questions rather than adding to them', () => {
+      // Someone with an exemption never reaches the good-cause screen at all.
+      const gc = classic2.guidedQuestions({ goodcause: 'transport' });
+      assert.deepEqual(gc.map(q => q.id), ['d_gc_what', 'd_gc_when', 'd_gc_now']);
+      assert.deepEqual(classic2.guidedQuestions({ health: 'yes', goodcause: 'transport' })
+        .map(q => q.id), ['d_health_kind', 'd_health_length', 'd_health_care']);
+    });
+
+    it('branches the good-cause question on the category already picked', () => {
+      const what = (id) => classic2.guidedQuestions({ goodcause: id })
+        .find(q => q.id === 'd_gc_what').options.map(o => o.id);
+      assert.ok(what('transport').includes('car_broke'));
+      assert.ok(!what('transport').includes('death'));
+      assert.ok(what('emergency').includes('death'));
+      assert.ok(what('employment').includes('harassment'));
+    });
+
+    /* One escape hatch per question, and it is always the last option.
+     * Two ("I do not know" above "I am not sure") read as a distinction the
+     * person has to work out, and there is none. */
+    it('every guided question offers exactly one way to decline', () => {
+      const OPT_OUT = /not sure|rather not say|do not know|not on this list|Something else|None of these/i;
+      const seen = new Set();
+      for (const base of [
+        { health: 'yes' }, { caretaker: 'yes' }, { child6: 'yes' },
+        { working: 'income_weekly' }, { disability: ['other'] },
+        { housing: 'no', housingFollowup: NONE }, { goodcause: 'transport' }
+      ]) {
+        for (const q of classic2.guidedQuestions(base)) {
+          if (seen.has(q.id)) continue;
+          seen.add(q.id);
+          if (q.type === 'yn') continue;
+          assert.ok(q.noneLabel, q.id + ' has no noneLabel, so it renders a blank last option');
+          const labels = [...q.options.map(o => o.label), q.noneLabel];
+          const outs = labels.filter(l => OPT_OUT.test(l));
+          assert.equal(outs.length, 1, q.id + ' offers ' + JSON.stringify(outs));
+          assert.ok(OPT_OUT.test(q.noneLabel), q.id + ': the opt-out must be the last option');
+        }
+      }
+      assert.equal(seen.size, 17, 'the guided question count moved; check the copy doc');
+    });
+
+    it('writes the full sentence when every question is answered', () => {
+      assert.equal(
+        compose({ health: 'yes', d_health_kind: 'physical', d_health_length: 'long', d_health_care: 'regularly' }),
+        'I have a physical health condition that makes it hard for me to work 30 or more hours a week. '
+        + 'It has lasted 6 months or more, or I expect it to. '
+        + 'I see a health care provider for it regularly, and I can ask them for a letter if you need one.'
+      );
+      assert.equal(
+        compose({ caretaker: 'yes', d_care_who: 'adult', d_care_often: 'daily', d_care_alone: 'alone' }),
+        'I take care of an adult who cannot care for themselves. I do this every day. '
+        + 'I am the only person providing this care.'
+      );
+      assert.equal(
+        compose({ child6: 'yes', d_child6_live: 'yes', d_child6_often: 'most_days' }),
+        'I take care of a child under 6 years old. The child lives with me. '
+        + 'I care for them most days of the week.'
+      );
+      assert.equal(
+        compose({ working: 'income_weekly', d_work_hours: 'h20_29', d_work_jobs: 'one',
+          d_work_proof: ['paystubs', 'employer_letter'] }),
+        'I usually work about 20 to 29 hours a week at one job. '
+        + 'I can send you my pay stubs and a letter from my employer.'
+      );
+      assert.equal(
+        compose({ housing: 'no', housingFollowup: NONE, d_housing_where: 'shelter',
+          d_housing_barriers: ['no_address', 'no_transport'] }),
+        'I do not have a regular place to sleep. I usually sleep in a shelter. '
+        + 'This makes it hard for me to work. I have no address or phone to give an employer. '
+        + 'I have no reliable way to get to a job.'
+      );
+    });
+
+    /* The property that makes the whole approach defensible: a skipped question
+     * drops its clause instead of guessing. What is left still has to be a true
+     * sentence, and one the exemption already supports. */
+    it('drops the clause for anything skipped rather than guessing', () => {
+      assert.equal(
+        compose({ health: 'yes' }),
+        'I have a health condition that makes it hard for me to work 30 or more hours a week.'
+      );
+      assert.equal(
+        compose({ health: 'yes', d_health_kind: NONE, d_health_length: NONE, d_health_care: NONE }),
+        'I have a health condition that makes it hard for me to work 30 or more hours a week.'
+      );
+      assert.equal(
+        compose({ health: 'yes', d_health_care: 'no' }),
+        'I have a health condition that makes it hard for me to work 30 or more hours a week. '
+        + 'I am not seeing a health care provider for it right now.'
+      );
+      assert.equal(compose({ caretaker: 'yes' }), 'I take care of someone who cannot care for themselves.');
+      assert.equal(compose({ child6: 'yes' }), 'I take care of a child under 6 years old.');
+      assert.equal(compose({ housing: 'no', housingFollowup: NONE }), 'I do not have a regular place to sleep.');
+      // No hours and no jobs picked leaves only what the proof answer supports.
+      assert.equal(
+        compose({ working: 'income_weekly', d_work_proof: ['paystubs'] }),
+        'I can send you my pay stubs.'
+      );
+    });
+
+    it('asks for help with proof rather than promising documents that do not exist', () => {
+      assert.equal(
+        compose({ working: 'hours_30', d_work_proof: ['need_help'] }),
+        'I need help getting proof of my work hours and pay.'
+      );
+      // Picking help alongside a real document must not claim both are coming.
+      assert.equal(
+        compose({ working: 'hours_30', d_work_proof: ['paystubs', 'need_help'] }),
+        'I can send you my pay stubs. I may need help getting the rest.'
+      );
+      assert.equal(compose({ working: 'hours_30', d_work_proof: NONE }), '');
+    });
+
+    /* The one place a pick-list is weaker than the box it replaces. A named
+     * benefit reads as a claim DTA can act on; anything else has to degrade to a
+     * promise to bring paperwork, because no list holds every disability payment
+     * in the country. Asserted so the weaker wording cannot be lost by accident. */
+    it('names the disability benefit when it can, and promises paperwork when it cannot', () => {
+      assert.equal(
+        compose({ disability: ['other'], d_disability_other: 'masshealth' }),
+        'I also receive MassHealth based on a disability determination. '
+        + 'Please review it as part of my exemption screening.'
+      );
+      for (const v of [NONE, undefined]) {
+        assert.equal(
+          compose({ disability: ['other'], d_disability_other: v }),
+          'I also receive another disability benefit or payment that was not on the list. '
+          + 'I will bring the paperwork so you can review it.'
+        );
+      }
+    });
+
+    it('names the months for a good-cause statement', () => {
+      const gc = (when, today) =>
+        compose({ goodcause: 'transport', d_gc_what: 'car_broke', d_gc_when: when, d_gc_now: 'still' }, today);
+      // Same year: the year is said once, not after every month.
+      assert.match(gc(['this_month', 'last_month']),
+        /^I could not meet the ABAWD work rules in July and August 2026\./);
+      assert.match(gc(['last_month']), /rules in July 2026\./);
+      // Across a year boundary it has to be repeated or the sentence is wrong.
+      assert.match(gc(['this_month', 'last_month'], new Date(2026, 0, 15)),
+        /rules in December 2025 and January 2026\./);
+      assert.match(gc(['longer']), /rules for more than three months\./);
+      // Oldest first, whatever order they were picked in.
+      assert.match(gc(['two_months', 'this_month', 'last_month']),
+        /in June, July, and August 2026\./);
+      // No month picked still leaves a true sentence.
+      assert.match(gc(NONE), /^I could not meet the ABAWD work rules\. My car broke down/);
+    });
+
+    it('month options stay relative so the copy does not change every month', () => {
+      const when = classic2.guidedQuestions({ goodcause: 'transport' }).find(q => q.id === 'd_gc_when');
+      for (const o of when.options) {
+        assert.doesNotMatch(
+          o.label, /20\d\d|January|February|March|April|May|June|July|August|September|October|November|December/,
+          'a month name in an option label would change SCREENER-COPY.md every month and fail CI'
+        );
+      }
+    });
+
+    it('the composed letter reads as prose, and the write-in one still has boxes', () => {
+      const explain = classic2.composeStatement(
+        { health: 'yes', d_health_kind: 'mental', d_health_care: 'regularly' }, AUG);
+      const composed = SnapScreening.buildStatementHTML({
+        name: 'Jane Doe', rt: 'exempt', rs: ['Have a health reason'], explain, composed: true, today: 'August 1, 2026'
+      });
+      assert.match(composed, /<p style="margin:0 0 14px">I have a mental health condition/);
+      assert.doesNotMatch(composed, /border:1px solid #999/, 'a composed sentence must not print inside a ruled box');
+      // The caption belongs to a blank someone fills in, not to a finished sentence.
+      assert.doesNotMatch(composed, /Your health reason/);
+      // A signature rule is still drawn when the pad was left empty.
+      assert.match(composed, /border-bottom:1px solid #111/);
+
+      const writein = SnapScreening.buildStatementHTML({
+        rt: 'exempt', explain: [{ prompt: 'Explain the health reason', text: '' }], today: 'August 1, 2026'
+      });
+      assert.match(writein, /border:1px solid #999/, 'an empty box must still print as a ruled area to write in');
+      assert.match(writein, /Explain the health reason/);
+    });
+
+    it('the emailed summary reads as a statement rather than a half-filled form', () => {
+      const explain = classic2.composeStatement(
+        { goodcause: 'transport', d_gc_what: 'car_broke', d_gc_now: 'still' }, AUG);
+      const composed = buildResultsEmailContent({ rt: 'goodcause', explain, composed: true }).body;
+      assert.match(composed, /What your letter says:/);
+      assert.match(composed, /My car broke down/);
+      assert.doesNotMatch(composed, /In a few sentences:/);
+      // The section label is a heading for the questions, not part of the letter.
+      assert.doesNotMatch(composed, /Why you missed hours/);
+
+      const writein = buildResultsEmailContent({
+        rt: 'exempt', explain: [{ prompt: 'Explain the health reason', text: 'I have asthma.' }]
+      }).body;
+      assert.match(writein, /In a few sentences:/);
+      assert.match(writein, /Explain the health reason/);
+    });
+
+    it('carries guided copy for every string the guided screens render', () => {
+      for (const k of ['detailsStepHeading', 'detailsStepLead', 'detailsStepPrivacy',
+        'composedStatementHeading', 'composedFormLeadExempt', 'composedFormLeadGoodCause',
+        'composedChangeLabel', 'composedWhyInfoExempt', 'composedWhyInfoGoodCause']) {
+        assert.ok(RESULT_COPY[k] && RESULT_COPY[k].trim(), k + ' is missing or empty');
+      }
+      // The write-in lead says "fill in the blanks below", which is wrong when
+      // there are none. The two must not converge back onto one string.
+      assert.notEqual(RESULT_COPY.composedFormLeadExempt, RESULT_COPY.formLeadExempt);
+      assert.doesNotMatch(RESULT_COPY.composedFormLeadExempt, /fill in the blanks/);
+    });
+
+    it('composes the same sentence for the same answers, run to run', () => {
+      const a = { health: 'yes', d_health_kind: 'both', d_health_length: 'short', d_health_care: 'sometimes' };
+      assert.equal(compose(a), compose(a));
+      // Every variant shares one guided table, as they share the decision.
+      assert.equal(classic.composeStatement(a, AUG).map(e => e.text).join(' '), compose(a));
+      assert.equal(v2.composeStatement(a, AUG).map(e => e.text).join(' '), compose(a));
+    });
+  });
+
   it('every LINKS entry is an absolute URL or a bare email address', () => {
     const entries = Object.entries(LINKS);
     assert.ok(entries.length >= 13);

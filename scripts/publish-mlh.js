@@ -210,6 +210,27 @@ if (/function applySampleFromURL/.test(shipHtml)) {
   }
 }
 
+/* ---- Guard: the ?v= version flag, if present, is gated the same way ----
+ * ?v=guided swaps in an unreleased ending for the statement form so the team can
+ * compare it against the shipping one. It reads a URL parameter and changes what
+ * a legal form asks for, which is the same shape of risk ?sample= carries and
+ * gets the same treatment: gated to review hosts, and gated as the first act of
+ * the function so the check cannot be stepped around.
+ *
+ * Written as its own block rather than folded into the one above because the two
+ * flags are independent. Whichever ending the team picks becomes the default and
+ * this flag goes away; ?sample= outlives it. */
+if (/function applyModeFromURL/.test(shipHtml)) {
+  if (!/function samplesAllowed/.test(shipHtml)) {
+    problems.push(SHIP_HTML + ' has a ?v= version flag with no samplesAllowed() host gate, so an'
+      + ' unreleased version of the statement form would be reachable in production.');
+  }
+  const fn = /function applyModeFromURL\(\)\{[\s\S]*?\n\}/.exec(shipHtml);
+  if (fn && !/^\s*if\(!samplesAllowed\(\)\) return false;/m.test(fn[0])) {
+    problems.push('applyModeFromURL does not bail out on samplesAllowed() as its first act, so the host gate can be bypassed.');
+  }
+}
+
 /* ---- Notes, not failures ---- */
 const bytes = files.reduce((n, f) => n + fs.statSync(f.abs).size, 0);
 notes.push(files.length + ' files, ' + Math.round(bytes / 1024) + 'KB');

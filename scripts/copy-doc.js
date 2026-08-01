@@ -85,8 +85,18 @@ const INLINE = [
   { id: 'hint.signatures.body', re: /hintTip\('sig', '[^']+', '((?:[^'\\]|\\.)+)'/ },
   // Chrome and footer. These are not the author's; see the flagged section.
   { id: 'chrome.tabTitle', re: /<title>(SNAP Work Rules Screening[^<]*)<\/title>/ },
-  { id: 'chrome.wordmark', re: /class="topbar-title">([^<]+)</ },
-  { id: 'chrome.tagline', re: /class="topbar-sub">([^<]+)</ },
+  /* chrome.wordmark and chrome.tagline were here, reading .topbar-title and
+     .topbar-sub. Both stopped matching when the header text was replaced by
+     MassLegalHelp's logo file: the words are inside mlh-logo.svg now, so they are
+     artwork rather than page copy and there is nothing here to edit. What is left
+     for a reader is the link's accessible name, which is what a screen reader
+     announces in place of the image, so that is extracted instead.
+
+     The .topbar-title and .topbar-sub CSS rules are still in the page with no
+     element wearing them. check-pages.js looks for the opposite case, a class in
+     the markup with no rule behind it, so it did not notice. Worth deleting, but
+     that is a change to the page rather than to this document. */
+  { id: 'chrome.brandLabel', re: /class="topbar-brand"[^>]*aria-label="([^"]+)"/ },
   { id: 'chrome.quickExit', re: /data-action="quick-exit"[^>]*>([^<]+)</ }
   /* footer.disclaimer was here. The footer paragraph came out on 2026-07-30 pending
      a legal footer nobody has drafted yet, so there is no string left to extract.
@@ -98,7 +108,7 @@ const INLINE = [
  * because the project rule is that author copy outranks editorial instinct, and
  * these were written to fill a gap, not handed over for review. */
 const DEVELOPER_WRITTEN = new Set([
-  'chrome.tabTitle', 'chrome.wordmark', 'chrome.tagline', 'chrome.quickExit',
+  'chrome.tabTitle', 'chrome.brandLabel', 'chrome.quickExit',
   'page.sigAlt'
 ]);
 
@@ -390,6 +400,166 @@ blank();
 ['hint.signatures.title', 'hint.signatures.body'].forEach(id => item(id, inline[id]));
 ['whyInfoLabel', 'whyInfoExempt', 'whyInfoGoodCause'].forEach(k => item(k, C[k]));
 
+/* ---- Guided mode ----
+ *
+ * This section matters more than its length suggests. Everything in it is
+ * wording the tool puts in someone's mouth, above their signature, on a
+ * document that goes to a state agency. In the write-in version those sentences
+ * are the person's own and never pass through here. So every composed sentence
+ * is printed in full below rather than described, for the same reason
+ * docassemble-snap-abawd/tests/test_good_cause_text.py gives for checking the
+ * good-cause wording exactly: a paraphrase is a defect. */
+
+section('The guided version of the statement');
+
+w('**This is a second version of the ending above, for you to compare.** Same questions,');
+w('same result, but instead of blank boxes the tool asks two or three multiple-choice');
+w('questions about whichever exemption applied and writes the statement from the answers.');
+w('The person still types their name and signs.');
+blank();
+w('It is reachable at `?v=guided` on the review site only. Neither version is the default');
+w('yet. **Every sentence in this section is wording the tool would put above someone\'s');
+w('signature on a letter to DTA, so it needs your eye more than anything else in this');
+w('document.**');
+blank();
+
+sub('The screen that asks for the details');
+['detailsStepHeading', 'detailsStepLead', 'detailsStepPrivacy'].forEach(k => item(k, C[k]));
+
+sub('The results screen, in guided mode');
+['composedStatementHeading', 'composedFormLeadExempt', 'composedFormLeadGoodCause',
+  'composedChangeLabel', 'composedWhyInfoExempt', 'composedWhyInfoGoodCause']
+  .forEach(k => item(k, C[k]));
+
+/* A fixed reference date, not today's.
+ *
+ * The good-cause sentence names the months someone missed, so composing it
+ * against the clock would change this document on the first of every month and
+ * fail the CI job that regenerates and diffs it. The question labels are
+ * relative ("Last month") and never move; only the composed sentence resolves a
+ * month name, and here it resolves against a date that does not. */
+const GUIDED_DOC_DATE = new Date(2026, 7, 1); // 1 August 2026
+
+/* One worked case per block: the answers that reach it, and picks for every
+ * question so the longest form of each sentence is on the page. */
+const GUIDED_CASES = [
+  {
+    title: 'A health reason',
+    answers: {
+      health: 'yes',
+      d_health_kind: 'physical', d_health_length: 'long', d_health_care: 'regularly'
+    }
+  },
+  {
+    title: 'Caring for someone who cannot care for themselves',
+    answers: {
+      caretaker: 'yes',
+      d_care_who: 'adult', d_care_often: 'daily', d_care_alone: 'alone'
+    }
+  },
+  {
+    title: 'Caring for a child under 6',
+    answers: { child6: 'yes', d_child6_live: 'yes', d_child6_often: 'daily' }
+  },
+  {
+    title: 'Working',
+    answers: {
+      working: 'income_weekly',
+      d_work_hours: 'h20_29', d_work_jobs: 'one', d_work_proof: ['paystubs', 'employer_letter']
+    }
+  },
+  {
+    title: 'Working, but cannot get proof',
+    answers: { working: 'hours_30', d_work_hours: 'varies', d_work_proof: ['need_help'] }
+  },
+  {
+    title: 'Another disability benefit',
+    answers: { disability: ['other'], d_disability_other: 'masshealth' }
+  },
+  {
+    title: 'Another disability benefit, not on the list',
+    answers: { disability: ['other'], d_disability_other: 'unlisted' }
+  },
+  {
+    title: 'No regular place to sleep',
+    answers: {
+      housing: 'no', housingFollowup: S.NONE,
+      d_housing_where: 'shelter', d_housing_barriers: ['no_address', 'no_transport']
+    }
+  },
+  {
+    title: 'A good reason for missing hours',
+    answers: {
+      goodcause: 'transport',
+      d_gc_what: 'car_broke', d_gc_when: ['this_month', 'last_month'], d_gc_now: 'still'
+    }
+  }
+];
+
+sub('The questions, and the sentence each one writes');
+
+w('For each situation below: the questions the person is asked, then the exact sentence');
+w('the tool writes into the letter when they pick the answers shown. Change either.');
+blank();
+
+for (const c of GUIDED_CASES) {
+  w('#### ' + c.title);
+  blank();
+  const qs = A.guidedQuestions(c.answers);
+  qs.forEach(q => {
+    w('**' + toMarkdown(q.text) + '**');
+    if (q.help) w('  ' + toMarkdown(q.help));
+    blank();
+    if (q.type === 'yn') {
+      w('- Yes');
+      w('- No');
+    } else {
+      (q.options || []).forEach(o => {
+        const chosen = Array.isArray(c.answers[q.id])
+          ? c.answers[q.id].indexOf(o.id) !== -1
+          : c.answers[q.id] === o.id;
+        w('- ' + toMarkdown(o.label) + (chosen ? '  ← picked below' : ''));
+      });
+      if (q.noneLabel) w('- ' + toMarkdown(q.noneLabel));
+    }
+    blank();
+  });
+  w('Writes:');
+  blank();
+  const composed = A.composeStatement(c.answers, GUIDED_DOC_DATE);
+  if (!composed.length) w('*(nothing)*');
+  composed.forEach(e => quote(e.text));
+  blank();
+}
+
+w('#### When there is nothing to ask');
+blank();
+w('Someone exempt only for reasons that speak for themselves (pregnant, TAFDC, a Tribe,');
+w('school, unemployment, a safety situation, substance use treatment, or a named disability');
+w('benefit) is asked nothing extra and the letter carries its list of reasons alone. In the');
+w('write-in version those people get one empty box under `statementPromptsFor` fallback,');
+w('"Explain your reasons in your own words", which is the least answerable prompt in the tool.');
+blank();
+w('Worked example, someone who is pregnant and nothing else:');
+blank();
+w('- Questions asked: ' + A.guidedQuestions({ pregnant: 'yes' }).length);
+w('- Sentences written: ' + A.composeStatement({ pregnant: 'yes' }, GUIDED_DOC_DATE).length);
+blank();
+
+w('#### When someone skips a question');
+blank();
+w('Nothing is guessed. A skipped question drops its part of the sentence rather than');
+w('filling it in with something likely, so a half-answered case still produces a true');
+w('sentence, just a shorter one. Answering only the first health question:');
+blank();
+quote(A.composeStatement({ health: 'yes', d_health_kind: 'physical' }, GUIDED_DOC_DATE)
+  .map(e => e.text).join(' '));
+blank();
+w('And answering none of them:');
+blank();
+quote(A.composeStatement({ health: 'yes' }, GUIDED_DOC_DATE).map(e => e.text).join(' '));
+blank();
+
 section('Printing, saving, and email');
 ['printFormLabel', 'downloadWordLabel', 'savingTipsTitle', 'savingTipsBody', 'emailSelfLabel',
   'emailSelfSubject', 'emailFallbackHeading', 'emailFallbackBody', 'emailCopyLabel',
@@ -435,7 +605,7 @@ w('anything, and it does not change your SNAP case." It made a claim about what 
 w('and is not, which was never a developer\'s call to make. The tool now says none of that');
 w('anywhere, so whatever replaces it still owes a reader those three facts.');
 blank();
-['chrome.tabTitle', 'chrome.wordmark', 'chrome.tagline', 'chrome.quickExit',
+['chrome.tabTitle', 'chrome.brandLabel', 'chrome.quickExit',
   'page.sigAlt'].forEach(id => item(id, inline[id]));
 
 w('The footer has no copy left in it. It is the gold rule, the navy band, and the wordmark,');

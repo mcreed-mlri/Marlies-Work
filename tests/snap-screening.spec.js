@@ -155,3 +155,120 @@ test.describe('SNAP ABAWD screening (the shipping build)', () => {
     await expect(workOpt).not.toHaveClass(/opt-selected/);
   });
 });
+
+/* ---- The guided version, at ?v=guided ---------------------------------------
+ *
+ * Same screening, different ending: instead of blank boxes on the results
+ * screen, a step of pick-lists before it, and a statement composed from the
+ * answers. Both versions are in front of the team while they decide which one
+ * DTA would accept, so this suite drives the ending the one above does not.
+ *
+ * The flag is gated to review hosts by samplesAllowed(); the Playwright server
+ * runs on 127.0.0.1, which is on that allowlist. If these fail with the write-in
+ * form on screen, the gate is the first thing to check. */
+test.describe('SNAP ABAWD screening (the guided ending)', () => {
+  const guidedUrl = `${screenerUrl}?v=guided`;
+  const yn = (page, qId, val) => page.locator(`[data-q-id="${qId}"][data-opt-val="${val}"]`);
+  const choice = (page, qId, idx) => page.locator(`[data-q-id="${qId}"][data-opt-idx="${idx}"]`);
+  const noneOf = (page, qId) => page.locator(`[data-q-id="${qId}"][data-opt-kind$="-none"]`);
+  const skipToResults = (page) => page.getByRole('button', { name: /Skip to results/i }).click();
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto(guidedUrl);
+  });
+
+  test('asks for details, then writes the statement instead of asking for it', async ({ page }) => {
+    await startScreener(page);
+    await clickNext(page);
+    await yn(page, 'health', 'yes').click();        // group 2
+    await skipToResults(page);
+
+    // The details step, which does not exist in the write-in version.
+    await expect(page.getByRole('heading', { name: asRegex(RESULT_COPY.detailsStepHeading) })).toBeVisible();
+    await choice(page, 'd_health_kind', 0).click();  // a physical health reason
+    await choice(page, 'd_health_length', 1).click(); // 6 months or more
+    await choice(page, 'd_health_care', 0).click();   // yes, regularly
+    await page.getByRole('button', { name: /See my letter/i }).click();
+
+    await expect(page.getByRole('heading', { name: EXEMPT_HEADING })).toBeVisible();
+    await expect(page.getByText(
+      /I have a physical health condition that makes it hard for me to work 30 or more hours a week\./i
+    )).toBeVisible();
+    await expect(page.getByText(/I see a health care provider for it regularly/i)).toBeVisible();
+
+    // The whole point: no blank box to fill in.
+    await expect(page.getByLabel(/Explain the health reason/i)).toHaveCount(0);
+    await expect(page.locator('textarea[id^="f-explain"]')).toHaveCount(0);
+
+    // What still has to be typed or drawn, because it cannot be derived.
+    await expect(page.getByLabel('Your name')).toBeVisible();
+    await expect(page.locator('#sig-pad')).toBeVisible();
+  });
+
+  test('nobody signs a statement they cannot read, and they can change it', async ({ page }) => {
+    await startScreener(page);
+    await clickNext(page);
+    await yn(page, 'health', 'yes').click();
+    await skipToResults(page);
+    await choice(page, 'd_health_kind', 1).click();  // a mental health reason
+    await page.getByRole('button', { name: /See my letter/i }).click();
+
+    await expect(page.getByText(/I have a mental health condition/i)).toBeVisible();
+    await page.getByRole('button', { name: asRegex(RESULT_COPY.composedChangeLabel) }).click();
+
+    // Back on the details step, with the earlier pick still selected.
+    await expect(page.getByRole('heading', { name: asRegex(RESULT_COPY.detailsStepHeading) })).toBeVisible();
+    await expect(choice(page, 'd_health_kind', 1)).toHaveClass(/opt-selected/);
+    await choice(page, 'd_health_kind', 0).click();  // change it to physical
+    await page.getByRole('button', { name: /See my letter/i }).click();
+    await expect(page.getByText(/I have a physical health condition/i)).toBeVisible();
+    await expect(page.getByText(/I have a mental health condition/i)).toHaveCount(0);
+  });
+
+  test('good cause is asked before the details, and branches on the category', async ({ page }) => {
+    await startScreener(page);
+    await skipToResults(page);
+    await choice(page, 'goodcause', 0).click();     // transportation
+    await clickNext(page);
+
+    await expect(page.getByRole('heading', { name: asRegex(RESULT_COPY.detailsStepHeading) })).toBeVisible();
+    // Transport options, not the emergency ones.
+    await expect(page.getByText('My car broke down', { exact: true })).toBeVisible();
+    await expect(page.getByText('There was a death in my family', { exact: true })).toHaveCount(0);
+    await choice(page, 'd_gc_what', 0).click();     // my car broke down
+    await choice(page, 'd_gc_now', 0).click();      // still going on
+    await page.getByRole('button', { name: /See my letter/i }).click();
+
+    await expect(page.getByRole('heading', { name: GOOD_CAUSE_HEADING })).toBeVisible();
+    await expect(page.getByText(/My car broke down and I had no other way to get there\./i)).toBeVisible();
+    await expect(page.getByText(/This is still going on\./i)).toBeVisible();
+  });
+
+  test('skips the details step when every exemption speaks for itself', async ({ page }) => {
+    await startScreener(page);
+    await yn(page, 'pregnant', 'yes').click();      // needs no explaining
+    await skipToResults(page);
+
+    // Straight to the results: nothing to ask, so nothing is asked.
+    await expect(page.getByRole('heading', { name: EXEMPT_HEADING })).toBeVisible();
+    await expect(page.getByRole('heading', { name: asRegex(RESULT_COPY.detailsStepHeading) })).toHaveCount(0);
+    await expect(page.locator('textarea[id^="f-explain"]')).toHaveCount(0);
+    // The write-in version shows an empty "Explain your reasons in your own
+    // words" box to exactly these people. This one shows the name and signature
+    // fields and nothing else to fill in.
+    await expect(page.getByLabel('Your name')).toBeVisible();
+  });
+
+  test('the write-in version is unchanged by any of this', async ({ page }) => {
+    await page.goto(screenerUrl);
+    await startScreener(page);
+    await clickNext(page);
+    await yn(page, 'health', 'yes').click();
+    await skipToResults(page);
+
+    // No details step, and the blank box is still the way this version works.
+    await expect(page.getByRole('heading', { name: EXEMPT_HEADING })).toBeVisible();
+    await expect(page.getByLabel(/Explain the health reason/i)).toBeVisible();
+    await expect(page.getByRole('button', { name: asRegex(RESULT_COPY.composedChangeLabel) })).toHaveCount(0);
+  });
+});

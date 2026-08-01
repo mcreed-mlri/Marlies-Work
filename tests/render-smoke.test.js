@@ -59,7 +59,31 @@ const SCREENS = {
   'good-cause question page': 'state.view="question"; state.gc=true; render();',
   /* Housing follow-up only appears once housing is answered "no". */
   'housing follow-up question':
-    'state.answers={housing:"no"}; state.view="question"; state.step=1; render();'
+    'state.answers={housing:"no"}; state.view="question"; state.step=1; render();',
+
+  /* ---- Guided mode -------------------------------------------------------
+   * ?v=guided replaces the write-in boxes with pick-lists and composes the
+   * letter. MODE is set directly rather than through location.search because
+   * the page reads the flag once at init, which has already run by the time a
+   * driver executes. The screens below are the ones that only exist in guided
+   * mode, so nothing above covers them. */
+  'guided: details step for a health exemption':
+    'MODE="guided"; state.answers={health:"yes"}; state.view="question"; state.details=true; render();',
+  'guided: details step for every exemption at once':
+    'MODE="guided"; state.answers={health:"yes",caretaker:"yes",child6:"yes",working:"income_weekly",'
+    + 'disability:["other"],housing:"no",housingFollowup:NONE}; state.view="question"; state.details=true; render();',
+  'guided: details step for good cause':
+    'MODE="guided"; state.answers={goodcause:"emergency"}; state.view="question"; state.details=true; render();',
+  'guided: composed results (exempt)':
+    'MODE="guided"; state.answers={health:"yes",d_health_kind:"physical",d_health_care:"regularly"};'
+    + ' state.view="results"; render();',
+  'guided: composed results (good cause)':
+    'MODE="guided"; state.answers={goodcause:"transport",d_gc_what:"car_broke",d_gc_when:["last_month"],d_gc_now:"still"};'
+    + ' state.view="results"; render();',
+  /* Exempt for reasons that speak for themselves. Guided mode has nothing to
+   * ask and nothing to compose, and the results screen still has to render. */
+  'guided: composed results with nothing to compose':
+    'MODE="guided"; state.answers={pregnant:"yes"}; state.view="results"; render();'
 };
 
 /* Paths reached by buttons rather than by rendering a view. These are where an
@@ -88,7 +112,51 @@ const ACTIONS = {
   'copy the email text':
     'state.answers={child14:"yes"}; state.view="results"; render(); emailResults(); copyEmailText();',
   'clear the signature':
-    'state.answers={child14:"yes"}; state.view="results"; render(); clearSignature();'
+    'state.answers={child14:"yes"}; state.view="results"; render(); clearSignature();',
+
+  /* ---- Guided mode -------------------------------------------------------
+   * The routing is the risk here, not the rendering. The details step is a
+   * boolean beside state.gc rather than a fifth entry in GROUPS, so advance()
+   * and back() have a branch each that nothing else exercises, and an
+   * off-by-one there strands someone on a screen with no way forward. */
+  'guided: advance from the first group through to a composed letter':
+    'MODE="guided"; state.answers={health:"yes"}; state.view="question"; state.step=0;'
+    + ' for(let i=0;i<GROUPS.length+3;i++){ advance(); }',
+  'guided: advance through good cause to the details step':
+    'MODE="guided"; state.answers={goodcause:"transport"}; state.view="question"; state.step=0;'
+    + ' for(let i=0;i<GROUPS.length+3;i++){ advance(); }',
+  'guided: back out from the details step to the intro':
+    'MODE="guided"; state.answers={health:"yes"}; state.view="question"; state.details=true;'
+    + ' for(let i=0;i<GROUPS.length+3;i++){ back(); }',
+  'guided: back out from the details step behind good cause':
+    'MODE="guided"; state.answers={goodcause:"transport"}; state.view="question"; state.details=true;'
+    + ' for(let i=0;i<GROUPS.length+3;i++){ back(); }',
+  'guided: skip to results lands on the details step':
+    'MODE="guided"; state.answers={health:"yes"}; state.view="question"; skipToEnd();',
+  'guided: change my answers from the results screen':
+    'MODE="guided"; state.answers={health:"yes"}; state.view="results"; render(); editDetails();',
+  'guided: print the composed letter':
+    'MODE="guided"; state.answers={housing:"no",housingFollowup:NONE,d_housing_where:"shelter"};'
+    + ' state.view="results"; render(); printForm();',
+  'guided: download the composed letter as Word':
+    'MODE="guided"; state.answers={health:"yes",d_health_kind:"both"}; state.view="results"; render(); downloadDoc();',
+  /* The click and keyboard handlers resolve a clicked option back to its
+   * question through qById. The guided questions are built per person and are
+   * not in the module's Q_BY_ID table, so before qById learned to fall back to
+   * the set on screen, every option on the details step rendered perfectly and
+   * did nothing whatsoever when clicked. The DOM shim cannot dispatch a click,
+   * so this asserts the lookup the handler depends on. */
+  'guided: every option on the details step resolves for the click handler':
+    'MODE="guided"; state.answers={health:"yes",caretaker:"yes",child6:"yes",working:"income_weekly",'
+    + 'disability:["other"],housing:"no",housingFollowup:NONE}; state.view="question"; state.details=true; render();'
+    + ' detailQuestions().forEach(function(q){ if(!qById(q.id)) throw new Error('
+    + '"qById cannot resolve guided question "+q.id+", so its options do nothing when clicked"); });',
+  'guided: good-cause detail options resolve for the click handler':
+    'MODE="guided"; state.answers={goodcause:"transport"}; state.view="question"; state.details=true; render();'
+    + ' detailQuestions().forEach(function(q){ if(!qById(q.id)) throw new Error('
+    + '"qById cannot resolve guided question "+q.id+""); });',
+  'guided: email the composed results':
+    'MODE="guided"; state.answers={goodcause:"emergency",d_gc_what:"death"}; state.view="results"; render(); emailResults();'
 };
 
 function makeEl(tag) {

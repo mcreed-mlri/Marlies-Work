@@ -590,7 +590,308 @@ An explainer opens next to the signature box:
 
 > **Question for you:** The wording in your doc reads "Telling DTA about your why you missed hours." The exempt version is "Telling DTA about your exemption," so the extra "your" looks like a typo. Confirm and we will drop it.
 
-## 11. Printing, saving, and email
+## 11. The guided version of the statement
+
+**This is a second version of the ending above, for you to compare.** Same questions,
+same result, but instead of blank boxes the tool asks two or three multiple-choice
+questions about whichever exemption applied and writes the statement from the answers.
+The person still types their name and signs.
+
+It is reachable at `?v=guided` on the review site only. Neither version is the default
+yet. **Every sentence in this section is wording the tool would put above someone's
+signature on a letter to DTA, so it needs your eye more than anything else in this
+document.**
+
+### The screen that asks for the details
+
+**`detailsStepHeading`**
+
+> A few more details for your letter
+
+**`detailsStepLead`**
+
+> These answers write your letter for you. Every question is optional, and anything you skip is simply left out.
+
+**`detailsStepPrivacy`**
+
+> Your answers stay on this device. MLRI does not see them.
+
+### The results screen, in guided mode
+
+**`composedStatementHeading`**
+
+> What your letter says:
+
+**`composedFormLeadExempt`**
+
+> We wrote this from your answers. Read it over, then print or download it to send to DTA.
+
+**`composedFormLeadGoodCause`**
+
+> We wrote this from your answers. Read it over, then print or download it to send to DTA.
+
+**`composedChangeLabel`**
+
+> Change my answers
+
+**`composedWhyInfoExempt`**
+
+> Telling DTA about your exemption can help them update your SNAP case more quickly. DTA needs to know why the work rules should not apply to you. This tool wrote the statement below from the answers you gave, so you can print or save it and send it to DTA. MLRI never sees your answers.
+
+**`composedWhyInfoGoodCause`**
+
+> Telling DTA about your good reason can help them update your SNAP case more quickly. DTA needs to know why you could not meet the work rules. This tool wrote the statement below from the answers you gave, so you can print or save it and send it to DTA. MLRI never sees your answers.
+
+### The questions, and the sentence each one writes
+
+For each situation below: the questions the person is asked, then the exact sentence
+the tool writes into the letter when they pick the answers shown. Change either.
+
+#### A health reason
+
+**Is this a physical health reason, a mental health reason, or both?**
+
+- A physical health reason  ← picked below
+- A mental health reason
+- Both
+- I would rather not say
+
+**How long has this been going on, or how long do you expect it to last?**
+
+- Less than 6 months
+- 6 months or more  ← picked below
+- I do not know
+
+**Do you see a doctor, therapist, or other provider for it?**
+
+- Yes, regularly  ← picked below
+- Yes, sometimes
+- No
+- I am not sure
+
+Writes:
+
+> I have a physical health condition that makes it hard for me to work 30 or more hours a week. It has lasted 6 months or more, or I expect it to. I see a health care provider for it regularly, and I can ask them for a letter if you need one.
+
+#### Caring for someone who cannot care for themselves
+
+**Who do you take care of?**
+
+- A child
+- An adult  ← picked below
+- More than one person
+- I would rather not say
+
+**How often do you provide this care?**
+
+- Every day  ← picked below
+- Most days of the week
+- A few days a week
+- Whenever they need me
+- I am not sure
+
+**Is anyone else helping with this care?**
+
+- I am the only one  ← picked below
+- I share it with someone else
+- I am not sure
+
+Writes:
+
+> I take care of an adult who cannot care for themselves. I do this every day. I am the only person providing this care.
+
+#### Caring for a child under 6
+
+**Does this child live with you?**
+
+- Yes
+- No
+
+**How often do you take care of them?**
+
+- Every day  ← picked below
+- Most days of the week
+- A few days a week
+- Whenever they need me
+- I am not sure
+
+Writes:
+
+> I take care of a child under 6 years old. The child lives with me. I care for them every day.
+
+#### Working
+
+**About how many hours a week do you usually work?**
+
+- Less than 10 hours
+- About 10 to 19 hours
+- About 20 to 29 hours  ← picked below
+- 30 hours or more
+- It changes week to week
+- I am not sure
+
+**How many jobs do you have?**
+
+- One job  ← picked below
+- More than one job
+- I am not sure
+
+**What can you send DTA as proof of your work?**
+  Pick every one you can send.
+
+- Pay stubs  ← picked below
+- A letter from my employer  ← picked below
+- My work schedule
+- I need help getting proof
+- None of these
+
+Writes:
+
+> I usually work about 20 to 29 hours a week at one job. I can send you my pay stubs and a letter from my employer.
+
+#### Working, but cannot get proof
+
+**About how many hours a week do you usually work?**
+
+- Less than 10 hours
+- About 10 to 19 hours
+- About 20 to 29 hours
+- 30 hours or more
+- It changes week to week  ← picked below
+- I am not sure
+
+**How many jobs do you have?**
+
+- One job
+- More than one job
+- I am not sure
+
+**What can you send DTA as proof of your work?**
+  Pick every one you can send.
+
+- Pay stubs
+- A letter from my employer
+- My work schedule
+- I need help getting proof  ← picked below
+- None of these
+
+Writes:
+
+> I usually work a different number of hours each week. I need help getting proof of my work hours and pay.
+
+#### Another disability benefit
+
+**Which benefit or payment is it?**
+
+- MassHealth based on a disability determination  ← picked below
+- Private or employer disability insurance
+- A VA pension
+- Railroad Retirement disability benefits
+- A Tribal disability payment
+- A disability payment from another state
+- Something not on this list
+
+Writes:
+
+> I also receive MassHealth based on a disability determination. Please review it as part of my exemption screening.
+
+#### Another disability benefit, not on the list
+
+**Which benefit or payment is it?**
+
+- MassHealth based on a disability determination
+- Private or employer disability insurance
+- A VA pension
+- Railroad Retirement disability benefits
+- A Tribal disability payment
+- A disability payment from another state
+- Something not on this list
+
+Writes:
+
+> I also receive another disability benefit or payment that was not on the list. I will bring the paperwork so you can review it.
+
+#### No regular place to sleep
+
+**Where do you usually sleep?**
+
+- In a shelter  ← picked below
+- Outside, or in a car
+- At other people’s homes
+- In a motel or hotel
+- Somewhere different from night to night
+- I would rather not say
+
+**What makes it hard for you to work?**
+  Pick every one that is true for you.
+
+- I have no address or phone to give an employer  ← picked below
+- I have no safe place to keep my things
+- I have no reliable way to get to a job  ← picked below
+- I have health problems
+- I have to move often
+- I do not feel safe
+- None of these
+
+Writes:
+
+> I do not have a regular place to sleep. I usually sleep in a shelter. This makes it hard for me to work. I have no address or phone to give an employer. I have no reliable way to get to a job.
+
+#### A good reason for missing hours
+
+**What happened?**
+
+- My car broke down  ← picked below
+- I lost my ride
+- Public transportation was not running
+- I could not afford to get there
+- Something else
+
+**Which months did this affect?**
+  Pick every month you could not meet the work rules.
+
+- This month  ← picked below
+- Last month  ← picked below
+- The month before that
+- More than three months
+- I am not sure
+
+**Is this still going on?**
+
+- Yes, it is still going on  ← picked below
+- No, it is over now
+- I am not sure
+
+Writes:
+
+> I could not meet the ABAWD work rules in July and August 2026. My car broke down and I had no other way to get there. This is still going on.
+
+#### When there is nothing to ask
+
+Someone exempt only for reasons that speak for themselves (pregnant, TAFDC, a Tribe,
+school, unemployment, a safety situation, substance use treatment, or a named disability
+benefit) is asked nothing extra and the letter carries its list of reasons alone. In the
+write-in version those people get one empty box under `statementPromptsFor` fallback,
+"Explain your reasons in your own words", which is the least answerable prompt in the tool.
+
+Worked example, someone who is pregnant and nothing else:
+
+- Questions asked: 0
+- Sentences written: 0
+
+#### When someone skips a question
+
+Nothing is guessed. A skipped question drops its part of the sentence rather than
+filling it in with something likely, so a half-answered case still produces a true
+sentence, just a shorter one. Answering only the first health question:
+
+> I have a physical health condition that makes it hard for me to work 30 or more hours a week.
+
+And answering none of them:
+
+> I have a health condition that makes it hard for me to work 30 or more hours a week.
+
+## 12. Printing, saving, and email
 
 **`printFormLabel`**
 
@@ -640,7 +941,7 @@ An explainer opens next to the signature box:
 
 > This summary was shortened to fit in an email. Use "Copy the text" in the screening tool to get the full version.
 
-## 12. Other ways to reach DTA
+## 13. Other ways to reach DTA
 
 **`otherWaysHeading`**
 
@@ -665,7 +966,7 @@ The contact details shown, which are real and worth checking:
 - Mail: DTA Document Processing Center, P.O. Box 4406, Taunton, MA 02780-0420
 - Fax: (617) 887-8765
 
-## 13. Numbers the screening depends on
+## 14. Numbers the screening depends on
 
 Not copy, but they appear in the wording of the work question and decide who comes out
 exempt. Last checked November 2025.
@@ -677,7 +978,7 @@ exempt. Last checked November 2025.
 | Hours a week at minimum wage that make someone exempt | 14.5 |
 | Hours a week that count while earning under minimum wage | 30 |
 
-## 14. Copy the developer wrote, which needs your approval
+## 15. Copy the developer wrote, which needs your approval
 
 Everything above came from you or from the earlier MLRI draft. The strings in this
 section did not. They were written to fill gaps while building the MassLegalHelp version,
@@ -693,13 +994,9 @@ anywhere, so whatever replaces it still owes a reader those three facts.
 
 > SNAP Work Rules Screening | Massachusetts Legal Help
 
-**`chrome.wordmark`**  **[written by the developer, not you]**
+**`chrome.brandLabel`**  **[written by the developer, not you]**
 
-> Mass Legal Help
-
-**`chrome.tagline`**  **[written by the developer, not you]**
-
-> Massachusetts Legal Information
+> Mass Legal Help home
 
 **`chrome.quickExit`**  **[written by the developer, not you]**
 
@@ -722,7 +1019,7 @@ benefits page is worse than no link. This version also has no Terms of Use check
 all, which earlier versions did. And with the disclaimer gone the tool no longer says
 anywhere that it is not legal advice.
 
-## 15. Every link the screener sends people to
+## 16. Every link the screener sends people to
 
 | Name | Where it goes |
 |---|---|
@@ -740,3 +1037,4 @@ anywhere that it is not legal advice.
 | `getSnapBack` | https://www.masslegalhelp.org/sites/default/files/2025-11/Terminations%20OB3%20KYR%20SNAP%20ABAWDs%20Flyers%20.pdf |
 | `dtaTraining` | https://snappathtowork.org/ |
 | `advocacyEmail` | info@masslegalservices.org |
+
