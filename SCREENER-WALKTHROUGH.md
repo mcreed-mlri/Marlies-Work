@@ -840,7 +840,7 @@ _The full set, for anyone who wants to read the wording without walking through 
 
 **A health reason**
 
-> I have physical and mental health conditions that makes it hard for me to work 30 or more hours a week. It has lasted 6 months or more, or I expect it to. I see a health care provider for it regularly, and I can ask them for a letter if you need one.
+> I have both a physical and a mental health condition that makes it hard for me to work 30 or more hours a week. It has lasted 6 months or more, or I expect it to. I see a health care provider for it regularly, and I can ask them for a letter if you need one.
 
 **Caring for someone**
 
@@ -856,7 +856,7 @@ _The full set, for anyone who wants to read the wording without walking through 
 
 **Working, but needs help getting proof**
 
-> I work 30 or more hours a week while earning less than minimum wage. I usually work a different number of hours each week. I need help getting proof of my work hours and pay.
+> I work 30 or more hours a week while earning less than minimum wage. I need help getting proof of my work hours and pay.
 
 **Another disability benefit**
 

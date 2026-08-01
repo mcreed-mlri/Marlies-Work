@@ -751,15 +751,6 @@ Writes:
 
 #### Working, but cannot get proof
 
-**About how many hours a week do you usually work?**
-
-- Less than 10 hours
-- About 10 to 19 hours
-- About 20 to 29 hours
-- 30 hours or more
-- It changes week to week  ← picked below
-- I am not sure
-
 **How many jobs do you have?**
 
 - One job
@@ -777,7 +768,7 @@ Writes:
 
 Writes:
 
-> I work 30 or more hours a week while earning less than minimum wage. I usually work a different number of hours each week. I need help getting proof of my work hours and pay.
+> I work 30 or more hours a week while earning less than minimum wage. I need help getting proof of my work hours and pay.
 
 #### Another disability benefit
 

@@ -340,7 +340,10 @@
   const GUIDED_HEALTH_KIND = [
     { id: 'physical', label: 'A physical health reason', text: 'a physical health condition' },
     { id: 'mental', label: 'A mental health reason', text: 'a mental health condition' },
-    { id: 'both', label: 'Both', text: 'physical and mental health conditions' }
+    /* Singular, because the sentence continues "...that makes it hard for me to
+     * work". "physical and mental health conditions that makes it" does not
+     * agree, and this goes on a letter to a state agency. */
+    { id: 'both', label: 'Both', text: 'both a physical and a mental health condition' }
   ];
 
   const GUIDED_HEALTH_LENGTH = [
@@ -565,11 +568,24 @@
       id: 'work',
       reasons: [WORK_REASON_INCOME, WORK_REASON_HOURS_30],
       label: 'Your work',
-      questions: [
-        { id: 'd_work_hours', type: 'single', text: 'About how many hours a week do you usually work?', options: GUIDED_WORK_HOURS, noneLabel: 'I am not sure' },
-        { id: 'd_work_jobs', type: 'single', text: 'How many jobs do you have?', options: GUIDED_WORK_JOBS, noneLabel: 'I am not sure' },
-        { id: 'd_work_proof', type: 'multi', text: 'What can you send DTA as proof of your work?', help: 'Pick every one you can send.', options: GUIDED_WORK_PROOF, noneLabel: 'None of these' }
-      ],
+      /* The hours question is only asked of someone whose exemption rests on
+       * pay rather than hours.
+       *
+       * "I work 30 hours or more a week" was already the screening answer for
+       * the other path, so asking again is a question with a known answer, and
+       * the bands on offer let them contradict it: picking "about 20 to 29
+       * hours" produced a letter claiming 30 or more in one sentence and
+       * something else in the next. One fewer question and no way to disagree
+       * with yourself. */
+      questions: (answers) => {
+        const qs = [];
+        if (!answers || answers.working !== 'hours_30') {
+          qs.push({ id: 'd_work_hours', type: 'single', text: 'About how many hours a week do you usually work?', options: GUIDED_WORK_HOURS, noneLabel: 'I am not sure' });
+        }
+        qs.push({ id: 'd_work_jobs', type: 'single', text: 'How many jobs do you have?', options: GUIDED_WORK_JOBS, noneLabel: 'I am not sure' });
+        qs.push({ id: 'd_work_proof', type: 'multi', text: 'What can you send DTA as proof of your work?', help: 'Pick every one you can send.', options: GUIDED_WORK_PROOF, noneLabel: 'None of these' });
+        return qs;
+      },
       /* Opens with the exemption claim itself, because in the letter this
        * paragraph replaces the fixed one that used to make the claim. Without
        * it the letter would give hours and proof and never say what they are
@@ -580,11 +596,11 @@
           ? 'I work 30 or more hours a week while earning less than minimum wage.'
           : 'I earn enough income to be exempt from the ABAWD work rules.';
 
-        const hoursId = pickOne(a, 'd_work_hours');
-        // The 30-hours claim has already given the hours; saying "I usually
-        // work 30 or more hours a week" straight after it is the same sentence.
-        const hours = (isHours30 && hoursId === 'h30plus')
-          ? '' : fragmentFor(GUIDED_WORK_HOURS, hoursId);
+        /* The hours question is not asked on the 30-hours path at all, so this
+         * is normally empty there anyway. Guarded rather than assumed, because
+         * a stale d_work_hours can still be in a restored session: someone can
+         * answer the hours question, go back, and change how they work. */
+        const hours = isHours30 ? '' : fragmentFor(GUIDED_WORK_HOURS, pickOne(a, 'd_work_hours'));
         const jobs = fragmentFor(GUIDED_WORK_JOBS, pickOne(a, 'd_work_jobs'));
         let detail = '';
         if (hours && jobs) detail = 'I usually work ' + hours + ' at ' + jobs + '.';

@@ -82,6 +82,7 @@ jobs:
         run: |
           node scripts/copy-doc.js
           node scripts/copy-walkthrough.js
+          node scripts/testing-doc.js
           node scripts/decision-spec.js
           node scripts/gen-docassemble.js
 

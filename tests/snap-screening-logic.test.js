@@ -475,9 +475,11 @@ describe('snap-screening-logic', () => {
       assert.deepEqual(ids({ disability: ['other'] }), ['d_disability_other']);
       // A named benefit needs no explaining; "other" alongside it still does.
       assert.deepEqual(ids({ disability: ['ssi_ssdi', 'other'] }), ['d_disability_other']);
-      // Both work exemptions share one block rather than asking twice.
+      /* Both work exemptions share one block rather than asking twice. The
+       * 30-hours path drops the hours question, since that exemption is itself
+       * the answer to it; see the test below. */
       assert.deepEqual(ids({ working: 'income_weekly' }), ['d_work_hours', 'd_work_jobs', 'd_work_proof']);
-      assert.deepEqual(ids({ working: 'hours_30' }), ['d_work_hours', 'd_work_jobs', 'd_work_proof']);
+      assert.deepEqual(ids({ working: 'hours_30' }), ['d_work_jobs', 'd_work_proof']);
     });
 
     it('good cause replaces the exemption questions rather than adding to them', () => {
@@ -559,19 +561,50 @@ describe('snap-screening-logic', () => {
       );
     });
 
-    /* The 30-hours claim states the hours, so the generic hours sentence would
-     * say the same thing a second time. */
-    it('does not state the hours twice for the 30-hours exemption', () => {
+    /* The 30-hours exemption is itself an answer about hours, so asking again
+     * is a question whose answer is already known, and the bands on offer let
+     * someone disagree with what they just said: picking "about 20 to 29 hours"
+     * produced a letter claiming 30 or more in one sentence and something else
+     * in the next. On a letter to a state agency that is not a rough edge. */
+    it('does not ask about hours when the exemption is already about hours', () => {
+      assert.deepEqual(
+        classic2.guidedQuestions({ working: 'hours_30' }).map(q => q.id),
+        ['d_work_jobs', 'd_work_proof']
+      );
+      // The pay-based exemptions say nothing about hours, so it is still asked.
+      for (const w of ['income_weekly', 'hours_min_wage']) {
+        assert.deepEqual(
+          classic2.guidedQuestions({ working: w }).map(q => q.id),
+          ['d_work_hours', 'd_work_jobs', 'd_work_proof']
+        );
+      }
       assert.equal(
-        compose({ working: 'hours_30', d_work_hours: 'h30plus', d_work_jobs: 'one' }),
+        compose({ working: 'hours_30', d_work_jobs: 'one' }),
         'I work 30 or more hours a week while earning less than minimum wage. I have one job.'
       );
-      // A different band is real information and is kept.
+      /* A stale answer can still reach compose: answer the hours question on
+       * the pay path, go back, and change how you work. It must not contradict
+       * the claim. */
       assert.equal(
-        compose({ working: 'hours_30', d_work_hours: 'h20_29' }),
-        'I work 30 or more hours a week while earning less than minimum wage. '
-        + 'I usually work about 20 to 29 hours a week.'
+        compose({ working: 'hours_30', d_work_hours: 'h20_29', d_work_jobs: 'one' }),
+        'I work 30 or more hours a week while earning less than minimum wage. I have one job.'
       );
+    });
+
+    /* The sentence continues "...that makes it hard for me to work", so the
+     * phrase naming the condition has to be singular to agree with it. */
+    it('the health sentence agrees with itself when both kinds are picked', () => {
+      const both = compose({ health: 'yes', d_health_kind: 'both' });
+      assert.equal(
+        both,
+        'I have both a physical and a mental health condition that makes it hard for me to '
+        + 'work 30 or more hours a week.'
+      );
+      assert.doesNotMatch(both, /conditions that makes/);
+      // Every kind has to agree, not only this one.
+      for (const kind of ['physical', 'mental', 'both', NONE]) {
+        assert.match(compose({ health: 'yes', d_health_kind: kind }), /condition that makes it hard/);
+      }
     });
 
     /* The property that makes the whole approach defensible: a skipped question

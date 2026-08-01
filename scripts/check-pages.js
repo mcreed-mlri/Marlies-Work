@@ -98,7 +98,12 @@ for (const rel of files) {
      * no rule behind it while this script reported ok. Those pages carry a comment
      * saying their tokens are duplicated rather than shared precisely to keep this
      * check alive; that was only true for one class. */
-    const interesting = /^(h\d|h-|btn-|opt-|card-|result-|q-|hint-|form-|facts-|fact-|topbar|brand|sr-only|no-print|fade|card-in|lead|icon-|mono|kicker|wrap|back|section|list|entry|badge|body|titlerow|tag|go|docs|panel|row|tool|foot|actions|theme-toggle)/;
+    /* flow, build, pick and wrote joined the list with the letter-writing
+     * diagram on screener/how-it-works.html. A family absent from here is not
+     * checked at all, which is the failure this comment already describes, so
+     * adding the rules without adding the prefix would have left the new half
+     * of that page as unverified as `.mono` once was. */
+    const interesting = /^(h\d|h-|btn-|opt-|card-|result-|q-|hint-|form-|facts-|fact-|topbar|brand|sr-only|no-print|fade|card-in|lead|icon-|mono|kicker|wrap|back|section|list|entry|badge|body|titlerow|tag|go|docs|panel|row|tool|foot|actions|theme-toggle|flow|build|pick|wrote|decision-|exempt-|outcome|matrix|toc|note)/;
     const used = new Set();
     /* Scan markup only. A class name mentioned inside a <style> block or an HTML
      * comment is prose about the CSS, not a use of it. */

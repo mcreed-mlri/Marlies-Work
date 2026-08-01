@@ -382,6 +382,55 @@ describe('the shipping build stores answers per tab only', () => {
    * with, so the assertion is gone rather than kept as decoration. */
 });
 
+/* screener/how-it-works.html explains how the guided version writes the letter,
+ * and quotes three composed sentences to show one being built. Those are copied
+ * into the markup by hand, which is the one thing the generated documents exist
+ * to avoid, so they get an assertion instead: the explainer cannot quietly go on
+ * describing wording the tool has stopped using.
+ *
+ * Only the sentences are checked, not the prose around them. The page is an
+ * explainer and is allowed to paraphrase; what it must not do is put words in
+ * quotation marks that the tool never writes. */
+describe('the how-it-works explainer quotes the real composed sentences', () => {
+  const PAGE = path.join(__dirname, '..', 'screener', 'how-it-works.html');
+  const S = require('../masslegalhelp/snap-screening-logic.js');
+  const A = S.create('classic2');
+
+  it('the health example matches what composeStatement produces', () => {
+    const html = fs.readFileSync(PAGE, 'utf8');
+    const composed = A.composeStatement(
+      { health: 'yes', d_health_kind: 'physical', d_health_length: 'long', d_health_care: 'regularly' },
+      new Date(2026, 7, 1)
+    ).map(e => e.text).join(' ');
+
+    /* The page shows the paragraph accumulating, so every sentence of the
+     * finished version has to appear somewhere in the markup. Split on the
+     * sentence boundary rather than matching the whole paragraph, because the
+     * page deliberately breaks it across three rows. */
+    const sentences = composed.match(/[^.]+\./g).map(s => s.trim());
+    assert.ok(sentences.length >= 3, 'expected the health paragraph to have three sentences');
+    for (const sentence of sentences) {
+      assert.ok(
+        html.includes(sentence),
+        'how-it-works.html no longer quotes a sentence the tool writes:\n  ' + sentence
+        + '\nUpdate the .build list on that page, or it is describing wording that does not exist.'
+      );
+    }
+  });
+
+  it('the disability fallback it calls out is still the real one', () => {
+    const html = fs.readFileSync(PAGE, 'utf8');
+    const fallback = A.composeStatement(
+      { disability: ['other'], d_disability_other: S.NONE }, new Date(2026, 7, 1)
+    )[0].text;
+    assert.ok(
+      html.includes(fallback),
+      'the explainer names the disability fallback as the weakest wording in the tool, '
+      + 'but no longer quotes it correctly. Expected:\n  ' + fallback
+    );
+  });
+});
+
 /* Quick exit is a safety control, and the failure mode is silent: it navigates
  * away correctly while leaving the answers behind. Only the shipping build has it;
  * the preview builds still use a Back button to the hub. */

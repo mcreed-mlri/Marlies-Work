@@ -48,6 +48,13 @@ tool's words. Writing a raw `w('> ...')` puts a blockquote past both the italics
 the `--docs` conversion, which is how two stray `>` lines once reached the Google Docs
 export as literal text.
 
+`TESTING.md` is generated too, for the same reason: a manual checklist that is quietly
+missing a case is worse than none, because working through it feels like coverage. The
+exemptions, the guided questions, and every composed sentence are read from the code; the
+judgement sections are prose in the generator. Reading its output is a real review step,
+not a formality. Laying every sentence out side by side is how a subject-verb disagreement
+and a letter that contradicted itself about hours were both caught.
+
 Generators and the publish path, same binary. All four are safe to re-run; each
 overwrites its own output and nothing else:
 
@@ -56,6 +63,7 @@ scripts/copy-doc.js                 regenerates SCREENER-COPY.md from the code
 scripts/copy-walkthrough.js         regenerates SCREENER-WALKTHROUGH.md from the code
 scripts/copy-walkthrough.js --docs  the same, rebuilt for pasting into Google Docs,
                                     written to _local/ and not tracked
+scripts/testing-doc.js              regenerates TESTING.md from the code
 scripts/decision-spec.js            regenerates DECISION-SPEC.md and decision-spec.json
 scripts/gen-docassemble.js          regenerates the interview YAML and ALKiln feature file
 scripts/publish-mlh.js --check      guards on the shipping build, changes nothing
