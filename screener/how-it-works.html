@@ -182,14 +182,14 @@
   <a class="back" href="./">← SNAP screener</a>
 
   <h1>How the SNAP screening works</h1>
-  <p class="lead">This is a short screening that helps someone on SNAP figure out whether the <strong>ABAWD work rules</strong> might apply to them. It asks a few plain-language questions and, based only on the answers, shows one of several outcomes. <strong>Nothing is sent anywhere.</strong> Answers stay in the browser tab and are erased when it closes. See <a href="#privacy">Privacy</a> below.</p>
+  <p class="lead">This is a short screening (less than 2 minutes) that helps someone on SNAP figure out whether the <strong>ABAWD work rules</strong> might apply to them. It asks a few plain-language questions and, based only on the answers, shows one of <strong>three</strong> outcomes. <strong>Nothing is sent anywhere.</strong> Answers stay in the browser tab and are erased when it closes. See <a href="#privacy">Privacy</a> below.</p>
 
   <nav class="toc" aria-label="On this page">
     <div class="toc-title">On this page</div>
     <ul class="toc-list">
       <li><a href="#abawd-rules">What are the ABAWD work rules?</a></li>
       <li><a href="#outcomes">The possible outcomes</a></li>
-      <li><a href="#why-four">Why three main result screens?</a></li>
+      <li><a href="#why-three">Why three result screens?</a></li>
       <li><a href="#how-decides">How the decision order works</a></li>
       <li><a href="#the-letter">How the letter to DTA gets written</a></li>
       <li><a href="#exemptions">What counts as an exemption?</a></li>
@@ -200,6 +200,7 @@
 
   <h2 id="abawd-rules">What are the "ABAWD work rules"?</h2>
   <p>ABAWD stands for "Able-Bodied Adult Without Dependents." Federal rules can require some SNAP recipients in this group to work, train, or volunteer a set number of hours each month to keep their benefits. But <strong>many people are exempt</strong>, and others have a good reason for months they couldn't meet the hours. The screening exists because a lot of people are told they must meet the rules when they actually don't have to.</p>
+  <p>The start page explains that these rules generally apply to adults <strong>18 through 64</strong>. There is no age question and no separate age result; everyone goes through the same questions.</p>
 
   <h2 id="outcomes">The possible outcomes</h2>
 
@@ -207,7 +208,7 @@
     <span class="pill" style="background:var(--ok)" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
     <div>
       <div class="t">Exempt: you may not have to meet the work rules</div>
-      <div class="d">The person picked at least one exemption reason (for example, living with a child under 14, a health reason, or earning enough income). The result lists those reasons, tells them to contact DTA as soon as they can, and explains what proof to send for work-, housing-, or disability-based exemptions. A fill-in statement form can be printed or downloaded to mail, fax, or upload to DTA Connect.</div>
+      <div class="d">The person picked at least one exemption reason (for example, living with a child under 14, a health reason, or earning enough income). The result lists those reasons, tells them to contact DTA as soon as they can, and explains what proof to send for work-, housing-, or disability-based exemptions. The word <strong>exempt</strong> in the heading can be hovered or tapped for a short reminder of what it means. A fill-in statement form can be printed, downloaded, or emailed to themselves, then signed and sent to DTA.</div>
     </div>
   </div>
 
@@ -227,22 +228,13 @@
     </div>
   </div>
 
-  <div class="outcome">
-    <span class="pill" style="background:var(--info)" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
-    <div>
-      <div class="t">Age may not apply</div>
-      <div class="d">If the person is not between 18 and 64, the screening explains that these rules may not apply and suggests contacting DTA or legal aid.</div>
-    </div>
-  </div>
-
-  <h2 id="why-four">Why three main result screens?</h2>
+  <h2 id="why-three">Why three result screens?</h2>
   <p>The proposal centers on three main results: <strong>exempt</strong>, <strong>good cause</strong>, or <strong>must meet the rules</strong>. The draft now keeps 30+ hours/week at lower pay inside the exempt result, because current guidance treats that work situation as an employment/income exemption category.</p>
   <p>The work question asks whether someone is working enough. These answers point to an exemption, but the person should still tell DTA and send proof of income and hours:</p>
   <ul>
     <li><strong>Exempt (income):</strong> earning $217.50+/week or 14.5 hours at $15+/hour.</li>
     <li><strong>Exempt (hours):</strong> working 30+ hours/week at lower pay.</li>
   </ul>
-  <p><strong>Age may not apply</strong> is an early result. It appears if the person is not 18–64 and stops the screening before the questions.</p>
 
   <div class="matrix-wrap">
     <table class="matrix">
@@ -274,12 +266,6 @@
           <td>No exemption and no good cause after all questions</td>
           <td class="no">No</td>
         </tr>
-        <tr>
-          <td>Age may not apply</td>
-          <td>ABAWD rules usually apply to adults 18–64; person should check with DTA or legal aid</td>
-          <td>Answered “No” to age question on the intro</td>
-          <td class="no">No</td>
-        </tr>
       </tbody>
     </table>
   </div>
@@ -290,15 +276,6 @@
   <div class="decision-step">
     <span class="decision-num">1</span>
     <div>
-      <div class="t">Age check (intro)</div>
-      <p class="d">If the person is <strong>not</strong> 18–64 → <strong>Age may not apply</strong>. The question flow stops here.</p>
-    </div>
-  </div>
-  <div class="decision-arrow">↓ if age 18–64</div>
-
-  <div class="decision-step">
-    <span class="decision-num">2</span>
-    <div>
       <div class="t">Any exemption?</div>
       <p class="d">If any exemption answer is selected → <strong>Exempt</strong>. See the list below.</p>
     </div>
@@ -306,7 +283,7 @@
   <div class="decision-arrow">↓ if no exemption</div>
 
   <div class="decision-step">
-    <span class="decision-num">3</span>
+    <span class="decision-num">2</span>
     <div>
       <div class="t">Good cause hardship?</div>
       <p class="d">A final question asks whether something is making it hard to work, go to school, or volunteer right now (transportation, an emergency, or an unfair job). If yes → <strong>Good cause</strong>.</p>
@@ -315,7 +292,7 @@
   <div class="decision-arrow">↓ if no good cause</div>
 
   <div class="decision-step">
-    <span class="decision-num">4</span>
+    <span class="decision-num">3</span>
     <div>
       <div class="t">Nothing above applies</div>
       <p class="d">→ <strong>May need to meet the work rules</strong>.</p>
@@ -323,26 +300,8 @@
   </div>
 
   <h2 id="the-letter" style="margin-top:34px">How the letter to DTA gets written</h2>
-  <p>Both the <strong>Exempt</strong> and <strong>Good cause</strong> screens end with a letter the person can print, download, or email, then sign and send to DTA. The tool never sends it; it only writes it.</p>
-  <p>Most of that letter is fixed. The part that is not is the middle: the person's own account of their situation, in their own voice. <strong>There are two versions of that middle part</strong>, and choosing between them is an open question for the team and for DTA.</p>
-
-  <div class="matrix-wrap">
-    <table class="matrix">
-      <thead>
-        <tr><th scope="col">&nbsp;</th><th scope="col">Version A, shipping today</th><th scope="col">Version B, under review</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>What they see</td><td>One empty box per exemption, with a prompt above it</td><td>Two or three multiple-choice questions, then the finished sentences</td></tr>
-        <tr><td>What they type</td><td>A few sentences, in their own words</td><td class="yes">Nothing</td></tr>
-        <tr><td>Extra questions</td><td class="no">None</td><td>2 to 5, on one screen before the results</td></tr>
-        <tr><td>Still needed</td><td>Name, ID, signature</td><td>Name, ID, signature</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <p>Version A asks someone to explain their own health, caretaking, or housing under a prompt like "Explain the health reason that makes it hard for you to work 30 or more hours a week." It is the hardest thing the tool asks of anyone and it lands last, after they already believe they are finished. Version B asks a few more multiple-choice questions instead and writes the sentences from the answers.</p>
-
-  <p>Version B works like this.</p>
+  <p>Both the <strong>Exempt</strong> and <strong>Good cause</strong> screens end with a letter the person can print, download, or email to themselves, then sign and send to DTA. The tool never sends it; it only writes it.</p>
+  <p>Most of that letter is fixed: the date, the DTA address block, the opening paragraph, and the bulleted list of reasons. What the person adds is the middle: a few sentences in their own words for each reason that needs explaining, plus their name, client or agency ID if they have one, and a signature.</p>
 
   <ol class="flow">
     <li class="flow-step">
@@ -352,75 +311,31 @@
     <div class="flow-arrow" aria-hidden="true">↓</div>
 
     <li class="flow-step">
-      <div class="t">Which of their reasons need explaining?</div>
-      <p class="d">Each reason is looked at on its own. Some carry all the information DTA needs already; some do not.</p>
-    </li>
-    <div class="flow-arrow" aria-hidden="true">↓</div>
-
-    <div class="flow-fork">
-      <div class="flow-branch">
-        <div class="flow-label">If it speaks for itself</div>
-        <div class="t">Ask nothing</div>
-        <p class="d">Pregnant, TAFDC, a Tribe, school, unemployment, a safety situation, substance use treatment, or a named disability benefit. There is nothing to add, so nothing is asked and the reason simply appears in the letter's list.</p>
-      </div>
-      <div class="flow-branch">
-        <div class="flow-label">If it needs explaining</div>
-        <div class="t">Ask two or three multiple-choice questions</div>
-        <p class="d">A health reason, caretaking, a child under 6, working, another disability benefit, or having no regular place to sleep. These are the six DTA needs detail on, and they are the same six Version A puts a blank box under.</p>
-      </div>
-    </div>
-    <div class="flow-join" aria-hidden="true">↓ &nbsp; both paths rejoin &nbsp; ↓</div>
-
-    <li class="flow-step">
-      <div class="t">Write one paragraph per reason that needed explaining</div>
-      <p class="d">Built from the answers, one sentence at a time. A skipped question drops its sentence rather than being guessed at, so a half-answered case still produces a true paragraph, just a shorter one.</p>
+      <div class="t">Which reasons need explaining?</div>
+      <p class="d">Some exemptions speak for themselves (pregnant, TAFDC, school, and others). The rest get one empty box each, with a prompt above it, such as explaining a health reason, caretaking, work hours and pay, housing, or why hours were missed.</p>
     </li>
     <div class="flow-arrow" aria-hidden="true">↓</div>
 
     <li class="flow-step">
-      <div class="t">Take that reason out of the bulleted list</div>
-      <p class="d">The paragraph already says it, and says more. Without this the letter states the same reason twice: once as a bullet and again as the opening words of the paragraph beneath it.</p>
+      <div class="t">They fill in the boxes, name, and signature</div>
+      <p class="d">The same privacy callout from the start page appears again above the form: <strong>Your information is private.</strong> MLRI will not save any personal information you share on this form. A <strong>← Back</strong> button returns to the last question screen with answers intact if they want to change something.</p>
     </li>
     <div class="flow-arrow" aria-hidden="true">↓</div>
 
     <li class="flow-step">
-      <div class="t">Show the person what was written</div>
-      <p class="d">In full, on screen, above the signature, with a link back to change any answer. Nobody signs a letter they have not read.</p>
+      <div class="t">Print, download, or email</div>
+      <p class="d"><strong>Print or save this form</strong> opens the letter alone, not the web page. <strong>Download as Word</strong> saves a file with the signature as a picture. <strong>Email myself a copy</strong> opens a panel where they can enter an address; sending from the page is not set up yet, so <strong>Open in my email app instead</strong> is the working path today.</p>
     </li>
     <div class="flow-arrow" aria-hidden="true">↓</div>
 
     <li class="flow-step">
-      <div class="t">They add their name and sign</div>
-      <p class="d">The two things the tool cannot write. Then print, download as Word, or email it to themselves.</p>
+      <div class="t">What the printed letter looks like</div>
+      <p class="d">Each reason stays in the bulleted list. What they typed appears in an indented box under the matching bullet, not as a repeated prompt line. Fixed paragraphs (for work, disability, or housing) sit the same way when those apply.</p>
     </li>
   </ol>
 
-  <h3 style="margin-top:26px">A sentence being built</h3>
-  <p>Someone who said they have a health reason that makes it hard to work 30 hours a week is asked three questions. Each answer adds to the same paragraph:</p>
-
-  <ul class="build">
-    <li>
-      <span class="pick">A physical health reason</span>
-      <span class="wrote">I have a physical health condition that makes it hard for me to work 30 or more hours a week.</span>
-    </li>
-    <li>
-      <span class="pick">6 months or more</span>
-      <span class="wrote"><em>…as above, then</em> It has lasted 6 months or more, or I expect it to.</span>
-    </li>
-    <li>
-      <span class="pick">Yes, I see a provider regularly</span>
-      <span class="wrote"><em>…then</em> I see a health care provider for it regularly, and I can ask them for a letter if you need one.</span>
-    </li>
-  </ul>
-
-  <p>Three taps instead of a blank box. The same person in Version A sees an empty field and the instruction to explain it themselves.</p>
-
   <div class="note">
-    <strong>Two things still open.</strong> The first is whether DTA will accept a statement composed by the tool rather than written by the claimant. The second matters more and is a question for lawyers rather than designers: a composed statement still sits above someone's signature, so is it still <em>their</em> statement? Showing them the finished text with a way to change it is the safeguard, not an answer. Until both are settled, Version A is what the public would get.
-  </div>
-
-  <div class="note">
-    <strong>Where multiple choice is worse.</strong> When someone gets a disability benefit that was not on the list, Version A asks them to name it and takes any answer. No list can hold every disability payment there is, so Version B offers the common ones and then falls back to "I receive a disability benefit or payment that was not on the list. I will bring the paperwork so you can review it." That is weaker than a written answer. It is the clearest single case for keeping one box.
+    <strong>Hardest ask.</strong> The write-in boxes land last, after someone already believes they are finished. A health reason, caretaking, or housing situation can mean explaining something personal in a few sentences. That is deliberate: DTA expects the person's own account, not a checkbox summary.
   </div>
 
   <h2 id="exemptions" style="margin-top:34px">What counts as an exemption?</h2>
@@ -451,7 +366,7 @@
         <li>Getting or applying for unemployment</li>
         <li>Disability benefits listed, or another disability benefit/payment DTA should review</li>
         <li>Substance use treatment program</li>
-        <li>Services from certain state agencies</li>
+        <li>Services from state agencies (listed under the question)</li>
       </ul>
     </div>
     <div class="exempt-card">
@@ -493,11 +408,10 @@
        settles, match it rather than paraphrasing it: two different descriptions of
        the same privacy promise is worse than one imperfect one. -->
   <p>There is no backend. Nothing anyone types is sent anywhere, and MLRI never receives it. There are currently no analytics of any kind, though that is expected to change to aggregate counts that record no answers and no identifiers.</p>
-  <p>The version going to MassLegalHelp keeps answers for the browser tab only. They survive a refresh, and they are erased when the tab closes, with nothing recoverable afterwards. This is deliberate: the questions cover pregnancy, disability, substance use treatment, and domestic violence, and the assumption is that the phone may be shared or monitored. It costs the ability to come back tomorrow and finish, which is the right way round for a screening that takes three minutes.</p>
+  <p>The version going to MassLegalHelp keeps answers for the browser tab only. They survive a refresh, and they are erased when the tab closes, with nothing recoverable afterwards. This is deliberate: the questions cover pregnancy, disability, substance use treatment, and domestic violence, and the assumption is that the phone may be shared or monitored. It costs the ability to come back tomorrow and finish, which is the right way round for a screening that takes less than 2 minutes.</p>
+  <p>On the start page and on the statement form, the screener shows the same privacy callout: <strong>Your information is private.</strong> MLRI will not save any personal information you share on this form.</p>
   <p>There is also a <strong>Quick exit</strong> control in the top bar. It erases the stored answers and then leaves the page, replacing the current history entry so the Back button cannot return to them.</p>
   <p>What someone types on the "Tell DTA" statement, their name, any client or agency ID, the explanation, and the signature, is never stored at all. It is read from the page only at the moment they print, download, or email. To keep a copy, that is what they do.</p>
-
-  <div class="note">This is a draft explainer, not legal advice. Results depend only on the answers given, and may not be complete or correct. People should always check with DTA before acting, and can reach a legal aid program (like MLRI) for advice. Anything here that doesn't match how DTA handles a case should be flagged for review.</div>
 
 </main>
 

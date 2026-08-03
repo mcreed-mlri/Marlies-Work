@@ -118,7 +118,6 @@ of these results:
 - **Good cause.** No exemption, but a temporary hardship may excuse missed hours.
 - **May need to meet the work rules.** Neither an exemption nor good cause came
   up, so the screen explains the work and volunteer options instead.
-- **Age may not apply.** Shown before the question flow if the person is not 18 through 64.
 
 ## The author's copy draft
 
@@ -126,7 +125,7 @@ The shipping build ([`masslegalhelp/tool/snap/index.html`](masslegalhelp/tool/sn
 is the classic design rebuilt from the MLRI author's **ABAWD Screening Tool
 website copy draft**, which also supplies every outbound URL. That draft is
 shared separately and is not tracked in this repo. It keeps the four grouped
-question sections and the age question, and adds
+question sections and adds
 material the original classic page does not have:
 
 - Intro explains the **SNAP and Work notice** and that DTA must screen for all exemptions first, with a *More on the SNAP ABAWD work rules* disclosure.
