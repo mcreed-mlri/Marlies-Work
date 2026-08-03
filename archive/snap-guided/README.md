@@ -11,5 +11,5 @@ Unlike the other files under `archive/`, this page loads the live
 composed sentences stay in sync with the logic tests and copy documents. The HTML
 and routing here are not maintained as a second build.
 
-Open from the preview site at `/archive/snap-guided/`, or from the screener home
-under "Archived guided ending."
+Open directly at `/archive/snap-guided/` on the preview site. It is not linked from
+the screener home or the shipping build.
