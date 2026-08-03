@@ -340,7 +340,9 @@ check('**Print or save this form** opens the print dialog and the preview shows 
 check('The letter has today\'s date, the DTA address block, the person\'s name, and their client ID if they gave one.');
 check('Leaving the client ID blank omits that row rather than printing an empty label.');
 check('**Download as Word** produces a file that opens in Word, and the signature is in it as a picture.');
-check('**Email myself a copy** opens the mail app with the summary already filled in.');
+check('**Email myself a copy** opens a panel where you can enter an email address.');
+check('The panel says sending from this page is not set up yet, and **Send** stays disabled.');
+check('**Open in my email app instead** opens the mail app with the summary already filled in.');
 check('On a machine with no mail app, the fallback panel appears with the text to copy, and "Copy the text" works.');
 check('A very long set of answers still produces a usable email; the summary is trimmed with a note saying so rather than silently cut.');
 
@@ -366,6 +368,8 @@ check('Closing the tab and reopening the tool shows the start page, not the prev
 check('Refreshing mid-way keeps the answers, so a stray reload does not mean starting over.');
 check('Open the browser\'s network tab and run the whole screening. **Nothing should be sent anywhere.** No analytics, no fonts from a CDN, no error reporting.');
 check('Nothing typed into the name, ID, or explanation fields appears in any URL.');
+check('The privacy callout on the start page and on the statement form shows the same wording: **'
+  + strip(C.privacyIntroLead) + '** ' + strip(C.privacyIntroBody));
 
 h2('7. Accessibility');
 

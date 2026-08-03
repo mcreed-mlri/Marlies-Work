@@ -101,7 +101,7 @@
       "reasons": [
         "Get services from a state agency"
       ],
-      "text": "Do you receive services from any state agencies?"
+      "text": "Do you get services from any of these state agencies?"
     },
     {
       "id": "school",
@@ -580,7 +580,7 @@
     "minimumWage": 15,
     "hoursAtMinimumWage": 14.5,
     "hoursBelowMinimumWage": 30,
-    "ageRange": "18 or older and under 65",
+    "ageRange": "18 through 64",
     "lastVerified": "2025-11"
   },
   "examples": [

@@ -30,13 +30,13 @@ _A note on what this tool is not. It does not send anything to DTA, it does not 
 
 > Did DTA tell you that you need to meet ABAWD Work Rules to keep getting SNAP?
 
-> Some adults on SNAP who are **18 or older and under 65** have to meet ABAWD work rules to get SNAP for more than 3 months. **Many adults are exempt** from the work rules. Being "exempt" means that you don't have to meet the work rules to keep getting SNAP.
+> Some adults on SNAP who are **18 through 64** have to meet ABAWD work rules to get SNAP for more than 3 months. **Many adults are exempt** from the work rules. Being "exempt" means that you don’t have to meet the work rules to keep getting SNAP.
 
 > You only have to meet these rules, or tell DTA you are exempt, if DTA sends you a [SNAP and Work notice](https://eohhs.ehs.state.ma.us/DTA/PolicyOnline/olg%20docs/Consolidated%20Notice%20Sample.pdf) that says you have to meet the ABAWD Work Rules. Check your mail and [DTAConnect](https://dtaconnect.eohhs.mass.gov/) to see notes from DTA. DTA has to screen you for all exemptions *before* subjecting you to the rules.
 
 > If you lost your SNAP because of the work rules, you might be able to get back on if you have an exemption, or if you met or are currently meeting the work rules.
 
-> This short screening asks a few questions to check if you need to meet the ABAWD work rules or if you are exempt. It takes about 3 minutes.
+> This short screening asks a few questions to check if you need to meet the ABAWD work rules or if you are exempt. It takes less than 2 minutes.
 
 > **Your information is private.** MLRI will not save any personal information you share on this form.
 
@@ -144,14 +144,13 @@ It does not have to be a daily program.
 - Yes
 - No
 
-**Do you receive services from any state agencies?**
+**Do you get services from any of these state agencies?**
 
-This includes services from agencies such as:
- - MassAbility
- - Dept. of Mental Health
- - Dept. of Developmental Services
- - MA Commission for the Blind
- - MA Commission for Deaf and Hard of Hearing
+- MassAbility
+- Dept. of Mental Health
+- Dept. of Developmental Services
+- MA Commission for the Blind
+- MA Commission for Deaf and Hard of Hearing
 
 - Yes
 - No
@@ -160,9 +159,9 @@ This includes services from agencies such as:
 
 **Are you enrolled in school half-time or more?**
 
-This includes high school, vocational/technical school, college, or any education and training program.
+This includes high school, vocational/technical school, college, or any education and training program. You can ask your school if you're unsure if you are enrolled half-time or more.
 
-- Yes, I am enrolled half-time or more in a school or program
+- Yes
 - No
 
 **Are you currently working for pay?**
@@ -296,6 +295,8 @@ _The results screen says:_
 
 > To tell DTA you are exempt, you can fill in the blanks below with your results and send it to DTA.
 
+> **Your information is private.** MLRI will not save any personal information you share on this form.
+
 _Then a heading, and under it one empty box for each thing that needs explaining:_
 
 > In a few sentences:
@@ -328,6 +329,8 @@ _Only the questions about that person's own exemption are asked, so most people 
 _Then the results screen shows what was written, so nobody signs something they have not read:_
 
 > We wrote this from your answers. Read it over, then print or download it to send to DTA.
+
+> **Your information is private.** MLRI will not save any personal information you share on this form.
 
 > What your letter says:
 

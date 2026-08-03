@@ -29,7 +29,7 @@ worth telling me about.
 
 **`page.introSummary`**
 
-> Some adults on SNAP who are **18 or older and under 65** have to meet ABAWD work rules to get SNAP for more than 3 months. **Many adults are exempt** from the work rules. Being "exempt" means that you don't have to meet the work rules to keep getting SNAP.
+> Some adults on SNAP who are **18 through 64** have to meet ABAWD work rules to get SNAP for more than 3 months. **Many adults are exempt** from the work rules. Being "exempt" means that you don’t have to meet the work rules to keep getting SNAP.
 
 **`page.introNotice`**
 
@@ -55,7 +55,7 @@ A collapsed "More on the SNAP ABAWD work rules" panel sits here:
 
 **`page.timeEstimate`**
 
-> This short screening asks a few questions to check if you need to meet the ABAWD work rules or if you are exempt. It takes about 3 minutes.
+> This short screening asks a few questions to check if you need to meet the ABAWD work rules or if you are exempt. It takes less than 2 minutes.
 
 **`page.privacyIntro`**
 
@@ -203,11 +203,15 @@ Help text, shown when someone opens the explainer:
 
 **`q.stateagency`**  (Yes / No; "yes" points to an exemption)
 
-> Do you receive services from any state agencies?
+> Do you get services from any of these state agencies?
 
-Help text, shown when someone opens the explainer:
+Listed on the question:
 
-> This includes services from agencies such as:MassAbilityDept. of Mental HealthDept. of Developmental ServicesMA Commission for the BlindMA Commission for Deaf and Hard of Hearing
+- MassAbility
+- Dept. of Mental Health
+- Dept. of Developmental Services
+- MA Commission for the Blind
+- MA Commission for Deaf and Hard of Hearing
 
 ### Group 4: School, work, and background
 
@@ -215,11 +219,9 @@ Help text, shown when someone opens the explainer:
 
 > Are you enrolled in school half-time or more?
 
-Yes button reads: Yes, I am enrolled half-time or more in a school or program
-
 Help text, shown when someone opens the explainer:
 
-> This includes high school, vocational/technical school, college, or any education and training program.
+> This includes high school, vocational/technical school, college, or any education and training program. You can ask your school if you're unsure if you are enrolled half-time or more.
 
 **`q.working`**  (Pick one)
 
@@ -322,9 +324,25 @@ Four results are possible. This block appears on more than one of them.
 
 > Learn more about the ABAWD work rules
 
+**`privacyIntroLead`**
+
+> Your information is private.
+
+**`privacyIntroBody`**
+
+> MLRI will not save any personal information you share on this form.
+
 **`privacyNote`**
 
-> Note: Your information is private and will not automatically be saved on this device. MLRI will not save any personal information you type on this form.
+> Your information is private. MLRI will not save any personal information you share on this form.
+
+**`introExemptExplain`**
+
+> Being "exempt" means that you don’t have to meet the work rules to keep getting SNAP.
+
+**`exemptTermHintLabel`**
+
+> What does exempt mean?
 
 **`printLead`**
 
@@ -875,6 +893,34 @@ And answering none of them:
 **`emailSelfSubject`**
 
 > My SNAP ABAWD screening results
+
+**`emailModalTitle`**
+
+> Email yourself a copy
+
+**`emailModalLead`**
+
+> Enter your email address. When sending is enabled, we will email you a text summary of your results.
+
+**`emailModalUnavailable`**
+
+> Sending from this page is not set up yet. For now, use Print or save this form, or open the summary in your email app.
+
+**`emailModalLabel`**
+
+> Your email address
+
+**`emailModalSendLabel`**
+
+> Send email
+
+**`emailModalMailAppLabel`**
+
+> Open in my email app instead
+
+**`emailModalCloseLabel`**
+
+> Close
 
 **`emailFallbackHeading`**
 

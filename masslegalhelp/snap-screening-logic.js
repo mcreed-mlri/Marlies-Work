@@ -152,7 +152,7 @@
       substanceUse: { text: 'Are you participating in a substance use treatment program?' },
       unemployment: { text: 'Do you get, or are you applying for, unemployment benefits?' },
       stateagency: { text: 'Do you get services from any of these state agencies?', help: 'MassAbility, Dept. of Mental Health, Dept. of Developmental Services, MA Commission for the Blind, or MA Commission for the Deaf and Hard of Hearing.' },
-      school: { text: 'Are you enrolled in school half-time or more?', help: 'This includes high school, vocational/technical school, college, or any education and training program.' },
+      school: { text: 'Are you enrolled in school half-time or more?', help: 'This includes high school, vocational/technical school, college, or any education and training program. You can ask your school if you\'re unsure if you are enrolled half-time or more.' },
       working: { text: 'Are you currently working for pay?', help: 'Choose the option that applies to you.', noneLabel: 'None of the above' }
     },
     v2: {
@@ -170,7 +170,7 @@
       substanceUse: { text: 'Are you in a substance use treatment program?' },
       unemployment: { text: 'Do you get, or are you applying for, unemployment benefits?' },
       stateagency: { text: 'Do you get services from a Massachusetts state agency?', help: 'For example: MassAbility, Dept. of Mental Health, Dept. of Developmental Services, MA Commission for the Blind, or MA Commission for the Deaf and Hard of Hearing.' },
-      school: { text: 'Are you in school half-time or more?', help: 'This includes high school, vocational/technical school, college, or any education and training program.' },
+      school: { text: 'Are you in school half-time or more?', help: 'This includes high school, vocational/technical school, college, or any education and training program. You can ask your school if you\'re unsure if you are enrolled half-time or more.' },
       working: { text: 'Are you working for pay right now?', help: 'Pick the one that is true for you.', noneLabel: 'None of these' }
     },
     /* Author's website copy draft. `helpHtml`, `listItems`, `note`, and
@@ -205,13 +205,18 @@
       substanceUse: { text: 'Are you participating in a substance use treatment program?', help: 'It does not have to be a daily program.' },
       unemployment: { text: 'Do you get, or are you applying for unemployment benefits?' },
       stateagency: {
-        text: 'Do you receive services from any state agencies?',
-        helpHtml: '<p style="margin:0 0 10px">This includes services from agencies such as:</p><ul style="margin:0;padding-left:22px"><li>MassAbility</li><li>Dept. of Mental Health</li><li>Dept. of Developmental Services</li><li>MA Commission for the Blind</li><li>MA Commission for Deaf and Hard of Hearing</li></ul>'
+        text: 'Do you get services from any of these state agencies?',
+        listItems: [
+          'MassAbility',
+          'Dept. of Mental Health',
+          'Dept. of Developmental Services',
+          'MA Commission for the Blind',
+          'MA Commission for Deaf and Hard of Hearing'
+        ]
       },
       school: {
         text: 'Are you enrolled in school half-time or more?',
-        help: 'This includes high school, vocational/technical school, college, or any education and training program.',
-        yesLabel: 'Yes, I am enrolled half-time or more in a school or program'
+        help: 'This includes high school, vocational/technical school, college, or any education and training program. You can ask your school if you\'re unsure if you are enrolled half-time or more.'
       },
       working: { text: 'Are you currently working for pay?', help: 'Choose the option that applies to you.', noneLabel: 'None of the above' }
     }
@@ -1062,7 +1067,13 @@
     resultsHeadLead: 'Based on your answers,',
     learnMoreLabel: 'Learn more about the ABAWD work rules',
     lostSnapIntro: 'If you lost your SNAP or are about to lose your SNAP because of the ABAWD rules, email us at',
-    privacyNote: 'Note: Your information is private and will not automatically be saved on this device. MLRI will not save any personal information you type on this form.',
+    privacyIntroLead: 'Your information is private.',
+    privacyIntroBody: 'MLRI will not save any personal information you share on this form.',
+    privacyNote: 'Your information is private. MLRI will not save any personal information you share on this form.',
+    /* Same sentence as the start page uses to explain "exempt". Shown again on hover
+     * over that word in the exempt results heading. */
+    introExemptExplain: 'Being "exempt" means that you don\u2019t have to meet the work rules to keep getting SNAP.',
+    exemptTermHintLabel: 'What does exempt mean?',
     printLead: 'Download or print these results to get a signed letter you can send to DTA. (More info on how to contact DTA in the box below)',
     exemptHeading: EXEMPT_HEADING_TEXT,
     /* Emptied 2026-07-30 at the author's direction. The exempt heading now ends
@@ -1128,6 +1139,13 @@
     savingTipsBody: 'Print or save this form opens your browser’s print menu. Pick your printer, or choose "Save as PDF" to keep a copy on your device. If the menu is slow to open, use Download as Word instead.',
     emailSelfLabel: 'Email myself a copy',
     emailSelfSubject: 'My SNAP ABAWD screening results',
+    emailModalTitle: 'Email yourself a copy',
+    emailModalLead: 'Enter your email address. When sending is enabled, we will email you a text summary of your results.',
+    emailModalUnavailable: 'Sending from this page is not set up yet. For now, use Print or save this form, or open the summary in your email app.',
+    emailModalLabel: 'Your email address',
+    emailModalSendLabel: 'Send email',
+    emailModalMailAppLabel: 'Open in my email app instead',
+    emailModalCloseLabel: 'Close',
     emailFallbackHeading: 'If your email app did not open',
     emailFallbackBody: 'Some computers have no email app set up. Copy the summary below and paste it into your email instead. This is a text summary, not the signed letter. Use "Print or save this form" for the copy you send to DTA.',
     emailCopyLabel: 'Copy the text',
@@ -1250,6 +1268,34 @@
       });
     }
 
+    const explainBox = (text) => {
+      const inner = String(text == null ? '' : text).trim() ? esc(text) : '&nbsp;';
+      return `<div style="margin:8px 0 0 18px;border:1px solid #999;padding:12px 14px;min-height:48px;white-space:pre-wrap;background:#fafafa">${inner}</div>`;
+    };
+
+    function explainTextForPrompt(prompt) {
+      const entry = explainEntries.find(e => e.prompt === prompt);
+      return entry ? String(entry.text == null ? '' : entry.text) : '';
+    }
+
+    function explainTextForReason(reason) {
+      for (const p of STATEMENT_PROMPTS) {
+        if (p.reason === reason) return explainTextForPrompt(p.prompt);
+      }
+      for (const e of explainEntries) {
+        if (Array.isArray(e.reasons) && e.reasons.includes(reason)) {
+          return String(e.text == null ? '' : e.text);
+        }
+      }
+      return '';
+    }
+
+    function needsExplainBox(reason) {
+      return STATEMENT_PROMPTS.some(p => p.reason === reason);
+    }
+
+    const workPrompt = STATEMENT_PROMPTS.find(p => p.reason === WORK_REASON_INCOME).prompt;
+
     let body;
     if (rt === 'exempt') {
       const specialReasons = [WORK_REASON_INCOME, WORK_REASON_HOURS_30, DISABILITY_OTHER_REASON, HOUSING_EXEMPT_REASON];
@@ -1257,37 +1303,54 @@
       let inner = `<p style="margin:0 0 14px">Dear DTA,</p>
         <p style="margin:0 0 14px">I am writing to ask that you update my SNAP case. I believe I am exempt from the ABAWD work rules and should not have to meet them for the following reason(s):</p>`;
       if (exemptReasons.length) {
-        const items = exemptReasons.map(r => `<li style="margin:0 0 6px">${esc(r)}</li>`).join('');
+        const items = exemptReasons.map(r => {
+          if (!composed && needsExplainBox(r)) {
+            return `<li style="margin:0 0 10px">${esc(r)}${explainBox(explainTextForReason(r))}</li>`;
+          }
+          return `<li style="margin:0 0 6px">${esc(r)}</li>`;
+        }).join('');
         inner += `<ul style="margin:0 0 16px;padding-left:22px">${items}</ul>`;
       }
       /* Each of these four is skipped when a composed paragraph already covers
        * the reason, because that paragraph says the same thing and more. In
        * write-in mode `covered` is always empty and all four behave as before. */
       const fixedFor = (reason) => rs.includes(reason) && !covered.has(reason);
+      const showWorkExplain = !composed && (fixedFor(WORK_REASON_INCOME) || fixedFor(WORK_REASON_HOURS_30));
       if (fixedFor(WORK_REASON_INCOME)) {
         inner += `<p style="margin:0 0 14px">I earn enough income to be exempt from the ABAWD work rules. I can send proof of my income and hours, such as pay stubs or a letter from my employer.</p>`;
       }
       if (fixedFor(WORK_REASON_HOURS_30)) {
         inner += `<p style="margin:0 0 14px">I work 30 or more hours per week while earning less than minimum wage. I can send proof of my hours and pay.</p>`;
       }
+      if (showWorkExplain) {
+        inner += explainBox(explainTextForPrompt(workPrompt));
+      }
       if (fixedFor(DISABILITY_OTHER_REASON)) {
         inner += `<p style="margin:0 0 14px">I receive a disability benefit or payment that is not listed above. Please review it as part of my exemption screening.</p>`;
+        if (!composed) inner += explainBox(explainTextForReason(DISABILITY_OTHER_REASON));
       }
       if (fixedFor(HOUSING_EXEMPT_REASON)) {
         inner += `<p style="margin:0 0 14px">I do not have a regular place to sleep. Please review the information I provide about my situation to decide whether I am unable to work under the ABAWD screening.</p>`;
+        if (!composed) inner += explainBox(explainTextForReason(HOUSING_EXEMPT_REASON));
+      }
+      if (!composed && explainEntries.some(e => e.prompt === STATEMENT_PROMPT_FALLBACK)) {
+        inner += explainBox(explainTextForPrompt(STATEMENT_PROMPT_FALLBACK));
+      }
+      if (!composed) {
+        explainEntries.forEach(e => {
+          if (!e.prompt) inner += explainBox(String(e.text == null ? '' : e.text));
+        });
       }
       body = inner;
     } else if (rt === 'goodcause') {
       body = `<p style="margin:0 0 14px">Dear DTA,</p>
         <p style="margin:0 0 14px">I am writing to explain why I could not meet the ABAWD work rules for one or more months. My good-cause reason is:</p>
         <p style="margin:0 0 14px;padding:12px 14px;border-left:3px solid #333;background:#f7f7f7">${esc(gcText)}</p>`;
+      if (!composed) body += explainBox(explainTextForPrompt(STATEMENT_PROMPT_GOODCAUSE));
     } else {
       body = `<p style="margin:0 0 14px">Dear DTA,</p>
         <p style="margin:0 0 14px">I am writing about my SNAP case and the ABAWD work rules.</p>`;
     }
-
-    const box = (content) =>
-      `<div style="border:1px solid #999;padding:12px 14px;min-height:72px;white-space:pre-wrap;background:#fff">${content}</div>`;
 
     /* Guided mode composed these sentences from pick-lists, so they are prose
      * and have to look like it. A caption above a ruled box is right for
@@ -1304,18 +1367,7 @@
         .map(t => `<p style="margin:0 0 14px">${esc(t)}</p>`)
         .join('');
     } else {
-      explainContent = explainEntries.length
-        ? explainEntries.map(e => {
-          const text = String(e.text == null ? '' : e.text);
-          const inner = text.trim()
-            ? esc(text)
-            : '&nbsp;';
-          const label = e.prompt
-            ? `<div style="font-size:10.5pt;color:#333;margin:0 0 6px">${esc(e.prompt)}</div>`
-            : '';
-          return label + box(inner);
-        }).join('<div style="height:14px"></div>')
-        : box('&nbsp;');
+      explainContent = '';
     }
 
     const sigBlock = sigImg
@@ -1333,9 +1385,7 @@
 
       ${body}
 
-      <div style="margin:${composed ? '0' : '20px 0 0'};break-inside:avoid;page-break-inside:avoid">
-        ${explainContent}
-      </div>
+      ${explainContent ? `<div style="margin:0;break-inside:avoid;page-break-inside:avoid">${explainContent}</div>` : ''}
 
       <div style="margin:28px 0 0;break-inside:avoid;page-break-inside:avoid">
         <p style="margin:0 0 18px">Sincerely,</p>

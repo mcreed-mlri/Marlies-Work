@@ -22,19 +22,18 @@ const VARIANT = 'classic2';
 const S = require(path.join(ROOT, 'masslegalhelp', 'snap-screening-logic.js'));
 const A = S.create(VARIANT);
 const C = S.RESULT_COPY;
+const INTRO_SUMMARY_HTML = 'Some adults on SNAP who are <strong>18 through 64</strong> have to meet ABAWD work rules to get SNAP for more than 3 months. <strong>Many adults are exempt</strong> from the work rules. ' + C.introExemptExplain;
 
 const GUIDED_DOC_DATE = new Date(2026, 7, 1);
 
 const INLINE = [
   { id: 'page.h1', re: /<h1 class="h1">([^<]+)<\/h1>/ },
-  { id: 'page.introSummary', re: /<p [^>]*>(Some adults on SNAP[\s\S]*?)<\/p>/ },
   { id: 'page.introNotice', re: /<p [^>]*>(You only have to meet these rules[\s\S]*?)<\/p>/ },
   { id: 'page.introLostSnap', re: /<p [^>]*>(If you lost your SNAP because of the work rules[\s\S]*?)<\/p>/ },
   { id: 'page.moreSummary', re: /<summary [^>]*>(More on the SNAP ABAWD work rules)<\/summary>/ },
   { id: 'page.moreDetails1', re: /<p style="margin:0 0 10px">(Everyone has a different life situation[\s\S]*?)<\/p>/ },
   { id: 'page.moreDetails2', re: /<p style="margin:0">(To learn more about the ABAWD work rules[\s\S]*?)<\/p>/ },
   { id: 'page.timeEstimate', re: /<p [^>]*>(This short screening asks[\s\S]*?)<\/p>/ },
-  { id: 'page.privacyIntro', re: /<p [^>]*>(<strong>Your information is private\.?<\/strong>[\s\S]*?)<\/p>/ },
   { id: 'page.startHeading', re: /<h2 class="h2"[^>]*>(Check if the SNAP work rules apply to you\.)<\/h2>/ },
   { id: 'page.startButton', re: />(Fill out the form[^<]*)<\/button>/ },
   { id: 'page.answerAny', re: /<p [^>]*>(Answer any that apply to you\. Every question is optional\.)<\/p>/ },
@@ -66,6 +65,8 @@ if (missing.length) {
   missing.forEach(id => console.error('  ' + id));
   process.exit(1);
 }
+inline['page.privacyIntro'] = `<strong>${C.privacyIntroLead}</strong> ${C.privacyIntroBody}`;
+inline['page.introSummary'] = INTRO_SUMMARY_HTML;
 
 const UNESCAPE = { '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;': "'", '&nbsp;': ' ' };
 
@@ -163,10 +164,17 @@ function emitFormFields() {
   emitCopy('page.sigAlt');
 }
 
+function emitPrivacyIntro() {
+  w('**' + C.privacyIntroLead + '** ' + C.privacyIntroBody);
+  blank();
+}
+
 function emitPrintEmailButtons() {
   [
     'printFormLabel', 'downloadWordLabel', 'emailSelfLabel', 'savingTipsTitle', 'savingTipsBody',
-    'emailSelfSubject', 'emailFallbackHeading', 'emailFallbackBody', 'emailCopyLabel',
+    'emailSelfSubject', 'emailModalTitle', 'emailModalLead', 'emailModalUnavailable', 'emailModalLabel',
+    'emailModalSendLabel', 'emailModalMailAppLabel', 'emailModalCloseLabel',
+    'emailFallbackHeading', 'emailFallbackBody', 'emailCopyLabel',
     'emailCopiedLabel', 'emailSelectedLabel', 'emailTruncatedNote'
   ].forEach(k => emitCopy(k));
 }
@@ -313,7 +321,7 @@ function emitFormWriteIn(rt) {
   emitCopy(rt === 'exempt' ? 'formLeadExempt' : 'formLeadGoodCause');
   emitCopy('whyInfoLabel');
   emitCopy(rt === 'exempt' ? 'whyInfoExempt' : 'whyInfoGoodCause');
-  emitCopy('privacyNote');
+  emitPrivacyIntro();
   emitCopy('printLead');
   emitCopy('formExplainHeading');
   [...ALL_PROMPTS].forEach(p => w('- ' + p));
@@ -327,7 +335,7 @@ function emitFormGuided(rt) {
   emitCopy(rt === 'exempt' ? 'composedFormLeadExempt' : 'composedFormLeadGoodCause');
   emitCopy('whyInfoLabel');
   emitCopy(rt === 'exempt' ? 'composedWhyInfoExempt' : 'composedWhyInfoGoodCause');
-  emitCopy('privacyNote');
+  emitPrivacyIntro();
   emitCopy('printLead');
   emitCopy('composedStatementHeading');
   emitCopy('composedChangeLabel');

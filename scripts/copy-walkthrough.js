@@ -60,6 +60,7 @@ const OUT = DOCS_MODE
 const S = require(path.join(ROOT, 'masslegalhelp', 'snap-screening-logic.js'));
 const A = S.create(VARIANT);
 const C = S.RESULT_COPY;
+const INTRO_SUMMARY_HTML = 'Some adults on SNAP who are <strong>18 through 64</strong> have to meet ABAWD work rules to get SNAP for more than 3 months. <strong>Many adults are exempt</strong> from the work rules. ' + C.introExemptExplain;
 
 /* The good-cause sentence names the months someone missed hours. Composing it
  * against the clock would rewrite this document on the first of every month and
@@ -74,11 +75,9 @@ const TODAY_LABEL = 'August 1, 2026';
  * than no walkthrough, because nothing about it looks wrong. */
 const INLINE = [
   { id: 'h1', re: /<h1 class="h1">([^<]+)<\/h1>/ },
-  { id: 'introSummary', re: /<p [^>]*>(Some adults on SNAP[\s\S]*?)<\/p>/ },
   { id: 'introNotice', re: /<p [^>]*>(You only have to meet these rules[\s\S]*?)<\/p>/ },
   { id: 'introLostSnap', re: /<p [^>]*>(If you lost your SNAP because of the work rules[\s\S]*?)<\/p>/ },
   { id: 'timeEstimate', re: /<p [^>]*>(This short screening asks[\s\S]*?)<\/p>/ },
-  { id: 'privacyIntro', re: /<p [^>]*>(<strong>Your information is private\.?<\/strong>[\s\S]*?)<\/p>/ },
   { id: 'startButton', re: />(Fill out the form[^<]*)<\/button>/ },
   { id: 'answerAny', re: /<p [^>]*>(Answer any that apply to you\. Every question is optional\.)<\/p>/ },
   { id: 'nameLabel', re: />(Your name)</ },
@@ -101,6 +100,8 @@ if (missing.length) {
   console.error('Fix the patterns in scripts/copy-walkthrough.js rather than shipping a document with gaps.');
   process.exit(1);
 }
+inline.privacyIntro = `<strong>${C.privacyIntroLead}</strong> ${C.privacyIntroBody}`;
+inline.introSummary = INTRO_SUMMARY_HTML;
 
 /* ---- Text helpers ---- */
 
@@ -456,6 +457,8 @@ quote(C.formTitleExempt);
 blank();
 quote(C.formLeadExempt);
 blank();
+quote(inline.privacyIntro);
+blank();
 say('Then a heading, and under it one empty box for each thing that needs explaining:');
 quote(C.formExplainHeading);
 blank();
@@ -488,6 +491,8 @@ say('Only the questions about that person\'s own exemption are asked, so most pe
 say('Then the results screen shows what was written, so nobody signs something they have not',
   'read:');
 quote(C.composedFormLeadExempt);
+blank();
+quote(inline.privacyIntro);
 blank();
 quote(C.composedStatementHeading);
 blank();

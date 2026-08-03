@@ -67,7 +67,7 @@ work rules when they do not have to.
 | Do you get, or are you applying for TAFDC cash assistance benefits? | **Yes** | Get or applying for TAFDC cash assistance |
 | Are you participating in a substance use treatment program? | **Yes** | Participating in a substance use treatment program |
 | Do you get, or are you applying for unemployment benefits? | **Yes** | Get or applying for unemployment benefits |
-| Do you receive services from any state agencies? | **Yes** | Get services from a state agency |
+| Do you get services from any of these state agencies? | **Yes** | Get services from a state agency |
 | Are you enrolled in school half-time or more? | **Yes** | Enrolled in school half-time or more |
 
 - [ ] `Live with a child under 14 years old` — Do you live with a child under 14 years old?
@@ -80,7 +80,7 @@ work rules when they do not have to.
 - [ ] `Get or applying for TAFDC cash assistance` — Do you get, or are you applying for TAFDC cash assistance benefits?
 - [ ] `Participating in a substance use treatment program` — Are you participating in a substance use treatment program?
 - [ ] `Get or applying for unemployment benefits` — Do you get, or are you applying for unemployment benefits?
-- [ ] `Get services from a state agency` — Do you receive services from any state agencies?
+- [ ] `Get services from a state agency` — Do you get services from any of these state agencies?
 - [ ] `Enrolled in school half-time or more` — Are you enrolled in school half-time or more?
 
 ### Disability benefits
@@ -408,7 +408,9 @@ getting to it.
 - [ ] The letter has today's date, the DTA address block, the person's name, and their client ID if they gave one.
 - [ ] Leaving the client ID blank omits that row rather than printing an empty label.
 - [ ] **Download as Word** produces a file that opens in Word, and the signature is in it as a picture.
-- [ ] **Email myself a copy** opens the mail app with the summary already filled in.
+- [ ] **Email myself a copy** opens a panel where you can enter an email address.
+- [ ] The panel says sending from this page is not set up yet, and **Send** stays disabled.
+- [ ] **Open in my email app instead** opens the mail app with the summary already filled in.
 - [ ] On a machine with no mail app, the fallback panel appears with the text to copy, and "Copy the text" works.
 - [ ] A very long set of answers still produces a usable email; the summary is trimmed with a note saying so rather than silently cut.
 
@@ -434,6 +436,7 @@ working assumption is a shared or borrowed phone.
 - [ ] Refreshing mid-way keeps the answers, so a stray reload does not mean starting over.
 - [ ] Open the browser's network tab and run the whole screening. **Nothing should be sent anywhere.** No analytics, no fonts from a CDN, no error reporting.
 - [ ] Nothing typed into the name, ID, or explanation fields appears in any URL.
+- [ ] The privacy callout on the start page and on the statement form shows the same wording: **Your information is private.** MLRI will not save any personal information you share on this form.
 
 ## 7. Accessibility
 

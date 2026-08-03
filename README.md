@@ -118,7 +118,7 @@ of these results:
 - **Good cause.** No exemption, but a temporary hardship may excuse missed hours.
 - **May need to meet the work rules.** Neither an exemption nor good cause came
   up, so the screen explains the work and volunteer options instead.
-- **Age may not apply.** Shown before the question flow if the person is not 18 or older and under 65.
+- **Age may not apply.** Shown before the question flow if the person is not 18 through 64.
 
 ## The author's copy draft
 

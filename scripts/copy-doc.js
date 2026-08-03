@@ -29,6 +29,7 @@ const VARIANT = 'classic2';
 const S = require(path.join(ROOT, 'masslegalhelp', 'snap-screening-logic.js'));
 const A = S.create(VARIANT);
 const C = S.RESULT_COPY;
+const INTRO_SUMMARY_HTML = 'Some adults on SNAP who are <strong>18 through 64</strong> have to meet ABAWD work rules to get SNAP for more than 3 months. <strong>Many adults are exempt</strong> from the work rules. ' + C.introExemptExplain;
 
 /* ---- Questions still open for the author. Keyed by copy id so each one
  * prints next to the text it is about, instead of in a list at the end. ---- */
@@ -45,14 +46,12 @@ const OPEN = {
 /* ---- Strings inline in the page markup. Each must match exactly once. ---- */
 const INLINE = [
   { id: 'page.h1', re: /<h1 class="h1">([^<]+)<\/h1>/ },
-  { id: 'page.introSummary', re: /<p [^>]*>(Some adults on SNAP[\s\S]*?)<\/p>/ },
   { id: 'page.introNotice', re: /<p [^>]*>(You only have to meet these rules[\s\S]*?)<\/p>/ },
   { id: 'page.introLostSnap', re: /<p [^>]*>(If you lost your SNAP because of the work rules[\s\S]*?)<\/p>/ },
   { id: 'page.moreSummary', re: /<summary [^>]*>(More on the SNAP ABAWD work rules)<\/summary>/ },
   { id: 'page.moreDetails1', re: /<p style="margin:0 0 10px">(Everyone has a different life situation[\s\S]*?)<\/p>/ },
   { id: 'page.moreDetails2', re: /<p style="margin:0">(To learn more about the ABAWD work rules[\s\S]*?)<\/p>/ },
   { id: 'page.timeEstimate', re: /<p [^>]*>(This short screening asks[\s\S]*?)<\/p>/ },
-  { id: 'page.privacyIntro', re: /<p [^>]*>(<strong>Your information is private\.?<\/strong>[\s\S]*?)<\/p>/ },
   { id: 'page.startHeading', re: /<h2 class="h2"[^>]*>(Check if the SNAP work rules apply to you\.)<\/h2>/ },
   { id: 'page.startButton', re: />(Fill out the form[^<]*)<\/button>/ },
   { id: 'page.answerAny', re: /<p [^>]*>(Answer any that apply to you\. Every question is optional\.)<\/p>/ },
@@ -115,6 +114,7 @@ if (missing.length) {
   console.error('Fix the patterns in scripts/copy-doc.js rather than shipping a document with gaps.');
   process.exit(1);
 }
+inline['page.introSummary'] = INTRO_SUMMARY_HTML;
 
 /* ---- Rendering helpers ---- */
 
@@ -219,8 +219,10 @@ blank();
 ['page.moreSummary', 'page.moreDetails1', 'page.moreDetails2']
   .forEach(id => item(id, inline[id]));
 
-[  'page.timeEstimate', 'page.privacyIntro'
+[  'page.timeEstimate'
 ].forEach(id => item(id, inline[id]));
+
+item('page.privacyIntro', `<strong>${C.privacyIntroLead}</strong> ${C.privacyIntroBody}`);
 
 w('**There is no Terms of Use text on this page today.** Other versions of the tool have a');
 w('checkbox someone must tick before starting; this one does not. If the published version');
@@ -264,6 +266,12 @@ A.GROUPS.forEach((g, gi) => {
       w('Help text, shown when someone opens the explainer:');
       blank();
       quote(help);
+      blank();
+    }
+    if (q.listItems) {
+      w('Listed on the question:');
+      blank();
+      q.listItems.forEach(li => w('- ' + toMarkdown(li)));
       blank();
     }
     if (q.options) {
@@ -320,7 +328,7 @@ section('Results: shared wording');
 
 w('Four results are possible. This block appears on more than one of them.');
 blank();
-['resultsHeadTitle', 'resultsHeadLead', 'learnMoreLabel', 'privacyNote', 'printLead',
+['resultsHeadTitle', 'resultsHeadLead', 'learnMoreLabel', 'privacyIntroLead', 'privacyIntroBody', 'privacyNote', 'introExemptExplain', 'exemptTermHintLabel', 'printLead',
   'lostSnapIntro'].forEach(k => item(k, C[k]));
 
 /* ---- Result screens ---- */
@@ -551,7 +559,9 @@ blank();
 
 section('Printing, saving, and email');
 ['printFormLabel', 'downloadWordLabel', 'savingTipsTitle', 'savingTipsBody', 'emailSelfLabel',
-  'emailSelfSubject', 'emailFallbackHeading', 'emailFallbackBody', 'emailCopyLabel',
+  'emailSelfSubject', 'emailModalTitle', 'emailModalLead', 'emailModalUnavailable', 'emailModalLabel',
+  'emailModalSendLabel', 'emailModalMailAppLabel', 'emailModalCloseLabel',
+  'emailFallbackHeading', 'emailFallbackBody', 'emailCopyLabel',
   'emailCopiedLabel', 'emailSelectedLabel', 'emailTruncatedNote'].forEach(k => item(k, C[k]));
 
 section('11. Other ways to reach DTA');

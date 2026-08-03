@@ -114,8 +114,8 @@ checked. If a second live build ever appears, restore the drift guard before the
   the idea returns.
 - **Thresholds.** Last verified November 2025. MLRI's own ABAWD article on MassLegalHelp
   was reviewed February 2026 and is therefore newer than this tool, so the income and hour
-  figures still need an SME. The age wording was settled on 2026-07-30 and now reads "18 or
-  older and under 65" everywhere; that reading of the federal cap is still worth confirming.
+  figures still need an SME. The age wording was settled on 2026-08-03 and now reads "18 through
+  64" everywhere; that reading of the federal cap is still worth confirming.
 - **Languages.** English only. MassLegalHelp publishes the ABAWD article in Spanish, and
   its language selector lives in the Drupal header, which a statically served tool at a
   path will not participate in.

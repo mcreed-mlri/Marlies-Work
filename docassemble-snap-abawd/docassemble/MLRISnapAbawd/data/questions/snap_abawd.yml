@@ -84,9 +84,9 @@ code: |
 question: |
   Did DTA tell you that you need to meet ABAWD Work Rules to keep getting SNAP?
 subquestion: |
-  Some adults on SNAP who are **18 or older and under 65** have to meet ABAWD work rules to get SNAP for more than 3 months. **Many adults are exempt** from the work rules. Being "exempt" means that you don't have to meet the work rules to keep getting SNAP.
+  Some adults on SNAP who are **18 through 64** have to meet ABAWD work rules to get SNAP for more than 3 months. **Many adults are exempt** from the work rules. Being "exempt" means that you don’t have to meet the work rules to keep getting SNAP.
 
-  This short screening asks a few questions to check if you need to meet the ABAWD work rules or if you are exempt. It takes about 3 minutes.
+  This short screening asks a few questions to check if you need to meet the ABAWD work rules or if you are exempt. It takes less than 2 minutes.
 
   **Your information is private.** MLRI will not save any personal information you share on this form.
 continue button field: introduction
@@ -175,11 +175,15 @@ fields:
   - "Do you get, or are you applying for unemployment benefits?": unemployment
     datatype: yesnoradio
     required: False
-  - "Do you receive services from any state agencies?": stateagency
+  - "Do you get services from any of these state agencies?": stateagency
     datatype: yesnoradio
     required: False
     help: |
-      This includes services from agencies such as:MassAbilityDept. of Mental HealthDept. of Developmental ServicesMA Commission for the BlindMA Commission for Deaf and Hard of Hearing
+      - MassAbility
+      - Dept. of Mental Health
+      - Dept. of Developmental Services
+      - MA Commission for the Blind
+      - MA Commission for Deaf and Hard of Hearing
 continue button field: benefits_group
 ---
 question: "School, work, and background"
@@ -188,7 +192,7 @@ fields:
     datatype: yesnoradio
     required: False
     help: |
-      This includes high school, vocational/technical school, college, or any education and training program.
+      This includes high school, vocational/technical school, college, or any education and training program. You can ask your school if you're unsure if you are enrolled half-time or more.
   - "Are you currently working for pay?": working
     datatype: radio
     choices:
@@ -246,7 +250,7 @@ subquestion: |
   To keep getting SNAP, you can meet the ABAWD work rules by doing one of these:
   % endif
 
-  Note: Your information is private and will not automatically be saved on this device. MLRI will not save any personal information you type on this form.
+  **Your information is private.** MLRI will not save any personal information you share on this form.
 attachment code: tell_dta_statement if outcome in ('exempt', 'goodcause') else []
 buttons:
   - Start over: restart

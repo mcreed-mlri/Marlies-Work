@@ -292,23 +292,22 @@ w('| Weekly earnings that exempt | $' + S.WORK_INCOME_THRESHOLD + ' before taxes
 w('| Massachusetts minimum wage | $' + S.MA_MIN_WAGE + ' an hour | |');
 w('| Hours a week at minimum wage that exempt | ' + S.WORK_HOURS_AT_MIN_WAGE + ' | |');
 w('| Hours a week counted below minimum wage | ' + S.WORK_HOURS_COMPLIANCE + ' | |');
-w('| Age the rules apply to | 18 or older and under 65 | |');
+w('| Age the rules apply to | 18 through 64 | |');
 blank();
 w('Income and hours were last verified November 2025 and still need an expert. MLRI\'s ABAWD');
 w('article on MassLegalHelp was reviewed February 2026 and is therefore newer than they are.');
 blank();
-w('The age wording was settled on 2026-07-30. The article says "between 18 and 65", which');
+w('The age wording was settled on 2026-08-03. The article says "between 18 and 65", which');
 w('does not say whether a 65-year-old is included, and the federal rule caps at 64 with 65');
-w('and over exempt by age. Reading the article literally would have screened a 65-year-old');
-w('as subject to the rules, so the screener says "18 or older and under 65" instead. Same');
-w('range, no ambiguity. Worth confirming that reading of the rule.');
+w('and over exempt by age. The screener says "18 through 64" to state that range without');
+w('ambiguity. Worth confirming that reading of the rule.');
 blank();
 json.thresholds = {
   weeklyIncome: S.WORK_INCOME_THRESHOLD,
   minimumWage: S.MA_MIN_WAGE,
   hoursAtMinimumWage: S.WORK_HOURS_AT_MIN_WAGE,
   hoursBelowMinimumWage: S.WORK_HOURS_COMPLIANCE,
-  ageRange: '18 or older and under 65',
+  ageRange: '18 through 64',
   lastVerified: '2025-11'
 };
 

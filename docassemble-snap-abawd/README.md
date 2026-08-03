@@ -107,7 +107,7 @@ Working 30 or more hours a week below minimum wage currently routes to exempt on
 which someone should confirm. `DECISION-SPEC.md` has a Citation column against every rule,
 and every row is currently blank.
 
-The age wording was settled on 2026-07-30 and now reads "18 or older and under 65"
+The age wording was settled on 2026-08-03 and now reads "18 through 64"
 everywhere. MLRI's ABAWD article says "between 18 and 65", which does not say whether a
 65-year-old is included; the federal rule caps at 64, with 65 and over exempt by age. The
 screener states the range unambiguously rather than mirroring the looser phrasing. That

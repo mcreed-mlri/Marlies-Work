@@ -94,14 +94,14 @@ test.describe('SNAP ABAWD screening (the shipping build)', () => {
     await expect(page.getByRole('link', { name: 'More examples' })).toHaveCount(2);
   });
 
-  test('state agencies appear in help and school uses the long Yes label', async ({ page }) => {
+  test('state agencies are listed on the question', async ({ page }) => {
     await startScreener(page);
     for (let i = 0; i < 2; i++) await clickNext(page);   // group 3: benefits
-    const stateAgencyBlock = page.locator('main').filter({ hasText: /receive services from any state agencies/i });
-    await stateAgencyBlock.getByRole('button', { name: /What does this mean/i }).click();
+    const stateAgencyBlock = page.locator('main').filter({ hasText: /get services from any of these state agencies/i });
     await expect(stateAgencyBlock.getByText('MA Commission for Deaf and Hard of Hearing')).toBeVisible();
+    await expect(stateAgencyBlock.getByRole('button', { name: /What does this mean/i })).toHaveCount(0);
     await clickNext(page);                               // group 4: school and work
-    await expect(yn(page, 'school', 'yes')).toHaveText(/Yes, I am enrolled half-time or more in a school or program/);
+    await expect(yn(page, 'school', 'yes')).toHaveText(/^Yes$/);
   });
 
   test('answers are stored under their own key, not the classic tool’s', async ({ page }) => {

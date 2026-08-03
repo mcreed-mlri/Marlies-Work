@@ -311,8 +311,12 @@
     #stage{padding:16px max(14px, env(safe-area-inset-right)) 48px max(14px, env(safe-area-inset-left))}
     .form-row{grid-template-columns:1fr}
     .opt{font-size:16px;padding:15px 14px}
-    .opt-group--yn{flex-direction:column}
-    .qcard{padding:18px;box-shadow:5px 5px 0 0 var(--band-edge);margin-right:5px;margin-bottom:5px}
+    /* Yes/No stays side by side on phones so a four-question section fits in
+       about a screen and a half. Multi-line options stay stacked. */
+    .opt-group--yn{flex-direction:row;gap:8px;margin-top:12px}
+    .opt--yn{min-height:44px;padding:10px 12px;font-size:15px;gap:8px}
+    .opt--yn .opt-mark{width:20px;height:20px;font-size:12px}
+    .qcard{padding:14px 16px;box-shadow:5px 5px 0 0 var(--band-edge);margin-right:5px;margin-bottom:5px}
     .q-nav{gap:10px;margin-left:0;margin-right:0;border:1px solid var(--panel);border-radius:12px}
     .q-nav > [data-action="back"]{flex:0 0 36%}
     .site-footer-inner{padding:24px max(14px, env(safe-area-inset-right)) 26px max(14px, env(safe-area-inset-left));align-items:flex-start}
@@ -341,6 +345,24 @@
     [data-progress-fill]{transition:none !important}
     .hint-tip-panel{transition:none}
   }
+  .email-modal{
+    border:none;border-radius:12px;padding:0;max-width:min(480px,calc(100vw - 32px));
+    box-shadow:0 18px 48px rgba(16,32,56,.18);
+  }
+  .email-modal::backdrop{background:rgba(16,32,56,.42)}
+  .email-modal-inner{padding:22px 22px 20px}
+  .email-modal-title{font-size:20px;line-height:1.3;font-weight:700;margin:0 0 10px;color:var(--ink)}
+  .email-modal-lead{font-size:15px;line-height:1.55;color:var(--prose);margin:0 0 14px}
+  .email-modal-note{
+    font-size:14.5px;line-height:1.55;color:var(--warn-ink);margin:0 0 16px;padding:12px 14px;
+    background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:var(--radius);
+  }
+  .email-modal-label{display:block;font-size:14px;font-weight:700;margin:0 0 6px}
+  .email-modal-input{
+    width:100%;font-family:inherit;font-size:16px;line-height:1.4;padding:11px 13px;
+    border:1.5px solid var(--stroke);border-radius:calc(var(--radius) - 3px);margin:0 0 18px;
+  }
+  .email-modal-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
   .hint-tip{position:relative;display:inline-block;max-width:100%}
   .hint-tip-btn{
     display:inline-flex;align-items:center;gap:7px;font-family:inherit;font-size:12.5px;font-weight:700;
@@ -370,8 +392,16 @@
   .hint-tip-btn--icon{min-height:28px;padding:2px;text-decoration:none;gap:0}
   .hint-tip-btn--icon .hint-tip-icon{width:20px;height:20px;font-size:13px}
   .hint-tip-wrap{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .hint-tip--term{display:inline;vertical-align:baseline;max-width:none}
+  .hint-tip-btn--term{
+    font:inherit;color:inherit;background:none;border:none;padding:0;margin:0;min-height:auto;
+    cursor:help;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;
+  }
+  .hint-tip-term--bold{font-weight:700}
   @media (max-width:640px),(hover:none),(pointer:coarse){
-    .hint-tip:not(.hint-tip--icon){display:block;width:100%;max-width:100%}
+    .hint-tip:not(.hint-tip--icon):not(.hint-tip--term){display:block;width:100%;max-width:100%}
+    .hint-tip-btn--term{min-height:44px;padding:8px 4px;margin:-8px -4px}
+    .hint-tip--term.is-open{display:inline-flex;flex-direction:column;align-items:flex-start;vertical-align:baseline;max-width:100%}
     .hint-tip-wrap .hint-tip--icon.is-open{
       flex:1 1 100%;display:flex;flex-direction:column;align-items:stretch;
       max-width:100%;min-width:0;
@@ -533,7 +563,7 @@ const { RESULT_COPY, exemptHeadingHtml, exemptProofNotes, buildDtaContactsHtml, 
  * State + logic (ports the DCLogic Component)
  * ------------------------------------------------------------------ */
 
-const state = { view:'intro', step:0, gc:false, helpOpen:{}, answers:{}, animate:true };
+const state = { view:'intro', step:0, gc:false, helpOpen:{}, answers:{}, animate:true, returnStep:null, returnGc:false };
 
 /* ---- Tab-scoped storage, nothing left behind --------------------- *
  * sessionStorage, not localStorage. Answers survive a refresh or a stray
@@ -609,6 +639,8 @@ function reasons(){ return S.exemptReasons(state.answers); }
 function resultType(){ return S.resultType(state.answers); }
 
 function goToResults(){
+  state.returnStep = state.step;
+  state.returnGc = state.gc;
   state.view = 'results';
 }
 
@@ -622,6 +654,21 @@ function advance(){
 }
 
 function back(){
+  if(state.view === 'results'){
+    state.view = 'question';
+    if(state.returnStep != null){
+      state.step = state.returnStep;
+      state.gc = !!state.returnGc;
+    } else if(S.shouldSkipGoodCause(state.answers)){
+      state.step = GROUPS.length - 1;
+      state.gc = false;
+    } else {
+      state.step = GROUPS.length - 1;
+      state.gc = true;
+    }
+    renderWithMotion();
+    return;
+  }
   if(state.gc){ state.gc = false; state.step = GROUPS.length - 1; renderWithMotion(); return; }
   if(state.step > 0){ state.step--; }
   else { state.view = 'intro'; }
@@ -657,6 +704,17 @@ function optNum(n){
   return `<span aria-hidden="true" style="width:26px;height:26px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none">${n}</span>`;
 }
 
+function renderPrivacyCallout(marginBottom){
+  const C = RESULT_COPY;
+  const mb = marginBottom != null ? marginBottom : '22px';
+  return `<div style="display:flex;align-items:flex-start;gap:12px;background:var(--soft);border-radius:var(--radius);padding:15px 17px;margin:0 0 ${mb}">
+    <span aria-hidden="true" style="width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;flex:none">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    </span>
+    <p style="font-size:14.5px;line-height:1.55;color:var(--prose);margin:0"><strong>${esc(C.privacyIntroLead)}</strong> ${esc(C.privacyIntroBody)}</p>
+  </div>`;
+}
+
 function hintTip(id, label, bodyHtml, iconOnly){
   const tipClass = iconOnly ? 'hint-tip hint-tip--icon' : 'hint-tip';
   const btnClass = iconOnly ? 'hint-tip-btn hint-tip-btn--icon' : 'hint-tip-btn';
@@ -670,6 +728,23 @@ function hintTip(id, label, bodyHtml, iconOnly){
     </button>
     <span id="hint-${id}" class="hint-tip-panel" role="note">${bodyHtml}</span>
   </span>`;
+}
+
+function hintTerm(id, term, bodyHtml, bold){
+  const termClass = bold ? 'hint-tip-term hint-tip-term--bold' : 'hint-tip-term';
+  return `<span class="hint-tip hint-tip--term">
+    <button type="button" class="hint-tip-btn hint-tip-btn--term" aria-expanded="false" aria-controls="hint-${id}" aria-label="${esc(RESULT_COPY.exemptTermHintLabel)}" data-action="toggle-hint" data-hint-id="${id}">
+      <span class="${termClass}">${esc(term)}</span>
+    </button>
+    <span id="hint-${id}" class="hint-tip-panel" role="note">${bodyHtml}</span>
+  </span>`;
+}
+
+function renderExemptHeading(){
+  return exemptHeadingHtml().replace(
+    '<strong>exempt</strong>',
+    hintTerm('exempt-term', 'exempt', esc(RESULT_COPY.introExemptExplain), true)
+  );
 }
 
 function prefersReducedMotion(){
@@ -835,25 +910,22 @@ function renderIntro(){
       <h1 class="h1">Did DTA tell you that you need to meet ABAWD Work Rules to keep getting SNAP?</h1>
     </div>
     <div class="byline-rule" aria-hidden="true"></div>
-    <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 14px">Some adults on SNAP who are <strong>18 or older and under 65</strong> have to meet ABAWD work rules to get SNAP for more than 3 months. <strong>Many adults are exempt</strong> from the work rules. Being "exempt" means that you don't have to meet the work rules to keep getting SNAP.</p>
-    <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 14px">You only have to meet these rules, or tell DTA you are exempt, if DTA sends you a <a href="${LINKS.snapWorkNotice}" target="_blank" rel="noopener">SNAP and Work notice</a> that says you have to meet the ABAWD Work Rules. Check your mail and <a href="${LINKS.dtaConnect}" target="_blank" rel="noopener">DTAConnect</a> to see notes from DTA. DTA has to screen you for all exemptions <em>before</em> subjecting you to the rules.</p>
-    <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 18px">If you lost your SNAP because of the work rules, you might be able to get back on if you have an exemption, or if you met or are currently meeting the work rules.</p>
+    <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 14px">Some adults on SNAP who are <strong>18 through 64</strong> have to meet ABAWD work rules to get SNAP for more than 3 months. <strong>Many adults are exempt</strong> from the work rules. ${esc(RESULT_COPY.introExemptExplain)}</p>
+    <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 18px">You only have to meet these rules, or tell DTA you are exempt, if DTA sends you a <a href="${LINKS.snapWorkNotice}" target="_blank" rel="noopener">SNAP and Work notice</a> that says you have to meet the ABAWD Work Rules. Check your mail and <a href="${LINKS.dtaConnect}" target="_blank" rel="noopener">DTAConnect</a> to see notes from DTA. DTA has to screen you for all exemptions <em>before</em> subjecting you to the rules.</p>
 
     <details style="margin:0 0 20px;border:1px solid var(--panel);border-radius:var(--radius);background:#fff">
       <summary style="cursor:pointer;padding:13px 16px;font-size:15px;font-weight:700;color:var(--accent)">More on the SNAP ABAWD work rules</summary>
       <div style="padding:0 16px 15px;font-size:15px;line-height:1.6;color:var(--prose)">
         <p style="margin:0 0 10px">Everyone has a different life situation. Many people have good reasons for why they aren't working, in school, or volunteering. During your application or recertification interview, DTA must ask you a list of questions to see if you're exempt, already meeting the work rules, or if you need to meet the work rules to keep getting SNAP.</p>
+        <p style="margin:0 0 10px">If you lost your SNAP because of the work rules, you might be able to get back on if you have an exemption, or if you met or are currently meeting the work rules.</p>
         <p style="margin:0">To learn more about the ABAWD work rules, <a href="${LINKS.abawd}" target="_blank" rel="noopener">click here</a>.</p>
       </div>
     </details>
 
-    <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 22px">This short screening asks a few questions to check if you need to meet the ABAWD work rules or if you are exempt. It takes about 3 minutes.</p>
-    <div style="display:flex;align-items:flex-start;gap:12px;background:var(--soft);border-radius:var(--radius);padding:15px 17px;margin-bottom:22px">
-      <span aria-hidden="true" style="width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;flex:none">
-        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-      </span>
-      <p style="font-size:14.5px;line-height:1.55;color:var(--prose);margin:0"><strong>Your information is private.</strong> MLRI will not save any personal information you share on this form.</p>
+    <div style="margin:0 0 22px;padding:14px 17px;background:var(--warn-bg);border:1px solid var(--warn-line);border-left:4px solid var(--gold);border-radius:var(--radius)">
+      <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0">This short screening asks a few questions to check if you need to meet the ABAWD work rules or if you are exempt. It takes less than 2 minutes.</p>
     </div>
+    ${renderPrivacyCallout('22px')}
 
     <h2 class="h2" style="margin:0 0 14px">Check if the SNAP work rules apply to you.</h2>
     <button type="button" id="start-btn" data-action="start" style="${primaryBtn}">Fill out the form →</button>
@@ -989,7 +1061,6 @@ function renderResults(){
 
   const learnMore = `<p style="font-size:15px;line-height:1.6;margin:0"><a href="${LINKS.abawd}" target="_blank" rel="noopener">${C.learnMoreLabel}</a></p>`;
   const lostSnap = `<p style="font-size:15px;line-height:1.6;margin:12px 0 0">${arrow} ${C.lostSnapIntro} <a href="mailto:${email}">${email}</a>.</p>`;
-  const privacyNote = `<p style="font-size:14.5px;line-height:1.55;color:var(--muted);margin:0 0 6px"><em><strong>${esc(C.privacyNote)}</strong></em></p>`;
   const printLead = `<p style="font-size:14.5px;line-height:1.55;color:var(--muted);margin:0 0 18px">${esc(C.printLead)}</p>`;
   const dtaContacts = buildDtaContactsHtml(LINKS);
   const dtaContactsUpload = buildDtaContactsHtml(LINKS, {
@@ -1010,7 +1081,7 @@ function renderResults(){
     card = `<div style="border-radius:var(--radius);overflow:hidden;border:1px solid var(--ok-line)">
       <div style="background:var(--ok-fill);padding:20px 22px;border-bottom:1px solid var(--ok-line);display:flex;gap:12px;align-items:flex-start">
         <span aria-hidden="true" style="flex:none;width:30px;height:30px;border-radius:50%;background:var(--ok-strong);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700">✓</span>
-        <h2 class="h-result" style="color:var(--ok-ink);font-weight:400">${exemptHeadingHtml()}</h2>
+        <h2 class="h-result" style="color:var(--ok-ink);font-weight:400">${renderExemptHeading()}</h2>
       </div>
       <div style="padding:20px 22px;background:#fff">
         ${C.exemptReasonsIntro ? `<p style="font-size:16px;line-height:1.6;color:var(--prose);margin:0 0 14px">${esc(C.exemptReasonsIntro)}</p>` : ''}
@@ -1109,7 +1180,7 @@ function renderResults(){
       </div>
       </div>
       <div style="padding:20px">
-      ${privacyNote}
+      ${renderPrivacyCallout('18px')}
       ${printLead}
       <p style="font-size:15px;font-weight:700;margin:0 0 12px">${esc(C.formExplainHeading)}</p>
       ${blanks}
@@ -1182,6 +1253,7 @@ function renderResults(){
 
   return `<div class="${animClass()}">${resultsHead}${card}${form}${nextSteps}${footer}
     <div class="no-print" style="display:flex;flex-wrap:wrap;gap:12px;margin-top:22px">
+      <button type="button" data-action="back" style="${ghostBtn}">← Back</button>
       <button type="button" data-action="restart" style="${ghostBtn}">↺ Start over</button>
       <button type="button" data-action="delete-answers" style="font-size:15px;font-weight:700;color:var(--danger);background:none;border:2px solid var(--danger-line);border-radius:var(--radius);padding:10px 18px;cursor:pointer">Delete my answers</button>
     </div>
@@ -1354,21 +1426,14 @@ function downloadDoc(){
   setTimeout(() => URL.revokeObjectURL(url), 2000);
 }
 
-/* mailto: is the only send path that keeps the promise in the privacy note:
- * the text never reaches a server. It has two failure modes and both are
- * handled here.
- *
- * A machine with no mail app registered does nothing at all when the link
- * fires, and nothing in the browser reports that back, so the copy-and-paste
- * panel is revealed every time instead of being guessed at with a timer.
- *
- * A long statement overflows the mailto length cap, which buildResultsMailto
- * trims. The panel always holds the untrimmed text. */
-function emailResults(){
+/* mailto: keeps the text off a server until MassLegalHelp provides a send endpoint.
+ * The modal collects an address for that future path; until then, mailto is the
+ * working route and lives behind "Open in my email app instead". */
+function buildEmailSummary(){
   const val = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
   const explain = Array.from(document.querySelectorAll('[data-explain-prompt]'))
     .map(el => ({ prompt: el.getAttribute('data-explain-prompt'), text: el.value }));
-  const { subject, body } = buildResultsEmailContent({
+  return buildResultsEmailContent({
     rt: resultType(),
     rs: reasons(),
     gcText: S.goodCauseText(state.answers),
@@ -1376,9 +1441,51 @@ function emailResults(){
     agency: val('f-agency'),
     explain,
   });
+}
+
+function ensureEmailModal(){
+  if(document.getElementById('email-modal')) return;
+  const C = RESULT_COPY;
+  document.body.insertAdjacentHTML('beforeend', `<dialog id="email-modal" class="email-modal no-print" aria-labelledby="email-modal-title">
+    <div class="email-modal-inner">
+      <h2 id="email-modal-title" class="email-modal-title">${esc(C.emailModalTitle)}</h2>
+      <p class="email-modal-lead">${esc(C.emailModalLead)}</p>
+      <p id="email-modal-unavailable" class="email-modal-note">${esc(C.emailModalUnavailable)}</p>
+      <label for="email-modal-address" class="email-modal-label">${esc(C.emailModalLabel)}</label>
+      <input id="email-modal-address" class="email-modal-input" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com">
+      <div class="email-modal-actions">
+        <button type="button" disabled aria-describedby="email-modal-unavailable" style="${nextBtn};opacity:.55;cursor:not-allowed">${esc(C.emailModalSendLabel)}</button>
+        <button type="button" data-action="email-via-mailapp" style="${ghostBtn}">${esc(C.emailModalMailAppLabel)}</button>
+        <button type="button" data-action="close-email-modal" style="${ghostBtn}">${esc(C.emailModalCloseLabel)}</button>
+      </div>
+    </div>
+  </dialog>`);
+}
+
+function openEmailModal(){
+  ensureEmailModal();
+  const dialog = document.getElementById('email-modal');
+  if(!dialog) return;
+  if(typeof dialog.showModal === 'function') dialog.showModal();
+  const input = document.getElementById('email-modal-address');
+  if(input) input.focus({ preventScroll: true });
+}
+
+function closeEmailModal(){
+  const dialog = document.getElementById('email-modal');
+  if(dialog && typeof dialog.close === 'function') dialog.close();
+}
+
+function emailViaMailApp(){
+  closeEmailModal();
+  const { subject, body } = buildEmailSummary();
   const { url } = buildResultsMailto({ subject, body });
   showEmailFallback(body);
   window.location.href = url;
+}
+
+function emailResults(){
+  openEmailModal();
 }
 
 function showEmailFallback(text){
@@ -1615,6 +1722,8 @@ document.addEventListener('click', (e) => {
     case 'print': printForm(); break;
     case 'download-doc': downloadDoc(); break;
     case 'email-self': emailResults(); break;
+    case 'email-via-mailapp': emailViaMailApp(); break;
+    case 'close-email-modal': closeEmailModal(); break;
     case 'copy-email-text': copyEmailText(); break;
     case 'sig-clear': clearSignature(); break;
   }

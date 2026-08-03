@@ -171,13 +171,14 @@ describe('snap-screening-logic', () => {
     assert.match(byId.dv.helpHtml, /contact info here/);
     assert.match(byId.health.help, /short- or long-term/);
     assert.match(byId.housing.help, /couch surfing/);
-    assert.equal(byId.stateagency.text, 'Do you receive services from any state agencies?');
-    assert.match(byId.stateagency.helpHtml, /MassAbility/);
-    assert.equal(byId.stateagency.listItems, undefined);
+    assert.equal(byId.stateagency.text, 'Do you get services from any of these state agencies?');
+    assert.equal(byId.stateagency.helpHtml, undefined);
+    assert.ok(Array.isArray(byId.stateagency.listItems));
+    assert.match(byId.stateagency.listItems.join(' '), /MassAbility/);
     assert.equal(classic2.GROUPS[0].title, 'Your Family and Household');
     assert.equal(classic2.GROUPS[2].title, 'Public Benefits and Participating in Programs');
     assert.match(classic2.GOODCAUSE.text, /Is something making it hard to work/);
-    assert.match(byId.school.yesLabel, /half-time or more/);
+    assert.equal(byId.school.yesLabel, undefined);
     assert.match(byId.substanceUse.help, /daily program/);
     // Other variants must not pick these up.
     assert.equal(classic.Q_BY_ID.stateagency.listItems, undefined);
@@ -220,19 +221,23 @@ describe('snap-screening-logic', () => {
     assert.equal(goodCauseCategories('classic2').length, 3);
   });
 
-  it('buildStatementHTML renders one labelled block per prompt', () => {
+  it('buildStatementHTML renders an indented box under each reason without printing the prompt', () => {
     const html = SnapScreening.buildStatementHTML({
       name: 'Jane Doe',
       rt: 'exempt',
-      rs: ['Pregnant'],
+      rs: [
+        'Have a health reason that makes it hard to work 30 or more hours a week',
+        'Take care of a child or adult who cannot care for themselves'
+      ],
       explain: [
-        { prompt: 'Explain the health reason', text: 'chronic back pain' },
-        { prompt: 'Explain your caretaking', text: '' }
+        { prompt: 'Explain the health reason that makes it hard for you to work 30 or more hours a week', text: 'chronic back pain' },
+        { prompt: 'Explain your caretaking responsibilities or arrangement', text: '' }
       ]
     });
-    assert.match(html, /Explain the health reason/);
     assert.match(html, /chronic back pain/);
-    assert.match(html, /Explain your caretaking/);
+    assert.match(html, /margin:8px 0 0 18px/);
+    assert.doesNotMatch(html, /Explain the health reason/);
+    assert.doesNotMatch(html, /Explain your caretaking/);
     assert.doesNotMatch(html, /No additional explanation provided/);
   });
 
@@ -791,7 +796,8 @@ describe('snap-screening-logic', () => {
           today: 'August 1, 2026'
         });
         assert.match(writein, /<li[^>]*>Live with a child under 14 years old<\/li>/);
-        assert.match(writein, /<li[^>]*>Take care of a child under 6 years old<\/li>/);
+        assert.match(writein, /Take care of a child under 6 years old/);
+        assert.match(writein, /margin:8px 0 0 18px/);
         assert.match(writein, /I earn enough income to be exempt from the ABAWD work rules\. I can send proof/);
         assert.match(writein, /I receive a disability benefit or payment that is not listed above/);
         assert.match(writein, /I do not have a regular place to sleep\. Please review the information I provide/);
@@ -812,10 +818,12 @@ describe('snap-screening-logic', () => {
       assert.match(composed, /border-bottom:1px solid #111/);
 
       const writein = SnapScreening.buildStatementHTML({
-        rt: 'exempt', explain: [{ prompt: 'Explain the health reason', text: '' }], today: 'August 1, 2026'
+        rt: 'exempt', explain: [{ prompt: 'Explain the health reason that makes it hard for you to work 30 or more hours a week', text: '' }],
+        rs: ['Have a health reason that makes it hard to work 30 or more hours a week'],
+        today: 'August 1, 2026'
       });
       assert.match(writein, /border:1px solid #999/, 'an empty box must still print as a ruled area to write in');
-      assert.match(writein, /Explain the health reason/);
+      assert.doesNotMatch(writein, /Explain the health reason/);
     });
 
     it('the emailed summary reads as a statement rather than a half-filled form', () => {

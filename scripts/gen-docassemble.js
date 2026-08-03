@@ -83,6 +83,9 @@ function fieldFor(q) {
   if (h) {
     out.push('    help: |');
     out.push(indent(h, 6));
+  } else if (q.listItems && q.listItems.length) {
+    out.push('    help: |');
+    out.push(indent(q.listItems.map(li => '- ' + li).join('\n'), 6));
   }
   if (q.showIf) {
     out.push('    show if:');
@@ -183,9 +186,9 @@ function fromShippingPage(id, re) {
   return help({ help: m[1] });
 }
 
-const introSummary = fromShippingPage('introSummary', /<p [^>]*>(Some adults on SNAP[\s\S]*?)<\/p>/);
+const introSummary = 'Some adults on SNAP who are **18 through 64** have to meet ABAWD work rules to get SNAP for more than 3 months. **Many adults are exempt** from the work rules. ' + C.introExemptExplain;
 const timeEstimate = fromShippingPage('timeEstimate', /<p [^>]*>(This short screening asks[\s\S]*?)<\/p>/);
-const privacyIntro = fromShippingPage('privacyIntro', /<p [^>]*>(<strong>Your information is private[\s\S]*?)<\/p>/);
+const privacyIntro = `**${C.privacyIntroLead}** ${C.privacyIntroBody}`;
 const pageH1 = fromShippingPage('h1', /<h1 class="h1">([^<]+)<\/h1>/);
 
 blocks.push(`question: |
@@ -255,7 +258,7 @@ subquestion: |
   ${C.workRulesHeading}
   % endif
 
-  ${C.privacyNote}
+  **${C.privacyIntroLead}** ${C.privacyIntroBody}
 attachment code: tell_dta_statement if outcome in ('exempt', 'goodcause') else []
 buttons:
   - Start over: restart
