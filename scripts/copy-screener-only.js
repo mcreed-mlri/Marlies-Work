@@ -311,7 +311,7 @@ const GUIDED_CASES = [
 ];
 
 function emitFormWriteIn(rt) {
-  emitCopy(rt === 'exempt' ? 'formTitleExempt' : 'formTitleGoodCause');
+  if (rt === 'exempt') emitCopy('formTitleExempt');
   emitCopy(rt === 'exempt' ? 'formLeadExempt' : 'formLeadGoodCause');
   emitCopy('whyInfoLabel');
   emitCopy(rt === 'exempt' ? 'whyInfoExempt' : 'whyInfoGoodCause');
@@ -325,7 +325,7 @@ function emitFormWriteIn(rt) {
 }
 
 function emitFormGuided(rt) {
-  emitCopy(rt === 'exempt' ? 'formTitleExempt' : 'formTitleGoodCause');
+  if (rt === 'exempt') emitCopy('formTitleExempt');
   emitCopy(rt === 'exempt' ? 'composedFormLeadExempt' : 'composedFormLeadGoodCause');
   emitCopy('whyInfoLabel');
   emitCopy(rt === 'exempt' ? 'composedWhyInfoExempt' : 'composedWhyInfoGoodCause');

@@ -237,7 +237,7 @@ subquestion: |
 
   To tell DTA you are exempt, you can fill in the blanks below with your results and send it to DTA.
   % elif outcome == 'goodcause':
-  This includes missing hours before or after your start date.
+  This includes missing work, school, or volunteer hours before or after your start date.
 
   To tell DTA why you missed work hours, you can fill in the blanks below with your results and send it to DTA.
   % else:

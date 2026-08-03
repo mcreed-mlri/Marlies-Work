@@ -234,7 +234,7 @@ _Some of them add a line about what to send DTA:_
 
 > You may have a good reason for missing hours
 
-> This includes missing hours before or after your start date.
+> This includes missing work, school, or volunteer hours before or after your start date.
 
 > Tell DTA as soon as you can if you could not meet the work rules for one or more months because of a hard life event, like:
 

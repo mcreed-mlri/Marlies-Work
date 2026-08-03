@@ -361,7 +361,7 @@ phrase comes from the question that produced it. Then, when relevant, one of the
 
 **`goodCauseIntro`**
 
-> This includes missing hours before or after your start date.
+> This includes missing work, school, or volunteer hours before or after your start date.
 
 > **Question for you:** Is "work, school, or volunteer hours" replacing the old sentence, or inserting into it? In other words, does it end at "volunteer hours." or continue "...volunteer hours before or after your start date."?
 
@@ -480,12 +480,6 @@ mails, faxes, or uploads it to DTA.
 > Tell DTA that you are exempt as soon as you can.
 
 > **Question for you:** If the good cause heading goes, should this matching one go too?
-
-**`formTitleGoodCause`**
-
-> Tell DTA why you missed work hours as soon as you can.
-
-> **Question for you:** This looked struck through in your doc, with its meaning folded into the sentence below it. Delete the heading entirely?
 
 **`formLeadExempt`**
 

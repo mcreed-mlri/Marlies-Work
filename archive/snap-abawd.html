@@ -665,7 +665,7 @@ function renderResults(){
 
   let form = '';
   if(rt === 'exempt' || rt === 'goodcause'){
-    const formTitle = rt === 'exempt' ? C.formTitleExempt : C.formTitleGoodCause;
+    const formTitle = rt === 'exempt' ? C.formTitleExempt : '';
     const formLead = rt === 'exempt' ? C.formLeadExempt : C.formLeadGoodCause;
     const whyInfo = rt === 'exempt' ? C.whyInfoExempt : C.whyInfoGoodCause;
     const blanks = prompts.map((p, i) => `<div style="margin:0 0 16px">
@@ -673,7 +673,7 @@ function renderResults(){
       <textarea id="f-explain-${i}" data-explain-prompt="${esc(p)}" rows="4" placeholder="Type here…" style="width:100%;font-family:inherit;font-size:16px;line-height:1.5;padding:11px 13px;border:1.5px solid #767f8c;border-radius:calc(var(--radius) - 3px);resize:vertical"></textarea>
     </div>`).join('');
     form = `<div style="margin:26px 0 0;padding:22px;background:#fff;border:1px solid #c8d2e0;border-radius:var(--radius)">
-      <h3 style="font-size:19px;margin:0 0 10px">${esc(formTitle)}</h3>
+      ${formTitle ? `<h3 style="font-size:19px;margin:0 0 10px">${esc(formTitle)}</h3>` : ''}
       <div class="hint-tip-wrap" style="margin:0 0 10px">
         <p style="font-size:15px;line-height:1.55;color:#3a424e;margin:0">${esc(formLead)}</p>
         ${hintTip('why-info', C.whyInfoLabel, whyInfo, true)}

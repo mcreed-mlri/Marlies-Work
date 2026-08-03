@@ -37,7 +37,6 @@ const OPEN = {
   'page.sigAlt': 'Added 2026-07-30, and not yours, so overwrite it freely. The signature pad only works with a finger or a mouse, so someone using a keyboard, a switch, or a screen reader cannot sign in the browser at all. The printed statement already leaves a ruled line when the pad is empty, so that route worked; nothing on the page said so. This sentence says it. If you would rather fold it into the line above, that is one sentence instead of two and we will make the swap.',
   goodCauseIntro: 'Is "work, school, or volunteer hours" replacing the old sentence, or inserting into it? In other words, does it end at "volunteer hours." or continue "...volunteer hours before or after your start date."?',
   goodCauseInNotExemptIntro: 'This is a second copy of the good cause sentence, shown on the "may need to meet the work rules" screen. Your note did not mention it. Should it change the same way?',
-  formTitleGoodCause: 'This looked struck through in your doc, with its meaning folded into the sentence below it. Delete the heading entirely?',
   formTitleExempt: 'If the good cause heading goes, should this matching one go too?',
   formLeadExempt: 'Your doc says "fill out this form" where this says "fill in the blanks below." Change it?',
   exemptReasonsIntro: 'Already applied: emptied, because the heading above now ends with "because of these reasons:" and this said it a second time.',
@@ -357,7 +356,7 @@ w('Shown on the exempt and good cause results. Someone fills in the blanks, sign
 w('mails, faxes, or uploads it to DTA.');
 blank();
 item('statement.docTitle', inline['statement.docTitle'], { note: 'the printed page title' });
-['formTitleExempt', 'formTitleGoodCause', 'formLeadExempt', 'formLeadGoodCause',
+['formTitleExempt', 'formLeadExempt', 'formLeadGoodCause',
   'formExplainHeading'].forEach(k => item(k, C[k]));
 
 /* The prompt above the writing box changes with the answers, so listing only one

@@ -1203,7 +1203,7 @@ function renderResults(){
 
   let form = '';
   if(rt === 'exempt' || rt === 'goodcause'){
-    const formTitle = rt === 'exempt' ? C.formTitleExempt : C.formTitleGoodCause;
+    const formTitle = rt === 'exempt' ? C.formTitleExempt : '';
     const formLead = guided()
       ? (rt === 'exempt' ? C.composedFormLeadExempt : C.composedFormLeadGoodCause)
       : (rt === 'exempt' ? C.formLeadExempt : C.formLeadGoodCause);
@@ -1238,7 +1238,7 @@ function renderResults(){
        header band of its own rather than opening as one more paragraph. */
     form = `<div style="margin:26px 0 0;background:#fff;border:1.5px solid var(--panel);border-radius:12px;overflow:hidden">
       <div style="background:var(--field);border-bottom:1px solid var(--panel);padding:16px 20px">
-      <h3 style="font-size:19px;line-height:1.3;margin:0 0 8px">${esc(formTitle)}</h3>
+      ${formTitle ? `<h3 style="font-size:19px;line-height:1.3;margin:0 0 8px">${esc(formTitle)}</h3>` : ''}
       <div class="hint-tip-wrap" style="margin:0">
         <p style="font-size:15px;line-height:1.55;color:var(--prose);margin:0">${esc(formLead)}</p>
         ${hintTip('why-info', C.whyInfoLabel, whyInfo, true)}
