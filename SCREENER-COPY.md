@@ -59,19 +59,7 @@ A collapsed "More on the SNAP ABAWD work rules" panel sits here:
 
 **`page.privacyIntro`**
 
-> **Your information is private** and will not automatically be saved on this device. MLRI does NOT have access to or save the information you share on this form.
-
-> **Question for you:** Your edit replaced this sentence. Separately, the note "Remove before you start question" is ambiguous: remove this paragraph from the start page, or something else?
-
-**`page.beforeYouStart`**
-
-> Before you start
-
-**`page.ageQuestion`**
-
-> Are you 18 or older and under 65?
-
-The age question offers Yes and No. Answering it enables the button below.
+> **Your information is private.** MLRI will not save any personal information you share on this form.
 
 **There is no Terms of Use text on this page today.** Other versions of the tool have a
 checkbox someone must tick before starting; this one does not. If the published version
@@ -328,9 +316,7 @@ Four results are possible. This block appears on more than one of them.
 
 **`privacyNote`**
 
-> Note: Your information is private and will not automatically be saved on this device. MLRI does NOT have access to or save the information you type on this form. Print, download, or email these results to keep a copy.
-
-> **Question for you:** Applying your edit literally leaves the clause twice: "MLRI will not save any personal information you type on this form. save the information you type on this form." Confirm it should end after the first sentence.
+> Note: Your information is private and will not automatically be saved on this device. MLRI will not save any personal information you type on this form.
 
 **`printLead`**
 
@@ -480,19 +466,7 @@ The categories listed on this screen:
 
 > if you lost or are about to lose SNAP because of these rules.
 
-## 9. Result: these rules may not apply to your age group
-
-**`ageInfoHeading`**
-
-> These work rules may not apply to your age group
-
-**`ageInfoBody`**
-
-> You said you are under 18, or 65 or older. The ABAWD work rules usually apply to adults 18 or older and under 65. You may still have other SNAP rights. Contact DTA or a legal aid program to check your situation.
-
-> **Question for you:** Settled 2026-07-30. You asked for 18 and 65 to match the MassLegalHelp article. "Between 18 and 65" does not say whether a 65-year-old counts, and the federal rule caps at 64 with 65 and over exempt by age, so reading it literally would have told a 65-year-old the work rules might apply to them. Every place the range appears now says "18 or older and under 65": same range, no ambiguity. Say so if you would rather mirror the article word for word.
-
-## 10. The printable "Tell DTA" statement
+## 9. The printable "Tell DTA" statement
 
 Shown on the exempt and good cause results. Someone fills in the blanks, signs it, and
 mails, faxes, or uploads it to DTA.
@@ -554,13 +528,7 @@ The fields someone fills in:
 
 > Sign here with your finger or mouse
 
-**`page.sigNote`**  (under the signature pad)
-
-> (DTA needs your actual signature, not a typed signature)
-
-> **Question for you:** Your note read "remove dta needs your actual signature line on all the results pages." That reads two opposite ways: delete this sentence, or add a signature line. Which? Note the new line below it, which may answer the same need.
-
-**`page.sigAlt`**  (under the signature pad, below the line above)  **[written by the developer, not you]**
+**`page.sigAlt`**  (under the signature pad)  **[written by the developer, not you]**
 
 > If you cannot sign here, leave it blank. The printed page has a line to sign by hand.
 
@@ -582,15 +550,13 @@ An explainer opens next to the signature box:
 
 **`whyInfoExempt`**
 
-> Telling DTA about your exemption can help them update your SNAP case more quickly. DTA needs to know why the work rules should not apply to you, and this form puts your answers in writing so you can print or save them and send them to DTA. MLRI never sees what you type.
+> Telling DTA about why you missed hours can help them update your SNAP case more quickly.
 
 **`whyInfoGoodCause`**
 
-> Telling DTA about your good reason can help them update your SNAP case more quickly. DTA needs to know why you could not meet the work rules, and this form puts your answers in writing so you can print or save them and send them to DTA. MLRI never sees what you type.
+> Telling DTA about why you missed hours can help them update your SNAP case more quickly.
 
-> **Question for you:** The wording in your doc reads "Telling DTA about your why you missed hours." The exempt version is "Telling DTA about your exemption," so the extra "your" looks like a typo. Confirm and we will drop it.
-
-## 11. The guided version of the statement
+## 10. The guided version of the statement
 
 **This is a second version of the ending above, for you to compare.** Same questions,
 same result, but instead of blank boxes the tool asks two or three multiple-choice
@@ -636,11 +602,11 @@ document.**
 
 **`composedWhyInfoExempt`**
 
-> Telling DTA about your exemption can help them update your SNAP case more quickly. DTA needs to know why the work rules should not apply to you. This tool wrote the statement below from the answers you gave, so you can print or save it and send it to DTA. MLRI never sees your answers.
+> Telling DTA about why you missed hours can help them update your SNAP case more quickly.
 
 **`composedWhyInfoGoodCause`**
 
-> Telling DTA about your good reason can help them update your SNAP case more quickly. DTA needs to know why you could not meet the work rules. This tool wrote the statement below from the answers you gave, so you can print or save it and send it to DTA. MLRI never sees your answers.
+> Telling DTA about why you missed hours can help them update your SNAP case more quickly.
 
 ### The questions, and the sentence each one writes
 
@@ -882,7 +848,7 @@ And answering none of them:
 
 > I have a health condition that makes it hard for me to work 30 or more hours a week.
 
-## 12. Printing, saving, and email
+## 11. Printing, saving, and email
 
 **`printFormLabel`**
 
@@ -932,7 +898,7 @@ And answering none of them:
 
 > This summary was shortened to fit in an email. Use "Copy the text" in the screening tool to get the full version.
 
-## 13. Other ways to reach DTA
+## 12. Other ways to reach DTA
 
 **`otherWaysHeading`**
 
@@ -946,10 +912,6 @@ And answering none of them:
 
 > Explain the information to DTA in a written, signed statement (handwritten note is fine):
 
-**`waysToReachDta`**
-
-> Ways to reach DTA
-
 The contact details shown, which are real and worth checking:
 
 - DTA Assistance Line: (877) 382-2363
@@ -957,7 +919,7 @@ The contact details shown, which are real and worth checking:
 - Mail: DTA Document Processing Center, P.O. Box 4406, Taunton, MA 02780-0420
 - Fax: (617) 887-8765
 
-## 14. Numbers the screening depends on
+## 13. Numbers the screening depends on
 
 Not copy, but they appear in the wording of the work question and decide who comes out
 exempt. Last checked November 2025.
@@ -969,7 +931,7 @@ exempt. Last checked November 2025.
 | Hours a week at minimum wage that make someone exempt | 14.5 |
 | Hours a week that count while earning under minimum wage | 30 |
 
-## 15. Copy the developer wrote, which needs your approval
+## 14. Copy the developer wrote, which needs your approval
 
 Everything above came from you or from the earlier MLRI draft. The strings in this
 section did not. They were written to fill gaps while building the MassLegalHelp version,
@@ -1010,7 +972,7 @@ benefits page is worse than no link. This version also has no Terms of Use check
 all, which earlier versions did. And with the disclaimer gone the tool no longer says
 anywhere that it is not legal advice.
 
-## 16. Every link the screener sends people to
+## 15. Every link the screener sends people to
 
 | Name | Where it goes |
 |---|---|

@@ -533,7 +533,7 @@ function renderProgress(){
 
 function animClass(){ return state.animate ? 'fade' : ''; }
 
-function canStart(){ return state.agreed && (state.answers.ageRange === 'yes' || state.answers.ageRange === 'no'); }
+function canStart(){ return state.agreed; }
 
 function renderIntro(){
   return `<div class="${animClass()}">
@@ -581,15 +581,6 @@ function renderIntro(){
           <p style="margin:0">Your answers are kept only on this device, are never sent to us, and are erased after 1 day.</p>
         </div>
       </details>
-
-      <fieldset style="border:1px solid #c8d2e0;border-radius:14px;padding:16px 18px;margin:0 0 20px;background:#fff">
-        <legend style="display:block;float:left;width:100%;font-size:16px;font-weight:700;padding:0;margin:0 0 14px;color:var(--ink)">Before you start</legend>
-        <p style="clear:both;font-size:16px;line-height:1.55;color:#2c3644;margin:0 0 12px">Are you between 18 and 64 years old?</p>
-        <div role="radiogroup" aria-label="Are you between 18 and 64 years old?" style="display:flex;flex-direction:column;gap:12px">
-          <label style="display:flex;gap:12px;align-items:center;font-size:17px;cursor:pointer"><input type="radio" name="ageRange" value="yes" ${state.answers.ageRange === 'yes' ? 'checked' : ''} style="width:22px;height:22px;accent-color:var(--blue)"> Yes</label>
-          <label style="display:flex;gap:12px;align-items:center;font-size:17px;cursor:pointer"><input type="radio" name="ageRange" value="no" ${state.answers.ageRange === 'no' ? 'checked' : ''} style="width:22px;height:22px;accent-color:var(--blue)"> No</label>
-        </div>
-      </fieldset>
 
       <label style="display:flex;gap:12px;align-items:flex-start;margin:0 0 24px;font-size:17px;line-height:1.5;color:#2c3644;cursor:pointer">
         <input type="checkbox" id="agree" ${state.agreed ? 'checked' : ''} style="width:24px;height:24px;flex:none;margin-top:1px;accent-color:var(--blue);cursor:pointer">
@@ -684,18 +675,7 @@ function renderResults(){
     <p style="font-size:17px;line-height:1.6;color:#37414f;margin:0 0 18px">${esc(C.resultsHeadLead)}</p>`;
 
   let card = '';
-  if(rt === 'ageinfo'){
-    card = `<div style="border-radius:20px;overflow:hidden;border:1px solid #c7d6f0">
-      <div class="result-head" style="background:var(--soft);border-bottom:1px solid #c7d6f0">
-        <span aria-hidden="true" style="width:52px;height:52px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;flex:none"><i data-lucide="info" class="icon-result"></i></span>
-        <div>
-          <h2 class="h-result" style="color:var(--navy)">${esc(C.ageInfoHeading)}</h2>
-        </div>
-      </div>
-      <div class="result-body">
-        <p style="font-size:17px;line-height:1.6;color:#37414f;margin:0">${esc(C.ageInfoBody)}</p>
-      </div></div>`;
-  } else if(rt === 'exempt'){
+  if(rt === 'exempt'){
     const items = rs.map(r => `<li style="display:flex;align-items:flex-start;gap:12px;font-size:17px;line-height:1.5;color:var(--ink)">
       <span aria-hidden="true" style="width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;display:inline-flex;align-items:center;justify-content:center;flex:none;margin-top:1px"><i data-lucide="check" style="width:14px;height:14px;stroke-width:3"></i></span>
       <span>${esc(r)}</span></li>`).join('');
@@ -820,7 +800,6 @@ function renderResults(){
         <div class="no-print" style="display:flex;justify-content:flex-end;margin:8px 0 0">
           <button type="button" data-action="sig-clear" style="flex:none;font-family:inherit;font-size:14px;font-weight:700;color:var(--blue);background:none;border:2px solid var(--blue);border-radius:10px;padding:9px 16px;cursor:pointer;min-height:42px">Clear</button>
         </div>
-        <p style="font-size:14px;line-height:1.5;color:var(--muted);margin:8px 0 0;text-align:center">(DTA needs your actual signature, not a typed signature)</p>
       </div>
       <div class="no-print q-nav" style="margin-top:22px">
         <button type="button" class="btn-block btn-full" data-action="print" style="${nextBtn}">${esc(C.printFormLabel)}</button>
@@ -848,11 +827,6 @@ function renderResults(){
     nextSteps = `<div class="card-box" style="margin:22px 0 0;background:var(--soft);box-shadow:none">
       <h3 style="font-size:19px;margin:0 0 12px">${esc(C.otherWaysHeading)}</h3>
       <p style="font-size:16px;line-height:1.6;color:#37414f;margin:0 0 12px">${stepsLead}</p>
-      ${dtaContacts}
-    </div>`;
-  } else if(rt === 'ageinfo'){
-    nextSteps = `<div class="card-box" style="margin:22px 0 0;background:var(--soft);box-shadow:none">
-      <h3 style="font-size:19px;margin:0 0 12px">${esc(C.waysToReachDta)}</h3>
       ${dtaContacts}
     </div>`;
   }
@@ -1164,7 +1138,6 @@ document.addEventListener('click', (e) => {
     case 'start':
       if(!canStart()) return;
       SAMPLE_MODE = false;
-      if(state.answers.ageRange === 'no'){ state.view = 'results'; renderWithMotion(); return; }
       state.view = 'question'; state.step = 0; state.gc = false; state.helpOpen = {}; renderWithMotion(); break;
     case 'back': back(); break;
     case 'next': advance(); break;
@@ -1198,11 +1171,6 @@ document.addEventListener('click', (e) => {
 document.addEventListener('change', (e) => {
   if(e.target && e.target.id === 'agree'){
     state.agreed = e.target.checked;
-    persist();
-    updateStartBtn();
-  }
-  if(e.target && e.target.name === 'ageRange'){
-    state.answers.ageRange = e.target.value;
     persist();
     updateStartBtn();
   }

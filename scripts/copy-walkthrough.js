@@ -78,14 +78,12 @@ const INLINE = [
   { id: 'introNotice', re: /<p [^>]*>(You only have to meet these rules[\s\S]*?)<\/p>/ },
   { id: 'introLostSnap', re: /<p [^>]*>(If you lost your SNAP because of the work rules[\s\S]*?)<\/p>/ },
   { id: 'timeEstimate', re: /<p [^>]*>(This short screening asks[\s\S]*?)<\/p>/ },
-  { id: 'privacyIntro', re: /<p [^>]*>(<strong>Your information is private<\/strong>[\s\S]*?)<\/p>/ },
-  { id: 'ageQuestion', re: /<p id="age-q"[^>]*>([^<]+)<\/p>/ },
+  { id: 'privacyIntro', re: /<p [^>]*>(<strong>Your information is private\.?<\/strong>[\s\S]*?)<\/p>/ },
   { id: 'startButton', re: />(Fill out the form[^<]*)<\/button>/ },
   { id: 'answerAny', re: /<p [^>]*>(Answer any that apply to you\. Every question is optional\.)<\/p>/ },
   { id: 'nameLabel', re: />(Your name)</ },
   { id: 'agencyLabel', re: />(Client \/ Agency ID \(if you have one\))</ },
   { id: 'sigLabel', re: />(Signature)</ },
-  { id: 'sigNote', re: /<p id="sig-note"[^>]*>(\([^<]+\))<\/p>/ },
   { id: 'sigAlt', re: /<p id="sig-alt"[^>]*>([^<]+)<\/p>/ }
 ];
 
@@ -330,15 +328,6 @@ quote(inline.timeEstimate);
 blank();
 quote(inline.privacyIntro);
 blank();
-say('Then one question, which is the only one that has to be answered:');
-quote(inline.ageQuestion);
-blank();
-w('- Yes');
-w('- No');
-blank();
-say('Answering **No** ends the screening straight away with the age screen further down, on',
-  'the grounds that these rules generally apply to adults 18 or older and under 65. Answering',
-  '**Yes** turns on the button:');
 quote(inline.startButton);
 
 /* ---- The questions ---- */
@@ -376,7 +365,7 @@ renderQuestion(A.GOODCAUSE);
 
 h2('What someone is told at the end');
 
-say('There are four outcomes, and the wording of each is below.');
+say('There are three outcomes, and the wording of each is below.');
 
 h3('1. You may be exempt');
 // exemptHeadingHtml, not exemptHeading: the plain string loses the emphasis, and
@@ -435,11 +424,6 @@ say('and a reminder that a good reason for missing hours still counts. This one 
 quote(bold(C.goodCauseInNotExemptBold));
 blank();
 quote(C.goodCauseInNotExemptBody);
-
-h3('4. These rules may not apply to your age group');
-quote(C.ageInfoHeading);
-blank();
-quote(C.ageInfoBody);
 
 /* ================================================================== */
 /* The letter                                                          */
@@ -729,8 +713,6 @@ blank();
 quote(inline.agencyLabel);
 blank();
 quote(inline.sigLabel);
-blank();
-quote(inline.sigNote);
 blank();
 quote(inline.sigAlt);
 blank();

@@ -52,7 +52,6 @@ const SCREENS = {
     'state.answers={child14:"yes",working:"income_weekly",housing:"no",housingFollowup:NONE,disability:["other"],pregnant:"yes"}; state.view="results"; render();',
   'good cause': 'state.answers={goodcause:"transport"}; state.view="results"; render();',
   'must meet the rules': 'state.answers={child14:"no",health:"no"}; state.view="results"; render();',
-  'age info': 'state.answers={ageRange:"no"}; state.view="results"; render();',
   /* Every question page, so a template error on a later group cannot hide. */
   'all question pages':
     'state.view="question"; for(let i=0;i<GROUPS.length;i++){ state.step=i; render(); }',

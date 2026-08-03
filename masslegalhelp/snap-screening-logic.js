@@ -991,7 +991,6 @@
   }
 
   function resultTypeFor(answers, questions) {
-    if (answers.ageRange === 'no') return 'ageinfo';
     const exempt = exemptReasonsFor(answers, questions);
     if (exempt.length) return 'exempt';
     const g = answers.goodcause;
@@ -1001,7 +1000,7 @@
 
   function shouldSkipGoodCause(answers, questions) {
     const rt = resultTypeFor(answers, questions);
-    return rt === 'exempt' || rt === 'ageinfo';
+    return rt === 'exempt';
   }
 
   function goodCauseText(answers, gcText) {
@@ -1063,7 +1062,7 @@
     resultsHeadLead: 'Based on your answers,',
     learnMoreLabel: 'Learn more about the ABAWD work rules',
     lostSnapIntro: 'If you lost your SNAP or are about to lose your SNAP because of the ABAWD rules, email us at',
-    privacyNote: 'Note: Your information is private and will not automatically be saved on this device. MLRI does NOT have access to or save the information you type on this form. Print, download, or email these results to keep a copy.',
+    privacyNote: 'Note: Your information is private and will not automatically be saved on this device. MLRI will not save any personal information you type on this form.',
     printLead: 'Download or print these results to get a signed letter you can send to DTA. (More info on how to contact DTA in the box below)',
     exemptHeading: EXEMPT_HEADING_TEXT,
     /* Emptied 2026-07-30 at the author's direction. The exempt heading now ends
@@ -1115,11 +1114,11 @@
     composedFormLeadExempt: 'We wrote this from your answers. Read it over, then print or download it to send to DTA.',
     composedFormLeadGoodCause: 'We wrote this from your answers. Read it over, then print or download it to send to DTA.',
     composedChangeLabel: 'Change my answers',
-    composedWhyInfoExempt: 'Telling DTA about your exemption can help them update your SNAP case more quickly. DTA needs to know why the work rules should not apply to you. This tool wrote the statement below from the answers you gave, so you can print or save it and send it to DTA. MLRI never sees your answers.',
-    composedWhyInfoGoodCause: 'Telling DTA about your good reason can help them update your SNAP case more quickly. DTA needs to know why you could not meet the work rules. This tool wrote the statement below from the answers you gave, so you can print or save it and send it to DTA. MLRI never sees your answers.',
+    composedWhyInfoExempt: 'Telling DTA about why you missed hours can help them update your SNAP case more quickly.',
+    composedWhyInfoGoodCause: 'Telling DTA about why you missed hours can help them update your SNAP case more quickly.',
     whyInfoLabel: 'Why are we asking for more information?',
-    whyInfoExempt: 'Telling DTA about your exemption can help them update your SNAP case more quickly. DTA needs to know why the work rules should not apply to you, and this form puts your answers in writing so you can print or save them and send them to DTA. MLRI never sees what you type.',
-    whyInfoGoodCause: 'Telling DTA about your good reason can help them update your SNAP case more quickly. DTA needs to know why you could not meet the work rules, and this form puts your answers in writing so you can print or save them and send them to DTA. MLRI never sees what you type.',
+    whyInfoExempt: 'Telling DTA about why you missed hours can help them update your SNAP case more quickly.',
+    whyInfoGoodCause: 'Telling DTA about why you missed hours can help them update your SNAP case more quickly.',
     printFormLabel: 'Print or save this form',
     downloadWordLabel: 'Download as Word',
     savingTipsTitle: 'Tips for printing or saving',
@@ -1134,17 +1133,7 @@
     emailTruncatedNote: 'This summary was shortened to fit in an email. Use "Copy the text" in the screening tool to get the full version.',
     otherWaysHeading: 'Other ways to tell DTA',
     otherWaysExemptLead: 'Fill out and send in DTA\u2019s exemption form or explain the information to DTA in a written, signed statement (handwritten note is fine):',
-    otherWaysGoodCauseLead: 'Explain the information to DTA in a written, signed statement (handwritten note is fine):',
-    ageInfoHeading: 'These work rules may not apply to your age group',
-    /* 2026-07-30: was "not between 18 and 64". The author asked for 18 and 65 to
-     * match the MassLegalHelp ABAWD article. "Between 18 and 65" does not say
-     * whether a 65-year-old is included, and the federal rule caps at 64 with 65
-     * and over exempt by age, so a literal reading would have screened a
-     * 65-year-old as subject to the rules. "18 or older and under 65" carries the
-     * intended range without the ambiguity. Used in the same words everywhere the
-     * range appears; see the age question and the intro. */
-    ageInfoBody: 'You said you are under 18, or 65 or older. The ABAWD work rules usually apply to adults 18 or older and under 65. You may still have other SNAP rights. Contact DTA or a legal aid program to check your situation.',
-    waysToReachDta: 'Ways to reach DTA'
+    otherWaysGoodCauseLead: 'Explain the information to DTA in a written, signed statement (handwritten note is fine):'
   };
 
   /**

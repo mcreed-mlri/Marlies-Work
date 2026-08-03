@@ -147,10 +147,6 @@ class WorkAndDisability(unittest.TestCase):
 
 
 class Precedence(unittest.TestCase):
-    def test_age_outranks_an_exemption(self):
-        answers = {"ageRange": "no", "pregnant": "yes", "goodcause": "transport"}
-        self.assertEqual(snap_abawd.result_type(answers), "ageinfo")
-
     def test_exemption_outranks_good_cause(self):
         answers = {"pregnant": "yes", "goodcause": "transport"}
         self.assertEqual(snap_abawd.result_type(answers), "exempt")
@@ -160,8 +156,7 @@ class Precedence(unittest.TestCase):
             snap_abawd.result_type({"goodcause": snap_abawd.NONE}), "notexempt"
         )
 
-    def test_good_cause_skipped_only_for_exempt_and_age(self):
-        self.assertTrue(snap_abawd.should_skip_good_cause({"ageRange": "no"}))
+    def test_good_cause_skipped_only_for_exempt(self):
         self.assertTrue(snap_abawd.should_skip_good_cause({"pregnant": "yes"}))
         self.assertFalse(snap_abawd.should_skip_good_cause({}))
 

@@ -168,12 +168,7 @@ def exempt_reasons(answers):
 
 
 def result_type(answers):
-    """One of 'ageinfo', 'exempt', 'goodcause', 'notexempt'.
-
-    Age outranks everything, including an exemption the person also qualifies for.
-    """
-    if answers.get("ageRange") == "no":
-        return "ageinfo"
+    """One of 'exempt', 'goodcause', 'notexempt'."""
     if exempt_reasons(answers):
         return "exempt"
     good_cause = answers.get("goodcause")
@@ -183,8 +178,8 @@ def result_type(answers):
 
 
 def should_skip_good_cause(answers):
-    """Good cause cannot change an exempt or age outcome, so it is not asked."""
-    return result_type(answers) in ("ageinfo", "exempt")
+    """Good cause cannot change an exempt outcome, so it is not asked."""
+    return result_type(answers) == "exempt"
 
 
 # Longer phrasing for the printable statement, one per good cause answer. Author

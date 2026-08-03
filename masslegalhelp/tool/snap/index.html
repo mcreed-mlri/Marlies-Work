@@ -939,20 +939,11 @@ function renderIntro(){
       <span aria-hidden="true" style="width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;flex:none">
         <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
       </span>
-      <p style="font-size:14.5px;line-height:1.55;color:var(--prose);margin:0"><strong>Your information is private</strong> and will not automatically be saved on this device. MLRI does NOT have access to or save the information you share on this form.</p>
+      <p style="font-size:14.5px;line-height:1.55;color:var(--prose);margin:0"><strong>Your information is private.</strong> MLRI will not save any personal information you share on this form.</p>
     </div>
 
-    <fieldset style="border:1px solid var(--panel);border-radius:var(--radius);padding:15px 17px;margin:0 0 22px;background:#fff">
-      <legend style="display:block;float:left;width:100%;font-size:15px;font-weight:700;padding:0;margin:0 0 13px;color:var(--ink)">Before you start</legend>
-      <p id="age-q" style="clear:both;font-size:15px;line-height:1.55;color:var(--prose);margin:0 0 12px">Are you 18 or older and under 65?</p>
-      <div role="radiogroup" aria-label="Are you 18 or older and under 65?" class="age-row">
-        <label class="age-opt"><input type="radio" name="ageRange" value="yes" ${state.answers.ageRange === 'yes' ? 'checked' : ''}> Yes</label>
-        <label class="age-opt"><input type="radio" name="ageRange" value="no" ${state.answers.ageRange === 'no' ? 'checked' : ''}> No</label>
-      </div>
-    </fieldset>
-
     <h2 class="h2" style="margin:0 0 14px">Check if the SNAP work rules apply to you.</h2>
-    <button type="button" id="start-btn" data-action="start" ${canStart() ? '' : 'aria-disabled="true" aria-describedby="age-q"'} style="${primaryBtn}${canStart() ? '' : ';opacity:.5;cursor:not-allowed'}">Fill out the form →</button>
+    <button type="button" id="start-btn" data-action="start" style="${primaryBtn}">Fill out the form →</button>
     <p style="font-size:14px;margin:18px 0 0"><a href="${LINKS.abawd}" target="_blank" rel="noopener">Learn more about the SNAP ABAWD work rules</a></p>
   </div>`;
 }
@@ -1040,8 +1031,6 @@ function renderQBlock(q){
   </div>`;
 }
 
-function canStart(){ return state.answers.ageRange === 'yes' || state.answers.ageRange === 'no'; }
-
 /* The guided details step.
  *
  * Its own function rather than a branch inside renderPage, because almost
@@ -1127,15 +1116,7 @@ function renderResults(){
     <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 16px">${esc(C.resultsHeadLead)}</p>`;
 
   let card = '';
-  if(rt === 'ageinfo'){
-    card = `<div style="border-radius:var(--radius);overflow:hidden;border:1px solid var(--info-line)">
-      <div style="background:var(--soft);padding:20px 22px;border-bottom:1px solid var(--info-line)">
-        <h2 class="h-result" style="color:var(--accent-dark)">${esc(C.ageInfoHeading)}</h2>
-      </div>
-      <div style="padding:20px 22px;background:#fff">
-        <p style="font-size:16px;line-height:1.6;color:var(--prose);margin:0">${esc(C.ageInfoBody)}</p>
-      </div></div>`;
-  } else if(rt === 'exempt'){
+  if(rt === 'exempt'){
     const items = rs.map(r => `<li style="display:flex;align-items:flex-start;gap:11px;font-size:16px;line-height:1.5;color:var(--ink);padding:12px 0;border-bottom:1px solid var(--field)">
       <span aria-hidden="true" style="width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex:none;margin-top:1px">✓</span>
       <span>${esc(r)}</span></li>`).join('');
@@ -1286,24 +1267,20 @@ function renderResults(){
              leaving it alone and signing on paper produces a correct letter. That
              route existed before; nothing on the page said so. -->
         <div style="position:relative;border:1.5px solid var(--stroke);border-radius:calc(var(--radius) - 3px);background:#fff">
-          <canvas id="sig-pad" aria-labelledby="sig-label" aria-describedby="sig-note sig-alt" style="display:block;width:100%;height:140px;border-radius:calc(var(--radius) - 3px);cursor:crosshair;touch-action:none;-webkit-print-color-adjust:exact;print-color-adjust:exact"></canvas>
+          <canvas id="sig-pad" aria-labelledby="sig-label" aria-describedby="sig-alt" style="display:block;width:100%;height:140px;border-radius:calc(var(--radius) - 3px);cursor:crosshair;touch-action:none;-webkit-print-color-adjust:exact;print-color-adjust:exact"></canvas>
           <span id="sig-hint" class="no-print" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--placeholder);font-size:14.5px;pointer-events:none">Sign here with your finger or mouse</span>
         </div>
         <div class="no-print" style="display:flex;justify-content:flex-end;margin:7px 0 0">
           <button type="button" data-action="sig-clear" style="flex:none;font-family:inherit;font-size:13.5px;font-weight:700;color:var(--accent);background:none;border:2px solid var(--accent);border-radius:calc(var(--radius) - 3px);padding:8px 14px;cursor:pointer">Clear</button>
         </div>
-        <p id="sig-note" style="font-size:14px;line-height:1.5;color:var(--muted);margin:8px 0 0;text-align:center">(DTA needs your actual signature, not a typed signature)</p>
         <!-- Ours, not the author's, and kept as its own element for that reason.
-             sig-note above is her sentence and is still open in SCREENER-COPY.md, so
-             it stays word for word.
              This line is the keyboard alternative. The pad is pointer-only and a
              drawing surface cannot be made keyboard-operable, so the way out has to
              be said rather than implied: buildStatementHTML already prints a blank
              signature rule whenever the pad is empty, which means not signing here
              produces a correct letter to sign on paper. That was true before and
-             nothing on the page mentioned it. Merging the two sentences is a copy
-             decision for the author; SCREENER-COPY.md carries it as a proposal. -->
-        <p id="sig-alt" style="font-size:14px;line-height:1.5;color:var(--muted);margin:4px 0 0;text-align:center">If you cannot sign here, leave it blank. The printed page has a line to sign by hand.</p>
+             nothing on the page mentioned it. -->
+        <p id="sig-alt" style="font-size:14px;line-height:1.5;color:var(--muted);margin:8px 0 0;text-align:center">If you cannot sign here, leave it blank. The printed page has a line to sign by hand.</p>
       </div>
       <div class="no-print" style="display:flex;gap:12px;margin:20px 0 0;flex-wrap:wrap;align-items:center">
         <button type="button" data-action="print" style="${nextBtn}">${esc(C.printFormLabel)}</button>
@@ -1332,11 +1309,6 @@ function renderResults(){
     nextSteps = `<div style="margin:26px 0 0;padding:22px;background:var(--soft);border-radius:12px">
       <h3 style="font-size:18px;line-height:1.3;margin:0 0 10px">${esc(C.otherWaysHeading)}</h3>
       <p style="font-size:15px;line-height:1.6;color:var(--prose);margin:0 0 12px">${stepsLead}</p>
-      ${dtaContacts}
-    </div>`;
-  } else if(rt === 'ageinfo'){
-    nextSteps = `<div style="margin:26px 0 0;padding:22px;background:var(--soft);border-radius:var(--radius)">
-      <h3 style="font-size:18px;margin:0 0 12px">${esc(C.waysToReachDta)}</h3>
       ${dtaContacts}
     </div>`;
   }
@@ -1738,15 +1710,7 @@ document.addEventListener('click', (e) => {
   if(!action) return;
   switch(action){
     case 'start':
-      /* Blocked used to be a silent no-op: nothing said what was missing. Move
-       * focus to the question that gates the button so it gets announced. */
-      if(!canStart()){
-        const first = document.querySelector('input[name="ageRange"]');
-        if(first) first.focus();
-        return;
-      }
       SAMPLE_MODE = false;
-      if(state.answers.ageRange === 'no'){ state.view = 'results'; renderWithMotion(); return; }
       state.view = 'question'; state.step = 0; state.gc = false; state.details = false; state.helpOpen = {}; renderWithMotion(); break;
     case 'back': back(); break;
     case 'next': advance(); break;
@@ -1800,27 +1764,6 @@ document.addEventListener('click', (e) => {
     case 'sig-clear': clearSignature(); break;
   }
 });
-
-// Age-range selection: enable/disable Start without a full re-render
-// so the radio buttons keep focus.
-document.addEventListener('change', (e) => {
-  if(e.target && e.target.name === 'ageRange'){
-    state.answers.ageRange = e.target.value;
-    persist();
-    updateStartBtn();
-  }
-});
-
-function updateStartBtn(){
-  const btn = document.getElementById('start-btn');
-  if(btn){
-    if(canStart()){
-      btn.style.opacity = ''; btn.style.cursor = 'pointer'; btn.removeAttribute('aria-disabled');
-    } else {
-      btn.style.opacity = '.5'; btn.style.cursor = 'not-allowed'; btn.setAttribute('aria-disabled', 'true');
-    }
-  }
-}
 
 /* Re-fit the signature canvas when the viewport changes (e.g. phone rotation).
  * The bitmap is sized from clientWidth at draw time, so a later resize would

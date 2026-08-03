@@ -32,30 +32,25 @@ features:
 mandatory: True
 code: |
   introduction
-  if ageRange == 'no':
-    # Age outranks everything, including an exemption the person also has.
-    age_screen
+  family_group
+  health_group
+  benefits_group
+  school_work_group
+  # Deliberately tested against partial_answers, not collected_answers.
+  # collected_answers includes goodcause, so asking it here would need the
+  # answer before deciding whether to ask the question. Nothing that decides
+  # the skip depends on goodcause: only an exempt outcome skips it.
+  if should_skip_good_cause(partial_answers):
+    goodcause = None
   else:
-    family_group
-    health_group
-    benefits_group
-    school_work_group
-    # Deliberately tested against partial_answers, not collected_answers.
-    # collected_answers includes goodcause, so asking it here would need the
-    # answer before deciding whether to ask the question. Nothing that decides
-    # the skip depends on goodcause: only an exempt or age outcome skips it.
-    if should_skip_good_cause(partial_answers):
-      goodcause = None
-    else:
-      good_cause_group
-    if outcome in ('exempt', 'goodcause'):
-      statement_details
-    results_screen
+    good_cause_group
+  if outcome in ('exempt', 'goodcause'):
+    statement_details
+  results_screen
 ---
 # Everything except goodcause. Used for the skip decision above.
 code: |
   partial_answers = {
-    'ageRange': ageRange,
     'child14': child14,
     'health': health,
     'child6': child6,
@@ -93,14 +88,7 @@ subquestion: |
 
   This short screening asks a few questions to check if you need to meet the ABAWD work rules or if you are exempt. It takes about 3 minutes.
 
-  Your information is private. Nothing you type is shared with DTA by this tool.
-fields:
-  - "Are you 18 or older and under 65?": ageRange
-    datatype: radio
-    choices:
-      - Yes: 'yes'
-      - No: 'no'
-    required: False
+  **Your information is private.** MLRI will not save any personal information you share on this form.
 continue button field: introduction
 ---
 question: "Your Family and Household"
@@ -232,13 +220,6 @@ fields:
       These are situations where you missed work, school, or volunteering hours for one or more months because of an unexpected life event.
 continue button field: good_cause_group
 ---
-event: age_screen
-question: "These work rules may not apply to your age group"
-subquestion: |
-  You said you are under 18, or 65 or older. The ABAWD work rules usually apply to adults 18 or older and under 65. You may still have other SNAP rights. Contact DTA or a legal aid program to check your situation.
-buttons:
-  - Exit: exit
----
 event: results_screen
 question: |
   % if outcome == 'exempt':
@@ -265,7 +246,7 @@ subquestion: |
   To keep getting SNAP, you can meet the ABAWD work rules by doing one of these:
   % endif
 
-  Note: Your information is private and will not automatically be saved on this device. MLRI does NOT have access to or save the information you type on this form. Print, download, or email these results to keep a copy.
+  Note: Your information is private and will not automatically be saved on this device. MLRI will not save any personal information you type on this form.
 attachment code: tell_dta_statement if outcome in ('exempt', 'goodcause') else []
 buttons:
   - Start over: restart
@@ -301,8 +282,6 @@ attachment:
     ${ explanation if defined('explanation') else '' }
 
     Signature: ______________________________  Date: ${ today() }
-
-    (DTA needs your actual signature, not a typed signature.)
 ---
 question: |
   Add your details to the statement

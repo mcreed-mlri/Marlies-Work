@@ -40,10 +40,8 @@ itself something to test.
 
 If any of these fail, stop and report it. Nothing further is worth testing.
 
-- [ ] The start page loads and shows the heading, the intro text, and the age question.
-- [ ] The "Fill out the form" button does nothing until the age question is answered.
-- [ ] Answering **No** to the age question and continuing goes straight to the age result, skipping every other question.
-- [ ] Answering **Yes** starts the questions.
+- [ ] The start page loads and shows the heading, the intro text, and the start button.
+- [ ] Clicking **Fill out the form** opens the first question section.
 - [ ] Answering nothing at all and clicking through to the end gives the "may need to meet the work rules" result.
 - [ ] Answering **Yes** to "Are you pregnant?" and skipping to results gives the exempt result.
 - [ ] The exempt result offers a letter, and "Print or save this form" opens a print dialog.
@@ -152,7 +150,6 @@ be wrong in a way nobody notices.
 These are precedence rules. Each one is a case where two things are true at once and only one
 answer is right.
 
-- [ ] **Age beats everything.** Answer No to the age question and Yes to a clear exemption. Expect the age result, not the exempt result.
 - [ ] **An exemption beats good cause.** Answer Yes to pregnant and also pick a good-cause reason. Expect exempt, and the good-cause question should never have been shown.
 - [ ] **Good cause only when nothing else applies.** With no exemption, the good-cause question appears as the last question.
 - [ ] Picking "This question does not apply to me / I’m not sure" on the good-cause question gives the "may need to meet the work rules" result, not good cause.

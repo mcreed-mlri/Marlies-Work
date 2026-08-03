@@ -73,10 +73,6 @@ describe('snap-screening-logic', () => {
     assert.equal(classic.resultType({ disability: ['ssi_ssdi'] }), 'exempt');
   });
 
-  it('age outside range returns ageinfo', () => {
-    assert.equal(classic.resultType({ ageRange: 'no' }), 'ageinfo');
-  });
-
   it('multiple exemption reasons can apply together', () => {
     assert.equal(classic.resultType({ child14: 'yes', working: 'hours_30' }), 'exempt');
   });
@@ -161,7 +157,6 @@ describe('snap-screening-logic', () => {
       { goodcause: 'transport' },
       { disability: ['other'] },
       { disability: ['ssi_ssdi'] },
-      { ageRange: 'no' },
       {}
     ];
     for (const answers of cases) {
@@ -328,9 +323,8 @@ describe('snap-screening-logic', () => {
     assert.match(RESULT_COPY.savingTipsBody, /Save as PDF/);
     assert.match(RESULT_COPY.printLead, /\(More info on how to contact DTA in the box below\)$/);
     assert.match(RESULT_COPY.whyInfoLabel, /^Why are we asking for more information\?$/);
-    // The pop-up wording is exemption-specific, so good cause gets its own.
-    assert.match(RESULT_COPY.whyInfoExempt, /^Telling DTA about your exemption can help them update your SNAP case more quickly\./);
-    assert.match(RESULT_COPY.whyInfoGoodCause, /^Telling DTA about your good reason can help them update your SNAP case more quickly\./);
+    assert.match(RESULT_COPY.whyInfoExempt, /^Telling DTA about why you missed hours can help them update your SNAP case more quickly\.$/);
+    assert.match(RESULT_COPY.whyInfoGoodCause, /^Telling DTA about why you missed hours can help them update your SNAP case more quickly\.$/);
     assert.match(RESULT_COPY.otherWaysHeading, /tell DTA/i);
     assert.match(RESULT_COPY.learnMoreLabel, /ABAWD work rules/);
     assert.doesNotMatch(RESULT_COPY.learnMoreLabel, /SNAP/);
@@ -425,7 +419,6 @@ describe('snap-screening-logic', () => {
         { goodcause: 'transport' },
         { goodcause: NONE },
         { pregnant: 'yes' },
-        { ageRange: 'no' },
         {}
       ];
       for (const base of bases) {
@@ -462,7 +455,7 @@ describe('snap-screening-logic', () => {
     });
 
     it('asks nothing at all when nobody is exempt and there is no good cause', () => {
-      for (const answers of [{}, { child14: 'no' }, { goodcause: NONE }, { ageRange: 'no' }]) {
+      for (const answers of [{}, { child14: 'no' }, { goodcause: NONE }]) {
         assert.equal(classic2.guidedQuestions(answers).length, 0, JSON.stringify(answers));
         assert.equal(classic2.composeStatement(answers, AUG).length, 0, JSON.stringify(answers));
       }

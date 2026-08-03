@@ -20,7 +20,6 @@ const EXEMPT_HEADING = asRegex(RESULT_COPY.exemptHeading);
 const GOOD_CAUSE_HEADING = asRegex(RESULT_COPY.goodCauseHeading);
 const NOT_EXEMPT_HEADING = asRegex(RESULT_COPY.notExemptHeading);
 const WORK_RULES_HEADING = asRegex(RESULT_COPY.workRulesHeading);
-const AGE_INFO_HEADING = asRegex(RESULT_COPY.ageInfoHeading);
 
 // One build now. court-forms/ was archived on 2026-07-30, so these drive the page
 // that actually ships rather than a lookalike of it.
@@ -32,8 +31,7 @@ const screenerUrl = '/masslegalhelp/tool/snap/';
  * is a separate open question recorded in PRODUCT.md. clickYn matched questions by
  * visible label, which is ambiguous once several Yes/No questions share a page;
  * the id-based helpers below replaced it. */
-async function startScreener(page, ageYes = true) {
-  await page.locator(`input[name="ageRange"][value="${ageYes ? 'yes' : 'no'}"]`).check();
+async function startScreener(page) {
   await page.locator('#start-btn').click();
 }
 

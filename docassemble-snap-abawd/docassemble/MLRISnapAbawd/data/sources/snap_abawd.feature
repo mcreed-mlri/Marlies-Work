@@ -8,18 +8,10 @@ Feature: SNAP work rules screening reaches the right outcome
     Given I start the interview at "snap_abawd.yml"
     Then the variable "outcome" should be "notexempt"
 
-  Scenario: Under 18 or over 64
-    Given I start the interview at "snap_abawd.yml"
-    And I set the variables to these values
-      | var | value |
-      | ageRange | no |
-    Then the variable "outcome" should be "ageinfo"
-
   Scenario: Pregnant
     Given I start the interview at "snap_abawd.yml"
     And I set the variables to these values
       | var | value |
-      | ageRange | yes |
       | pregnant | yes |
     Then the variable "outcome" should be "exempt"
 
@@ -27,7 +19,6 @@ Feature: SNAP work rules screening reaches the right outcome
     Given I start the interview at "snap_abawd.yml"
     And I set the variables to these values
       | var | value |
-      | ageRange | yes |
       | child14 | yes |
     Then the variable "outcome" should be "exempt"
 
@@ -35,7 +26,6 @@ Feature: SNAP work rules screening reaches the right outcome
     Given I start the interview at "snap_abawd.yml"
     And I set the variables to these values
       | var | value |
-      | ageRange | yes |
       | working | income_weekly |
     Then the variable "outcome" should be "exempt"
 
@@ -43,7 +33,6 @@ Feature: SNAP work rules screening reaches the right outcome
     Given I start the interview at "snap_abawd.yml"
     And I set the variables to these values
       | var | value |
-      | ageRange | yes |
       | working | hours_30 |
     Then the variable "outcome" should be "exempt"
 
@@ -51,7 +40,6 @@ Feature: SNAP work rules screening reaches the right outcome
     Given I start the interview at "snap_abawd.yml"
     And I set the variables to these values
       | var | value |
-      | ageRange | yes |
       | disability | ssi_ssdi |
     Then the variable "outcome" should be "exempt"
 
@@ -59,7 +47,6 @@ Feature: SNAP work rules screening reaches the right outcome
     Given I start the interview at "snap_abawd.yml"
     And I set the variables to these values
       | var | value |
-      | ageRange | yes |
       | disability | other |
     Then the variable "outcome" should be "exempt"
 
@@ -67,7 +54,6 @@ Feature: SNAP work rules screening reaches the right outcome
     Given I start the interview at "snap_abawd.yml"
     And I set the variables to these values
       | var | value |
-      | ageRange | yes |
       | housing | no |
       | housingFollowup | steady_job |
     Then the variable "outcome" should be "exempt"
@@ -76,7 +62,6 @@ Feature: SNAP work rules screening reaches the right outcome
     Given I start the interview at "snap_abawd.yml"
     And I set the variables to these values
       | var | value |
-      | ageRange | yes |
       | housing | no |
       | housingFollowup | diploma,steady_job |
     Then the variable "outcome" should be "notexempt"
@@ -85,7 +70,6 @@ Feature: SNAP work rules screening reaches the right outcome
     Given I start the interview at "snap_abawd.yml"
     And I set the variables to these values
       | var | value |
-      | ageRange | yes |
       | housing | no |
       | housingFollowup | __none |
     Then the variable "outcome" should be "exempt"
@@ -94,7 +78,6 @@ Feature: SNAP work rules screening reaches the right outcome
     Given I start the interview at "snap_abawd.yml"
     And I set the variables to these values
       | var | value |
-      | ageRange | yes |
       | dv | yes |
     Then the variable "outcome" should be "exempt"
 
@@ -102,7 +85,6 @@ Feature: SNAP work rules screening reaches the right outcome
     Given I start the interview at "snap_abawd.yml"
     And I set the variables to these values
       | var | value |
-      | ageRange | yes |
       | child14 | yes |
       | pregnant | yes |
       | working | income_weekly |
@@ -112,7 +94,6 @@ Feature: SNAP work rules screening reaches the right outcome
     Given I start the interview at "snap_abawd.yml"
     And I set the variables to these values
       | var | value |
-      | ageRange | yes |
       | goodcause | transport |
     Then the variable "outcome" should be "goodcause"
 
@@ -120,7 +101,6 @@ Feature: SNAP work rules screening reaches the right outcome
     Given I start the interview at "snap_abawd.yml"
     And I set the variables to these values
       | var | value |
-      | ageRange | yes |
       | goodcause | __none |
     Then the variable "outcome" should be "notexempt"
 

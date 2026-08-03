@@ -9,25 +9,21 @@ expert records the authority for each rule. Every row is currently blank.
 
 Companion file `decision-spec.json` holds the same structure for a port to generate from.
 
-## The four outcomes, and which one wins
+## The three outcomes, and which one wins
 
 | Input | Outcome |
 |---|---|
-| Age answered "no", and an exemption also applies | `ageinfo` |
 | An exemption applies, and a good cause reason is also given | `exempt` |
 | No exemption, good cause given | `goodcause` |
 | No exemption, good cause explicitly none | `notexempt` |
 | Nothing answered at all | `notexempt` |
 
-So the order is: age first, then exemption, then good cause, then not exempt. Age
-outranks everything, including an exemption the person also qualifies for.
+So the order is: exemption first, then good cause, then not exempt.
 
-`ageinfo` and `exempt` both skip the good cause question entirely, because it cannot
-change the outcome:
+`exempt` skips the good cause question entirely, because it cannot change the outcome:
 
 | Outcome | Good cause question asked |
 |---|---|
-| ageinfo | no |
 | exempt | no |
 | notexempt so far | yes |
 
@@ -228,7 +224,6 @@ these double as test cases; the JSON carries them in a form a test generator can
 | Example | Outcome | Reasons recorded |
 |---|---|---|
 | Nothing answered | `notexempt` | *none* |
-| Under 18 or over 64 | `ageinfo` | *none* |
 | Pregnant | `exempt` | Pregnant |
 | Lives with a child under 14 | `exempt` | Live with a child under 14 years old |
 | Earns $217.50 a week or more | `exempt` | Earn enough income to be exempt from the work rules |

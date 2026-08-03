@@ -38,16 +38,7 @@ _A note on what this tool is not. It does not send anything to DTA, it does not 
 
 > This short screening asks a few questions to check if you need to meet the ABAWD work rules or if you are exempt. It takes about 3 minutes.
 
-> **Your information is private** and will not automatically be saved on this device. MLRI does NOT have access to or save the information you share on this form.
-
-_Then one question, which is the only one that has to be answered:_
-
-> Are you 18 or older and under 65?
-
-- Yes
-- No
-
-_Answering **No** ends the screening straight away with the age screen further down, on the grounds that these rules generally apply to adults 18 or older and under 65. Answering **Yes** turns on the button:_
+> **Your information is private.** MLRI will not save any personal information you share on this form.
 
 > Fill out the form →
 
@@ -205,7 +196,7 @@ These are situations where you missed work, school, or volunteering hours for on
 
 ## What someone is told at the end
 
-_There are four outcomes, and the wording of each is below._
+_There are three outcomes, and the wording of each is below._
 
 ### 1. You may be exempt
 
@@ -280,12 +271,6 @@ _and a reminder that a good reason for missing hours still counts. This one is a
 > **You may have a good reason for missing work, school, or volunteer hours.**
 
 > Tell DTA as soon as possible if you couldn’t meet the work rules for one or more months because of an unexpected life situation like temporary transportation issues, a personal or family emergency, or employment issues.
-
-### 4. These rules may not apply to your age group
-
-> These work rules may not apply to your age group
-
-> You said you are under 18, or 65 or older. The ABAWD work rules usually apply to adults 18 or older and under 65. You may still have other SNAP rights. Contact DTA or a legal aid program to check your situation.
 
 ## The letter to DTA, and the two ways of writing it
 
@@ -887,8 +872,6 @@ _Neither version can write these, and neither tries to._
 > Client / Agency ID (if you have one)
 
 > Signature
-
-> (DTA needs your actual signature, not a typed signature)
 
 > If you cannot sign here, leave it blank. The printed page has a line to sign by hand.
 

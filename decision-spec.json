@@ -3,17 +3,14 @@
   "generated": "by scripts/decision-spec.js",
   "outcomes": {
     "order": [
-      "ageinfo",
       "exempt",
       "goodcause",
       "notexempt"
     ],
-    "ageinfoWhen": "answers.ageRange === 'no'",
     "exemptWhen": "exemptReasons(answers).length > 0",
     "goodcauseWhen": "answers.goodcause is set and is not the none sentinel ('__none')",
     "notexemptWhen": "none of the above",
     "goodCauseSkippedFor": [
-      "ageinfo",
       "exempt"
     ]
   },
@@ -596,19 +593,8 @@
       }
     },
     {
-      "name": "Under 18 or over 64",
-      "answers": {
-        "ageRange": "no"
-      },
-      "expect": {
-        "outcome": "ageinfo",
-        "reasons": []
-      }
-    },
-    {
       "name": "Pregnant",
       "answers": {
-        "ageRange": "yes",
         "pregnant": "yes"
       },
       "expect": {
@@ -621,7 +607,6 @@
     {
       "name": "Lives with a child under 14",
       "answers": {
-        "ageRange": "yes",
         "child14": "yes"
       },
       "expect": {
@@ -634,7 +619,6 @@
     {
       "name": "Earns $217.50 a week or more",
       "answers": {
-        "ageRange": "yes",
         "working": "income_weekly"
       },
       "expect": {
@@ -647,7 +631,6 @@
     {
       "name": "30+ hours below minimum wage",
       "answers": {
-        "ageRange": "yes",
         "working": "hours_30"
       },
       "expect": {
@@ -660,7 +643,6 @@
     {
       "name": "Gets SSI or SSDI",
       "answers": {
-        "ageRange": "yes",
         "disability": [
           "ssi_ssdi"
         ]
@@ -675,7 +657,6 @@
     {
       "name": "Other disability payment only",
       "answers": {
-        "ageRange": "yes",
         "disability": [
           "other"
         ]
@@ -690,7 +671,6 @@
     {
       "name": "No place to sleep, no diploma",
       "answers": {
-        "ageRange": "yes",
         "housing": "no",
         "housingFollowup": [
           "steady_job"
@@ -706,7 +686,6 @@
     {
       "name": "No place to sleep, diploma and steady job",
       "answers": {
-        "ageRange": "yes",
         "housing": "no",
         "housingFollowup": [
           "diploma",
@@ -721,7 +700,6 @@
     {
       "name": "No place to sleep, none of these apply",
       "answers": {
-        "ageRange": "yes",
         "housing": "no",
         "housingFollowup": "__none"
       },
@@ -735,7 +713,6 @@
     {
       "name": "Safety concern",
       "answers": {
-        "ageRange": "yes",
         "dv": "yes"
       },
       "expect": {
@@ -748,7 +725,6 @@
     {
       "name": "Several exemptions at once",
       "answers": {
-        "ageRange": "yes",
         "child14": "yes",
         "pregnant": "yes",
         "working": "income_weekly"
@@ -765,7 +741,6 @@
     {
       "name": "No exemption, transport problem",
       "answers": {
-        "ageRange": "yes",
         "goodcause": "transport"
       },
       "expect": {
@@ -776,7 +751,6 @@
     {
       "name": "No exemption, no good cause",
       "answers": {
-        "ageRange": "yes",
         "goodcause": "__none"
       },
       "expect": {

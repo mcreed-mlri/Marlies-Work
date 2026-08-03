@@ -34,17 +34,12 @@ const C = S.RESULT_COPY;
  * prints next to the text it is about, instead of in a list at the end. ---- */
 const OPEN = {
   'page.answerAny': 'Applied: this now shows above group 1 only, per your note that it "only needs to be said once in section 1." It used to repeat above all four groups.',
-  'page.privacyIntro': 'Your edit replaced this sentence. Separately, the note "Remove before you start question" is ambiguous: remove this paragraph from the start page, or something else?',
-  'page.sigNote': 'Your note read "remove dta needs your actual signature line on all the results pages." That reads two opposite ways: delete this sentence, or add a signature line. Which? Note the new line below it, which may answer the same need.',
   'page.sigAlt': 'Added 2026-07-30, and not yours, so overwrite it freely. The signature pad only works with a finger or a mouse, so someone using a keyboard, a switch, or a screen reader cannot sign in the browser at all. The printed statement already leaves a ruled line when the pad is empty, so that route worked; nothing on the page said so. This sentence says it. If you would rather fold it into the line above, that is one sentence instead of two and we will make the swap.',
-  privacyNote: 'Applying your edit literally leaves the clause twice: "MLRI will not save any personal information you type on this form. save the information you type on this form." Confirm it should end after the first sentence.',
   goodCauseIntro: 'Is "work, school, or volunteer hours" replacing the old sentence, or inserting into it? In other words, does it end at "volunteer hours." or continue "...volunteer hours before or after your start date."?',
   goodCauseInNotExemptIntro: 'This is a second copy of the good cause sentence, shown on the "may need to meet the work rules" screen. Your note did not mention it. Should it change the same way?',
   formTitleGoodCause: 'This looked struck through in your doc, with its meaning folded into the sentence below it. Delete the heading entirely?',
   formTitleExempt: 'If the good cause heading goes, should this matching one go too?',
   formLeadExempt: 'Your doc says "fill out this form" where this says "fill in the blanks below." Change it?',
-  whyInfoGoodCause: 'The wording in your doc reads "Telling DTA about your why you missed hours." The exempt version is "Telling DTA about your exemption," so the extra "your" looks like a typo. Confirm and we will drop it.',
-  ageInfoBody: 'Settled 2026-07-30. You asked for 18 and 65 to match the MassLegalHelp article. "Between 18 and 65" does not say whether a 65-year-old counts, and the federal rule caps at 64 with 65 and over exempt by age, so reading it literally would have told a 65-year-old the work rules might apply to them. Every place the range appears now says "18 or older and under 65": same range, no ambiguity. Say so if you would rather mirror the article word for word.',
   exemptReasonsIntro: 'Already applied: emptied, because the heading above now ends with "because of these reasons:" and this said it a second time.',
 };
 
@@ -58,13 +53,10 @@ const INLINE = [
   { id: 'page.moreDetails1', re: /<p style="margin:0 0 10px">(Everyone has a different life situation[\s\S]*?)<\/p>/ },
   { id: 'page.moreDetails2', re: /<p style="margin:0">(To learn more about the ABAWD work rules[\s\S]*?)<\/p>/ },
   { id: 'page.timeEstimate', re: /<p [^>]*>(This short screening asks[\s\S]*?)<\/p>/ },
-  { id: 'page.privacyIntro', re: /<p [^>]*>(<strong>Your information is private<\/strong>[\s\S]*?)<\/p>/ },
-  { id: 'page.beforeYouStart', re: /<legend[^>]*>(Before you start)<\/legend>/ },
-  { id: 'page.ageQuestion', re: /<p id="age-q"[^>]*>([^<]+)<\/p>/ },
+  { id: 'page.privacyIntro', re: /<p [^>]*>(<strong>Your information is private\.?<\/strong>[\s\S]*?)<\/p>/ },
   { id: 'page.startHeading', re: /<h2 class="h2"[^>]*>(Check if the SNAP work rules apply to you\.)<\/h2>/ },
   { id: 'page.startButton', re: />(Fill out the form[^<]*)<\/button>/ },
   { id: 'page.answerAny', re: /<p [^>]*>(Answer any that apply to you\. Every question is optional\.)<\/p>/ },
-  { id: 'page.sigNote', re: /<p id="sig-note"[^>]*>(\([^<]+\))<\/p>/ },
   { id: 'page.sigAlt', re: /<p id="sig-alt"[^>]*>([^<]+)<\/p>/ },
   // Buttons and navigation
   { id: 'btn.next', re: /nextLabel = [^?]+\? '[^']+' : '([^']+)'/ },
@@ -230,11 +222,9 @@ blank();
 ['page.moreSummary', 'page.moreDetails1', 'page.moreDetails2']
   .forEach(id => item(id, inline[id]));
 
-['page.timeEstimate', 'page.privacyIntro', 'page.beforeYouStart', 'page.ageQuestion']
-  .forEach(id => item(id, inline[id]));
+[  'page.timeEstimate', 'page.privacyIntro'
+].forEach(id => item(id, inline[id]));
 
-w('The age question offers Yes and No. Answering it enables the button below.');
-blank();
 w('**There is no Terms of Use text on this page today.** Other versions of the tool have a');
 w('checkbox someone must tick before starting; this one does not. If the published version');
 w('needs one, its wording has to come from you, and it has to match whichever site hosts');
@@ -359,12 +349,9 @@ section('7. Result: you may need to meet the work rules');
   'notExemptReapplyLead', 'notExemptReapplyLink', 'notExemptReapplyEnd', 'notExemptSnapBack',
   'notExemptEmail', 'notExemptEmailSuffix'].forEach(k => item(k, C[k]));
 
-section('8. Result: these rules may not apply to your age group');
-['ageInfoHeading', 'ageInfoBody'].forEach(k => item(k, C[k]));
-
 /* ---- The statement ---- */
 
-section('9. The printable "Tell DTA" statement');
+section('8. The printable "Tell DTA" statement');
 
 w('Shown on the exempt and good cause results. Someone fills in the blanks, signs it, and');
 w('mails, faxes, or uploads it to DTA.');
@@ -393,8 +380,7 @@ w('The fields someone fills in:');
 blank();
 ['statement.nameLabel', 'statement.agencyLabel', 'statement.sigLabel', 'statement.sigHint']
   .forEach(id => item(id, inline[id]));
-item('page.sigNote', inline['page.sigNote'], { note: 'under the signature pad' });
-item('page.sigAlt', inline['page.sigAlt'], { note: 'under the signature pad, below the line above' });
+item('page.sigAlt', inline['page.sigAlt'], { note: 'under the signature pad' });
 w('An explainer opens next to the signature box:');
 blank();
 ['hint.signatures.title', 'hint.signatures.body'].forEach(id => item(id, inline[id]));
@@ -566,7 +552,7 @@ section('Printing, saving, and email');
   'emailCopiedLabel', 'emailSelectedLabel', 'emailTruncatedNote'].forEach(k => item(k, C[k]));
 
 section('11. Other ways to reach DTA');
-['otherWaysHeading', 'otherWaysExemptLead', 'otherWaysGoodCauseLead', 'waysToReachDta']
+['otherWaysHeading', 'otherWaysExemptLead', 'otherWaysGoodCauseLead']
   .forEach(k => item(k, C[k]));
 w('The contact details shown, which are real and worth checking:');
 blank();

@@ -55,15 +55,11 @@ w('Companion file `decision-spec.json` holds the same structure for a port to ge
 /* ------------------------------------------------------------------ *
  * Outcomes and precedence
  * ------------------------------------------------------------------ */
-section('The four outcomes, and which one wins');
+section('The three outcomes, and which one wins');
 
 /* Prove the precedence rather than assert it: build inputs that satisfy more
  * than one condition at once and report what actually comes out. */
 const PRECEDENCE = [
-  {
-    what: 'Age answered "no", and an exemption also applies',
-    answers: { ageRange: 'no', pregnant: 'yes', goodcause: 'transport' }
-  },
   {
     what: 'An exemption applies, and a good cause reason is also given',
     answers: { pregnant: 'yes', goodcause: 'transport' }
@@ -82,16 +78,13 @@ w('| Input | Outcome |');
 w('|---|---|');
 for (const c of PRECEDENCE) w('| ' + c.what + ' | `' + outcome(c.answers) + '` |');
 blank();
-w('So the order is: age first, then exemption, then good cause, then not exempt. Age');
-w('outranks everything, including an exemption the person also qualifies for.');
+w('So the order is: exemption first, then good cause, then not exempt.');
 blank();
-w('`ageinfo` and `exempt` both skip the good cause question entirely, because it cannot');
-w('change the outcome:');
+w('`exempt` skips the good cause question entirely, because it cannot change the outcome:');
 blank();
 w('| Outcome | Good cause question asked |');
 w('|---|---|');
 for (const c of [
-  { a: { ageRange: 'no' }, label: 'ageinfo' },
   { a: { pregnant: 'yes' }, label: 'exempt' },
   { a: {}, label: 'notexempt so far' }
 ]) {
@@ -99,12 +92,11 @@ for (const c of [
 }
 blank();
 json.outcomes = {
-  order: ['ageinfo', 'exempt', 'goodcause', 'notexempt'],
-  ageinfoWhen: "answers.ageRange === 'no'",
+  order: ['exempt', 'goodcause', 'notexempt'],
   exemptWhen: 'exemptReasons(answers).length > 0',
   goodcauseWhen: "answers.goodcause is set and is not the none sentinel ('" + NONE + "')",
   notexemptWhen: 'none of the above',
-  goodCauseSkippedFor: ['ageinfo', 'exempt']
+  goodCauseSkippedFor: ['exempt']
 };
 
 /* ------------------------------------------------------------------ *
@@ -330,20 +322,19 @@ w('these double as test cases; the JSON carries them in a form a test generator 
 blank();
 const CASES = [
   { name: 'Nothing answered', a: {} },
-  { name: 'Under 18 or over 64', a: { ageRange: 'no' } },
-  { name: 'Pregnant', a: { ageRange: 'yes', pregnant: 'yes' } },
-  { name: 'Lives with a child under 14', a: { ageRange: 'yes', child14: 'yes' } },
-  { name: 'Earns $217.50 a week or more', a: { ageRange: 'yes', working: 'income_weekly' } },
-  { name: '30+ hours below minimum wage', a: { ageRange: 'yes', working: 'hours_30' } },
-  { name: 'Gets SSI or SSDI', a: { ageRange: 'yes', disability: ['ssi_ssdi'] } },
-  { name: 'Other disability payment only', a: { ageRange: 'yes', disability: ['other'] } },
-  { name: 'No place to sleep, no diploma', a: { ageRange: 'yes', housing: 'no', housingFollowup: ['steady_job'] } },
-  { name: 'No place to sleep, diploma and steady job', a: { ageRange: 'yes', housing: 'no', housingFollowup: ['diploma', 'steady_job'] } },
-  { name: 'No place to sleep, none of these apply', a: { ageRange: 'yes', housing: 'no', housingFollowup: NONE } },
-  { name: 'Safety concern', a: { ageRange: 'yes', dv: 'yes' } },
-  { name: 'Several exemptions at once', a: { ageRange: 'yes', child14: 'yes', pregnant: 'yes', working: 'income_weekly' } },
-  { name: 'No exemption, transport problem', a: { ageRange: 'yes', goodcause: 'transport' } },
-  { name: 'No exemption, no good cause', a: { ageRange: 'yes', goodcause: NONE } }
+  { name: 'Pregnant', a: { pregnant: 'yes' } },
+  { name: 'Lives with a child under 14', a: { child14: 'yes' } },
+  { name: 'Earns $217.50 a week or more', a: { working: 'income_weekly' } },
+  { name: '30+ hours below minimum wage', a: { working: 'hours_30' } },
+  { name: 'Gets SSI or SSDI', a: { disability: ['ssi_ssdi'] } },
+  { name: 'Other disability payment only', a: { disability: ['other'] } },
+  { name: 'No place to sleep, no diploma', a: { housing: 'no', housingFollowup: ['steady_job'] } },
+  { name: 'No place to sleep, diploma and steady job', a: { housing: 'no', housingFollowup: ['diploma', 'steady_job'] } },
+  { name: 'No place to sleep, none of these apply', a: { housing: 'no', housingFollowup: NONE } },
+  { name: 'Safety concern', a: { dv: 'yes' } },
+  { name: 'Several exemptions at once', a: { child14: 'yes', pregnant: 'yes', working: 'income_weekly' } },
+  { name: 'No exemption, transport problem', a: { goodcause: 'transport' } },
+  { name: 'No exemption, no good cause', a: { goodcause: NONE } }
 ];
 w('| Example | Outcome | Reasons recorded |');
 w('|---|---|---|');

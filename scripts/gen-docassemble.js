@@ -128,30 +128,25 @@ features:
 mandatory: True
 code: |
   introduction
-  if ageRange == 'no':
-    # Age outranks everything, including an exemption the person also has.
-    age_screen
+  family_group
+  health_group
+  benefits_group
+  school_work_group
+  # Deliberately tested against partial_answers, not collected_answers.
+  # collected_answers includes goodcause, so asking it here would need the
+  # answer before deciding whether to ask the question. Nothing that decides
+  # the skip depends on goodcause: only an exempt outcome skips it.
+  if should_skip_good_cause(partial_answers):
+    goodcause = None
   else:
-    family_group
-    health_group
-    benefits_group
-    school_work_group
-    # Deliberately tested against partial_answers, not collected_answers.
-    # collected_answers includes goodcause, so asking it here would need the
-    # answer before deciding whether to ask the question. Nothing that decides
-    # the skip depends on goodcause: only an exempt or age outcome skips it.
-    if should_skip_good_cause(partial_answers):
-      goodcause = None
-    else:
-      good_cause_group
-    if outcome in ('exempt', 'goodcause'):
-      statement_details
-    results_screen
+    good_cause_group
+  if outcome in ('exempt', 'goodcause'):
+    statement_details
+  results_screen
 ---
 # Everything except goodcause. Used for the skip decision above.
 code: |
   partial_answers = {
-    'ageRange': ageRange,
 ${A.QUESTIONS.map(q => "    '" + q.id + "': " + q.id + ",").join('\n')}
   }
 ---
@@ -190,7 +185,7 @@ function fromShippingPage(id, re) {
 
 const introSummary = fromShippingPage('introSummary', /<p [^>]*>(Some adults on SNAP[\s\S]*?)<\/p>/);
 const timeEstimate = fromShippingPage('timeEstimate', /<p [^>]*>(This short screening asks[\s\S]*?)<\/p>/);
-const ageQuestion = fromShippingPage('ageQuestion', /<p id="age-q"[^>]*>([^<]+)<\/p>/);
+const privacyIntro = fromShippingPage('privacyIntro', /<p [^>]*>(<strong>Your information is private[\s\S]*?)<\/p>/);
 const pageH1 = fromShippingPage('h1', /<h1 class="h1">([^<]+)<\/h1>/);
 
 blocks.push(`question: |
@@ -200,14 +195,7 @@ ${indent(introSummary, 2)}
 
 ${indent(timeEstimate, 2)}
 
-  Your information is private. Nothing you type is shared with DTA by this tool.
-fields:
-  - ${y(ageQuestion)}: ageRange
-    datatype: radio
-    choices:
-      - Yes: 'yes'
-      - No: 'no'
-    required: False
+${indent(privacyIntro, 2)}
 continue button field: introduction
 ---`);
 
@@ -241,14 +229,7 @@ continue button field: good_cause_group
 ---`);
 
 /* ---- Result screens ---- */
-blocks.push(`event: age_screen
-question: ${y(C.ageInfoHeading)}
-subquestion: |
-${indent(C.ageInfoBody, 2)}
-buttons:
-  - Exit: exit
----
-event: results_screen
+blocks.push(`event: results_screen
 question: |
   % if outcome == 'exempt':
   ${C.exemptHeading}
@@ -315,8 +296,6 @@ blocks.push(`attachment:
     \${ explanation if defined('explanation') else '' }
 
     Signature: ______________________________  Date: \${ today() }
-
-    (DTA needs your actual signature, not a typed signature.)
 ---
 question: |
   Add your details to the statement

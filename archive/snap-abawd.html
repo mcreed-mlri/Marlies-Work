@@ -472,15 +472,6 @@ function renderIntro(){
       </div>
     </details>
 
-    <fieldset style="border:1px solid #c8d2e0;border-radius:var(--radius);padding:15px 17px;margin:0 0 18px;background:#fff">
-      <legend style="display:block;float:left;width:100%;font-size:15px;font-weight:700;padding:0;margin:0 0 13px;color:var(--ink)">Before you start</legend>
-      <p style="clear:both;font-size:15px;line-height:1.55;color:#3a424e;margin:0 0 12px">Are you between 18 and 64 years old?</p>
-      <div role="radiogroup" aria-label="Are you between 18 and 64 years old?" style="display:flex;flex-direction:column;gap:10px">
-        <label style="display:flex;gap:10px;align-items:center;font-size:15px;cursor:pointer"><input type="radio" name="ageRange" value="yes" ${state.answers.ageRange === 'yes' ? 'checked' : ''} style="width:18px;height:18px;accent-color:var(--accent)"> Yes</label>
-        <label style="display:flex;gap:10px;align-items:center;font-size:15px;cursor:pointer"><input type="radio" name="ageRange" value="no" ${state.answers.ageRange === 'no' ? 'checked' : ''} style="width:18px;height:18px;accent-color:var(--accent)"> No</label>
-      </div>
-    </fieldset>
-
     <label style="display:flex;gap:11px;align-items:flex-start;margin:0 0 22px;font-size:15px;line-height:1.5;color:#3a424e;cursor:pointer">
       <input type="checkbox" id="agree" ${state.agreed ? 'checked' : ''} style="width:20px;height:20px;flex:none;margin-top:1px;accent-color:var(--accent);cursor:pointer">
       <span>I have read and agree to the Terms of Use above.</span>
@@ -541,7 +532,7 @@ function renderQBlock(q){
   </div>`;
 }
 
-function canStart(){ return state.agreed && (state.answers.ageRange === 'yes' || state.answers.ageRange === 'no'); }
+function canStart(){ return state.agreed; }
 
 function renderPage(){
   const lastGroup = !state.gc && state.step === GROUPS.length - 1;
@@ -591,15 +582,7 @@ function renderResults(){
     <p style="font-size:16.5px;line-height:1.6;color:#3a424e;margin:0 0 16px">${esc(C.resultsHeadLead)}</p>`;
 
   let card = '';
-  if(rt === 'ageinfo'){
-    card = `<div style="border-radius:var(--radius);overflow:hidden;border:1px solid #c7d6f0">
-      <div style="background:var(--soft);padding:20px 22px;border-bottom:1px solid #c7d6f0">
-        <h2 class="h-result" style="color:var(--accent-dark)">${esc(C.ageInfoHeading)}</h2>
-      </div>
-      <div style="padding:20px 22px;background:#fff">
-        <p style="font-size:16px;line-height:1.6;color:#3a424e;margin:0">${esc(C.ageInfoBody)}</p>
-      </div></div>`;
-  } else if(rt === 'exempt'){
+  if(rt === 'exempt'){
     const items = rs.map(r => `<li style="display:flex;align-items:flex-start;gap:11px;font-size:16px;line-height:1.5;color:#1b1f27">
       <span aria-hidden="true" style="width:22px;height:22px;border-radius:50%;background:#1f7a4d;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex:none;margin-top:1px">✓</span>
       <span>${esc(r)}</span></li>`).join('');
@@ -715,7 +698,6 @@ function renderResults(){
         <div class="no-print" style="display:flex;justify-content:flex-end;margin:7px 0 0">
           <button type="button" data-action="sig-clear" style="flex:none;font-family:inherit;font-size:13.5px;font-weight:700;color:var(--accent);background:none;border:2px solid var(--accent);border-radius:calc(var(--radius) - 3px);padding:8px 14px;cursor:pointer">Clear</button>
         </div>
-        <p style="font-size:14px;line-height:1.5;color:#5b6470;margin:8px 0 0;text-align:center">(DTA needs your actual signature, not a typed signature)</p>
       </div>
       <div class="no-print" style="display:flex;gap:12px;margin:20px 0 0;flex-wrap:wrap;align-items:center">
         <button type="button" data-action="print" style="${nextBtn}">${esc(C.printFormLabel)}</button>
@@ -743,11 +725,6 @@ function renderResults(){
     nextSteps = `<div style="margin:26px 0 0;padding:22px;background:var(--soft);border-radius:var(--radius)">
       <h3 style="font-size:18px;margin:0 0 10px">${esc(C.otherWaysHeading)}</h3>
       <p style="font-size:15px;line-height:1.6;color:#3a424e;margin:0 0 12px">${stepsLead}</p>
-      ${dtaContacts}
-    </div>`;
-  } else if(rt === 'ageinfo'){
-    nextSteps = `<div style="margin:26px 0 0;padding:22px;background:var(--soft);border-radius:var(--radius)">
-      <h3 style="font-size:18px;margin:0 0 12px">${esc(C.waysToReachDta)}</h3>
       ${dtaContacts}
     </div>`;
   }
@@ -1052,7 +1029,6 @@ document.addEventListener('click', (e) => {
   switch(action){
     case 'start':
       if(!canStart()) return;
-      if(state.answers.ageRange === 'no'){ state.view = 'results'; renderWithMotion(); return; }
       state.view = 'question'; state.step = 0; state.gc = false; state.helpOpen = {}; renderWithMotion(); break;
     case 'back': back(); break;
     case 'next': advance(); break;
@@ -1087,11 +1063,6 @@ document.addEventListener('click', (e) => {
 document.addEventListener('change', (e) => {
   if(e.target && e.target.id === 'agree'){
     state.agreed = e.target.checked;
-    persist();
-    updateStartBtn();
-  }
-  if(e.target && e.target.name === 'ageRange'){
-    state.answers.ageRange = e.target.value;
     persist();
     updateStartBtn();
   }
