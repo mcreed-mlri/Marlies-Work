@@ -36,8 +36,15 @@ const SHIP = path.join(MLH, 'tool', 'snap', 'index.html');
  * PAGES stays a list rather than collapsing to one path, because the loops below
  * read naturally over it and the next screener MLRI adds will slot straight in. */
 const PAGES = [
-  { label: 'masslegalhelp/tool/snap/index.html', dir: path.join(MLH, 'tool', 'snap'), file: 'index.html' }
+  { label: 'masslegalhelp/tool/snap/index.html', dir: path.join(MLH, 'tool', 'snap'), file: 'index.html', guided: false },
+  { label: 'archive/snap-guided/index.html', dir: path.join(__dirname, '..', 'archive', 'snap-guided'), file: 'index.html', guided: true }
 ];
+
+function entriesFor(page, obj) {
+  return Object.fromEntries(Object.entries(obj).filter(([k]) =>
+    k.startsWith('guided:') ? page.guided : !k.startsWith('guided:')
+  ));
+}
 
 /* Result screens to drive, as answer sets. Keyed so a failure names the screen. */
 const SCREENS = {
@@ -60,12 +67,9 @@ const SCREENS = {
   'housing follow-up question':
     'state.answers={housing:"no"}; state.view="question"; state.step=1; render();',
 
-  /* ---- Guided mode -------------------------------------------------------
-   * ?v=guided replaces the write-in boxes with pick-lists and composes the
-   * letter. MODE is set directly rather than through location.search because
-   * the page reads the flag once at init, which has already run by the time a
-   * driver executes. The screens below are the ones that only exist in guided
-   * mode, so nothing above covers them. */
+  /* Guided mode (archive/snap-guided/index.html only). MODE is set directly rather
+   * than through location.search because init has already run by the time a
+   * driver executes. */
   'guided: details step for a health exemption':
     'MODE="guided"; state.answers={health:"yes"}; state.view="question"; state.details=true; render();',
   'guided: details step for every exemption at once':
@@ -113,7 +117,7 @@ const ACTIONS = {
   'clear the signature':
     'state.answers={child14:"yes"}; state.view="results"; render(); clearSignature();',
 
-  /* ---- Guided mode -------------------------------------------------------
+  /* ---- Guided mode (archive/snap-guided/index.html only) ---------------
    * The routing is the risk here, not the rendering. The details step is a
    * boolean beside state.gc rather than a fifth entry in GROUPS, so advance()
    * and back() have a branch each that nothing else exercises, and an
@@ -468,7 +472,7 @@ describe('screener pages render without throwing', () => {
       new vm.Script(src, { filename: page.label });
     });
 
-    for (const [screen, driver] of Object.entries(SCREENS)) {
+    for (const [screen, driver] of Object.entries(entriesFor(page, SCREENS))) {
       it(page.label + ' renders ' + screen, () => {
         const { ctx, stage } = buildContext();
         vm.createContext(ctx);
@@ -485,7 +489,7 @@ describe('screener pages render without throwing', () => {
 
     /* Button paths. These assert "did not throw" rather than checking output,
      * since print and download write elsewhere or hand off to the browser. */
-    for (const [action, driver] of Object.entries(ACTIONS)) {
+    for (const [action, driver] of Object.entries(entriesFor(page, ACTIONS))) {
       it(page.label + ' survives ' + action, () => {
         const { ctx } = buildContext();
         vm.createContext(ctx);

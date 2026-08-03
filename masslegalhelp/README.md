@@ -67,20 +67,6 @@ allowlist rather than an exclusion of production, so a preview moving to a new h
 samples, which is visible and harmless, instead of a production move silently switching a
 demo on.
 
-`?v=guided` swaps the ending of the statement form and is gated by the same `samplesAllowed()`
-allowlist, so it is also inert on masslegalhelp.org. Write-in, the version without the flag,
-hands someone a blank box per exemption and asks them to explain it in their own words. Guided
-asks two or three multiple-choice questions on a step before the results and composes the
-statement from the answers; the person still types their name and signs. Both are on the same
-page because there is one build, and the team is choosing between two endings rather than two
-tools. Whichever they pick becomes the only path and the flag comes out. Until then the public
-would get write-in, which is what this build does with no query string.
-
-Nothing a guided question answers touches the decision. The exemption rules, the reasons, and
-the result are computed from the screening answers alone, which is why `decision-spec.json`
-and the Docassemble interview are unchanged by any of it. `scripts/publish-mlh.js` refuses to
-publish if `applyModeFromURL` stops checking the host gate as its first act.
-
 Answers live in `sessionStorage`, not `localStorage`: they survive a refresh and are erased
 when the tab closes. The questions cover pregnancy, disability, substance use treatment and
 domestic violence, and the working assumption is a shared or monitored phone, so a day of
@@ -123,13 +109,9 @@ checked. If a second live build ever appears, restore the drift guard before the
 - **Author copy edits.** Several are applied; several are waiting on the author. See
   `SCREENER-COPY.md` in the MLRI source repository, which lists every string and the open
   questions against it.
-- **Which ending ships.** `?v=guided` is a second version of the statement form, waiting on
-  the team and on DTA. It needs two answers before launch: whether DTA will accept a statement
-  composed by the tool rather than written by the claimant, and, if so, whether a composed
-  statement is still the claimant's statement in the sense the signature implies. That second
-  one is a question for MLRI's lawyers, not a design decision. The guided section of
-  `SCREENER-COPY.md` prints every sentence the tool would write, which is what to review.
-  Until it is settled, launching means shipping write-in and deleting the flag.
+- **Guided ending.** Archived at `archive/snap-guided/` for records. The shipping build is
+  write-in only. Section 10 of `SCREENER-COPY.md` still lists every composed sentence if
+  the idea returns.
 - **Thresholds.** Last verified November 2025. MLRI's own ABAWD article on MassLegalHelp
   was reviewed February 2026 and is therefore newer than this tool, so the income and hour
   figures still need an SME. The age wording was settled on 2026-07-30 and now reads "18 or

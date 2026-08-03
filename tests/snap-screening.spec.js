@@ -36,7 +36,7 @@ async function startScreener(page) {
 }
 
 async function clickNext(page) {
-  await page.getByRole('button', { name: /Next|See my/ }).click();
+  await page.getByRole('button', { name: /Next|See my|few more details/i }).click();
 }
 
 test.describe('SNAP ABAWD screening (the shipping build)', () => {
@@ -154,18 +154,15 @@ test.describe('SNAP ABAWD screening (the shipping build)', () => {
   });
 });
 
-/* ---- The guided version, at ?v=guided ---------------------------------------
+/* ---- The guided version (archived at archive/snap-guided/) ---------------
  *
  * Same screening, different ending: instead of blank boxes on the results
  * screen, a step of pick-lists before it, and a statement composed from the
- * answers. Both versions are in front of the team while they decide which one
- * DTA would accept, so this suite drives the ending the one above does not.
+ * answers. Kept for records; not linked from the shipping screener.
  *
- * The flag is gated to review hosts by samplesAllowed(); the Playwright server
- * runs on 127.0.0.1, which is on that allowlist. If these fail with the write-in
- * form on screen, the gate is the first thing to check. */
+ * The Playwright server runs on 127.0.0.1. */
 test.describe('SNAP ABAWD screening (the guided ending)', () => {
-  const guidedUrl = `${screenerUrl}?v=guided`;
+  const guidedUrl = '/archive/snap-guided/';
   const yn = (page, qId, val) => page.locator(`[data-q-id="${qId}"][data-opt-val="${val}"]`);
   const choice = (page, qId, idx) => page.locator(`[data-q-id="${qId}"][data-opt-idx="${idx}"]`);
   const noneOf = (page, qId) => page.locator(`[data-q-id="${qId}"][data-opt-kind$="-none"]`);

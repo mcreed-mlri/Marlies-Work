@@ -70,17 +70,17 @@ w('```');
 w('python -m http.server 4173 --bind 127.0.0.1');
 w('```');
 blank();
-w('Then the two versions, which differ only in how the letter gets written:');
+w('Then open the screener and, if you need the archived guided build, its copy:');
 blank();
-w('| Version | URL |');
+w('| Build | URL |');
 w('| --- | --- |');
-w('| A, write-in (shipping today) | `http://127.0.0.1:4173/masslegalhelp/tool/snap/` |');
-w('| B, guided (under review) | `http://127.0.0.1:4173/masslegalhelp/tool/snap/?v=guided` |');
+w('| Write-in (shipping) | `http://127.0.0.1:4173/masslegalhelp/tool/snap/` |');
+w('| Guided (archived) | `http://127.0.0.1:4173/archive/snap-guided/` |');
 w('| The tools landing page | `http://127.0.0.1:4173/masslegalhelp/tool/` |');
 w('| The explainer | `http://127.0.0.1:4173/screener/how-it-works.html` |');
 blank();
-w('`?v=guided` and `?sample=` only work on a review host (localhost, 127.0.0.1, a `.pages.dev`');
-w('preview, or a `file://` URL). Both are inert on masslegalhelp.org, which is deliberate and is');
+w('`?sample=` only works on a review host (localhost, 127.0.0.1, a `.pages.dev`');
+w('preview, or a `file://` URL). It is inert on masslegalhelp.org, which is deliberate and is');
 w('itself something to test.');
 blank();
 check('Have a real phone to hand, not just a narrow browser window. The signature pad, the print dialog, and the mail app all behave differently on a real device.');
@@ -192,14 +192,15 @@ check('Picking "' + strip(A.GOODCAUSE.noneLabel) + '" on the good-cause question
 check('Every question is optional: clicking a selected answer a second time clears it, and the result changes back.');
 check('"Skip to results" from any point gives the same result as answering nothing further.');
 
-h2('4. The guided version');
+h2('4. The guided version (archived)');
 
-w('Everything above applies to both versions, because the decision is identical: the guided');
-w('questions add detail to the letter and change nothing about who is exempt. **That is itself');
-w('worth testing.**');
+w('The shipping screener is write-in only. The guided ending lives at');
+w('`archive/snap-guided/` for records. Everything in sections 1–3 applies to both builds,');
+w('because the decision is identical: the guided questions add detail to the letter and');
+w('change nothing about who is exempt. **That is itself worth testing on the archive copy.**');
 blank();
 check('Run the same answers through both URLs. The result screen, the reasons listed, and the outcome must be identical.');
-check('Answer every guided question, then go back and change your screening answers. The result must still match what Version A gives for those answers.');
+check('Answer every guided question, then go back and change your screening answers. The result must still match what the write-in build gives for those answers.');
 blank();
 
 w('The guided version asks ' + (function () {
@@ -407,14 +408,12 @@ check('Airplane mode partway through: does the tool keep working, given it needs
 check('A tablet in both orientations.');
 check('The browser Back button mid-screening. It should not lose answers or land on a broken screen.');
 
-h2('9. The two versions side by side');
+h2('9. Review-only modes and the archived guided build');
 
-check('The tools landing page shows both cards on a review host.');
-check('It shows only the write-in card on a production host.');
-check('`?v=guided` on a masslegalhelp.org address does nothing, and the write-in version loads.');
+check('The tools landing page shows one SNAP card only.');
 check('`?sample=exempt`, `?sample=goodcause`, and `?sample=notexempt` each open the right result on a review host.');
 check('Sample mode shows the "Sample result" banner and does not overwrite a real session.');
-check('The strip naming which version you are on links correctly to the other one.');
+check('The archived guided build at `archive/snap-guided/` still loads and names itself as archived.');
 
 h2('10. Things only a person can judge');
 
@@ -423,7 +422,7 @@ blank();
 check('**Is the wording right?** Read `SCREENER-WALKTHROUGH.md`, which lays out every word in the order someone meets it. The author has final say on copy.');
 check('**Are the thresholds current?** $' + S.WORK_INCOME_THRESHOLD + ' a week and $' + S.MA_MIN_WAGE + ' an hour were last verified in November 2025. MLRI\'s own ABAWD article was reviewed in February 2026, so the article is newer than the tool.');
 check('**Is the exemption list complete?** Someone who knows DTA policy should confirm nothing is missing. A missing exemption is a person who stays cut off.');
-check('**Would DTA accept the composed letter?** The whole reason the guided version is under review. Show them one.');
+check('**Would DTA accept the composed letter?** The guided version is archived, but the composed sentences in `SCREENER-COPY.md` section 10 are still worth a legal read if the idea returns.');
 check('**Is a composed statement still the claimant\'s statement?** A question for lawyers, not designers. It sits above their signature.');
 check('**Does it read as though it respects the person?** Someone in this situation has usually been told no several times already.');
 check('**The legal footer.** The disclaimer came out on 2026-07-30 and has not been replaced, so nothing currently says this is not legal advice, sends nothing to DTA, and does not change a SNAP case. All three are true and worth saying.');

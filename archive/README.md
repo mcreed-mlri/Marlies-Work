@@ -13,6 +13,7 @@ should be linked to as though it were current. The live screening is
 | `snap-screening-v2.html` | An accessible redesign: plain language, picture cues, big Yes/No tiles. |
 | `snap-abawd-classic-v2.html` | The classic design carrying the author's current wording. Archived later the same day, when `court-forms/` was retired entirely. |
 | `court-forms-index.html` | The `court-forms/` project page. Renamed on the way in so it does not collide with an `index.html` here. |
+| `snap-guided/index.html` | The guided ending (pick-lists compose the statement). Archived 2026-08-03 when the team dropped it as an option; uses the live logic module, not a frozen copy. See `snap-guided/README.md`. |
 
 ## Why they stopped
 

@@ -179,8 +179,6 @@
       </div>
       <a class="btn-primary" href="snap/">Start screener</a>
     </article>
-    <!-- A second card for the guided version is appended here on review hosts
-         only. See the script at the foot of this file. -->
   </section>
 </main>
 
@@ -217,29 +215,6 @@
         home.style.display = 'inline-flex';
       }
 
-      /* The guided version of the SNAP screener, for the team to compare against
-         the one above. Same questions and the same result; the difference is the
-         last screen, where the tool writes the statement to DTA from pick-list
-         answers instead of handing over blank boxes.
-
-         Built here rather than sitting in the markup because it is one page with
-         a mode flag, not a second build, and the public should see one card. If
-         the team picks guided, the flag becomes the default and this card and its
-         script go away rather than being promoted. */
-      var grid = document.querySelector('.tools-grid');
-      var first = grid && grid.querySelector('.tool-card');
-      if(grid && first){
-        var card = first.cloneNode(true);
-        card.querySelector('h2').textContent = 'SNAP work rules screening (guided letter)';
-        card.querySelector('h2 ~ p').textContent =
-          'The same screening, with a different ending. Instead of blank boxes to write '
-          + 'your statement to DTA, it asks a few more multiple-choice questions and writes '
-          + 'the statement for you. Under review: not the version the public gets.';
-        var start = card.querySelector('.btn-primary');
-        start.setAttribute('href', 'snap/?v=guided'); // review-only
-        start.textContent = 'Start guided screener';
-        grid.appendChild(card);
-      }
     }
 
     var btn = document.querySelector('[data-action="quick-exit"]');

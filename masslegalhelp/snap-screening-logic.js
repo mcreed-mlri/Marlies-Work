@@ -1101,6 +1101,10 @@
     formLeadExempt: 'To tell DTA you are exempt, you can fill in the blanks below with your results and send it to DTA.',
     formLeadGoodCause: 'To tell DTA why you missed work hours, you can fill in the blanks below with your results and send it to DTA.',
     formExplainHeading: 'In a few sentences:',
+    btnNext: 'Next →',
+    btnSeeResults: 'See my results →',
+    btnGuidedDetailsNext: 'A few more details →',
+    btnSeeLetter: 'See my letter →',
     /* ---- Guided mode ----
      * Every string below belongs to the version that composes the statement
      * from pick-lists instead of asking for it in a blank box. The write-in

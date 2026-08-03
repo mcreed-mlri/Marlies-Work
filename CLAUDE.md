@@ -125,42 +125,21 @@ are unnecessary now that there is nothing to drift against.
 
 If a second build ever appears, bring the drift guard back before the second copy does.
 
-## Two endings, one page
+## Guided ending (archived)
 
-The statement form has two versions in front of the team, chosen by `?v=guided` on the same
-page. Write-in is what ships today: one blank box per exemption, and the person writes the
-letter body. Guided asks two or three pick-lists per exemption on a step before the results
-and composes the body from the answers; name and signature still have to be given. The open
-question is whether DTA accepts a statement in the tool's words, so neither is the default
-yet.
+The shipping screener is write-in only: one blank box per exemption, and the person writes
+the letter body. The guided ending, where pick-lists compose the statement, is archived at
+`archive/snap-guided/index.html` for records. It is not linked from the shipping or review
+landing pages.
 
-It is a mode flag rather than a second directory on purpose. `copy-doc.js` and
-`gen-docassemble.js` both scrape the one shipping page by exact path and exit on a miss,
-`publish-mlh.js` keys three guards to a single `SHIP_HTML`, and `check-pages.js` would skip a
-new directory silently. A fork would need all of those changed plus the drift guard restored,
-to compare two endings that differ on one screen.
+The logic module still carries `guidedQuestions`, `composeStatement`, and the composed copy in
+`RESULT_COPY`, because the copy documents and unit tests read them. Nothing a guided question
+answers may reach the decision; `decision-spec.json` is generated from the logic module and
+the Python parity suite reads it.
 
-The flag is gated to review hosts by the same `samplesAllowed()` allowlist `?sample=` uses,
-and `publish-mlh.js` refuses to publish if `applyModeFromURL` stops bailing out on it first.
-When the team picks, the winner becomes the only path and the flag comes out; do not promote
-it to a permanent setting.
-
-Two rules hold the guided side together:
-
-Nothing a guided question answers may reach the decision. `decision-spec.json` is generated
-from the logic module and the Python parity suite reads it, so a guided answer that changed
-`exemptReasonsFor` would move the two implementations apart without either noticing the
-cause. Regenerate the spec after any change here; an empty diff is the proof.
-
-The details step must not become a fifth entry in `GROUPS`. `gen-docassemble.js` indexes a
-fixed four-element `GROUP_VARS` by position in that array and exits on a fifth. It is a
-`state.details` boolean beside `state.gc`, which is a step outside the groups for the same
-reason.
-
-Every composed sentence is printed in full in `SCREENER-COPY.md`. They go above someone's
-signature on a letter to a state agency, so they are the author's to approve, not ours to
-tune. Month names are resolved at compose time against a passed-in date and never appear in
-an option label, or the copy doc would change every month and fail CI on the first.
+Every composed sentence is printed in full in `SCREENER-COPY.md` section 10. Month names are
+resolved at compose time against a passed-in date and never appear in an option label, or the
+copy doc would change every month and fail CI on the first.
 
 ## MassLegalHelp look
 

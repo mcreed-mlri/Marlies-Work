@@ -838,7 +838,8 @@ describe('snap-screening-logic', () => {
     it('carries guided copy for every string the guided screens render', () => {
       for (const k of ['detailsStepHeading', 'detailsStepLead', 'detailsStepPrivacy',
         'composedStatementHeading', 'composedFormLeadExempt', 'composedFormLeadGoodCause',
-        'composedChangeLabel', 'composedWhyInfoExempt', 'composedWhyInfoGoodCause']) {
+        'composedChangeLabel', 'composedWhyInfoExempt', 'composedWhyInfoGoodCause',
+        'btnGuidedDetailsNext', 'btnSeeLetter']) {
         assert.ok(RESULT_COPY[k] && RESULT_COPY[k].trim(), k + ' is missing or empty');
       }
       // The write-in lead says "fill in the blanks below", which is wrong when

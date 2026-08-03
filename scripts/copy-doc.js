@@ -57,9 +57,7 @@ const INLINE = [
   { id: 'page.startButton', re: />(Fill out the form[^<]*)<\/button>/ },
   { id: 'page.answerAny', re: /<p [^>]*>(Answer any that apply to you\. Every question is optional\.)<\/p>/ },
   { id: 'page.sigAlt', re: /<p id="sig-alt"[^>]*>([^<]+)<\/p>/ },
-  // Buttons and navigation
-  { id: 'btn.next', re: /nextLabel = [^?]+\? '[^']+' : '([^']+)'/ },
-  { id: 'btn.seeResults', re: /nextLabel = [^?]+\? '([^']+)'/ },
+  // Buttons and navigation (skip/startOver/delete still inline in the page)
   { id: 'btn.skipToResults', re: />(Skip to results)</ },
   { id: 'btn.startOver', re: />([^<]{0,4}Start over)</ },
   { id: 'btn.deleteAnswers', re: />(Delete my answers)</ },
@@ -304,7 +302,13 @@ section('Moving through the questions');
 
 w('Short strings, but people read them at the moment they decide what to do next.');
 blank();
-['btn.next', 'btn.seeResults', 'btn.skipToResults', 'btn.startOver', 'btn.deleteAnswers']
+[
+  ['btn.next', 'btnNext'],
+  ['btn.seeResults', 'btnSeeResults'],
+  ['btn.guidedDetailsNext', 'btnGuidedDetailsNext'],
+  ['btn.seeLetter', 'btnSeeLetter']
+].forEach(([id, k]) => item(id, C[k]));
+['btn.skipToResults', 'btn.startOver', 'btn.deleteAnswers']
   .forEach(id => item(id, inline[id]));
 w('And one warning on the results, if someone left questions blank:');
 blank();
@@ -395,17 +399,17 @@ blank();
  * docassemble-snap-abawd/tests/test_good_cause_text.py gives for checking the
  * good-cause wording exactly: a paraphrase is a defect. */
 
-section('The guided version of the statement');
+section('The guided version of the statement (archived)');
 
-w('**This is a second version of the ending above, for you to compare.** Same questions,');
+w('**Archived.** The shipping screener is write-in only. This section documents the');
+w('guided ending kept for records at `archive/snap-guided/index.html`. Same questions,');
 w('same result, but instead of blank boxes the tool asks two or three multiple-choice');
 w('questions about whichever exemption applied and writes the statement from the answers.');
 w('The person still types their name and signs.');
 blank();
-w('It is reachable at `?v=guided` on the review site only. Neither version is the default');
-w('yet. **Every sentence in this section is wording the tool would put above someone\'s');
-w('signature on a letter to DTA, so it needs your eye more than anything else in this');
-w('document.**');
+w('It is not linked from the shipping or review landing pages. **Every sentence in this');
+w('section is wording the tool would put above someone\'s signature on a letter to DTA,');
+w('so it needs your eye more than anything else in this document.**');
 blank();
 
 sub('The screen that asks for the details');

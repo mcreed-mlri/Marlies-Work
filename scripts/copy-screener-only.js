@@ -41,8 +41,6 @@ const INLINE = [
   { id: 'page.learnMoreIntro', re: />(Learn more about the SNAP ABAWD work rules)</ },
   { id: 'page.skippedWarning', re: />(If you skipped questions[^<]+)</ },
   { id: 'page.sigAlt', re: /<p id="sig-alt"[^>]*>([^<]+)<\/p>/ },
-  { id: 'btn.next', re: /nextLabel = [^?]+\? '[^']+' : '([^']+)'/ },
-  { id: 'btn.seeResults', re: /nextLabel = [^?]+\? '([^']+)'/ },
   { id: 'btn.skipToResults', re: />(Skip to results)</ },
   { id: 'btn.startOver', re: />([^<]{0,4}Start over)</ },
   { id: 'btn.deleteAnswers', re: />(Delete my answers)</ },
@@ -470,10 +468,8 @@ emitQuestion(A.GOODCAUSE);
 
 h2('Moving through the questions');
 
-[
-  'btn.next', 'btn.seeResults', 'btn.skipToResults', 'btn.startOver', 'btn.deleteAnswers',
-  'page.skippedWarning'
-].forEach(id => emitCopy(id));
+['btnNext', 'btnSeeResults', 'btnGuidedDetailsNext', 'btnSeeLetter'].forEach(k => emitCopy(k));
+['btn.skipToResults', 'btn.startOver', 'btn.deleteAnswers', 'page.skippedWarning'].forEach(id => emitCopy(id));
 
 emitExemptResultScreen(false);
 emitGoodCauseResultScreen(false);

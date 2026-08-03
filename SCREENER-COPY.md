@@ -280,6 +280,14 @@ Short strings, but people read them at the moment they decide what to do next.
 
 > See my results →
 
+**`btn.guidedDetailsNext`**
+
+> A few more details →
+
+**`btn.seeLetter`**
+
+> See my letter →
+
 **`btn.skipToResults`**
 
 > Skip to results
@@ -550,17 +558,17 @@ An explainer opens next to the signature box:
 
 > Telling DTA about why you missed hours can help them update your SNAP case more quickly.
 
-## 10. The guided version of the statement
+## 10. The guided version of the statement (archived)
 
-**This is a second version of the ending above, for you to compare.** Same questions,
+**Archived.** The shipping screener is write-in only. This section documents the
+guided ending kept for records at `archive/snap-guided/index.html`. Same questions,
 same result, but instead of blank boxes the tool asks two or three multiple-choice
 questions about whichever exemption applied and writes the statement from the answers.
 The person still types their name and signs.
 
-It is reachable at `?v=guided` on the review site only. Neither version is the default
-yet. **Every sentence in this section is wording the tool would put above someone's
-signature on a letter to DTA, so it needs your eye more than anything else in this
-document.**
+It is not linked from the shipping or review landing pages. **Every sentence in this
+section is wording the tool would put above someone's signature on a letter to DTA,
+so it needs your eye more than anything else in this document.**
 
 ### The screen that asks for the details
 
@@ -966,7 +974,28 @@ benefits page is worse than no link. This version also has no Terms of Use check
 all, which earlier versions did. And with the disclaimer gone the tool no longer says
 anywhere that it is not legal advice.
 
-## 15. Every link the screener sends people to
+## 15. Everything else
+
+These are shown to people too, but did not fit the sections above. Listed so the
+document stays complete.
+
+**`btnNext`**
+
+> Next →
+
+**`btnSeeResults`**
+
+> See my results →
+
+**`btnGuidedDetailsNext`**
+
+> A few more details →
+
+**`btnSeeLetter`**
+
+> See my letter →
+
+## 16. Every link the screener sends people to
 
 | Name | Where it goes |
 |---|---|
