@@ -980,19 +980,87 @@
     return answers.working === 'hours_30';
   }
 
-  function exemptReasonsFor(answers, questions) {
+  /* ---- Every reason the screening can reach, keyed by a stable id ----
+   *
+   * This exists for the email endpoint. The browser cannot be trusted to supply
+   * the words that go in an email sent from our own domain: an endpoint that
+   * accepts arbitrary text addressed to an arbitrary recipient is a spam relay
+   * that authenticates as MassLegalHelp, and a listing against the sending
+   * subdomain would be earned honestly. So the client posts ids and the server
+   * resolves them here, which means the body can only ever contain wording that
+   * is already in this file and already in SCREENER-COPY.md.
+   *
+   * Twelve of these ids are question ids, which is not a coincidence worth
+   * relying on, so they are written out rather than derived from QUESTIONS. The
+   * remaining five name reasons assembled from answers rather than a single
+   * question. */
+  const REASON_TEXT_BY_ID = {
+    child14: REASONS.child14,
+    health: REASONS.health,
+    child6: REASONS.child6,
+    caretaker: REASONS.caretaker,
+    pregnant: REASONS.pregnant,
+    dv: REASONS.dv,
+    tribe: REASONS.tribe,
+    tafdc: REASONS.tafdc,
+    disability: REASONS.disability,
+    substanceUse: REASONS.substanceUse,
+    unemployment: REASONS.unemployment,
+    stateagency: REASONS.stateagency,
+    school: REASONS.school,
+    disabilityOther: DISABILITY_OTHER_REASON,
+    housing: HOUSING_EXEMPT_REASON,
+    workIncome: WORK_REASON_INCOME,
+    workHours30: WORK_REASON_HOURS_30
+  };
+
+  /**
+   * The exempt reasons that apply, as `{ id, text }`.
+   *
+   * `exemptReasonsFor` is the text-only view of this, built from the same
+   * traversal rather than a second one, so an id and its wording cannot drift
+   * apart. Anything that adds a reason has to add it here and gets both.
+   */
+  function exemptReasonEntriesFor(answers, questions) {
     const qs = questions || buildQuestions('classic');
     const r = [];
+    const add = (id) => { r.push({ id, text: REASON_TEXT_BY_ID[id] }); };
     for (const q of qs) {
       if (q.id === 'housing' || q.id === 'housingFollowup' || q.id === 'working' || q.id === 'disability') continue;
       const v = answers[q.id];
-      if (q.exemptOn && v === q.exemptOn) r.push(q.reason);
+      if (q.exemptOn && v === q.exemptOn) r.push({ id: q.id, text: q.reason });
     }
-    disabilityReasons(answers).forEach(reason => r.push(reason));
-    if (housingUnableExempt(answers)) r.push(HOUSING_EXEMPT_REASON);
-    if (isIncomeWorkExempt(answers)) r.push(WORK_REASON_INCOME);
-    if (isHours30WorkExempt(answers)) r.push(WORK_REASON_HOURS_30);
+    const dis = disabilityReasons(answers);
+    if (dis.indexOf(REASONS.disability) !== -1) add('disability');
+    if (dis.indexOf(DISABILITY_OTHER_REASON) !== -1) add('disabilityOther');
+    if (housingUnableExempt(answers)) add('housing');
+    if (isIncomeWorkExempt(answers)) add('workIncome');
+    if (isHours30WorkExempt(answers)) add('workHours30');
     return r;
+  }
+
+  function exemptReasonsFor(answers, questions) {
+    return exemptReasonEntriesFor(answers, questions).map(e => e.text);
+  }
+
+  /**
+   * Reason ids to their wording, dropping anything unrecognised.
+   *
+   * The email endpoint's only input filter. Silently dropping rather than
+   * throwing is deliberate: a stale client that posts a retired id should still
+   * get an email listing the reasons that are still real, not a failure.
+   */
+  function resolveReasonIds(ids) {
+    if (!Array.isArray(ids)) return [];
+    const seen = {};
+    const out = [];
+    for (const id of ids) {
+      const text = REASON_TEXT_BY_ID[id];
+      if (!text || seen[id]) continue;
+      seen[id] = true;
+      out.push(text);
+    }
+    return out;
   }
 
   function resultTypeFor(answers, questions) {
@@ -1138,14 +1206,35 @@
     savingTipsTitle: 'Tips for printing or saving',
     savingTipsBody: 'Print or save this form opens your browser’s print menu. Pick your printer, or choose "Save as PDF" to keep a copy on your device. If the menu is slow to open, use Download as Word instead.',
     emailSelfLabel: 'Email myself a copy',
-    emailSelfSubject: 'My SNAP ABAWD screening results',
+    /* The subject names SNAP, which is a disclosure to anyone who can see the
+     * inbox list. It is kept because a subject vague enough to hide the topic
+     * ("The information you asked for") reads as spam and gets deleted unread.
+     * The body is where the choice was made to hold back: see
+     * buildResultsEmailContent. */
+    emailSelfSubject: 'Your SNAP work rules screening',
     emailModalTitle: 'Email yourself a copy',
-    emailModalLead: 'Enter your email address. When sending is enabled, we will email you a text summary of your results.',
-    emailModalUnavailable: 'Sending from this page is not set up yet. For now, use Print or save this form, or open the summary in your email app.',
+    /* This lead is a consent notice, so it is longer than house style would
+     * normally allow. It has to say three things before someone types an
+     * address: what arrives, what does not, and that the email outlives the
+     * tab when nothing else in this tool does. */
+    emailModalLead: 'We will email your result and the reasons that applied. What you wrote in your own words is not included. The email stays in your inbox until you delete it, so if someone else can read your email, use Print or save this form instead.',
     emailModalLabel: 'Your email address',
     emailModalSendLabel: 'Send email',
+    emailModalSendingLabel: 'Sending…',
+    emailSentHeading: 'Email sent.',
+    emailSentBody: 'Check your inbox. If it is not there in a few minutes, look in your spam folder.',
+    emailErrorBody: 'We could not send the email just now. Use Print or save this form, or open the summary in your email app.',
+    emailInvalidAddressBody: 'That does not look like an email address. Check it and try again.',
     emailModalMailAppLabel: 'Open in my email app instead',
     emailModalCloseLabel: 'Close',
+    /* Body strings for the emailed summary. Separate keys rather than inline
+     * text so they appear in SCREENER-COPY.md and the author can edit them
+     * without reading the builder. */
+    emailBodyResultExempt: 'You may be exempt from the SNAP work rules (ABAWD rules).',
+    emailBodyResultGoodCause: 'You may have good cause for not meeting the SNAP work rules (ABAWD rules).',
+    emailBodyResultNotExempt: 'This screening did not find a reason you would be exempt from the SNAP work rules (ABAWD rules).',
+    emailBodyReasonsHeading: 'Reasons that applied:',
+    emailBodyNextSteps: 'To finish, open the screening again to print and sign your letter to DTA. This email is not the letter.',
     emailFallbackHeading: 'If your email app did not open',
     emailFallbackBody: 'Some computers have no email app set up. Copy the summary below and paste it into your email instead. This is a text summary, not the signed letter. Use "Print or save this form" for the copy you send to DTA.',
     emailCopyLabel: 'Copy the text',
@@ -1396,62 +1485,64 @@
     </div>`;
   }
 
-  /** Plain-text summary for "email these results to myself" (mailto). */
+  /**
+   * Plain-text summary for "email yourself a copy".
+   *
+   * Carries the result and the reasons that applied, and stops there. What it
+   * deliberately leaves out is what the person wrote in their own words, their
+   * name, and their Client/Agency ID. Until 2026-08-04 it included all three.
+   *
+   * The reason is that the email is the only artefact this tool produces that
+   * outlives the tab and cannot be taken back. Everything else is built to
+   * assume a shared or monitored device: answers live in sessionStorage, Quick
+   * exit leaves no history entry, and the questions cover pregnancy,
+   * disability, substance use treatment and domestic violence. A paragraph in
+   * someone's own words about a domestic violence incident, sitting in an inbox
+   * they may not control, is a worse outcome than a slightly less useful email.
+   * Nothing is lost that matters: the free text, the name, and the ID all
+   * appear in Print or save this form, which is the copy DTA actually needs
+   * and which never leaves the device.
+   *
+   * The reasons themselves are still sensitive, and a bare "You are a survivor
+   * of domestic violence" is close to as exposing as the paragraph. Making the
+   * reasons non-specific was raised and is an author decision, not settled
+   * here.
+   *
+   * `toolUrl` is passed in rather than derived, so this module holds no path of
+   * its own and the link stays right at any deploy subpath.
+   */
   function buildResultsEmailContent(opts) {
     const {
       rt = 'exempt',
       rs = [],
       gcText = '',
-      name = '',
-      agency = '',
-      explain = '',
-      composed = false,
+      toolUrl = '',
       copy = RESULT_COPY
     } = opts || {};
     const lines = [];
-    lines.push(copy.emailSelfSubject);
-    lines.push('');
     if (rt === 'exempt') {
-      lines.push('Result: ' + copy.exemptHeading);
+      lines.push(copy.emailBodyResultExempt);
       if (rs.length) {
         lines.push('');
-        lines.push('Reason(s):');
+        lines.push(copy.emailBodyReasonsHeading);
         rs.forEach(r => { lines.push('- ' + r); });
       }
     } else if (rt === 'goodcause') {
-      lines.push('Result: ' + copy.goodCauseHeading);
+      lines.push(copy.emailBodyResultGoodCause);
       if (gcText) {
         lines.push('');
-        lines.push(gcText);
+        lines.push(copy.emailBodyReasonsHeading);
+        lines.push('- ' + gcText);
       }
+    } else {
+      lines.push(copy.emailBodyResultNotExempt);
     }
-    const explainEntries = Array.isArray(explain)
-      ? explain.filter(e => e && (e.prompt || e.text))
-      : [{ prompt: '', text: explain }];
-    const hasExplain = explainEntries.some(e => String(e.text || '').trim());
-    if (hasExplain) {
+    lines.push('');
+    lines.push(copy.emailBodyNextSteps);
+    if (toolUrl) {
       lines.push('');
-      /* "In a few sentences:" introduces blanks someone is about to fill in.
-       * Guided mode has already written the sentences, so the heading changes
-       * and the per-blank labels come out: the summary reads as the statement
-       * it is rather than as a half-filled form. */
-      lines.push(composed ? copy.composedStatementHeading : copy.formExplainHeading);
-      explainEntries.forEach(e => {
-        const text = String(e.text == null ? '' : e.text).trim();
-        if (!text) return;
-        if (e.prompt && !composed) lines.push(e.prompt);
-        lines.push(text);
-        lines.push('');
-      });
+      lines.push(toolUrl);
     }
-    if (name || agency) {
-      lines.push('Contact information:');
-      if (name) lines.push('Name: ' + name);
-      if (agency) lines.push('Client / Agency ID: ' + agency);
-      lines.push('');
-    }
-    lines.push('---');
-    lines.push('To send a signed letter to DTA, use "' + copy.printFormLabel + '" in the screening tool and attach the PDF when you email or upload to DTA.');
     return {
       subject: copy.emailSelfSubject,
       body: lines.join('\n').trim()
@@ -1584,6 +1675,9 @@
     isIncomeWorkExempt,
     isHours30WorkExempt,
     exemptReasonsFor,
+    exemptReasonEntriesFor,
+    REASON_TEXT_BY_ID,
+    resolveReasonIds,
     resultTypeFor,
     shouldSkipGoodCause,
     buildQuestions,

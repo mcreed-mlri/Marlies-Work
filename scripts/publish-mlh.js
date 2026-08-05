@@ -130,7 +130,21 @@ for (const f of textFiles) {
    * One documented exception, marked `review-only` on the same line. It exists
    * because a link that renders only on a review host cannot 404 in production,
    * which is the failure this guard is for. The marker has to be visible in the
-   * source, and the gate that makes it true is asserted separately below. */
+   * source, and the gate that makes it true is asserted separately below.
+   *
+   * The test applied is the one the attribute scan above already uses: resolve
+   * the path, and refuse it only if it lands outside the folder. Until the email
+   * endpoint arrived this scan refused every ../ outright, which is stricter than
+   * the failure it exists for. fetch('../../api/email') from tool/snap/ resolves
+   * to <root>/api/email, correct at any deploy subpath; the rooted '/api/email'
+   * is the one that breaks, and line 116 catches that. Resolving rather than
+   * banning also avoids the workaround this comment warns against, since a
+   * computed endpoint URL would pass a literal-only scan and read as evasion.
+   *
+   * Unlike the html/css pass below, an inside-folder path found here is not
+   * checked against disk. It cannot be: a Pages Function route answers at
+   * <root>/api/email with no file of that name. So this guard is narrower than
+   * the attribute one by necessity, and a typo'd fetch path is on review. */
   for (const line of src.split('\n')) {
     if (!/['"`]\.\.\//.test(line)) continue;
     if (/(?:src|href)=["']\.\.\//.test(line)) continue;
@@ -138,9 +152,14 @@ for (const f of textFiles) {
       reviewOnlyPaths.push(f.rel);
       continue;
     }
-    problems.push(f.rel + ' holds a parent path in a string: ' + line.trim().slice(0, 70)
-      + '. It would 404 at the deploy root. Gate it on samplesAllowed() and mark the'
-      + ' line review-only, or drop it.');
+    for (const m of line.matchAll(/['"`](\.\.\/[^'"`]*)['"`]/g)) {
+      const target = path.normalize(path.join(path.dirname(f.abs), m[1].split(/[?#]/)[0]));
+      if (target === DIR || target.startsWith(DIR + path.sep)) continue;
+      problems.push(f.rel + ' holds a parent path in a string that leaves ' + PREFIX + '/: '
+        + line.trim().slice(0, 70)
+        + '. It would 404 at the deploy root. Gate it on samplesAllowed() and mark the'
+        + ' line review-only, or drop it.');
+    }
   }
 }
 
@@ -185,8 +204,31 @@ for (const f of textFiles) {
     if (b.re.test(src)) problems.push(f.rel + ' still contains ' + b.what + '. It must not ship.');
   }
 }
-if (fs.existsSync(path.join(DIR, 'functions'))) {
-  problems.push(PREFIX + '/functions/ exists. Cloudflare Pages would pick it up and could gate the public site.');
+/* A functions/ directory was refused outright until the email endpoint needed
+ * one. The hazard was never the directory: it was the repo root's
+ * functions/_middleware.js, an HTTP Basic gate for the preview site that
+ * Cloudflare Pages picks up automatically and runs on every request, so a copy
+ * landing here would put the public tool behind a password. So the ban narrowed
+ * to the file that carries the hazard rather than the directory that happens to
+ * hold it. What makes narrowing safe rather than a hole is that the gate is
+ * already caught independently by the SITE_PASSWORD/WWW-Authenticate scan above:
+ * two guards would have to miss it, not one. */
+const fnDir = path.join(DIR, 'functions');
+if (fs.existsSync(fnDir)) {
+  const stack = [fnDir];
+  while (stack.length) {
+    const dir = stack.pop();
+    for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
+      const abs = path.join(dir, ent.name);
+      if (ent.isDirectory()) stack.push(abs);
+      else if (/^_middleware\.(js|ts)$/.test(ent.name)) {
+        problems.push(path.relative(DIR, abs).split(path.sep).join('/')
+          + ' is Pages middleware. Cloudflare Pages runs it on every request to the deploy'
+          + ' root, which is the route by which the preview password gate would reach the'
+          + ' public tool. Put endpoint code in its own route file instead.');
+      }
+    }
+  }
 }
 
 /* ---- Guard: sample mode, if present, is gated to review hosts ----

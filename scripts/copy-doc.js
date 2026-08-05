@@ -559,8 +559,11 @@ blank();
 
 section('Printing, saving, and email');
 ['printFormLabel', 'downloadWordLabel', 'savingTipsTitle', 'savingTipsBody', 'emailSelfLabel',
-  'emailSelfSubject', 'emailModalTitle', 'emailModalLead', 'emailModalUnavailable', 'emailModalLabel',
-  'emailModalSendLabel', 'emailModalMailAppLabel', 'emailModalCloseLabel',
+  'emailSelfSubject', 'emailModalTitle', 'emailModalLead', 'emailModalLabel',
+  'emailModalSendLabel', 'emailModalSendingLabel', 'emailModalMailAppLabel', 'emailModalCloseLabel',
+  'emailSentHeading', 'emailSentBody', 'emailErrorBody', 'emailInvalidAddressBody',
+  'emailBodyResultExempt', 'emailBodyResultGoodCause', 'emailBodyResultNotExempt',
+  'emailBodyReasonsHeading', 'emailBodyNextSteps',
   'emailFallbackHeading', 'emailFallbackBody', 'emailCopyLabel',
   'emailCopiedLabel', 'emailSelectedLabel', 'emailTruncatedNote'].forEach(k => item(k, C[k]));
 

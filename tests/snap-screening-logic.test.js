@@ -4,7 +4,7 @@ const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
 const SnapScreening = require('../masslegalhelp/snap-screening-logic.js');
 
-const { NONE, WORK_REASON_INCOME, WORK_REASON_HOURS_30, DISABILITY_OTHER_REASON, HOUSING_EXEMPT_REASON, LINKS, RESULT_COPY, exemptHeadingHtml, exemptProofNotes, buildDtaContactsHtml, buildResultsEmailContent, buildResultsMailto, MAILTO_MAX_URL, create, migrateAnswers, resultTypeFor, exemptReasonsFor, housingUnableExempt, buildQuestions, statementPromptsFor, goodCauseCategories } = SnapScreening;
+const { NONE, WORK_REASON_INCOME, WORK_REASON_HOURS_30, DISABILITY_OTHER_REASON, HOUSING_EXEMPT_REASON, LINKS, RESULT_COPY, exemptHeadingHtml, exemptProofNotes, buildDtaContactsHtml, buildResultsEmailContent, buildResultsMailto, MAILTO_MAX_URL, create, migrateAnswers, resultTypeFor, exemptReasonsFor, exemptReasonEntriesFor, REASON_TEXT_BY_ID, resolveReasonIds, buildGcText, housingUnableExempt, buildQuestions, statementPromptsFor, goodCauseCategories } = SnapScreening;
 
 describe('snap-screening-logic', () => {
   const classic = create('classic');
@@ -247,18 +247,81 @@ describe('snap-screening-logic', () => {
     assert.doesNotMatch(html, /No additional explanation provided/);
   });
 
-  it('buildResultsEmailContent summarizes exempt results for mailto', () => {
+  it('buildResultsEmailContent carries the result, the reasons, and a way back', () => {
     const { subject, body } = buildResultsEmailContent({
       rt: 'exempt',
       rs: ['Pregnant'],
-      name: 'Jane Doe',
-      explain: [{ prompt: 'Explain pregnancy', text: 'Due in March.' }]
+      toolUrl: 'https://example.org/tool/snap/'
     });
-    assert.match(subject, /My SNAP ABAWD screening results/);
-    assert.match(body, /Pregnant/);
-    assert.match(body, /Jane Doe/);
-    assert.match(body, /Due in March/);
-    assert.match(body, /Print or save this form/);
+    assert.match(subject, /Your SNAP work rules screening/);
+    assert.match(body, /may be exempt/);
+    assert.match(body, /Reasons that applied:/);
+    assert.match(body, /- Pregnant/);
+    assert.match(body, /This email is not the letter/);
+    assert.match(body, /https:\/\/example\.org\/tool\/snap\//);
+  });
+
+  /* ----------------------------------------------------------------------- *
+   * The reason catalog is the email endpoint's only input filter. The client
+   * posts ids and the server resolves them, so a reason the screening can
+   * produce but the catalog does not know would silently vanish from the email
+   * while still showing on screen. That failure is invisible from either side,
+   * which is what these tests are for.
+   * ----------------------------------------------------------------------- */
+  describe('the reason catalog', () => {
+    it('knows every exempt reason a question can produce, with the same wording', () => {
+      const skip = ['housing', 'housingFollowup', 'working', 'disability'];
+      const driven = buildQuestions('classic').filter(q => q.exemptOn && skip.indexOf(q.id) === -1);
+      assert.ok(driven.length >= 12, 'expected the question-driven reasons, got ' + driven.length);
+      for (const q of driven) {
+        assert.equal(REASON_TEXT_BY_ID[q.id], q.reason,
+          q.id + ' is missing from REASON_TEXT_BY_ID or its wording has drifted from the question');
+      }
+    });
+
+    it('knows the five reasons assembled from answers rather than one question', () => {
+      for (const id of ['disability', 'disabilityOther', 'housing', 'workIncome', 'workHours30']) {
+        assert.ok(REASON_TEXT_BY_ID[id] && REASON_TEXT_BY_ID[id].trim(), id + ' has no wording');
+      }
+      assert.equal(REASON_TEXT_BY_ID.disabilityOther, DISABILITY_OTHER_REASON);
+      assert.equal(REASON_TEXT_BY_ID.housing, HOUSING_EXEMPT_REASON);
+      assert.equal(REASON_TEXT_BY_ID.workIncome, WORK_REASON_INCOME);
+      assert.equal(REASON_TEXT_BY_ID.workHours30, WORK_REASON_HOURS_30);
+    });
+
+    it('entries and the text-only view cannot disagree', () => {
+      const answers = { pregnant: 'yes', dv: 'yes', working: 'hours_30', disability: ['ssi_ssdi', 'other'] };
+      const entries = exemptReasonEntriesFor(answers);
+      assert.deepEqual(exemptReasonsFor(answers), entries.map(e => e.text));
+      assert.deepEqual(resolveReasonIds(entries.map(e => e.id)), entries.map(e => e.text),
+        'every id the screening emits must resolve back to the same wording');
+    });
+
+    it('drops ids it does not recognise and never repeats one', () => {
+      assert.deepEqual(resolveReasonIds(['pregnant', 'not_a_reason', 'pregnant']), [REASON_TEXT_BY_ID.pregnant]);
+      assert.deepEqual(resolveReasonIds(['<script>alert(1)</script>']), []);
+      assert.deepEqual(resolveReasonIds('pregnant'), [], 'a bare string is not a list of ids');
+      assert.deepEqual(resolveReasonIds(null), []);
+    });
+
+    it('good cause text is reachable by option id alone', () => {
+      const gc = buildGcText('classic');
+      const ids = goodCauseCategories('classic').map(c => c.id);
+      assert.ok(ids.length, 'expected good-cause categories');
+      for (const id of ids) {
+        assert.ok(gc[id] && gc[id].trim(), id + ' has no good-cause result text');
+      }
+    });
+  });
+
+  it('buildResultsEmailContent handles good cause and the no-exemption result', () => {
+    const gc = buildResultsEmailContent({ rt: 'goodcause', gcText: 'Your car broke down.' }).body;
+    assert.match(gc, /may have good cause/);
+    assert.match(gc, /- Your car broke down\./);
+
+    const none = buildResultsEmailContent({ rt: 'notexempt' }).body;
+    assert.match(none, /did not find a reason/);
+    assert.doesNotMatch(none, /Reasons that applied:/);
   });
 
   /* ----------------------------------------------------------------------- *
@@ -826,21 +889,37 @@ describe('snap-screening-logic', () => {
       assert.doesNotMatch(writein, /Explain the health reason/);
     });
 
-    it('the emailed summary reads as a statement rather than a half-filled form', () => {
+    /* Until 2026-08-04 this test asserted the opposite: that the emailed summary
+     * carried the statement, and read as a finished letter rather than a
+     * half-filled form. The email now deliberately holds that back, so the test
+     * inverted with it. See the comment on buildResultsEmailContent for why.
+     *
+     * The old arguments are still passed in on purpose. They are what a caller
+     * that was updated carelessly would keep sending, so the assertion is that
+     * the builder drops them rather than that every caller remembered to stop. */
+    it('the emailed summary never carries the free text, the name, or the ID', () => {
       const explain = classic2.composeStatement(
         { goodcause: 'transport', d_gc_what: 'car_broke', d_gc_now: 'still' }, AUG);
-      const composed = buildResultsEmailContent({ rt: 'goodcause', explain, composed: true }).body;
-      assert.match(composed, /What your letter says:/);
-      assert.match(composed, /My car broke down/);
+      const composed = buildResultsEmailContent({
+        rt: 'goodcause', rs: ['Transportation problem'], gcText: 'Transportation problem',
+        explain, composed: true, name: 'Jane Doe', agency: '12345678'
+      }).body;
+      assert.doesNotMatch(composed, /My car broke down/);
+      assert.doesNotMatch(composed, /Jane Doe/);
+      assert.doesNotMatch(composed, /12345678/);
+      assert.doesNotMatch(composed, /What your letter says:/);
       assert.doesNotMatch(composed, /In a few sentences:/);
-      // The section label is a heading for the questions, not part of the letter.
-      assert.doesNotMatch(composed, /Why you missed hours/);
 
       const writein = buildResultsEmailContent({
-        rt: 'exempt', explain: [{ prompt: 'Explain the health reason', text: 'I have asthma.' }]
+        rt: 'exempt', rs: ['A health condition'],
+        explain: [{ prompt: 'Explain the health reason', text: 'I have asthma.' }],
+        name: 'Jane Doe', agency: '12345678'
       }).body;
-      assert.match(writein, /In a few sentences:/);
-      assert.match(writein, /Explain the health reason/);
+      assert.doesNotMatch(writein, /asthma/);
+      assert.doesNotMatch(writein, /Explain the health reason/);
+      assert.doesNotMatch(writein, /Jane Doe/);
+      assert.doesNotMatch(writein, /12345678/);
+      assert.match(writein, /A health condition/, 'the reason itself is still carried');
     });
 
     it('carries guided copy for every string the guided screens render', () => {

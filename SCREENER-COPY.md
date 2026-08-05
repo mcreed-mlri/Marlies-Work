@@ -892,7 +892,7 @@ And answering none of them:
 
 **`emailSelfSubject`**
 
-> My SNAP ABAWD screening results
+> Your SNAP work rules screening
 
 **`emailModalTitle`**
 
@@ -900,11 +900,7 @@ And answering none of them:
 
 **`emailModalLead`**
 
-> Enter your email address. When sending is enabled, we will email you a text summary of your results.
-
-**`emailModalUnavailable`**
-
-> Sending from this page is not set up yet. For now, use Print or save this form, or open the summary in your email app.
+> We will email your result and the reasons that applied. What you wrote in your own words is not included. The email stays in your inbox until you delete it, so if someone else can read your email, use Print or save this form instead.
 
 **`emailModalLabel`**
 
@@ -914,6 +910,10 @@ And answering none of them:
 
 > Send email
 
+**`emailModalSendingLabel`**
+
+> Sending…
+
 **`emailModalMailAppLabel`**
 
 > Open in my email app instead
@@ -921,6 +921,42 @@ And answering none of them:
 **`emailModalCloseLabel`**
 
 > Close
+
+**`emailSentHeading`**
+
+> Email sent.
+
+**`emailSentBody`**
+
+> Check your inbox. If it is not there in a few minutes, look in your spam folder.
+
+**`emailErrorBody`**
+
+> We could not send the email just now. Use Print or save this form, or open the summary in your email app.
+
+**`emailInvalidAddressBody`**
+
+> That does not look like an email address. Check it and try again.
+
+**`emailBodyResultExempt`**
+
+> You may be exempt from the SNAP work rules (ABAWD rules).
+
+**`emailBodyResultGoodCause`**
+
+> You may have good cause for not meeting the SNAP work rules (ABAWD rules).
+
+**`emailBodyResultNotExempt`**
+
+> This screening did not find a reason you would be exempt from the SNAP work rules (ABAWD rules).
+
+**`emailBodyReasonsHeading`**
+
+> Reasons that applied:
+
+**`emailBodyNextSteps`**
+
+> To finish, open the screening again to print and sign your letter to DTA. This email is not the letter.
 
 **`emailFallbackHeading`**
 

@@ -172,8 +172,11 @@ function emitPrivacyIntro() {
 function emitPrintEmailButtons() {
   [
     'printFormLabel', 'downloadWordLabel', 'emailSelfLabel', 'savingTipsTitle', 'savingTipsBody',
-    'emailSelfSubject', 'emailModalTitle', 'emailModalLead', 'emailModalUnavailable', 'emailModalLabel',
-    'emailModalSendLabel', 'emailModalMailAppLabel', 'emailModalCloseLabel',
+    'emailSelfSubject', 'emailModalTitle', 'emailModalLead', 'emailModalLabel',
+    'emailModalSendLabel', 'emailModalSendingLabel', 'emailModalMailAppLabel', 'emailModalCloseLabel',
+    'emailSentHeading', 'emailSentBody', 'emailErrorBody', 'emailInvalidAddressBody',
+    'emailBodyResultExempt', 'emailBodyResultGoodCause', 'emailBodyResultNotExempt',
+    'emailBodyReasonsHeading', 'emailBodyNextSteps',
     'emailFallbackHeading', 'emailFallbackBody', 'emailCopyLabel',
     'emailCopiedLabel', 'emailSelectedLabel', 'emailTruncatedNote'
   ].forEach(k => emitCopy(k));
