@@ -114,9 +114,18 @@
     transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
   .entry:hover{transform:translateY(-2px);border-color:var(--accent);
     box-shadow:0 8px 22px -14px var(--lift)}
+  .entry.snap{--accent:#2f6f5e;--tag:#e9f2ed;--lift:rgba(47,111,94,.42)}
+  .entry.lace{--accent:#3d5a80;--tag:#eaf0f7;--lift:rgba(61,90,128,.42)}
+  .entry.training{--accent:#8a5a1f;--tag:#f6eee2;--lift:rgba(138,90,31,.38)}
   .entry.court{--accent:#a85a32}
+  :root[data-theme="dark"] .entry.snap{--accent:#8cc8b7;--tag:#1f2c28;--lift:rgba(0,0,0,.6)}
+  :root[data-theme="dark"] .entry.lace{--accent:#9ab7d6;--tag:#202938;--lift:rgba(0,0,0,.6)}
+  :root[data-theme="dark"] .entry.training{--accent:#e5b878;--tag:#30271a;--lift:rgba(0,0,0,.6)}
   :root[data-theme="dark"] .entry.court{--accent:#dc9163}
   @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]) .entry.snap{--accent:#8cc8b7;--tag:#1f2c28;--lift:rgba(0,0,0,.6)}
+    :root:not([data-theme="light"]) .entry.lace{--accent:#9ab7d6;--tag:#202938;--lift:rgba(0,0,0,.6)}
+    :root:not([data-theme="light"]) .entry.training{--accent:#e5b878;--tag:#30271a;--lift:rgba(0,0,0,.6)}
     :root:not([data-theme="light"]) .entry.court{--accent:#dc9163}
   }
   .badge{flex:none;width:40px;height:40px;border-radius:10px;
@@ -215,7 +224,7 @@
 
   <main>
   <ul class="list" role="list">
-    <li class="entry">
+    <li class="entry snap">
       <div class="badge" aria-hidden="true">S</div>
       <div class="body">
         <div class="titlerow">
@@ -226,7 +235,7 @@
         <a class="go" href="screener/">Open the screener</a>
       </div>
     </li>
-    <li class="entry">
+    <li class="entry lace">
       <div class="badge" aria-hidden="true">L</div>
       <div class="body">
         <div class="titlerow">
@@ -250,7 +259,7 @@
         </div>
       </div>
     </li>
-    <li class="entry">
+    <li class="entry training">
       <div class="badge" aria-hidden="true">T</div>
       <div class="body">
         <div class="titlerow">
