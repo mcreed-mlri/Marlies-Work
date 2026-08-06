@@ -361,7 +361,7 @@ _The most common exemption, and the one with the most to explain._
 
 _**What they answered in the screening**_
 
-- Do you have a health reason or disability that makes it hard to work at least 30 hours a week? — **Yes**
+- Do you have a health reason or disability that makes it hard to work at least 30 hours a week? **Yes**
 
 _**Which gives**_
 
@@ -440,7 +440,7 @@ _Shows how the sentence names who is cared for without asking anything identifyi
 
 _**What they answered in the screening**_
 
-- Do you take care of a child or adult who cannot care for themselves? — **Yes**
+- Do you take care of a child or adult who cannot care for themselves? **Yes**
 
 _**Which gives**_
 
@@ -520,7 +520,7 @@ _The proof question matters here: DTA wants documents, and the letter should onl
 
 _**What they answered in the screening**_
 
-- Are you currently working for pay? — **Yes, I am making $217.50 a week or more (before taxes)**
+- Are you currently working for pay? Choose the option that applies to you. **Yes, I am making $217.50 a week or more (before taxes)**
 
 _**Which gives**_
 
@@ -602,8 +602,8 @@ _Several answers at once, composed as separate sentences rather than a list._
 
 _**What they answered in the screening**_
 
-- Do you have a regular place to sleep at night? — **No**
-- Please choose all that apply: — **None of the above**
+- Do you have a regular place to sleep at night? **No**
+- Please choose all that apply: **None of the above**
 
 _**Which gives**_
 
@@ -677,7 +677,7 @@ _The only case where the tool names dates. Note that the questions say "last mon
 
 _**What they answered in the screening**_
 
-- Is something making it hard to work, go to school, or volunteer right now? — **Yes, my ride broke down or I have temporary transportation issues**
+- Is something making it hard to work, go to school, or volunteer right now? **Yes, my ride broke down or I have temporary transportation issues**
 
 _**Which gives**_
 
@@ -758,7 +758,7 @@ _Nothing needs explaining, so nothing is asked. This is the clearest difference 
 
 _**What they answered in the screening**_
 
-- Are you pregnant? — **Yes**
+- Are you pregnant? **Yes**
 
 _**Which gives**_
 

@@ -523,12 +523,40 @@ say('Six people, each shown all the way through: what they clicked, what each cl
   'the real tool, not written by hand.');
 w('Dates are fixed at ' + TODAY_LABEL + ' so this document does not change on its own.');
 
+/* What the person answered, derived from the answers rather than typed out.
+ *
+ * Each example used to carry a screeningSaid array quoting the question and the answer label.
+ * They were hand-copied, and they drifted: the transport line read "Yes, my ride broke down"
+ * with a comma while the option in the code carried an em dash, so this document misquoted the
+ * tool until the code happened to change to match on 2026-08-06. Everything else in this file is
+ * read from the module; there was no reason for these to be the exception.
+ *
+ * No separator between the question and the answer. Question text already ends in "?" or ":",
+ * which does the job, and the em dash that used to sit there is against the house style anyway.
+ */
+function screeningSaid(answers) {
+  return Object.keys(answers).map(id => {
+    const q = A.qById(id);
+    if (!q) return null;
+    const v = answers[id];
+    let said;
+    if (v === S.NONE) said = q.noneLabel;
+    else if (Array.isArray(v)) {
+      said = v.map(x => ((q.options || []).find(o => o.id === x) || {}).label).filter(Boolean).join(', ');
+    } else if (q.type === 'yn') {
+      said = v === 'yes' ? (q.yesLabel || 'Yes') : (q.noLabel || 'No');
+    } else {
+      said = ((q.options || []).find(o => o.id === v) || {}).label;
+    }
+    return said ? plain(q.text) + ' **' + plain(said) + '**' : null;
+  }).filter(Boolean);
+}
+
 const EXAMPLES = [
   {
     name: 'Someone with a health condition',
     note: 'The most common exemption, and the one with the most to explain.',
     screening: { health: 'yes' },
-    screeningSaid: ['Do you have a health reason or disability that makes it hard to work at least 30 hours a week? — **Yes**'],
     picks: { d_health_kind: 'physical', d_health_length: 'long', d_health_care: 'regularly' },
     person: 'Jordan Rivera'
   },
@@ -536,7 +564,6 @@ const EXAMPLES = [
     name: 'Someone caring for a parent',
     note: 'Shows how the sentence names who is cared for without asking anything identifying.',
     screening: { caretaker: 'yes' },
-    screeningSaid: ['Do you take care of a child or adult who cannot care for themselves? — **Yes**'],
     picks: { d_care_who: 'adult', d_care_often: 'daily', d_care_alone: 'alone' },
     person: 'Alex Chen'
   },
@@ -544,7 +571,6 @@ const EXAMPLES = [
     name: 'Someone working part time',
     note: 'The proof question matters here: DTA wants documents, and the letter should only promise the ones the person actually has.',
     screening: { working: 'income_weekly' },
-    screeningSaid: ['Are you currently working for pay? — **Yes, I am making $217.50 a week or more (before taxes)**'],
     picks: { d_work_hours: 'h20_29', d_work_jobs: 'one', d_work_proof: ['paystubs', 'employer_letter'] },
     person: 'Sam Okafor'
   },
@@ -552,10 +578,6 @@ const EXAMPLES = [
     name: 'Someone with no regular place to sleep',
     note: 'Several answers at once, composed as separate sentences rather than a list.',
     screening: { housing: 'no', housingFollowup: S.NONE },
-    screeningSaid: [
-      'Do you have a regular place to sleep at night? — **No**',
-      'Please choose all that apply: — **None of the above**'
-    ],
     picks: { d_housing_where: 'shelter', d_housing_barriers: ['no_address', 'no_transport'] },
     person: 'Riley Santos'
   },
@@ -563,7 +585,6 @@ const EXAMPLES = [
     name: 'Someone who missed hours because their car broke down',
     note: 'The only case where the tool names dates. Note that the questions say "last month", never a month name, so this wording does not change over time.',
     screening: { goodcause: 'transport' },
-    screeningSaid: ['Is something making it hard to work, go to school, or volunteer right now? — **Yes, my ride broke down or I have temporary transportation issues**'],
     picks: { d_gc_what: 'car_broke', d_gc_when: ['this_month', 'last_month'], d_gc_now: 'still' },
     person: 'Dana Whitfield'
   },
@@ -571,7 +592,6 @@ const EXAMPLES = [
     name: 'Someone who is pregnant',
     note: 'Nothing needs explaining, so nothing is asked. This is the clearest difference between the two versions: in Version A this person gets an empty box under "Explain your reasons in your own words".',
     screening: { pregnant: 'yes' },
-    screeningSaid: ['Are you pregnant? — **Yes**'],
     picks: {},
     person: 'Casey Brooks'
   }
@@ -588,7 +608,7 @@ EXAMPLES.forEach((ex, n) => {
   say(ex.note);
 
   label('What they answered in the screening');
-  ex.screeningSaid.forEach(s => w('- ' + s));
+  screeningSaid(ex.screening).forEach(line => w('- ' + line));
   blank();
 
   const rt = A.resultType(ex.screening);
