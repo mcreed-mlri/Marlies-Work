@@ -308,7 +308,14 @@ if (dirty) {
   process.exit(1);
 }
 
-try { git('rev-parse', '--verify', branch); git('branch', '-D', branch); } catch (e) { /* no old branch */ }
+/* The probe's own stderr is swallowed. `rev-parse --verify` on a branch that does not exist yet
+ * prints "fatal: Needed a single revision" before the catch below handles it, so the very first
+ * publish, and every publish after the branch is cleaned up, printed a line reading `fatal:` in
+ * the middle of an otherwise successful run. On launch day that reads as a failed deploy. */
+try {
+  execFileSync('git', ['rev-parse', '--verify', branch], { cwd: ROOT, encoding: 'utf8', stdio: 'pipe' });
+  git('branch', '-D', branch);
+} catch (e) { /* no old branch */ }
 git('subtree', 'split', '--prefix=' + PREFIX, '-b', branch);
 
 console.log('Split into local branch: ' + branch);
