@@ -156,15 +156,12 @@
   .flow-branch .d{font-size:14.5px;color:var(--muted);line-height:1.5;margin:0}
   .flow-join{text-align:center;color:var(--muted);font-size:14px;padding:10px 0 0}
 
-  /* A composed sentence being assembled: what was picked, then what it wrote. */
-  .build{margin:16px 0 0;padding:0;list-style:none}
-  .build li{display:grid;grid-template-columns:1fr;gap:4px;padding:11px 0;
-    border-bottom:1px solid var(--rule)}
-  @media (min-width:620px){.build li{grid-template-columns:210px 1fr;gap:18px;align-items:baseline}}
-  .build li:last-child{border-bottom:none}
-  .build .pick{font-size:14px;font-weight:700;color:var(--house)}
-  .build .wrote{font-size:15px;line-height:1.5;color:var(--ink)}
-  .build .wrote em{color:var(--muted);font-style:normal}
+  /* .build was here: the two-column list showing a composed sentence being assembled,
+     what was picked beside what it wrote. Its markup left with the guided-version
+     comparison in 589792b, when the shipping build became write-in only, and the rules
+     stayed behind for three days with no element wearing them. check-pages.js looks for
+     the opposite case, a class in the markup with no rule behind it, so nothing flagged
+     these. Same situation as .topbar-title and .topbar-sub, noted in copy-doc.js. */
 
   .toc{padding:16px 18px;margin:22px 0 8px}
   .toc-title{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
