@@ -88,27 +88,50 @@ checked. If a second live build ever appears, restore the drift guard before the
 
 ## Before this goes live
 
+Three groups, because reading this on launch day and having to work out which items still
+need somebody is how one of them gets missed. Nothing in the first group is a code problem;
+each is waiting on a decision or on the vendor.
+
+### Still open, and each one blocks launch
+
+- **The legal footer. The largest gap.** The disclaimer came out on 2026-07-30 pending
+  proper wording, so the tool says nowhere that it is not legal advice, that it sends
+  nothing to DTA, or that it does not change a SNAP case. All three are true and all three
+  are worth telling a reader. This needs an approval rather than a draft: the removed
+  sentence is quoted verbatim in the footer comment in `tool/snap/index.html` and in
+  `SCREENER-COPY.md`, and it came out because nobody with the standing to approve it had
+  seen it, not because it was wrong. The footer slot it goes back into is empty and marked.
 - **Quick exit destination.** Currently `weather.com`, set in `PRODUCTION_QUICK_EXIT_URL`
   in the logic module. Confirm that is the right neutral site.
-- **The legal footer.** This is now the largest gap. The footer disclaimer came out on
-  2026-07-30 pending proper wording, so the tool no longer says anywhere that it is not
-  legal advice, that it sends nothing to DTA, or that it does not change a SNAP case. All
-  three were true and all three are worth telling a reader. The removed sentence is quoted
-  verbatim in the footer comment in `index.html` and in `SCREENER-COPY.md` so the
-  replacement can be compared against it.
 - **Terms of Use and Privacy Policy.** The footer has no links to either, because they are
   not in MassLegalHelp's `<footer>` element and their URLs are unknown. Get them from the
   vendor. Separately, this build has no Terms of Use checkbox at all, unlike the other
   variants, so decide whether the tool inherits the host site's terms or needs its own
   gate.
+- **Two vendor items, both in the deploy contract above.** It needs its own Pages project or
+  repo, because a project containing `functions/` puts the public tool behind the preview
+  site's password. And confirm the Worker strips `masslegalhelp.org` cookies and retains
+  none in its logs.
+- **Author copy edits.** Several are applied; several are waiting on the author. See
+  `SCREENER-COPY.md` in the MLRI source repository, which lists every string and prints each
+  open question beside the text it is about.
+
+### Known limits, to be stated rather than fixed
+
 - **Signing without a pointer.** The signature pad is a canvas and only takes a finger or a
   mouse, so it cannot be operated by keyboard, switch, or screen reader. The printed
   statement already leaves a ruled line when the pad is empty, and the page now says so, but
   the underlying limit stands. If DTA ever accepts a typed or checkbox attestation, that is
   the real fix.
-- **Author copy edits.** Several are applied; several are waiting on the author. See
-  `SCREENER-COPY.md` in the MLRI source repository, which lists every string and the open
-  questions against it.
+- **Emailing a copy.** "Email myself a copy" opens a panel whose Send button is disabled,
+  because MassLegalHelp has not provided a send endpoint. The panel says so, and "open in my
+  email app instead" works and keeps the text off any server.
+- **Languages.** English only. MassLegalHelp publishes the ABAWD article in Spanish, and
+  its language selector lives in the Drupal header, which a statically served tool at a
+  path will not participate in.
+
+### Settled
+
 - **Guided ending.** Archived at `archive/snap-guided/` for records. The shipping build is
   write-in only. Section 10 of `SCREENER-COPY.md` still lists every composed sentence if
   the idea returns.
@@ -118,13 +141,17 @@ checked. If a second live build ever appears, restore the drift guard before the
   `THRESHOLD_SOURCE` in `snap-screening-logic.js` and every generated document reads it from
   there, so it cannot go stale in one place and not another. The age wording was settled on
   2026-08-03 and reads "18 through 64" everywhere, which the same question confirms.
-- **The housing follow-up is still open, and it is the one correctness question left.** The
-  guide says those screening answers "are not an 'automatic' exemption" and that DTA assesses.
-  The tool currently returns a flat not-exempt for a diploma plus a steady job, and the ticked
-  answers then appear nowhere. It should say DTA has to review instead. Waiting on the author.
-- **Languages.** English only. MassLegalHelp publishes the ABAWD article in Spanish, and
-  its language selector lives in the Drupal header, which a statically served tool at a
-  path will not participate in.
+- **The housing follow-up. Settled 2026-08-07,** to the author's two-case spec, and no longer
+  open. No regular place to sleep is not something the tool concludes on its own: when it is
+  the only thing the screening finds, the result is a fifth type, `housingreview`, which asks
+  DTA to review rather than telling the person they are exempt. Two headings, depending on
+  whether any follow-up answer was ticked, and the ticked answers print under the reason in
+  both the result and the letter. Answered alongside any other exemption, the normal exempt
+  result shows with housing listed among the others. The old behaviour returned a flat
+  not-exempt for a diploma plus a steady job and the ticked answers appeared nowhere.
+- **The "testing preview" footer line. Removed 2026-08-07.** Both pages carried "A testing
+  preview from Mass Legal Help." in the footer. It described the review site, and on a
+  benefits tool it tells a reader their result may not count.
 
 ## How this folder becomes the deploy repository
 
