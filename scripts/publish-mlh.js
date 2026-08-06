@@ -64,6 +64,30 @@ if (!fs.existsSync(DIR)) {
 const files = walk(DIR, '');
 const textFiles = files.filter(f => /\.(html|js|css|md)$/.test(f.rel));
 
+/* ---- Guard: nothing but web assets in the deploy root ----
+ *
+ * masslegalhelp/ is split out and published, so anything sitting in it becomes a public URL.
+ * On 2026-08-07 two MLRI advocacy guide PDFs were dropped into masslegalhelp/reference/ as
+ * working material and the deploy went from 8 files and 263KB to 10 and 1227KB. Every existing
+ * guard passed: they look for broken paths and missing entry points, not for files that have no
+ * business being here at all. Nothing was published, but only because nobody ran the split.
+ *
+ * An allowlist rather than a blocklist. The question worth asking is "is this a web asset the
+ * screener needs", and a list of what belongs answers it for file types nobody has thought of
+ * yet. Reference material, notes, drafts and exports live outside masslegalhelp/; reference/ at
+ * the repository root is where those two PDFs went. */
+const DEPLOY_EXTENSIONS = ['html', 'js', 'css', 'svg', 'woff2', 'md'];
+for (const f of files) {
+  const ext = (f.rel.split('.').pop() || '').toLowerCase();
+  if (DEPLOY_EXTENSIONS.indexOf(ext) === -1) {
+    problems.push(
+      f.rel + ' is not a web asset and would be published at a public URL. '
+      + PREFIX + '/ only carries ' + DEPLOY_EXTENSIONS.join(', ') + '. '
+      + 'Reference material and working files belong outside it, such as reference/ at the repository root.'
+    );
+  }
+}
+
 /* ---- Guard: the tool entry points exist ---- */
 if (!files.some(f => f.rel === TOOL_INDEX)) {
   problems.push('No ' + TOOL_INDEX + ' in ' + PREFIX + '/. The public tools index lives at /tool/.');
