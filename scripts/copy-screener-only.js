@@ -221,11 +221,24 @@ function letterToText(letterHtml) {
   return out.join('\n').replace(/\n{3,}/g, '\n\n').trim();
 }
 
+/* The sample answers are marked, because they are not the tool's words.
+ *
+ * These strings are invented: they stand in for what a person might type into a write-in box,
+ * so the example letters read like finished letters instead of showing empty rules. Unmarked,
+ * they sat in the export looking exactly like copy, and on 2026-08-06 the author marked two of
+ * them for deletion, reasonably, since nothing said otherwise. Deleting them would have removed
+ * nothing from the tool.
+ *
+ * The risk runs the other way too: the other six could be read as the tool's wording and
+ * approved, or edited, as though they were. So each one now says what it is, inside the box
+ * where it appears. */
+const SAMPLE_PREFIX = '[example of what someone might write, not our wording] ';
+
 function writeInExplain(answers, texts) {
   const prompts = A.statementPrompts(answers);
   return prompts.map((prompt, i) => ({
     prompt,
-    text: (texts && texts[i]) || ''
+    text: (texts && texts[i]) ? SAMPLE_PREFIX + texts[i] : ''
   }));
 }
 
@@ -514,6 +527,12 @@ emitExemptResultScreen(true);
 emitGoodCauseResultScreen(true);
 
 h2('Printable statements (write-in version)');
+
+w('What the printed letter looks like for each result. Everything here is the wording of the');
+w('letter itself, except the text inside the write-in boxes, which is invented so the examples');
+w('read like finished letters. Those are labelled. Do not mark them for editing: changing them');
+w('changes nothing a person will ever see.');
+blank();
 
 emitCopy('statement.docTitle');
 
