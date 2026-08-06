@@ -1142,6 +1142,11 @@
      * over that word in the exempt results heading. */
     introExemptExplain: 'Being "exempt" means that you don\u2019t have to meet the work rules to keep getting SNAP.',
     exemptTermHintLabel: 'What does exempt mean?',
+    /* The acronym is in the page heading before anything defines it, and outside
+     * DTA nobody knows it. Attached to the first "ABAWD" in the intro, the same
+     * dotted-underline hint the word "exempt" gets. */
+    abawdTermExplain: 'ABAWD stands for Able-Bodied Adults With/Without Dependents. If DTA tells you that you are an ABAWD, you may need to meet certain work rules. You may also be exempt from (don\u2019t need to meet) these rules, and this online tool can help you figure that out.',
+    abawdTermHintLabel: 'What does ABAWD mean?',
     printLead: 'Download or print these results to get a signed letter you can send to DTA. (More info on how to contact DTA in the box below)',
     exemptHeading: EXEMPT_HEADING_TEXT,
     /* Emptied 2026-07-30 at the author's direction. The exempt heading now ends

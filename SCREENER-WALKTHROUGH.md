@@ -30,17 +30,19 @@ _A note on what this tool is not. It does not send anything to DTA, it does not 
 
 > Did DTA tell you that you need to meet ABAWD Work Rules to keep getting SNAP?
 
-> Some adults on SNAP who are **18 through 64** have to meet ABAWD work rules to get SNAP for more than 3 months. **Many adults are exempt** from the work rules. Being "exempt" means that you don’t have to meet the work rules to keep getting SNAP.
+> Some adults on SNAP who are **18 through 64** have to meet ABAWD work rules to get SNAP for more than 3 months. **Many adults are exempt**. Being "exempt" means that you don’t have to meet the work rules to keep getting SNAP.
 
-> You only have to meet these rules, or tell DTA you are exempt, if DTA sends you a [SNAP and Work notice](https://eohhs.ehs.state.ma.us/DTA/PolicyOnline/olg%20docs/Consolidated%20Notice%20Sample.pdf) that says you have to meet the ABAWD Work Rules. Check your mail and [DTAConnect](https://dtaconnect.eohhs.mass.gov/) to see notes from DTA. DTA has to screen you for all exemptions *before* subjecting you to the rules.
+> You only have to meet these rules or tell DTA you are exempt if DTA sends you a [SNAP and Work notice](https://eohhs.ehs.state.ma.us/DTA/PolicyOnline/olg%20docs/Consolidated%20Notice%20Sample.pdf) that says you have to meet the ABAWD Work Rules. DTA has to talk to you and check you for all exemptions *before* telling you that you have to meet the rules. Check your mail and [DTAConnect](https://dtaconnect.eohhs.mass.gov/) to see notices from DTA.
 
-> If you lost your SNAP because of the work rules, you might be able to get back on if you have an exemption, or if you met or are currently meeting the work rules.
+> Learn more about the ABAWD Work Rules and applying for SNAP [here](https://www.masslegalhelp.org/public-benefits-ssi/snap-food-benefits/snap-3-month-time-limit-abawd-work-rules).
 
-> This short screening asks a few questions to check if you need to meet the ABAWD work rules or if you are exempt. It takes less than 2 minutes.
+> This short online form asks a few questions to check if you need to meet the ABAWD work rules or if you are exempt. **It takes less than 2 minutes.**
+
+> Click here to check if the ABAWD work rules apply to you
 
 > **Your information is private.** MLRI will not save any personal information you share on this form.
 
-> Fill out the form →
+> The Department of Transitional Assistance (DTA) runs the SNAP program in Massachusetts. The SNAP ABAWD Work Rules are different from MassHealth work rules.
 
 ## The questions
 

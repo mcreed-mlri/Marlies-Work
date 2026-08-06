@@ -60,7 +60,6 @@ const OUT = DOCS_MODE
 const S = require(path.join(ROOT, 'masslegalhelp', 'snap-screening-logic.js'));
 const A = S.create(VARIANT);
 const C = S.RESULT_COPY;
-const INTRO_SUMMARY_HTML = 'Some adults on SNAP who are <strong>18 through 64</strong> have to meet ABAWD work rules to get SNAP for more than 3 months. <strong>Many adults are exempt</strong> from the work rules. ' + C.introExemptExplain;
 
 /* The good-cause sentence names the months someone missed hours. Composing it
  * against the clock would rewrite this document on the first of every month and
@@ -75,10 +74,13 @@ const TODAY_LABEL = 'August 1, 2026';
  * than no walkthrough, because nothing about it looks wrong. */
 const INLINE = [
   { id: 'h1', re: /<h1 class="h1">([^<]+)<\/h1>/ },
+  { id: 'introSummary', re: /<p [^>]*>(Some adults on SNAP who are[\s\S]*?)<\/p>/ },
   { id: 'introNotice', re: /<p [^>]*>(You only have to meet these rules[\s\S]*?)<\/p>/ },
-  { id: 'introLostSnap', re: /<p [^>]*>(If you lost your SNAP because of the work rules[\s\S]*?)<\/p>/ },
-  { id: 'timeEstimate', re: /<p [^>]*>(This short screening asks[\s\S]*?)<\/p>/ },
-  { id: 'startButton', re: />(Fill out the form[^<]*)<\/button>/ },
+  { id: 'learnMoreIntro', re: /<p [^>]*>(Learn more about the ABAWD Work Rules[\s\S]*?)<\/p>/ },
+  { id: 'timeEstimate', re: /<p [^>]*>(This short online form asks[\s\S]*?)<\/p>/ },
+  // Stops at the first tag, so the decorative aria-hidden arrow stays out of the copy.
+  { id: 'startButton', re: />(Click here to check[^<]*)</ },
+  { id: 'dtaNote', re: /<p [^>]*>(The Department of Transitional Assistance[\s\S]*?)<\/p>/ },
   { id: 'answerAny', re: /<p [^>]*>(Answer any that apply to you\. Every question is optional\.)<\/p>/ },
   { id: 'nameLabel', re: />(Your name)</ },
   { id: 'agencyLabel', re: />(Client \/ Agency ID \(if you have one\))</ },
@@ -101,7 +103,15 @@ if (missing.length) {
   process.exit(1);
 }
 inline.privacyIntro = `<strong>${C.privacyIntroLead}</strong> ${C.privacyIntroBody}`;
-inline.introSummary = INTRO_SUMMARY_HTML;
+/* The intro paragraph is the one extracted string that still holds a template
+ * expression: the page builds it from static markup plus introExemptExplain.
+ * Expanded here rather than pasted in as a literal, which is what this file did
+ * until 2026-08-06, and how it came to be the one generator of four still
+ * printing "Many adults are exempt from the work rules" after the phrase was cut.
+ * See the longer note in copy-doc.js. */
+for (const id of Object.keys(inline)) {
+  inline[id] = inline[id].replace('${esc(RESULT_COPY.introExemptExplain)}', C.introExemptExplain);
+}
 
 /* ---- Text helpers ---- */
 
@@ -323,13 +333,15 @@ quote(inline.introSummary);
 blank();
 quote(inline.introNotice);
 blank();
-quote(inline.introLostSnap);
+quote(inline.learnMoreIntro);
 blank();
 quote(inline.timeEstimate);
 blank();
+quote(inline.startButton);
+blank();
 quote(inline.privacyIntro);
 blank();
-quote(inline.startButton);
+quote(inline.dtaNote);
 
 /* ---- The questions ---- */
 

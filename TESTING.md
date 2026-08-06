@@ -41,7 +41,9 @@ itself something to test.
 If any of these fail, stop and report it. Nothing further is worth testing.
 
 - [ ] The start page loads and shows the heading, the intro text, and the start button.
-- [ ] Clicking **Fill out the form** opens the first question section.
+- [ ] The dotted-underlined **ABAWD** in the first paragraph opens a box defining the acronym: on hover with a mouse, on tap on a phone.
+- [ ] The start button darkens on hover and sinks by the height of its own bottom edge when held down, then springs back. Check it by keyboard too: hold Space with the button focused.
+- [ ] Clicking **Click here to check if the ABAWD work rules apply to you** opens the first question section.
 - [ ] Answering nothing at all and clicking through to the end gives the "may need to meet the work rules" result.
 - [ ] Answering **Yes** to "Are you pregnant?" and skipping to results gives the exempt result.
 - [ ] The exempt result offers a letter, and "Print or save this form" opens a print dialog.
@@ -457,6 +459,7 @@ of the exemptions are about.
 - [ ] The progress bar announces "Section 2 of 4" when the section changes, not just visually.
 - [ ] Each question is announced with its options, and selecting one announces the change.
 - [ ] Help text behind "What does this mean?" is reachable and announced.
+- [ ] The dotted-underlined **ABAWD** on the start page announces as "What does ABAWD mean?", opens on Enter or Space, and reads the definition. The same for **exempt** in the exempt result heading, which should announce "What does exempt mean?" and not the ABAWD one.
 - [ ] The result screen heading is announced on arrival.
 - [ ] The signature pad announces as a control with an explanation, not as an unlabelled image.
 
@@ -464,7 +467,7 @@ of the exemptions are about.
 
 - [ ] Zoom the browser to 200%. Nothing overlaps, nothing is cut off, no horizontal scrolling.
 - [ ] At 400% zoom, or a 320px-wide window, the questions and buttons are still usable.
-- [ ] Turn on the operating system's "reduce motion" setting. Screens change without animation.
+- [ ] Turn on the operating system's "reduce motion" setting. Screens change without animation. The start button still visibly presses in when clicked: that is feedback for a deliberate action, not decoration, so it should survive the setting. What goes is the easing, not the movement.
 - [ ] In high contrast mode, the selected answer is still visibly selected.
 - [ ] A selected answer is marked by more than colour alone: there is a filled dot or tick as well as a border.
 

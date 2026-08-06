@@ -54,9 +54,12 @@ test.describe('SNAP ABAWD screening (the shipping build)', () => {
   test('intro uses the draft copy and links', async ({ page }) => {
     await expect(page.getByRole('heading', { name: /Did DTA tell you that you need to meet ABAWD Work Rules/i })).toBeVisible();
     await expect(page.getByRole('link', { name: 'SNAP and Work notice' })).toBeVisible();
-    await expect(page.getByText('More on the SNAP ABAWD work rules')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'DTAConnect' })).toBeVisible();
+    // Its accessible name, not its visible text: the button reads "ABAWD" on screen.
+    await expect(page.getByRole('button', { name: 'What does ABAWD mean?' })).toBeVisible();
     await expect(page.getByText(/Your information is private/i)).toBeVisible();
-    await expect(page.getByRole('button', { name: /Fill out the form/i })).toBeVisible();
+    await expect(page.getByText(/different from MassHealth work rules/i)).toBeVisible();
+    await expect(page.getByRole('button', { name: /Click here to check if the ABAWD work rules apply to you/i })).toBeVisible();
   });
 
   test('exempt result states the exemption and shows one blank per reason', async ({ page }) => {

@@ -34,6 +34,7 @@
      outranks matching a host font. Revisit only with their font files in hand. */
   :root{
     --accent:#0057a2;       /* 7.28:1, MLH accent blue. Was #1a5fb4 */
+    --accent-hover:#004884; /* darker than --accent, so white text only gains contrast */
     --navy:#1e2e5f;         /* MLH header bar */
     /* Two golds, because MassLegalHelp uses two. --pill is the pale gold of the
        Legal Topics button; --gold is the saturated rule under the header, measured
@@ -335,9 +336,29 @@
     .q-nav{flex-direction:column}
     .q-nav > [data-action="back"],.q-nav > [data-action="next"]{width:100%;flex:auto}
   }
+  /* The start button's look and its states live here, not in the primaryBtn inline
+     style it used to carry. An inline background and box-shadow outrank every
+     stylesheet selector short of !important, so :hover and :active had nothing they
+     could change and a press produced no feedback at all. Same trap the
+     [data-progress-fill] comment below records. Only this one element ever used
+     primaryBtn, so moving it moved nothing else. */
+  #start-btn{
+    font-size:17px;font-weight:700;line-height:1.35;color:#fff;background:var(--accent);
+    border:none;border-radius:var(--radius);padding:16px 30px;cursor:pointer;min-height:48px;
+    box-shadow:0 3px 0 var(--accent-dark);
+    transition:background-color .12s ease,transform .07s ease,box-shadow .07s ease;
+  }
+  #start-btn:hover{background:var(--accent-hover)}
+  /* Pressed: the button travels down exactly the height of its own lip while the lip
+     collapses to nothing, so the 3px edge reads as depth being taken up rather than as
+     a drawn-on line. Both values are 3px for that reason; changing one needs the other. */
+  #start-btn:active{transform:translateY(3px);box-shadow:0 0 0 var(--accent-dark)}
   @media (prefers-reduced-motion:reduce){
     .card-in{animation:none}
     .opt,.opt-mark{transition:none}
+    /* The press still moves, and should: it is feedback for a deliberate action, not
+       decoration. What goes is the easing, so the change is instant. */
+    #start-btn{transition:none}
     /* The progress fill's transition is written as an inline style in
        renderProgress(), so overriding it from a stylesheet needs !important. It was
        the one animation still running under reduced motion, along with the hint
@@ -730,10 +751,14 @@ function hintTip(id, label, bodyHtml, iconOnly){
   </span>`;
 }
 
-function hintTerm(id, term, bodyHtml, bold){
+/* `label` is the button's accessible name, since the visible text is just the term
+ * being defined and "exempt" on its own does not say what the control does. It was
+ * hardcoded to RESULT_COPY.exemptTermHintLabel while "exempt" was the only defined
+ * term; a second term would have announced itself as the first. */
+function hintTerm(id, term, bodyHtml, label, bold){
   const termClass = bold ? 'hint-tip-term hint-tip-term--bold' : 'hint-tip-term';
   return `<span class="hint-tip hint-tip--term">
-    <button type="button" class="hint-tip-btn hint-tip-btn--term" aria-expanded="false" aria-controls="hint-${id}" aria-label="${esc(RESULT_COPY.exemptTermHintLabel)}" data-action="toggle-hint" data-hint-id="${id}">
+    <button type="button" class="hint-tip-btn hint-tip-btn--term" aria-expanded="false" aria-controls="hint-${id}" aria-label="${esc(label)}" data-action="toggle-hint" data-hint-id="${id}">
       <span class="${termClass}">${esc(term)}</span>
     </button>
     <span id="hint-${id}" class="hint-tip-panel" role="note">${bodyHtml}</span>
@@ -743,7 +768,21 @@ function hintTerm(id, term, bodyHtml, bold){
 function renderExemptHeading(){
   return exemptHeadingHtml().replace(
     '<strong>exempt</strong>',
-    hintTerm('exempt-term', 'exempt', esc(RESULT_COPY.introExemptExplain), true)
+    hintTerm('exempt-term', 'exempt', esc(RESULT_COPY.introExemptExplain), RESULT_COPY.exemptTermHintLabel, true)
+  );
+}
+
+/* Attaches the acronym's definition to the first "ABAWD" in a block of finished
+ * markup. Done as a replace rather than written inline in the paragraph so the copy
+ * generators can still read that sentence out of the page source as one string: a
+ * hintTerm() call spliced into the middle of it would reach SCREENER-COPY.md as raw
+ * template code, which is how two stray blockquotes once reached a Google Docs
+ * export. Only the first occurrence, because String.replace with a string pattern
+ * stops there and defining a word twice in one paragraph reads as a stutter. */
+function defineAbawd(html){
+  return html.replace(
+    'ABAWD',
+    hintTerm('abawd-term', 'ABAWD', esc(RESULT_COPY.abawdTermExplain), RESULT_COPY.abawdTermHintLabel, false)
   );
 }
 
@@ -841,7 +880,13 @@ function initHintTips(){
   });
 }
 
-const primaryBtn = "font-size:17px;font-weight:700;color:#fff;background:var(--navy);border:none;border-radius:var(--radius);padding:15px 26px;cursor:pointer;box-shadow:0 2px 0 var(--accent-dark);min-height:48px";
+/* primaryBtn was here. It styled the start button and nothing else, and its fill and
+ * box-shadow being inline are what stopped :hover and :active from working, so it moved
+ * to the #start-btn rule in the stylesheet on 2026-08-06. Two decisions recorded there
+ * rather than lost with it: the fill is --accent, not --navy, because --navy #1e2e5f and
+ * --accent-dark #1f2c5c are the same navy to the eye and the button's lip was invisible;
+ * and accent blue separates the page's one action from the body text and header bar,
+ * which are both --navy. A second primary button belongs in a class, not back in here. */
 const nextBtn    = "font-size:16px;font-weight:700;color:#fff;background:var(--navy);border:none;border-radius:var(--radius);padding:12px 22px;cursor:pointer;box-shadow:0 2px 0 var(--accent-dark);min-height:48px";
 const ghostBtn   = "font-size:15px;font-weight:700;color:var(--navy);background:#fff;border:2px solid var(--navy);border-radius:var(--radius);padding:10px 18px;cursor:pointer;min-height:48px";
 /* Inline text button that reads as a link (used inside result copy). */
@@ -905,31 +950,45 @@ function renderProgress(){
 function animClass(){ return state.animate ? 'card-in' : ''; }
 
 function renderIntro(){
+  /* Held in a variable so defineAbawd() can wrap the finished paragraph. The h1
+   * above says "ABAWD Work Rules" first, but the definition hangs off this sentence
+   * instead: a button inside the page's only h1 changes what a screen reader
+   * announces for the heading itself. */
+  const introSummary = `<p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 14px">Some adults on SNAP who are <strong>18 through 64</strong> have to meet ABAWD work rules to get SNAP for more than 3 months. <strong>Many adults are exempt</strong>. ${esc(RESULT_COPY.introExemptExplain)}</p>`;
   return `<div class="${animClass()}">
     <div class="band">
       <h1 class="h1">Did DTA tell you that you need to meet ABAWD Work Rules to keep getting SNAP?</h1>
     </div>
     <div class="byline-rule" aria-hidden="true"></div>
-    <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 14px">Some adults on SNAP who are <strong>18 through 64</strong> have to meet ABAWD work rules to get SNAP for more than 3 months. <strong>Many adults are exempt</strong> from the work rules. ${esc(RESULT_COPY.introExemptExplain)}</p>
-    <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 18px">You only have to meet these rules, or tell DTA you are exempt, if DTA sends you a <a href="${LINKS.snapWorkNotice}" target="_blank" rel="noopener">SNAP and Work notice</a> that says you have to meet the ABAWD Work Rules. Check your mail and <a href="${LINKS.dtaConnect}" target="_blank" rel="noopener">DTAConnect</a> to see notes from DTA. DTA has to screen you for all exemptions <em>before</em> subjecting you to the rules.</p>
+    <!-- Prose runs the full width of #stage. A 35em measure column was tried here on
+         2026-08-06 and reverted: it does bring the line down from ~88 characters to ~70,
+         but #stage is centred and the column is not, so it left a wide empty gutter down
+         the right and a title band noticeably wider than the body. Unbalanced enough to
+         cost more than the long lines did. Narrowing #stage itself would reflow the
+         question and result screens, which are built for 760px. -->
+    ${defineAbawd(introSummary)}
+    <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 14px">You only have to meet these rules or tell DTA you are exempt if DTA sends you a <a href="${LINKS.snapWorkNotice}" target="_blank" rel="noopener">SNAP and Work notice</a> that says you have to meet the ABAWD Work Rules. DTA has to talk to you and check you for all exemptions <em>before</em> telling you that you have to meet the rules. Check your mail and <a href="${LINKS.dtaConnect}" target="_blank" rel="noopener">DTAConnect</a> to see notices from DTA.</p>
+    <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 14px">Learn more about the ABAWD Work Rules and applying for SNAP <a href="${LINKS.abawd}" target="_blank" rel="noopener">here</a>.</p>
+    <!-- Plain prose, not a callout. This sat in a --warn-bg box with a 4px --gold bar
+         until 2026-08-06, which spent the page's caution vocabulary on a reassurance:
+         amber is what the "you may need to meet the work rules" result wears, so a
+         sentence saying "this takes two minutes" read as a caveat to clear first. The
+         larger bottom margin is the gap before the button. -->
+    <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 26px">This short online form asks a few questions to check if you need to meet the ABAWD work rules or if you are exempt. <strong>It takes less than 2 minutes.</strong></p>
 
-    <details style="margin:0 0 20px;border:1px solid var(--panel);border-radius:var(--radius);background:#fff">
-      <summary style="cursor:pointer;padding:13px 16px;font-size:15px;font-weight:700;color:var(--accent)">More on the SNAP ABAWD work rules</summary>
-      <div style="padding:0 16px 15px;font-size:15px;line-height:1.6;color:var(--prose)">
-        <p style="margin:0 0 10px">Everyone has a different life situation. Many people have good reasons for why they aren't working, in school, or volunteering. During your application or recertification interview, DTA must ask you a list of questions to see if you're exempt, already meeting the work rules, or if you need to meet the work rules to keep getting SNAP.</p>
-        <p style="margin:0 0 10px">If you lost your SNAP because of the work rules, you might be able to get back on if you have an exemption, or if you met or are currently meeting the work rules.</p>
-        <p style="margin:0">To learn more about the ABAWD work rules, <a href="${LINKS.abawd}" target="_blank" rel="noopener">click here</a>.</p>
-      </div>
-    </details>
-
-    <div style="margin:0 0 22px;padding:14px 17px;background:var(--warn-bg);border:1px solid var(--warn-line);border-left:4px solid var(--gold);border-radius:var(--radius)">
-      <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0">This short screening asks a few questions to check if you need to meet the ABAWD work rules or if you are exempt. It takes less than 2 minutes.</p>
+    <!-- Centred on a wrapper rather than on the button itself, so the button carries no
+         inline width to outrank the width:100% rule in the narrow media query and it
+         still goes full width on a phone. Everything else about it is in the #start-btn
+         rule; see the note there for why it cannot be inline.
+         No backticks in here: this comment sits inside a JS template literal. -->
+    <div style="text-align:center">
+      <!-- The arrow is aria-hidden so the button's accessible name stays the sentence
+           rather than gaining "right arrow", and it is preceded by a non-breaking space
+           so it can never be left alone on the second line when the label wraps. -->
+      <button type="button" id="start-btn" data-action="start">Click here to check if the ABAWD work rules apply to you<span aria-hidden="true">&nbsp;&rarr;</span></button>
     </div>
-    ${renderPrivacyCallout('22px')}
-
-    <h2 class="h2" style="margin:0 0 14px">Check if the SNAP work rules apply to you.</h2>
-    <button type="button" id="start-btn" data-action="start" style="${primaryBtn}">Fill out the form →</button>
-    <p style="font-size:14px;margin:18px 0 0"><a href="${LINKS.abawd}" target="_blank" rel="noopener">Learn more about the SNAP ABAWD work rules</a></p>
+    <div style="margin:22px 0 0">${renderPrivacyCallout('0')}</div>
+    <p style="font-size:14px;line-height:1.55;color:var(--muted);margin:22px 0 0;padding-top:18px;border-top:1px solid var(--panel)">The Department of Transitional Assistance (DTA) runs the SNAP program in Massachusetts. The SNAP ABAWD Work Rules are different from MassHealth work rules.</p>
   </div>`;
 }
 

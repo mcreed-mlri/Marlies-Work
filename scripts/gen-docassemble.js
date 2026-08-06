@@ -182,12 +182,17 @@ function fromShippingPage(id, re) {
     console.error('and the web builds drift apart silently.');
     process.exit(1);
   }
+  /* The intro paragraph is built in the page from static markup plus
+   * RESULT_COPY.introExemptExplain, so it arrives with one template expression in
+   * it. Expanded before conversion, which is what lets that paragraph be read from
+   * the page like the other three instead of pasted in below. */
+  const raw = m[1].replace('${esc(RESULT_COPY.introExemptExplain)}', C.introExemptExplain);
   // Same conversion the help text gets: links and emphasis to markdown.
-  return help({ help: m[1] });
+  return help({ help: raw });
 }
 
-const introSummary = 'Some adults on SNAP who are **18 through 64** have to meet ABAWD work rules to get SNAP for more than 3 months. **Many adults are exempt** from the work rules. ' + C.introExemptExplain;
-const timeEstimate = fromShippingPage('timeEstimate', /<p [^>]*>(This short screening asks[\s\S]*?)<\/p>/);
+const introSummary = fromShippingPage('introSummary', /<p [^>]*>(Some adults on SNAP who are[\s\S]*?)<\/p>/);
+const timeEstimate = fromShippingPage('timeEstimate', /<p [^>]*>(This short online form asks[\s\S]*?)<\/p>/);
 const privacyIntro = `**${C.privacyIntroLead}** ${C.privacyIntroBody}`;
 const pageH1 = fromShippingPage('h1', /<h1 class="h1">([^<]+)<\/h1>/);
 

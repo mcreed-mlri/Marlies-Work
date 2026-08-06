@@ -22,22 +22,19 @@ const VARIANT = 'classic2';
 const S = require(path.join(ROOT, 'masslegalhelp', 'snap-screening-logic.js'));
 const A = S.create(VARIANT);
 const C = S.RESULT_COPY;
-const INTRO_SUMMARY_HTML = 'Some adults on SNAP who are <strong>18 through 64</strong> have to meet ABAWD work rules to get SNAP for more than 3 months. <strong>Many adults are exempt</strong> from the work rules. ' + C.introExemptExplain;
 
 const GUIDED_DOC_DATE = new Date(2026, 7, 1);
 
 const INLINE = [
   { id: 'page.h1', re: /<h1 class="h1">([^<]+)<\/h1>/ },
+  { id: 'page.introSummary', re: /<p [^>]*>(Some adults on SNAP who are[\s\S]*?)<\/p>/ },
   { id: 'page.introNotice', re: /<p [^>]*>(You only have to meet these rules[\s\S]*?)<\/p>/ },
-  { id: 'page.introLostSnap', re: /<p [^>]*>(If you lost your SNAP because of the work rules[\s\S]*?)<\/p>/ },
-  { id: 'page.moreSummary', re: /<summary [^>]*>(More on the SNAP ABAWD work rules)<\/summary>/ },
-  { id: 'page.moreDetails1', re: /<p style="margin:0 0 10px">(Everyone has a different life situation[\s\S]*?)<\/p>/ },
-  { id: 'page.moreDetails2', re: /<p style="margin:0">(To learn more about the ABAWD work rules[\s\S]*?)<\/p>/ },
-  { id: 'page.timeEstimate', re: /<p [^>]*>(This short screening asks[\s\S]*?)<\/p>/ },
-  { id: 'page.startHeading', re: /<h2 class="h2"[^>]*>(Check if the SNAP work rules apply to you\.)<\/h2>/ },
-  { id: 'page.startButton', re: />(Fill out the form[^<]*)<\/button>/ },
+  { id: 'page.learnMoreIntro', re: /<p [^>]*>(Learn more about the ABAWD Work Rules[\s\S]*?)<\/p>/ },
+  { id: 'page.timeEstimate', re: /<p [^>]*>(This short online form asks[\s\S]*?)<\/p>/ },
+  // Stops at the first tag, so the decorative aria-hidden arrow stays out of the copy.
+  { id: 'page.startButton', re: />(Click here to check[^<]*)</ },
+  { id: 'page.dtaNote', re: /<p [^>]*>(The Department of Transitional Assistance[\s\S]*?)<\/p>/ },
   { id: 'page.answerAny', re: /<p [^>]*>(Answer any that apply to you\. Every question is optional\.)<\/p>/ },
-  { id: 'page.learnMoreIntro', re: />(Learn more about the SNAP ABAWD work rules)</ },
   { id: 'page.skippedWarning', re: />(If you skipped questions[^<]+)</ },
   { id: 'page.sigAlt', re: /<p id="sig-alt"[^>]*>([^<]+)<\/p>/ },
   { id: 'btn.skipToResults', re: />(Skip to results)</ },
@@ -66,7 +63,12 @@ if (missing.length) {
   process.exit(1);
 }
 inline['page.privacyIntro'] = `<strong>${C.privacyIntroLead}</strong> ${C.privacyIntroBody}`;
-inline['page.introSummary'] = INTRO_SUMMARY_HTML;
+/* The intro paragraph interpolates introExemptExplain in the page source, so it
+ * arrives here with one template expression in it. Expanded rather than pasted in
+ * as a literal; see the note in copy-doc.js for what the literal cost. */
+for (const id of Object.keys(inline)) {
+  inline[id] = inline[id].replace('${esc(RESULT_COPY.introExemptExplain)}', C.introExemptExplain);
+}
 
 const UNESCAPE = { '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;': "'", '&nbsp;': ' ' };
 
@@ -455,11 +457,9 @@ blank();
 h2('Start page');
 
 [
-  'page.h1', 'page.introSummary', 'page.introNotice', 'page.introLostSnap',
-  'page.moreSummary', 'page.moreDetails1', 'page.moreDetails2',
-  'page.timeEstimate', 'page.privacyIntro', 'page.startHeading', 'page.startButton'
+  'page.h1', 'page.introSummary', 'page.introNotice', 'page.learnMoreIntro',
+  'page.timeEstimate', 'page.startButton', 'page.privacyIntro', 'page.dtaNote'
 ].forEach(id => emitCopy(id));
-emitCopy('page.learnMoreIntro');
 
 h2('The questions');
 

@@ -29,7 +29,6 @@ const VARIANT = 'classic2';
 const S = require(path.join(ROOT, 'masslegalhelp', 'snap-screening-logic.js'));
 const A = S.create(VARIANT);
 const C = S.RESULT_COPY;
-const INTRO_SUMMARY_HTML = 'Some adults on SNAP who are <strong>18 through 64</strong> have to meet ABAWD work rules to get SNAP for more than 3 months. <strong>Many adults are exempt</strong> from the work rules. ' + C.introExemptExplain;
 
 /* ---- Questions still open for the author. Keyed by copy id so each one
  * prints next to the text it is about, instead of in a list at the end. ---- */
@@ -46,14 +45,22 @@ const OPEN = {
 /* ---- Strings inline in the page markup. Each must match exactly once. ---- */
 const INLINE = [
   { id: 'page.h1', re: /<h1 class="h1">([^<]+)<\/h1>/ },
+  { id: 'page.introSummary', re: /<p [^>]*>(Some adults on SNAP who are[\s\S]*?)<\/p>/ },
   { id: 'page.introNotice', re: /<p [^>]*>(You only have to meet these rules[\s\S]*?)<\/p>/ },
-  { id: 'page.introLostSnap', re: /<p [^>]*>(If you lost your SNAP because of the work rules[\s\S]*?)<\/p>/ },
-  { id: 'page.moreSummary', re: /<summary [^>]*>(More on the SNAP ABAWD work rules)<\/summary>/ },
-  { id: 'page.moreDetails1', re: /<p style="margin:0 0 10px">(Everyone has a different life situation[\s\S]*?)<\/p>/ },
-  { id: 'page.moreDetails2', re: /<p style="margin:0">(To learn more about the ABAWD work rules[\s\S]*?)<\/p>/ },
-  { id: 'page.timeEstimate', re: /<p [^>]*>(This short screening asks[\s\S]*?)<\/p>/ },
-  { id: 'page.startHeading', re: /<h2 class="h2"[^>]*>(Check if the SNAP work rules apply to you\.)<\/h2>/ },
-  { id: 'page.startButton', re: />(Fill out the form[^<]*)<\/button>/ },
+  /* page.introLostSnap, page.moreSummary, page.moreDetails1 and page.moreDetails2
+     were the "More on the SNAP ABAWD work rules" disclosure. The 2026-08-06 edits
+     cut the whole panel and replaced it with page.learnMoreIntro, one line pointing
+     at the MassLegalHelp article. Nothing on the page carries that wording now. */
+  { id: 'page.learnMoreIntro', re: /<p [^>]*>(Learn more about the ABAWD Work Rules[\s\S]*?)<\/p>/ },
+  { id: 'page.timeEstimate', re: /<p [^>]*>(This short online form asks[\s\S]*?)<\/p>/ },
+  /* page.startHeading was an h2 above the button, "Check if the SNAP work rules
+     apply to you." The same edits folded it into the button label, so there is one
+     string here where there were two. */
+  /* Stops at the first tag rather than at </button>, so the decorative arrow after the
+     label is left out. The author is reviewing words here; the arrow is aria-hidden and
+     is not one. */
+  { id: 'page.startButton', re: />(Click here to check[^<]*)</ },
+  { id: 'page.dtaNote', re: /<p [^>]*>(The Department of Transitional Assistance[\s\S]*?)<\/p>/ },
   { id: 'page.answerAny', re: /<p [^>]*>(Answer any that apply to you\. Every question is optional\.)<\/p>/ },
   { id: 'page.sigAlt', re: /<p id="sig-alt"[^>]*>([^<]+)<\/p>/ },
   // Buttons and navigation (skip/startOver/delete still inline in the page)
@@ -62,7 +69,6 @@ const INLINE = [
   { id: 'btn.deleteAnswers', re: />(Delete my answers)</ },
   // Warnings and inline notes
   { id: 'page.skippedWarning', re: />(If you skipped questions[^<]+)</ },
-  { id: 'page.learnMoreIntro', re: />(Learn more about the SNAP ABAWD work rules)</ },
   // The printable statement
   { id: 'statement.docTitle', re: /<title>(SNAP Work Rules Statement)<\/title>/ },
   { id: 'statement.nameLabel', re: />(Your name)</ },
@@ -114,7 +120,19 @@ if (missing.length) {
   console.error('Fix the patterns in scripts/copy-doc.js rather than shipping a document with gaps.');
   process.exit(1);
 }
-inline['page.introSummary'] = INTRO_SUMMARY_HTML;
+/* The opening paragraph is the one extracted string with a template expression
+ * left in it, because the page builds that sentence from static markup plus
+ * RESULT_COPY.introExemptExplain. Expanded here so the paragraph can be read out
+ * of the page whole.
+ *
+ * It used to be pasted into this file as a literal, and into three other
+ * generators besides. That is how the 2026-08-06 edit landed in three of the four
+ * and not in copy-walkthrough.js: the generated-files CI job regenerates and
+ * diffs, so a stale literal produces a document that is wrong and stable, which
+ * is the one failure that job cannot see. */
+for (const id of Object.keys(inline)) {
+  inline[id] = inline[id].replace('${esc(RESULT_COPY.introExemptExplain)}', C.introExemptExplain);
+}
 
 /* ---- Rendering helpers ---- */
 
@@ -211,29 +229,28 @@ w('worth telling me about.');
 
 section('1. Start page');
 
-['page.h1', 'page.introSummary', 'page.introNotice', 'page.introLostSnap']
-  .forEach(id => item(id, inline[id]));
+['page.h1', 'page.introSummary'].forEach(id => item(id, inline[id]));
 
-w('A collapsed "More on the SNAP ABAWD work rules" panel sits here:');
+w('The first "ABAWD" in that paragraph is defined on hover or tap, the same dotted-underline');
+w('hint the word "exempt" carries on the results screen. The second string is what a screen');
+w('reader announces for the control, since "ABAWD" on its own does not say it can be opened.');
 blank();
-['page.moreSummary', 'page.moreDetails1', 'page.moreDetails2']
+['abawdTermExplain', 'abawdTermHintLabel'].forEach(k => item(k, C[k]));
+
+['page.introNotice', 'page.learnMoreIntro', 'page.timeEstimate']
   .forEach(id => item(id, inline[id]));
-
-[  'page.timeEstimate'
-].forEach(id => item(id, inline[id]));
-
-item('page.privacyIntro', `<strong>${C.privacyIntroLead}</strong> ${C.privacyIntroBody}`);
 
 w('**There is no Terms of Use text on this page today.** Other versions of the tool have a');
 w('checkbox someone must tick before starting; this one does not. If the published version');
 w('needs one, its wording has to come from you, and it has to match whichever site hosts');
 w('the tool.');
 blank();
-['page.startHeading', 'page.startButton'].forEach(id => item(id, inline[id]));
+item('page.startButton', inline['page.startButton']);
 
-w('A link sits at the bottom of the start page, under the button:');
+w('The privacy callout and a closing note sit under the button:');
 blank();
-item('page.learnMoreIntro', inline['page.learnMoreIntro']);
+item('page.privacyIntro', `<strong>${C.privacyIntroLead}</strong> ${C.privacyIntroBody}`);
+item('page.dtaNote', inline['page.dtaNote']);
 
 /* ---- Questions ---- */
 

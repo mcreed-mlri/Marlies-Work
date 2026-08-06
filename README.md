@@ -128,7 +128,7 @@ shared separately and is not tracked in this repo. It keeps the four grouped
 question sections and adds
 material the original classic page does not have:
 
-- Intro explains the **SNAP and Work notice** and that DTA must screen for all exemptions first, with a *More on the SNAP ABAWD work rules* disclosure.
+- Intro explains the **SNAP and Work notice** and that DTA must talk to someone and check for all exemptions before telling them they have to meet the rules, then points at the MassLegalHelp article for the rest. The *More on the SNAP ABAWD work rules* disclosure that used to sit here came out on 2026-08-06: three paragraphs behind a click, most of which the article says better.
 - Every outbound link lives in one place: `LINKS` in `snap-screening-logic.js`.
 - The exempt screen names the reasons it found. Since 2026-07-30 it reads "You may be exempt and do not need to meet the ABAWD work rules because of these reasons:", because the screening cannot confirm an exemption, only suggest one.
 - **One labelled write-in blank per exemption that needs explaining** instead of a single box. Driven by `statementPromptsFor` in the logic module; each blank prints as its own labelled section of the statement letter.
