@@ -183,18 +183,41 @@ blank();
 check('Answering **Yes** to "Do you have a regular place to sleep at night?" hides the follow-up entirely.');
 check('Answering **No**, picking something, then changing to **Yes** clears the follow-up rather than keeping a hidden answer.');
 
-h2('3. The order the decision is made in');
+h2('3. The age question and its result');
+
+w('Added 2026-08-06 as the first question in section 1. It is the only answer that ends the');
+w('screening where it stands, and the only result that offers no letter, so none of the');
+w('checks above cover it. It is also absent from the exemption table in section 2 on purpose:');
+w('answering No is not an exemption reason, it changes the result outright.');
+blank();
+w('The question is optional, like every other one. It is deliberately not required.');
+blank();
+check('Answer **No** and click **Next** on section 1. You should land straight on the age result without seeing sections 2, 3, or 4.');
+check('Answer **No** and use **Skip to results** instead. Same screen.');
+check('The result heading reads: ' + strip(C.ageExemptHeading));
+check('The panel explains that DTA already has the date of birth on file and that no further action is needed.');
+check('The word **still** is in italics in the sentence about DTA sending a notice anyway. That emphasis is the author\'s and is the point of the sentence.');
+check('The email address in that sentence opens a mail app addressed to ' + strip(S.LINKS.advocacyEmail) + '.');
+check('There is **no** statement form, no name or signature field, and no "Print or save this form" button on this screen. DTA already holds the date of birth, so there is nothing to sign.');
+check('**Age beats everything.** Answer Yes to pregnant and No to the age question in the same section. Expect the age result, not the exempt result, and no list of reasons.');
+check('Answer **Yes** to the age question and continue. Section 2 appears and the screening behaves exactly as before.');
+check('Leave the age question blank and continue. Nothing changes: the result is whatever the other answers give.');
+check('From the age result, **← Back** returns to section 1 with the answer still selected.');
+check('Clicking the selected **No** a second time clears it, and **Next** then goes to section 2 as normal.');
+
+h2('4. The order the decision is made in');
 
 w('These are precedence rules. Each one is a case where two things are true at once and only one');
 w('answer is right.');
 blank();
+check('**The age result beats every other outcome.** It is checked before the exemption list, so someone outside 18 through 64 gets the age result no matter what else they answered.');
 check('**An exemption beats good cause.** Answer Yes to pregnant and also pick a good-cause reason. Expect exempt, and the good-cause question should never have been shown.');
 check('**Good cause only when nothing else applies.** With no exemption, the good-cause question appears as the last question.');
 check('Picking "' + strip(A.GOODCAUSE.noneLabel) + '" on the good-cause question gives the "may need to meet the work rules" result, not good cause.');
 check('Every question is optional: clicking a selected answer a second time clears it, and the result changes back.');
 check('"Skip to results" from any point gives the same result as answering nothing further.');
 
-h2('4. The guided version (archived)');
+h2('5. The guided version (archived)');
 
 w('The shipping screener is write-in only. The guided ending lives at');
 w('`archive/snap-guided/` for records. Everything in sections 1–3 applies to both builds,');
@@ -333,7 +356,7 @@ check('"' + strip(C.composedChangeLabel) + '" goes back to the questions with th
 check('Changing an answer and returning updates the letter.');
 check('There is no empty text box anywhere in the guided version.');
 
-h2('5. The letter itself');
+h2('6. The letter itself');
 
 w('Test this on both versions. The letter is the whole point: everything else is a way of');
 w('getting to it.');
@@ -357,7 +380,7 @@ check('A drawn signature appears in the printed letter as a real image, not a fo
 check('Leaving the pad empty prints a ruled line to sign by hand. This is the only route for someone who cannot use a pointer, so it must work.');
 check('Rotating the phone does not wipe a signature already drawn.');
 
-h2('6. Privacy and safety');
+h2('7. Privacy and safety');
 
 w('The questions cover pregnancy, disability, substance use treatment, and domestic violence. The');
 w('working assumption is a shared or borrowed phone.');
@@ -373,7 +396,7 @@ check('Nothing typed into the name, ID, or explanation fields appears in any URL
 check('The privacy callout on the start page and on the statement form shows the same wording: **'
   + strip(C.privacyIntroLead) + '** ' + strip(C.privacyIntroBody));
 
-h2('7. Accessibility');
+h2('8. Accessibility');
 
 w('People using this tool are more likely than average to have a disability. That is what several');
 w('of the exemptions are about.');
@@ -405,7 +428,7 @@ check('Turn on the operating system\'s "reduce motion" setting. Screens change w
 check('In high contrast mode, the selected answer is still visibly selected.');
 check('A selected answer is marked by more than colour alone: there is a filled dot or tick as well as a border.');
 
-h2('8. Devices and conditions');
+h2('9. Devices and conditions');
 
 check('An older Android phone on a slow connection. Time how long the first screen takes.');
 check('An iPhone, in Safari.');
@@ -415,14 +438,14 @@ check('Airplane mode partway through: does the tool keep working, given it needs
 check('A tablet in both orientations.');
 check('The browser Back button mid-screening. It should not lose answers or land on a broken screen.');
 
-h2('9. Review-only modes and the archived guided build');
+h2('10. Review-only modes and the archived guided build');
 
 check('The tools landing page shows one SNAP card only.');
 check('`?sample=exempt`, `?sample=goodcause`, and `?sample=notexempt` each open the right result on a review host.');
 check('Sample mode shows the "Sample result" banner and does not overwrite a real session.');
 check('The archived guided build at `archive/snap-guided/` still loads and names itself as archived.');
 
-h2('10. Things only a person can judge');
+h2('11. Things only a person can judge');
 
 w('None of this can be automated and all of it matters more than the rest of this document.');
 blank();
@@ -437,7 +460,7 @@ check('**Terms of Use and Privacy Policy links.** Absent, because the URLs are u
 check('**Quick exit destination.** Currently weather.com. Confirm that is the right neutral site.');
 check('**Languages.** English only. MassLegalHelp publishes the ABAWD article in Spanish.');
 
-h2('11. What is already checked automatically');
+h2('12. What is already checked automatically');
 
 w('Do not spend manual time on these. They run on every push and fail the build.');
 blank();
@@ -464,7 +487,7 @@ blank();
 w('The browser suite cannot run on the authoring machine, so it runs only in CI. If you are');
 w('checking a change locally, the browser paths are the ones your own testing has to cover.');
 
-h2('12. Reporting what you find');
+h2('13. Reporting what you find');
 
 w('Useful:');
 blank();

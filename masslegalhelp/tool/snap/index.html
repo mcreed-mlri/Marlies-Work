@@ -106,9 +106,15 @@
   .opt{
     display:flex;align-items:center;gap:13px;width:100%;
     font-family:inherit;font-size:16.5px;font-weight:700;text-align:left;
-    padding:16px 18px;border:2px solid var(--line);border-radius:var(--radius);
+    /* Was padding:16px 18px with min-height:52px, which rendered about 60px tall: the
+       24px mark plus 32px of padding plus 4px of border. Adding the age question put
+       five of these on the first section and ten tiles on one screen, so it came down
+       on 2026-08-06. The floor is WCAG 2.5.5, which wants 44px, and these still render
+       about 54px. Do not take the padding below 12px without re-measuring: the mark
+       plus padding plus border is what sets the real height, not min-height. */
+    padding:13px 16px;border:2px solid var(--line);border-radius:var(--radius);
     background:var(--card);cursor:pointer;color:var(--ink);line-height:1.35;
-    box-shadow:0 0 0 3px transparent;min-height:52px;
+    box-shadow:0 0 0 3px transparent;min-height:48px;
     transition:background .15s ease,border-color .15s ease,box-shadow .15s ease;
     -webkit-tap-highlight-color:transparent;touch-action:manipulation;
   }
@@ -273,7 +279,7 @@
      answer, so what is left to do is what still reads as white. */
   .qcard{
     background:var(--card);border:1.5px solid var(--panel);border-radius:12px;
-    padding:20px;box-shadow:6px 6px 0 0 var(--band-edge);
+    padding:18px 20px;box-shadow:6px 6px 0 0 var(--band-edge);
     margin-right:6px;margin-bottom:6px;
   }
   .qcard-done{background:var(--band-bottom);border-color:var(--sel)}
@@ -281,9 +287,9 @@
   /* Options. Yes/No sits in one row, so a four-question section is about a
      screen and a half on a phone instead of three. Anything longer than Yes/No
      stays stacked, because two columns of sentence fragments is unreadable. */
-  .opt-group{display:flex;flex-direction:column;gap:11px;margin:18px 0 0}
+  .opt-group{display:flex;flex-direction:column;gap:11px;margin:14px 0 0}
   .opt-group--yn{flex-direction:row}
-  .opt--yn{flex:1;justify-content:center;min-height:56px}
+  .opt--yn{flex:1;justify-content:center;min-height:52px}
   .opt--yn > span:last-child{flex:0 1 auto !important;text-align:center !important}
   /* The age question, as two boxed choices rather than bare radios, so it has
      the same hit target as every option that follows it. */
@@ -667,6 +673,11 @@ function goToResults(){
 
 function advance(){
   if(state.view === 'results') return;
+  /* Answering No to the age question ends the screening wherever they are. Checked
+     before the group walk, so Next on group 1 goes straight to the result rather than
+     through three groups of questions that cannot apply to them. Back still returns
+     here, and clearing the answer resumes the normal flow. */
+  if(S.endsScreeningEarly(state.answers)){ goToResults(); renderWithMotion(); return; }
   if(state.gc){ goToResults(); renderWithMotion(); return; }
   if(state.step < GROUPS.length - 1){ state.step++; renderWithMotion(); return; }
   if(S.shouldSkipGoodCause(state.answers)){ goToResults(); }
@@ -697,6 +708,8 @@ function back(){
 }
 
 function skipToEnd(){
+  /* shouldSkipGoodCause also covers the age result, so Skip to results lands on the
+     right screen here without a second check. */
   if(S.shouldSkipGoodCause(state.answers)){
     state.gc = false;
     goToResults();
@@ -1086,8 +1099,16 @@ function renderPage(){
      on the first group only. It used to repeat above all four, which read as
      nagging by the third one. Someone who reaches group 2 has already answered
      optional questions and knows how this works. */
+  /* Two lines rather than one, and one bolded fact each. The author's words and their
+     order are unchanged; only where the paragraph breaks is a formatting call. As one
+     three-sentence muted paragraph it had no anchor, and the sentence that matters most
+     to someone deciding whether to keep going, that nothing is required, sat in the
+     middle of it. Splitting also separates how to use the tool from who it is for.
+     Bold marks the load-bearing fact, which is the convention the start page already
+     uses on "18 through 64" and "Many adults are exempt". */
   const optionalNote = state.step === 0
-    ? `<p style="font-size:15.5px;line-height:1.55;color:var(--muted);margin:8px 0 0">Answer any that apply to you. Every question is optional.</p>`
+    ? `<p style="font-size:15.5px;line-height:1.55;color:var(--muted);margin:8px 0 0">Answer any that apply to you. <strong>Every question is optional.</strong></p>
+       <p style="font-size:15.5px;line-height:1.55;color:var(--muted);margin:6px 0 0">Remember, this tool is for people <strong>18 through 64</strong> who were told by DTA that they have to meet the ABAWD Work Rules.</p>`
     : '';
 
   const header = state.gc ? '' : `<div style="margin:0 0 20px">
@@ -1133,7 +1154,23 @@ function renderResults(){
     <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 16px">${esc(C.resultsHeadLead)}</p>`;
 
   let card = '';
-  if(rt === 'exempt'){
+  if(rt === 'ageexempt'){
+    /* Wears the same green as the exempt card, because the answer is the same good news,
+       but it carries no reasons list and no letter. DTA already holds the date of birth,
+       so there is nothing to tell them and nothing to sign; offering a statement form
+       here would invent a task. The one action is the email, and only for the case where
+       DTA sent a notice anyway. */
+    card = `<div style="border-radius:var(--radius);overflow:hidden;border:1px solid var(--ok-line)">
+      <div style="background:var(--ok-fill);padding:20px 22px;border-bottom:1px solid var(--ok-line);display:flex;gap:12px;align-items:flex-start">
+        <span aria-hidden="true" style="flex:none;width:30px;height:30px;border-radius:50%;background:var(--ok-strong);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700">✓</span>
+        <h2 class="h-result" style="color:var(--ok-ink);font-weight:400">${esc(C.ageExemptHeading)}</h2>
+      </div>
+      <div style="padding:20px 22px;background:#fff">
+        <p style="font-size:16px;line-height:1.6;color:var(--prose);margin:0 0 14px">${esc(C.ageExemptBody)}</p>
+        <p style="font-size:16px;line-height:1.6;color:var(--prose);margin:0 0 14px">${esc(C.ageExemptNoticeLead)} <em>${esc(C.ageExemptNoticeEmphasis)}</em> ${esc(C.ageExemptNoticeEnd)} <a href="mailto:${email}">${email}</a>.</p>
+        ${learnMore}
+      </div></div>`;
+  } else if(rt === 'exempt'){
     const items = rs.map(r => `<li style="display:flex;align-items:flex-start;gap:11px;font-size:16px;line-height:1.5;color:var(--ink);padding:12px 0;border-bottom:1px solid var(--field)">
       <span aria-hidden="true" style="width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex:none;margin-top:1px">✓</span>
       <span>${esc(r)}</span></li>`).join('');
@@ -1307,8 +1344,14 @@ function renderResults(){
     </div>`;
   }
 
-  // Exempt/good-cause cards include learn-more; not-exempt includes it in the card.
-  const footer = `<div style="margin:24px 0 0">${rt === 'exempt' || rt === 'goodcause' || rt === 'notexempt' ? '' : learnMore}${rt === 'notexempt' ? '' : lostSnap}</div>`;
+  /* Every card carries its own learn-more link, so the footer adds none. Written as a
+     list rather than collapsed to '' so that a future result type without one in its
+     card still gets it here; that is what this condition is for. The age card would
+     have shown the link twice before 'ageexempt' was added to it.
+
+     lostSnap does show on the age result, and should: someone outside 18 through 64 who
+     lost SNAP over these rules is exactly who that address is for. */
+  const footer = `<div style="margin:24px 0 0">${['exempt', 'goodcause', 'notexempt', 'ageexempt'].indexOf(rt) !== -1 ? '' : learnMore}${rt === 'notexempt' ? '' : lostSnap}</div>`;
 
   return `<div class="${animClass()}">${resultsHead}${card}${form}${nextSteps}${footer}
     <div class="no-print" style="display:flex;flex-wrap:wrap;gap:12px;margin-top:22px">

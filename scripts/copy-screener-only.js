@@ -34,7 +34,8 @@ const INLINE = [
   // Stops at the first tag, so the decorative aria-hidden arrow stays out of the copy.
   { id: 'page.startButton', re: />(Click here to check[^<]*)</ },
   { id: 'page.dtaNote', re: /<p [^>]*>(The Department of Transitional Assistance[\s\S]*?)<\/p>/ },
-  { id: 'page.answerAny', re: /<p [^>]*>(Answer any that apply to you\. Every question is optional\.)<\/p>/ },
+  { id: 'page.answerAny', re: /<p [^>]*>(Answer any that apply to you\.[\s\S]*?)<\/p>/ },
+  { id: 'page.scopeReminder', re: /<p [^>]*>(Remember, this tool is for people[\s\S]*?)<\/p>/ },
   { id: 'page.skippedWarning', re: />(If you skipped questions[^<]+)</ },
   { id: 'page.sigAlt', re: /<p id="sig-alt"[^>]*>([^<]+)<\/p>/ },
   { id: 'btn.skipToResults', re: />(Skip to results)</ },

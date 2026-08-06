@@ -168,6 +168,7 @@ Sixteen questions in four groups, every one optional, then the good cause questi
 
 **Group 1: Your Family and Household**
 
+- `ageRange` (yn)
 - `child14` (yn, exempts on "yes")
 - `child6` (yn, exempts on "yes")
 - `caretaker` (yn, exempts on "yes")
@@ -236,6 +237,9 @@ these double as test cases; the JSON carries them in a form a test generator can
 | Several exemptions at once | `exempt` | Live with a child under 14 years old; Pregnant; Earn enough income to be exempt from the work rules |
 | No exemption, transport problem | `goodcause` | *none* |
 | No exemption, no good cause | `notexempt` | *none* |
+| Not 18 through 64 | `ageexempt` | *none* |
+| Is 18 through 64, nothing else answered | `notexempt` | *none* |
+| Not 18 through 64, and other exemptions answered | `ageexempt` | Pregnant |
 
 ## Notes for the Docassemble port
 

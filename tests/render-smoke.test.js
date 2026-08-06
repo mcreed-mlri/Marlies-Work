@@ -40,10 +40,15 @@ const PAGES = [
   { label: 'archive/snap-guided/index.html', dir: path.join(__dirname, '..', 'archive', 'snap-guided'), file: 'index.html', guided: true }
 ];
 
+/* Keys are plain, 'guided:' for the archived build only, or 'ship:' for the shipping
+ * build only. 'ship:' arrived with the age result, which is classic2 copy: driving it on
+ * the archived guided page would assert against wording that build has never had. */
 function entriesFor(page, obj) {
-  return Object.fromEntries(Object.entries(obj).filter(([k]) =>
-    k.startsWith('guided:') ? page.guided : !k.startsWith('guided:')
-  ));
+  return Object.fromEntries(Object.entries(obj).filter(([k]) => {
+    if (k.startsWith('guided:')) return page.guided;
+    if (k.startsWith('ship:')) return !page.guided;
+    return true;
+  }));
 }
 
 /* Result screens to drive, as answer sets. Keyed so a failure names the screen. */
@@ -57,6 +62,11 @@ const SCREENS = {
   'exempt: named disability': 'state.answers={disability:["ssi_ssdi"]}; state.view="results"; render();',
   'exempt: several reasons at once':
     'state.answers={child14:"yes",working:"income_weekly",housing:"no",housingFollowup:NONE,disability:["other"],pregnant:"yes"}; state.view="results"; render();',
+  /* The age result is classic2 only, so it is keyed to run on the shipping page and not
+     on the archived guided build, which has no wording for it. */
+  'ship:age exempt': 'state.answers={ageRange:"no"}; state.view="results"; render();',
+  'ship:age exempt outranks other exemptions':
+    'state.answers={ageRange:"no",pregnant:"yes",goodcause:"transport"}; state.view="results"; render();',
   'good cause': 'state.answers={goodcause:"transport"}; state.view="results"; render();',
   'must meet the rules': 'state.answers={child14:"no",health:"no"}; state.view="results"; render();',
   /* Every question page, so a template error on a later group cannot hide. */
@@ -340,7 +350,11 @@ describe('the optional-questions note appears above group 1 only', () => {
   for (const build of PAGES) {
     it(build.label, () => {
       const src = inlineScript(fs.readFileSync(path.join(build.dir, build.file), 'utf8'), build.label);
-      const note = /Answer any that apply to you\. Every question is optional\./;
+      /* Tolerant of markup between the two sentences. The shipping build bolds "Every
+       * question is optional." and splits the paragraph after it; the archived guided
+       * build still has the original single run of plain text. Both must read the same
+       * to someone looking at the screen, which is what this is really guarding. */
+      const note = /Answer any that apply to you\.[\s\S]{0,60}Every question is optional\./;
       assert.match(src, note, build.label + ': the note is gone entirely.');
       // The line has to sit behind a first-group condition, not render every time.
       const guarded = /state\.step === 0[\s\S]{0,400}?Answer any that apply to you/.test(src);
@@ -349,6 +363,20 @@ describe('the optional-questions note appears above group 1 only', () => {
         build.label + ': the optional-questions note is not gated on state.step === 0, so ' +
         'it renders above every group again. The author asked for group 1 only.'
       );
+
+      /* The scope reminder landed with the age question on 2026-08-06 and is group 1 only
+       * for the same reason. Shipping build only: the archive predates it. */
+      if (!build.guided) {
+        assert.match(
+          src, /Remember, this tool is for people <strong>18 through 64<\/strong>/,
+          build.label + ': the scope reminder is gone, or no longer bolds the age range.'
+        );
+        assert.ok(
+          /state\.step === 0[\s\S]{0,700}?Remember, this tool is for people/.test(src),
+          build.label + ': the scope reminder is not gated on state.step === 0, so it '
+          + 'repeats above every group.'
+        );
+      }
     });
   }
 });

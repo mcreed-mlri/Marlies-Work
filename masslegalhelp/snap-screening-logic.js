@@ -176,6 +176,14 @@
     /* Author's website copy draft. `helpHtml`, `listItems`, `note`, and
      * `yesLabel` are optional fields the classic-v2 page knows how to render. */
     classic2: {
+      /* Only classic2 defines this one. An age question and an `ageinfo` result were
+       * removed from the start page in 62498cc; the author asked for it back on
+       * 2026-08-06 as the first question in group 1, with an exempt result rather than
+       * a gate. The archived guided build shares this module and never had it, so
+       * leaving the copy out of the other variants keeps that record intact:
+       * pageQuestionsFor already drops ids with no question behind them, and create()
+       * only builds this question when its copy exists. */
+      ageRange: { text: 'Are you 18 through 64 years old?' },
       child14: {
         text: 'Do you live with a child under 14 years old?',
         helpHtml: 'If you live with a child under 14 who should be part of your <a href="' + LINKS.snapHousehold + '" target="_blank" rel="noopener">SNAP household</a>, even if they are not eligible (for example, because of immigration status or if they are a foster child), select “Yes.”'
@@ -768,7 +776,7 @@
   }
 
   const GROUPS = [
-    { title: 'Children and people you care for', ids: ['child14', 'child6', 'caretaker', 'pregnant'], classic2Title: 'Your Family and Household' },
+    { title: 'Children and people you care for', ids: ['ageRange', 'child14', 'child6', 'caretaker', 'pregnant'], classic2Title: 'Your Family and Household' },
     { title: 'Your health, housing, and safety', ids: ['health', 'housing', 'housingFollowup', 'dv'] },
     { title: 'Benefits, programs, and cash assistance', ids: ['tafdc', 'disability', 'substanceUse', 'unemployment', 'stateagency'], classic2Title: 'Public Benefits and Participating in Programs' },
     { title: 'School, work, and background', ids: ['school', 'working', 'tribe'] }
@@ -812,6 +820,15 @@
     const workOpts = workOptions(variant);
 
     const questions = [
+      /* No exemptOn and no reason: "No" here does not add an exemption to the list, it
+       * changes the result outright, because the letter every other exemption leads to
+       * would be the wrong advice. DTA already holds the person's date of birth, so
+       * there is nothing for them to tell DTA and nothing to sign. resultTypeFor
+       * handles it; see 'ageexempt' there.
+       *
+       * Built only where its copy exists, which is classic2. The archived guided build
+       * shares this module and never had an age question. */
+      ...(copy.ageRange ? [{ id: 'ageRange', type: 'yn', text: copy.ageRange.text }] : []),
       { id: 'child14', type: 'yn', text: copy.child14.text, help: copy.child14.help, exemptOn: 'yes', reason: REASONS.child14 },
       { id: 'health', type: 'yn', text: copy.health.text, exemptOn: 'yes', reason: REASONS.health },
       { id: 'child6', type: 'yn', text: copy.child6.text, help: copy.child6.help, exemptOn: 'yes', reason: REASONS.child6 },
@@ -1063,7 +1080,16 @@
     return out;
   }
 
+  /* Checked before the exemption list on purpose. Someone outside 18 through 64 is
+   * outside the rules altogether, so the reasons the rest of the screening collects do
+   * not change the answer and listing them would imply DTA needs to hear about them.
+   * The author asked for "No" to take the person straight to this result. */
+  function isAgeExempt(answers) {
+    return answers.ageRange === 'no';
+  }
+
   function resultTypeFor(answers, questions) {
+    if (isAgeExempt(answers)) return 'ageexempt';
     const exempt = exemptReasonsFor(answers, questions);
     if (exempt.length) return 'exempt';
     const g = answers.goodcause;
@@ -1071,9 +1097,19 @@
     return 'notexempt';
   }
 
+  /* True when the remaining questions cannot change the result, so the screening should
+   * stop asking. 'exempt' skips only the good-cause question; 'ageexempt' skips the rest
+   * of the screening, which is why endsScreeningEarly exists separately below. */
   function shouldSkipGoodCause(answers, questions) {
     const rt = resultTypeFor(answers, questions);
-    return rt === 'exempt';
+    return rt === 'exempt' || rt === 'ageexempt';
+  }
+
+  /* Next and Skip to results both jump straight to the result when this is true. Nothing
+   * after group 1 applies to someone the rules do not cover, and asking anyway would
+   * suggest the answers still matter. */
+  function endsScreeningEarly(answers) {
+    return isAgeExempt(answers);
   }
 
   function goodCauseText(answers, gcText) {
@@ -1147,6 +1183,26 @@
      * dotted-underline hint the word "exempt" gets. */
     abawdTermExplain: 'ABAWD stands for Able-Bodied Adults With/Without Dependents. If DTA tells you that you are an ABAWD, you may need to meet certain work rules. You may also be exempt from (don\u2019t need to meet) these rules, and this online tool can help you figure that out.',
     abawdTermHintLabel: 'What does ABAWD mean?',
+    /* The age result, author's wording, 2026-08-06. Split into three parts for the same
+     * reason notExemptReapplyLead/Link/End is: one sentence carries an emphasis and a
+     * mailto in the middle, and esc() cannot pass markup through. The emphasis on
+     * "still" is the author's, marked "(italicize)" in her note, and it is the point of
+     * the sentence: DTA holding your date of birth and sending the notice anyway is the
+     * thing worth reporting.
+     *
+     * The author wrote this as one block. It is split at the first sentence because that
+     * sentence is the result and the rest is the explanation, which is the shape every
+     * other result screen already uses: a sentence in the coloured header, detail in the
+     * white panel below. Every word is hers and the order is unchanged. Putting all three
+     * sentences in the header would have made a paragraph into an h2.
+     *
+     * No letter. The screening cannot tell anyone their exact age, so the body restates
+     * the range rather than asserting which side of it they are on. */
+    ageExemptHeading: 'You are exempt and do not need to meet the ABAWD work rules because of your age.',
+    ageExemptBody: 'If you are younger than 18 or 65 years and older, the ABAWD Work Rules don’t apply to you. DTA should already have your age and date of birth information on file, so you don’t have to take any further action.',
+    ageExemptNoticeLead: 'If you are exempt because of age and DTA',
+    ageExemptNoticeEmphasis: 'still',
+    ageExemptNoticeEnd: 'sent you a SNAP and Work notice, please email',
     printLead: 'Download or print these results to get a signed letter you can send to DTA. (More info on how to contact DTA in the box below)',
     exemptHeading: EXEMPT_HEADING_TEXT,
     /* Emptied 2026-07-30 at the author's direction. The exempt heading now ends
@@ -1639,6 +1695,7 @@
       exemptReasons: (answers) => exemptReasonsFor(answers, QUESTIONS),
       resultType: (answers) => resultTypeFor(answers, QUESTIONS),
       shouldSkipGoodCause: (answers) => shouldSkipGoodCause(answers, QUESTIONS),
+      endsScreeningEarly: (answers) => endsScreeningEarly(answers),
       goodCauseText: (answers) => goodCauseText(answers, GC_TEXT),
       statementPrompts: (answers) => statementPromptsFor(exemptReasonsFor(answers, QUESTIONS), resultTypeFor(answers, QUESTIONS)),
       /* Guided mode. Both read the same reasons the write-in prompts do, so a

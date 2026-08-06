@@ -61,7 +61,12 @@ const INLINE = [
      is not one. */
   { id: 'page.startButton', re: />(Click here to check[^<]*)</ },
   { id: 'page.dtaNote', re: /<p [^>]*>(The Department of Transitional Assistance[\s\S]*?)<\/p>/ },
-  { id: 'page.answerAny', re: /<p [^>]*>(Answer any that apply to you\. Every question is optional\.)<\/p>/ },
+  /* Two paragraphs since 2026-08-06. They were one, and the author's addition made it
+     three sentences with no anchor, so it splits after "optional." Two ids rather than
+     one because they are now two editable strings: how to use the tool, and who it is
+     for. Both carry bold, which the converter keeps. */
+  { id: 'page.answerAny', re: /<p [^>]*>(Answer any that apply to you\.[\s\S]*?)<\/p>/ },
+  { id: 'page.scopeReminder', re: /<p [^>]*>(Remember, this tool is for people[\s\S]*?)<\/p>/ },
   { id: 'page.sigAlt', re: /<p id="sig-alt"[^>]*>([^<]+)<\/p>/ },
   // Buttons and navigation (skip/startOver/delete still inline in the page)
   { id: 'btn.skipToResults', re: />(Skip to results)</ },
@@ -262,6 +267,7 @@ w('question, and the good cause question in section 3 is skipped when the answer
 w('point to an exemption.');
 blank();
 item('page.answerAny', inline['page.answerAny'], { note: 'above group 1 only' });
+item('page.scopeReminder', inline['page.scopeReminder'], { note: 'above group 1 only' });
 
 A.GROUPS.forEach((g, gi) => {
   sub('Group ' + (gi + 1) + ': ' + g.title);
@@ -350,14 +356,27 @@ blank();
 
 /* ---- Result screens ---- */
 
-section('5. Result: you may be exempt');
+section('5. Result: exempt because of your age');
+
+w('Reached by answering **No** to "Are you 18 through 64 years old?" in section 1. That');
+w('answer ends the screening immediately, so none of the later questions are asked and');
+w('this screen replaces the other three results. It offers no letter: DTA already holds');
+w('the date of birth, so there is nothing to tell them and nothing to sign.');
+blank();
+w('The first sentence is the green heading and the rest is the panel below it, which is');
+w('how the other result screens are built. The emphasis on *still* is yours.');
+blank();
+['ageExemptHeading', 'ageExemptBody', 'ageExemptNoticeLead', 'ageExemptNoticeEmphasis', 'ageExemptNoticeEnd']
+  .forEach(k => item(k, C[k]));
+
+section('6. Result: you may be exempt');
 ['exemptHeading', 'exemptReasonsIntro'].forEach(k => item(k, C[k]));
 w('Under the heading, the screener lists the reasons the answers point to. Each reason');
 w('phrase comes from the question that produced it. Then, when relevant, one of these:');
 blank();
 ['exemptProofWork', 'exemptProofHousing', 'exemptProofDisability'].forEach(k => item(k, C[k]));
 
-section('6. Result: you may have a good reason for missing hours');
+section('7. Result: you may have a good reason for missing hours');
 ['goodCauseHeading', 'goodCauseIntro', 'goodCauseLead'].forEach(k => item(k, C[k]));
 w('The categories listed on this screen:');
 blank();
@@ -369,7 +388,7 @@ A.GOODCAUSE_CATEGORIES.forEach(cat => {
 });
 blank();
 
-section('7. Result: you may need to meet the work rules');
+section('8. Result: you may need to meet the work rules');
 ['notExemptHeading', 'notExemptIntro', 'workRulesHeading', 'workOption1', 'workOption1Unpaid',
   'workOption1Training', 'workOption2', 'meetingDtaHeading', 'meetingDtaPaid',
   'meetingDtaStatement', 'goodCauseInNotExemptBold', 'goodCauseInNotExemptIntro',
@@ -379,7 +398,7 @@ section('7. Result: you may need to meet the work rules');
 
 /* ---- The statement ---- */
 
-section('8. The printable "Tell DTA" statement');
+section('9. The printable "Tell DTA" statement');
 
 w('Shown on the exempt and good cause results. Someone fills in the blanks, signs it, and');
 w('mails, faxes, or uploads it to DTA.');

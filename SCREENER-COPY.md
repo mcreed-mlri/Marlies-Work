@@ -83,11 +83,19 @@ point to an exemption.
 
 **`page.answerAny`**  (above group 1 only)
 
-> Answer any that apply to you. Every question is optional.
+> Answer any that apply to you. **Every question is optional.**
 
 > **Question for you:** Applied: this now shows above group 1 only, per your note that it "only needs to be said once in section 1." It used to repeat above all four groups.
 
+**`page.scopeReminder`**  (above group 1 only)
+
+> Remember, this tool is for people **18 through 64** who were told by DTA that they have to meet the ABAWD Work Rules.
+
 ### Group 1: Your Family and Household
+
+**`q.ageRange`**  (Yes / No)
+
+> Are you 18 through 64 years old?
 
 **`q.child14`**  (Yes / No; "yes" points to an exemption)
 
@@ -346,7 +354,37 @@ Four results are possible. This block appears on more than one of them.
 
 > If you lost your SNAP or are about to lose your SNAP because of the ABAWD rules, email us at
 
-## 6. Result: you may be exempt
+## 6. Result: exempt because of your age
+
+Reached by answering **No** to "Are you 18 through 64 years old?" in section 1. That
+answer ends the screening immediately, so none of the later questions are asked and
+this screen replaces the other three results. It offers no letter: DTA already holds
+the date of birth, so there is nothing to tell them and nothing to sign.
+
+The first sentence is the green heading and the rest is the panel below it, which is
+how the other result screens are built. The emphasis on *still* is yours.
+
+**`ageExemptHeading`**
+
+> You are exempt and do not need to meet the ABAWD work rules because of your age.
+
+**`ageExemptBody`**
+
+> If you are younger than 18 or 65 years and older, the ABAWD Work Rules don’t apply to you. DTA should already have your age and date of birth information on file, so you don’t have to take any further action.
+
+**`ageExemptNoticeLead`**
+
+> If you are exempt because of age and DTA
+
+**`ageExemptNoticeEmphasis`**
+
+> still
+
+**`ageExemptNoticeEnd`**
+
+> sent you a SNAP and Work notice, please email
+
+## 7. Result: you may be exempt
 
 **`exemptHeading`**
 
@@ -373,7 +411,7 @@ phrase comes from the question that produced it. Then, when relevant, one of the
 
 > Tell DTA the details about your disability benefit so they can review your exemption.
 
-## 7. Result: you may have a good reason for missing hours
+## 8. Result: you may have a good reason for missing hours
 
 **`goodCauseHeading`**
 
@@ -398,7 +436,7 @@ The categories listed on this screen:
 - **Employment issues**  Employer or work environment discriminates on the basis of age, sex, race, religion, ethnicity, or physical or mental disability.
   More examples link: https://www.masslegalhelp.org/public-benefits-ssi/snap-food-benefits/snap-3-month-time-limit-abawd-work-rules#:~:text=What%20if%20I%20had%20a%20good%20reason%20for%20not%20meeting%20the%20Work%20Rules%3F
 
-## 8. Result: you may need to meet the work rules
+## 9. Result: you may need to meet the work rules
 
 **`notExemptHeading`**
 
@@ -486,7 +524,7 @@ The categories listed on this screen:
 
 > if you lost or are about to lose SNAP because of these rules.
 
-## 9. The printable "Tell DTA" statement
+## 10. The printable "Tell DTA" statement
 
 Shown on the exempt and good cause results. Someone fills in the blanks, signs it, and
 mails, faxes, or uploads it to DTA.
@@ -570,7 +608,7 @@ An explainer opens next to the signature box:
 
 > Telling DTA about why you missed hours can help them update your SNAP case more quickly.
 
-## 10. The guided version of the statement (archived)
+## 11. The guided version of the statement (archived)
 
 **Archived.** The shipping screener is write-in only. This section documents the
 guided ending kept for records at `archive/snap-guided/index.html`. Same questions,
@@ -862,7 +900,7 @@ And answering none of them:
 
 > I have a health condition that makes it hard for me to work 30 or more hours a week.
 
-## 11. Printing, saving, and email
+## 12. Printing, saving, and email
 
 **`printFormLabel`**
 
@@ -976,7 +1014,7 @@ And answering none of them:
 
 > This summary was shortened to fit in an email. Use "Copy the text" in the screening tool to get the full version.
 
-## 12. Other ways to reach DTA
+## 13. Other ways to reach DTA
 
 **`otherWaysHeading`**
 
@@ -997,7 +1035,7 @@ The contact details shown, which are real and worth checking:
 - Mail: DTA Document Processing Center, P.O. Box 4406, Taunton, MA 02780-0420
 - Fax: (617) 887-8765
 
-## 13. Numbers the screening depends on
+## 14. Numbers the screening depends on
 
 Not copy, but they appear in the wording of the work question and decide who comes out
 exempt. Last checked November 2025.
@@ -1009,7 +1047,7 @@ exempt. Last checked November 2025.
 | Hours a week at minimum wage that make someone exempt | 14.5 |
 | Hours a week that count while earning under minimum wage | 30 |
 
-## 14. Copy the developer wrote, which needs your approval
+## 15. Copy the developer wrote, which needs your approval
 
 Everything above came from you or from the earlier MLRI draft. The strings in this
 section did not. They were written to fill gaps while building the MassLegalHelp version,
@@ -1050,7 +1088,7 @@ benefits page is worse than no link. This version also has no Terms of Use check
 all, which earlier versions did. And with the disclaimer gone the tool no longer says
 anywhere that it is not legal advice.
 
-## 15. Everything else
+## 16. Everything else
 
 These are shown to people too, but did not fit the sections above. Listed so the
 document stays complete.
@@ -1071,7 +1109,7 @@ document stays complete.
 
 > See my letter →
 
-## 16. Every link the screener sends people to
+## 17. Every link the screener sends people to
 
 | Name | Where it goes |
 |---|---|

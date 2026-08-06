@@ -167,8 +167,20 @@ def exempt_reasons(answers):
     return out
 
 
+def is_age_exempt(answers):
+    """Outside 18 through 64, so the rules do not apply at all.
+
+    Checked before the exemption list, matching isAgeExempt in the JavaScript
+    reference. Someone outside the range is outside the rules, so the reasons the
+    rest of the screening collects cannot change the answer.
+    """
+    return answers.get("ageRange") == "no"
+
+
 def result_type(answers):
-    """One of 'exempt', 'goodcause', 'notexempt'."""
+    """One of 'ageexempt', 'exempt', 'goodcause', 'notexempt'."""
+    if is_age_exempt(answers):
+        return "ageexempt"
     if exempt_reasons(answers):
         return "exempt"
     good_cause = answers.get("goodcause")
@@ -179,7 +191,12 @@ def result_type(answers):
 
 def should_skip_good_cause(answers):
     """Good cause cannot change an exempt outcome, so it is not asked."""
-    return result_type(answers) == "exempt"
+    return result_type(answers) in ("exempt", "ageexempt")
+
+
+def ends_screening_early(answers):
+    """The age result stops the screening where it stands; nothing after applies."""
+    return is_age_exempt(answers)
 
 
 # Longer phrasing for the printable statement, one per good cause answer. Author

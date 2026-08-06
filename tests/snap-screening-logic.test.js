@@ -104,6 +104,55 @@ describe('snap-screening-logic', () => {
     assert.equal(classic.resultType({ dv: 'yes' }), 'exempt');
   });
 
+  /* The age question was added on 2026-08-06 as the first question in group 1. It is not
+   * an exemption reason: answering No changes the result outright, because someone
+   * outside 18 through 64 is outside the rules and the letter every other exemption
+   * leads to would be the wrong advice. */
+  describe('the age question', () => {
+    it('No gives the age result', () => {
+      assert.equal(classic2.resultType({ ageRange: 'no' }), 'ageexempt');
+    });
+
+    it('Yes on its own changes nothing', () => {
+      assert.equal(classic2.resultType({ ageRange: 'yes' }), 'notexempt');
+      assert.equal(classic2.resultType({ ageRange: 'yes', pregnant: 'yes' }), 'exempt');
+    });
+
+    it('is optional, so leaving it blank keeps the normal flow', () => {
+      assert.equal(classic2.resultType({}), 'notexempt');
+      assert.equal(classic2.resultType({ pregnant: 'yes' }), 'exempt');
+    });
+
+    /* The precedence is the part most likely to regress, and the part a port is most
+     * likely to get wrong. Age wins over both an exemption and a good cause answer. */
+    it('outranks exemptions and good cause', () => {
+      assert.equal(classic2.resultType({ ageRange: 'no', pregnant: 'yes' }), 'ageexempt');
+      assert.equal(classic2.resultType({ ageRange: 'no', goodcause: 'transport' }), 'ageexempt');
+      assert.equal(
+        classic2.resultType({ ageRange: 'no', pregnant: 'yes', goodcause: 'transport' }),
+        'ageexempt'
+      );
+    });
+
+    it('ends the screening early, and nothing else does', () => {
+      assert.equal(classic2.endsScreeningEarly({ ageRange: 'no' }), true);
+      assert.equal(classic2.endsScreeningEarly({ ageRange: 'yes' }), false);
+      assert.equal(classic2.endsScreeningEarly({}), false);
+      // An ordinary exemption keeps asking; only the good cause question is skipped.
+      assert.equal(classic2.endsScreeningEarly({ pregnant: 'yes' }), false);
+      assert.equal(classic2.shouldSkipGoodCause({ ageRange: 'no' }), true);
+    });
+
+    /* The archived guided build shares this module and never had an age question, so its
+     * copy variants deliberately do not define one. If that stops being true the archive
+     * starts rendering a screen it has no wording for. */
+    it('exists in classic2 only, so the frozen archive is untouched', () => {
+      assert.ok(classic2.qById('ageRange'), 'classic2 should have the age question');
+      assert.ok(!classic.qById('ageRange'), 'classic must not gain the age question');
+      assert.ok(!v2.qById('ageRange'), 'v2 must not gain the age question');
+    });
+  });
+
   it('resultType no longer returns meeting', () => {
     assert.notEqual(classic.resultType({ working: 'hours_30' }), 'meeting');
   });

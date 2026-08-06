@@ -459,6 +459,12 @@
       "title": "Your Family and Household",
       "questions": [
         {
+          "id": "ageRange",
+          "type": "yn",
+          "showIf": null,
+          "exemptOn": null
+        },
+        {
           "id": "child14",
           "type": "yn",
           "showIf": null,
@@ -756,6 +762,40 @@
       "expect": {
         "outcome": "notexempt",
         "reasons": []
+      }
+    },
+    {
+      "name": "Not 18 through 64",
+      "answers": {
+        "ageRange": "no"
+      },
+      "expect": {
+        "outcome": "ageexempt",
+        "reasons": []
+      }
+    },
+    {
+      "name": "Is 18 through 64, nothing else answered",
+      "answers": {
+        "ageRange": "yes"
+      },
+      "expect": {
+        "outcome": "notexempt",
+        "reasons": []
+      }
+    },
+    {
+      "name": "Not 18 through 64, and other exemptions answered",
+      "answers": {
+        "ageRange": "no",
+        "pregnant": "yes",
+        "goodcause": "transport"
+      },
+      "expect": {
+        "outcome": "ageexempt",
+        "reasons": [
+          "Pregnant"
+        ]
       }
     }
   ]

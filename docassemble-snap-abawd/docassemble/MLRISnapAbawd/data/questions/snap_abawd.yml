@@ -51,6 +51,7 @@ code: |
 # Everything except goodcause. Used for the skip decision above.
 code: |
   partial_answers = {
+    'ageRange': ageRange,
     'child14': child14,
     'health': health,
     'child6': child6,
@@ -86,7 +87,7 @@ question: |
 subquestion: |
   Some adults on SNAP who are **18 through 64** have to meet ABAWD work rules to get SNAP for more than 3 months. **Many adults are exempt**. Being "exempt" means that you don’t have to meet the work rules to keep getting SNAP.
 
-  This short online form asks a few questions to check if you need to meet the ABAWD work rules or if you are exempt. It takes less than 2 minutes.
+  This short online form asks a few questions to check if you need to meet the ABAWD work rules or if you are exempt. **It takes less than 2 minutes.**
 
   **Your information is private.** MLRI will not save any personal information you share on this form.
 continue button field: introduction
@@ -95,6 +96,9 @@ question: "Your Family and Household"
 subquestion: |
   Answer any that apply to you. Every question is optional.
 fields:
+  - "Are you 18 through 64 years old?": ageRange
+    datatype: yesnoradio
+    required: False
   - "Do you live with a child under 14 years old?": child14
     datatype: yesnoradio
     required: False

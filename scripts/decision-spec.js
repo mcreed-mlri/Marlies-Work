@@ -333,7 +333,15 @@ const CASES = [
   { name: 'Safety concern', a: { dv: 'yes' } },
   { name: 'Several exemptions at once', a: { child14: 'yes', pregnant: 'yes', working: 'income_weekly' } },
   { name: 'No exemption, transport problem', a: { goodcause: 'transport' } },
-  { name: 'No exemption, no good cause', a: { goodcause: NONE } }
+  { name: 'No exemption, no good cause', a: { goodcause: NONE } },
+  { name: 'Not 18 through 64', a: { ageRange: 'no' } },
+  { name: 'Is 18 through 64, nothing else answered', a: { ageRange: 'yes' } },
+  /* Pins the precedence, which is the part of this rule a port is most likely to get
+     wrong. Age is checked before the exemption list, so this is `ageexempt` and not
+     `exempt`, even though pregnancy alone would be an exemption and a transport problem
+     alone would be good cause. Someone outside the range is outside the rules, so
+     listing reasons would imply DTA needs to hear about them. */
+  { name: 'Not 18 through 64, and other exemptions answered', a: { ageRange: 'no', pregnant: 'yes', goodcause: 'transport' } }
 ];
 w('| Example | Outcome | Reasons recorded |');
 w('|---|---|---|');

@@ -104,3 +104,26 @@ Feature: SNAP work rules screening reaches the right outcome
       | goodcause | __none |
     Then the variable "outcome" should be "notexempt"
 
+  Scenario: Not 18 through 64
+    Given I start the interview at "snap_abawd.yml"
+    And I set the variables to these values
+      | var | value |
+      | ageRange | no |
+    Then the variable "outcome" should be "ageexempt"
+
+  Scenario: Is 18 through 64, nothing else answered
+    Given I start the interview at "snap_abawd.yml"
+    And I set the variables to these values
+      | var | value |
+      | ageRange | yes |
+    Then the variable "outcome" should be "notexempt"
+
+  Scenario: Not 18 through 64, and other exemptions answered
+    Given I start the interview at "snap_abawd.yml"
+    And I set the variables to these values
+      | var | value |
+      | ageRange | no |
+      | pregnant | yes |
+      | goodcause | transport |
+    Then the variable "outcome" should be "ageexempt"
+

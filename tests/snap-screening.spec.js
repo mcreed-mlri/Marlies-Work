@@ -62,6 +62,39 @@ test.describe('SNAP ABAWD screening (the shipping build)', () => {
     await expect(page.getByRole('button', { name: /Click here to check if the ABAWD work rules apply to you/i })).toBeVisible();
   });
 
+  /* Answering No to the age question ends the screening on section 1. This is the only
+     path that skips groups, so it is the one most likely to break when navigation is
+     touched, and the only result that offers no letter. */
+  test('No to the age question goes straight to the age result', async ({ page }) => {
+    await startScreener(page);
+    await yn(page, 'ageRange', 'no').click();
+    await clickNext(page);
+    await expect(page.getByRole('heading', {
+      name: /You are exempt and do not need to meet the ABAWD work rules because of your age/i
+    })).toBeVisible();
+    await expect(page.getByText(/DTA should already have your age and date of birth/i)).toBeVisible();
+    await expect(page.getByRole('link', { name: 'info@masslegalservices.org' })).toBeVisible();
+    // No letter: DTA already holds the date of birth, so there is nothing to sign.
+    await expect(page.getByLabel(/Your name/i)).toHaveCount(0);
+    await expect(page.getByRole('button', { name: /Print or save/i })).toHaveCount(0);
+  });
+
+  test('the age result outranks an exemption answered in the same section', async ({ page }) => {
+    await startScreener(page);
+    await yn(page, 'pregnant', 'yes').click();
+    await yn(page, 'ageRange', 'no').click();
+    await clickNext(page);
+    await expect(page.getByRole('heading', { name: /because of your age/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: EXEMPT_HEADING })).toHaveCount(0);
+  });
+
+  test('Yes to the age question carries on through the sections', async ({ page }) => {
+    await startScreener(page);
+    await yn(page, 'ageRange', 'yes').click();
+    await clickNext(page);
+    await expect(page.getByText(/Section 2 of 4/i)).toBeVisible();
+  });
+
   test('exempt result states the exemption and shows one blank per reason', async ({ page }) => {
     await startScreener(page);
     await yn(page, 'caretaker', 'yes').click();   // group 1

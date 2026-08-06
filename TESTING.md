@@ -147,18 +147,41 @@ be wrong in a way nobody notices.
 - [ ] Answering **Yes** to "Do you have a regular place to sleep at night?" hides the follow-up entirely.
 - [ ] Answering **No**, picking something, then changing to **Yes** clears the follow-up rather than keeping a hidden answer.
 
-## 3. The order the decision is made in
+## 3. The age question and its result
+
+Added 2026-08-06 as the first question in section 1. It is the only answer that ends the
+screening where it stands, and the only result that offers no letter, so none of the
+checks above cover it. It is also absent from the exemption table in section 2 on purpose:
+answering No is not an exemption reason, it changes the result outright.
+
+The question is optional, like every other one. It is deliberately not required.
+
+- [ ] Answer **No** and click **Next** on section 1. You should land straight on the age result without seeing sections 2, 3, or 4.
+- [ ] Answer **No** and use **Skip to results** instead. Same screen.
+- [ ] The result heading reads: You are exempt and do not need to meet the ABAWD work rules because of your age.
+- [ ] The panel explains that DTA already has the date of birth on file and that no further action is needed.
+- [ ] The word **still** is in italics in the sentence about DTA sending a notice anyway. That emphasis is the author's and is the point of the sentence.
+- [ ] The email address in that sentence opens a mail app addressed to info@masslegalservices.org.
+- [ ] There is **no** statement form, no name or signature field, and no "Print or save this form" button on this screen. DTA already holds the date of birth, so there is nothing to sign.
+- [ ] **Age beats everything.** Answer Yes to pregnant and No to the age question in the same section. Expect the age result, not the exempt result, and no list of reasons.
+- [ ] Answer **Yes** to the age question and continue. Section 2 appears and the screening behaves exactly as before.
+- [ ] Leave the age question blank and continue. Nothing changes: the result is whatever the other answers give.
+- [ ] From the age result, **← Back** returns to section 1 with the answer still selected.
+- [ ] Clicking the selected **No** a second time clears it, and **Next** then goes to section 2 as normal.
+
+## 4. The order the decision is made in
 
 These are precedence rules. Each one is a case where two things are true at once and only one
 answer is right.
 
+- [ ] **The age result beats every other outcome.** It is checked before the exemption list, so someone outside 18 through 64 gets the age result no matter what else they answered.
 - [ ] **An exemption beats good cause.** Answer Yes to pregnant and also pick a good-cause reason. Expect exempt, and the good-cause question should never have been shown.
 - [ ] **Good cause only when nothing else applies.** With no exemption, the good-cause question appears as the last question.
 - [ ] Picking "This question does not apply to me / I’m not sure" on the good-cause question gives the "may need to meet the work rules" result, not good cause.
 - [ ] Every question is optional: clicking a selected answer a second time clears it, and the result changes back.
 - [ ] "Skip to results" from any point gives the same result as answering nothing further.
 
-## 4. The guided version (archived)
+## 5. The guided version (archived)
 
 The shipping screener is write-in only. The guided ending lives at
 `archive/snap-guided/` for records. Everything in sections 1–3 applies to both builds,
@@ -401,7 +424,7 @@ other two have to give way.
 - [ ] Changing an answer and returning updates the letter.
 - [ ] There is no empty text box anywhere in the guided version.
 
-## 5. The letter itself
+## 6. The letter itself
 
 Test this on both versions. The letter is the whole point: everything else is a way of
 getting to it.
@@ -425,7 +448,7 @@ getting to it.
 - [ ] Leaving the pad empty prints a ruled line to sign by hand. This is the only route for someone who cannot use a pointer, so it must work.
 - [ ] Rotating the phone does not wipe a signature already drawn.
 
-## 6. Privacy and safety
+## 7. Privacy and safety
 
 The questions cover pregnancy, disability, substance use treatment, and domestic violence. The
 working assumption is a shared or borrowed phone.
@@ -440,7 +463,7 @@ working assumption is a shared or borrowed phone.
 - [ ] Nothing typed into the name, ID, or explanation fields appears in any URL.
 - [ ] The privacy callout on the start page and on the statement form shows the same wording: **Your information is private.** MLRI will not save any personal information you share on this form.
 
-## 7. Accessibility
+## 8. Accessibility
 
 People using this tool are more likely than average to have a disability. That is what several
 of the exemptions are about.
@@ -471,7 +494,7 @@ of the exemptions are about.
 - [ ] In high contrast mode, the selected answer is still visibly selected.
 - [ ] A selected answer is marked by more than colour alone: there is a filled dot or tick as well as a border.
 
-## 8. Devices and conditions
+## 9. Devices and conditions
 
 - [ ] An older Android phone on a slow connection. Time how long the first screen takes.
 - [ ] An iPhone, in Safari.
@@ -481,14 +504,14 @@ of the exemptions are about.
 - [ ] A tablet in both orientations.
 - [ ] The browser Back button mid-screening. It should not lose answers or land on a broken screen.
 
-## 9. Review-only modes and the archived guided build
+## 10. Review-only modes and the archived guided build
 
 - [ ] The tools landing page shows one SNAP card only.
 - [ ] `?sample=exempt`, `?sample=goodcause`, and `?sample=notexempt` each open the right result on a review host.
 - [ ] Sample mode shows the "Sample result" banner and does not overwrite a real session.
 - [ ] The archived guided build at `archive/snap-guided/` still loads and names itself as archived.
 
-## 10. Things only a person can judge
+## 11. Things only a person can judge
 
 None of this can be automated and all of it matters more than the rest of this document.
 
@@ -503,7 +526,7 @@ None of this can be automated and all of it matters more than the rest of this d
 - [ ] **Quick exit destination.** Currently weather.com. Confirm that is the right neutral site.
 - [ ] **Languages.** English only. MassLegalHelp publishes the ABAWD article in Spanish.
 
-## 11. What is already checked automatically
+## 12. What is already checked automatically
 
 Do not spend manual time on these. They run on every push and fail the build.
 
@@ -530,7 +553,7 @@ python docassemble-snap-abawd/tests/test_good_cause_text.py
 The browser suite cannot run on the authoring machine, so it runs only in CI. If you are
 checking a change locally, the browser paths are the ones your own testing has to cover.
 
-## 12. Reporting what you find
+## 13. Reporting what you find
 
 Useful:
 
