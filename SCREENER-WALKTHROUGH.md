@@ -470,7 +470,7 @@ Sincerely,
 
 __________________________
 
-Jordan Rivera
+Printed name: Jordan Rivera
 
 Date signed: August 1, 2026
 ```
@@ -550,7 +550,7 @@ Sincerely,
 
 __________________________
 
-Alex Chen
+Printed name: Alex Chen
 
 Date signed: August 1, 2026
 ```
@@ -632,7 +632,7 @@ Sincerely,
 
 __________________________
 
-Sam Okafor
+Printed name: Sam Okafor
 
 Date signed: August 1, 2026
 ```
@@ -703,7 +703,7 @@ Sincerely,
 
 __________________________
 
-Riley Santos
+Printed name: Riley Santos
 
 Date signed: August 1, 2026
 ```
@@ -784,7 +784,7 @@ Sincerely,
 
 __________________________
 
-Dana Whitfield
+Printed name: Dana Whitfield
 
 Date signed: August 1, 2026
 ```
@@ -831,7 +831,7 @@ Sincerely,
 
 __________________________
 
-Casey Brooks
+Printed name: Casey Brooks
 
 Date signed: August 1, 2026
 ```

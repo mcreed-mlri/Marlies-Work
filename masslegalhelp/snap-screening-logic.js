@@ -1892,12 +1892,28 @@
       subItemsByReason = {}
     } = opts || {};
     const esc = escHtml;
-    const blank = (w) => `<span style="border-bottom:1px solid #111;display:inline-block;min-width:${w};padding:0 2px 2px">${'&nbsp;'.repeat(8)}</span>`;
+    /* One rule per row.
+     *
+     * Every row already drew a pale full-width rule under its cell, and a blank row drew a second
+     * short dark one inside it, a few pixels higher. So From and the Agency ID came out as two
+     * stacked lines of different lengths and weights while To, Re and Date came out as one, and
+     * the header read as clutter rather than as a form. The cell rule is now the line you write
+     * on: darker where the row is blank, because that is the one meant to be written on, pale
+     * where it is only separating a value that is already printed.
+     *
+     * Full width rather than the old 280px. There is no reason to stop the line for a name short
+     * of the margin, and matching the rules above and below it is most of what makes the block
+     * settle down.
+     *
+     * The non-breaking space is what gives an empty cell its height: an empty <td> collapses, and
+     * it collapses in the Word export too, which is the copy most likely to be filled in by hand. */
+    const RULE_VALUE = '1px solid #bbb';
+    const RULE_WRITE = '1px solid #555';
 
     const addrRow = (label, value) =>
       `<tr>
         <td style="width:108px;padding:5px 12px 5px 0;font-weight:700;vertical-align:top;color:#222">${esc(label)}</td>
-        <td style="padding:5px 0;border-bottom:1px solid #bbb;color:#111">${value ? esc(value) : blank('280px')}</td>
+        <td style="padding:${value ? '5px 0' : '7px 0'};border-bottom:${value ? RULE_VALUE : RULE_WRITE};color:#111">${value ? esc(value) : '&nbsp;'}</td>
       </tr>`;
 
     /* The Client / DTA Agency ID row, always printed and always blank.
@@ -1922,7 +1938,7 @@
     const agencyRow = () => `<tr>
         <td colspan="2" style="padding:9px 0 5px;color:#111">
           <div style="font-weight:700;color:#222;margin:0 0 3px">${esc(STATEMENT_AGENCY_LABEL)}</div>
-          <div style="border-bottom:1px solid #bbb;padding:0 0 3px">${agency ? esc(agency) : blank('280px')}</div>
+          <div style="border-bottom:${agency ? RULE_VALUE : RULE_WRITE};padding:0 0 5px">${agency ? esc(agency) : '&nbsp;'}</div>
           <div style="font-size:9.5pt;color:#444;padding:3px 0 0;line-height:1.35">${esc(STATEMENT_AGENCY_HINT)}</div>
         </td>
       </tr>`;
@@ -2122,9 +2138,17 @@
       explainContent = '';
     }
 
+    /* Same rule weight as the header blanks, and more air under it. The signature rule was #111
+     * with the printed-name underscores four pixels below it, so the two read as one thick smudge
+     * of two different constructions, a border and a row of glyphs. Every line in this letter that
+     * someone writes on is now the one weight, and the two are far enough apart to be two lines. */
     const sigBlock = sigImg
-      ? `<img src="${sigImg}" alt="Signature" width="320" height="72" style="display:block;width:320px;height:72px;max-width:100%;margin:0 0 4px">`
-      : `<div style="border-bottom:1px solid #111;height:56px;width:320px;max-width:100%;margin:0 0 4px"></div>`;
+      ? `<img src="${sigImg}" alt="Signature" width="320" height="72" style="display:block;width:320px;height:72px;max-width:100%;margin:0 0 12px">`
+      : `<div style="border-bottom:${RULE_WRITE};height:56px;width:320px;max-width:100%;margin:0 0 12px"></div>`;
+
+    /* A ruled span, not underscores. Underscores set in Georgia leave visible gaps between the
+     * glyphs and sit at a different height from every other blank on the page. */
+    const writeLine = (w) => `<span style="display:inline-block;border-bottom:${RULE_WRITE};min-width:${w};max-width:100%">&nbsp;</span>`;
 
     return `<div style="font-family:Georgia,'Times New Roman',serif;color:#111;max-width:6.5in;margin:0 auto;font-size:12pt;line-height:1.55">
       <table style="width:100%;border-collapse:collapse;margin:0 0 28px;font-size:11pt;break-inside:avoid;page-break-inside:avoid">
@@ -2149,8 +2173,8 @@
       <div style="margin:28px 0 0;break-inside:avoid;page-break-inside:avoid">
         <p style="margin:0 0 18px">${esc(STATEMENT_SIGN_OFF)}</p>
         ${sigBlock}
-        <div style="font-size:11pt;margin:0 0 2px">${name ? esc(name) : esc(STATEMENT_PRINTED_NAME_LABEL) + ' _________________________________'}</div>
-        <div style="font-size:10.5pt;color:#444">${esc(STATEMENT_DATE_SIGNED_LABEL)} ${today ? esc(today) : '________________'}</div>
+        <div style="font-size:11pt;margin:0 0 6px">${esc(STATEMENT_PRINTED_NAME_LABEL)} ${name ? esc(name) : writeLine('250px')}</div>
+        <div style="font-size:10.5pt;color:#444">${esc(STATEMENT_DATE_SIGNED_LABEL)} ${today ? esc(today) : writeLine('160px')}</div>
       </div>
     </div>`;
   }

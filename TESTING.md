@@ -483,8 +483,10 @@ Test this on both versions. The letter is the whole point: everything else is a 
 getting to it.
 
 - [ ] **Print or save this form** opens the print dialog and the preview shows the letter, not the web page.
-- [ ] The letter has today's date, the DTA address block, the person's name, and their client ID if they gave one.
-- [ ] Leaving the client ID blank omits that row rather than printing an empty label.
+- [ ] The letter has today's date, the DTA address block, and the person's name.
+- [ ] The Client / DTA Agency ID row is on the letter **every time**, with an empty line to write on. There is no way to fill it in on screen, so it is never pre-filled.
+- [ ] Each row of the header block has **one** rule under it, not two. The rows waiting to be written on, From and the Agency ID, are a touch darker than the rows that already have a value.
+- [ ] The signature line and the Printed name line are two clearly separate rules of the same weight, not one thick smudge.
 - [ ] **Download as Word** produces a file that opens in Word, and the signature is in it as a picture.
 - [ ] **Email myself a copy** opens a panel where you can enter an email address.
 - [ ] The panel says sending from this page is not set up yet, and **Send** stays disabled.

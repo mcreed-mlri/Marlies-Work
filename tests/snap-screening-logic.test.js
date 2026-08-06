@@ -1413,8 +1413,11 @@ describe('snap-screening-logic', () => {
       assert.doesNotMatch(composed, /border:1px solid #999/, 'a composed sentence must not print inside a ruled box');
       // The caption belongs to a blank someone fills in, not to a finished sentence.
       assert.doesNotMatch(composed, /Your health reason/);
-      // A signature rule is still drawn when the pad was left empty.
-      assert.match(composed, /border-bottom:1px solid #111/);
+      /* A signature rule is still drawn when the pad was left empty. Matched on the ruled 56px
+         block rather than on the colour: this asserted `#111` until 2026-08-07, when every
+         write-on line in the letter moved to one weight, and a layout change read as a
+         regression in the composed letter, which is not what this test is about. */
+      assert.match(composed, /<div style="border-bottom:[^";]+;height:56px/);
 
       const writein = SnapScreening.buildStatementHTML({
         rt: 'exempt', explain: [{ prompt: 'Explain the health reason that makes it hard for you to work 30 or more hours a week', text: '' }],

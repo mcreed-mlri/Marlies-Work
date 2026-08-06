@@ -422,8 +422,16 @@ w('Test this on both versions. The letter is the whole point: everything else is
 w('getting to it.');
 blank();
 check('**Print or save this form** opens the print dialog and the preview shows the letter, not the web page.');
-check('The letter has today\'s date, the DTA address block, the person\'s name, and their client ID if they gave one.');
-check('Leaving the client ID blank omits that row rather than printing an empty label.');
+check('The letter has today\'s date, the DTA address block, and the person\'s name.');
+/* These two contradicted the spec until 2026-08-07. They said the letter carries "their client ID
+ * if they gave one" and that leaving it blank "omits that row", which was true before the author
+ * removed the on-screen field on 2026-08-06 and asked for the printed letter to always carry a
+ * blank for it. A checklist that asserts the opposite of the intended behaviour is worse than a
+ * missing one: a tester following it files a bug against a screen that is correct. The section
+ * further down, "The Client / DTA Agency ID line", has had the right checks the whole time. */
+check('The Client / DTA Agency ID row is on the letter **every time**, with an empty line to write on. There is no way to fill it in on screen, so it is never pre-filled.');
+check('Each row of the header block has **one** rule under it, not two. The rows waiting to be written on, From and the Agency ID, are a touch darker than the rows that already have a value.');
+check('The signature line and the Printed name line are two clearly separate rules of the same weight, not one thick smudge.');
 check('**Download as Word** produces a file that opens in Word, and the signature is in it as a picture.');
 check('**Email myself a copy** opens a panel where you can enter an email address.');
 check('The panel says sending from this page is not set up yet, and **Send** stays disabled.');

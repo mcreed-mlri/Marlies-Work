@@ -251,7 +251,13 @@ function letterToText(letterHtml) {
     // A drawn signature is an image; an unsigned letter prints a ruled line to
     // sign by hand, which is the route someone who cannot use the pad relies on.
     .replace(/<img [^>]*alt="Signature"[^>]*>/g, '\n[the signature they drew]\n')
-    .replace(/<div[^>]*border-bottom:1px solid #111[^>]*><\/div>/g, '\n__________________________\n')
+    /* Matched on the 56px signature block, not on its colour. This read `border-bottom:1px solid
+       #111` until 2026-08-07, when the letter's write-on lines moved to one weight, and the rule
+       simply stopped matching: the signature line vanished from all six worked examples and
+       nothing failed. Only the diff showed it. */
+    .replace(/<div[^>]*height:56px[^>]*><\/div>/g, '\n__________________________\n')
+    /* The ruled spans behind Printed name and Date signed, when those are left blank. */
+    .replace(/<span[^>]*border-bottom[^>]*>&nbsp;<\/span>/g, '__________________________')
     .replace(/<li[^>]*>/g, '\n' + BULLET)
     .replace(/<\/p>/g, '\n\n')
     .replace(/<\/(div|ul|li|h[1-6])>/g, '\n')
