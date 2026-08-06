@@ -391,6 +391,55 @@ describe('snap-screening-logic', () => {
     });
   });
 
+  /* The closing request goes on every letter, all four results. Victoria asked for it on the
+   * pregnancy example and Tasmiah agreed it should go everywhere, so "everywhere" is the thing
+   * worth asserting: it is the kind of line that gets added to the one screen someone was looking
+   * at and quietly missed on the other three. */
+  it('every letter asks DTA to put follow-up in writing', () => {
+    const cases = [
+      { pregnant: 'yes' },
+      { housing: 'no', housingFollowup: NONE },
+      { disability: ['other'] },
+      { goodcause: 'transport' },
+      {}
+    ];
+    for (const a of cases) {
+      const html = SnapScreening.buildStatementHTML({
+        rt: classic2.resultType(a),
+        rs: classic2.exemptReasons(a),
+        gcText: classic2.goodCauseText(a),
+        housingPicks: classic2.housingFollowupLabels(a),
+        explain: classic2.statementPrompts(a).map(pr => ({ prompt: pr, text: '' }))
+      });
+      assert.ok(
+        html.includes(SnapScreening.STATEMENT_CLOSING_REQUEST),
+        'missing the closing request for ' + JSON.stringify(a)
+      );
+      // Before the signature, so it reads as the last thing the person says.
+      assert.ok(
+        html.indexOf(SnapScreening.STATEMENT_CLOSING_REQUEST) < html.indexOf('Sincerely'),
+        'the closing request must come before the signature'
+      );
+    }
+  });
+
+  /* The good cause letter stopped naming the category on 2026-08-07. That sentence is what made
+   * someone who picked "unreasonable employment" over a two-hour commute sign an allegation that
+   * their employer discriminates, so its absence is asserted rather than assumed. */
+  it('the good cause letter carries no category sentence', () => {
+    const a = { goodcause: 'employment' };
+    const gc = classic2.goodCauseText(a);
+    assert.ok(gc, 'the category sentence should still exist for the emailed summary');
+    const html = SnapScreening.buildStatementHTML({
+      rt: 'goodcause', rs: [], gcText: gc,
+      explain: classic2.statementPrompts(a).map(pr => ({ prompt: pr, text: 'My commute is over two hours.' }))
+    });
+    assert.ok(!html.includes(gc), 'the category sentence must not reach the letter');
+    assert.doesNotMatch(html, /discriminates/);
+    assert.ok(html.includes('My commute is over two hours.'), 'their own words stay');
+    assert.match(html, /and missed hours for one or more months due to an unexpected life situation/);
+  });
+
   it('the substance use help says it covers drugs or alcohol', () => {
     assert.match(classic2.qById('substanceUse').help, /drugs or alcohol/);
     assert.match(classic2.qById('substanceUse').help, /does not have to be a daily program/);
@@ -570,7 +619,12 @@ describe('snap-screening-logic', () => {
 
   it('classic2 lists every good-cause category for the results screen', () => {
     const cats = classic2.GOODCAUSE_CATEGORIES;
-    assert.deepEqual(cats.map(c => c.title), ['No transportation', 'Emergency', 'Employment issues']);
+    /* "Unreasonable Employment issues" since 2026-08-07, the author's prefix. */
+    assert.deepEqual(cats.map(c => c.title), ['No transportation', 'Emergency', 'Unreasonable Employment issues']);
+    /* The employment list went from one line naming only discrimination to four, which is the
+       change that made the option label and the category agree. */
+    assert.equal(cats.find(c => c.id === 'employment').detail.length, 4);
+    assert.ok(cats.find(c => c.id === 'employment').detail.some(d => /strike/.test(d)));
     assert.ok(cats.every(c => c.detail.length > 0));
     assert.equal(cats.filter(c => c.moreExamplesUrl).length, 2);
     assert.equal(goodCauseCategories('classic2').length, 3);
@@ -832,7 +886,16 @@ describe('snap-screening-logic', () => {
     assert.match(RESULT_COPY.notExemptEmailSuffix, /^if you lost or are about to lose SNAP because of these rules\.$/);
     assert.match(RESULT_COPY.workOption1Unpaid, /^Examples of unpaid work can include/);
     assert.match(RESULT_COPY.workOption2, /how many hours to volunteer\.$/);
-    assert.match(RESULT_COPY.meetingDtaStatement, /\(handwritten note is fine\) onto$/);
+    /* "Upload proof onto", from 2026-08-07. This line is on the not-exempt screen, where someone
+       is proving they meet the rules rather than claiming an exemption, so a signed statement of
+       their own was the wrong thing to ask for. */
+    assert.match(RESULT_COPY.meetingDtaStatement, /^Upload proof onto$/);
+    assert.doesNotMatch(RESULT_COPY.meetingDtaStatement, /handwritten note/);
+    assert.match(RESULT_COPY.meetingDtaPaid, /it does not need to be addressed to DTA/);
+    assert.match(RESULT_COPY.workOption1, /and\/or DTA training program/);
+    // Reads from the threshold rather than quoting it, so the reminder cannot drift from the rule.
+    assert.ok(RESULT_COPY.workOption1IncomeReminder.includes('$' + SnapScreening.WORK_INCOME_THRESHOLD.toFixed(2)));
+    assert.match(RESULT_COPY.workOption1IncomeReminder, /you are exempt\.$/);
     // The statement sentence folds into the DTAConnect bullet on this screen.
     const merged = buildDtaContactsHtml(LINKS, { uploadPrefix: 'Upload a statement onto' });
     assert.match(merged, /<li>Upload a statement onto <a/);

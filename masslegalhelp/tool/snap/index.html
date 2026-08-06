@@ -1257,6 +1257,9 @@ function renderResults(){
                 <ul style="margin:7px 0 0;padding-left:20px;font-size:15px;line-height:1.6;color:var(--prose)">
                   <li>${esc(C.workOption1Unpaid)}</li>
                   <li><a href="${LINKS.dtaTraining}" target="_blank" rel="noopener">${esc(C.workOption1Training)}</a></li>
+                  <!-- Last in the list, after the training link: it is the way out of this screen
+                       rather than one more thing to do, so it reads better as the closing note. -->
+                  <li>${esc(C.workOption1IncomeReminder)}</li>
                 </ul>
               </div>
             </li>
@@ -1289,8 +1292,15 @@ function renderResults(){
     const formLead = rt === 'exempt' ? C.formLeadExempt : C.formLeadGoodCause;
     const whyInfo = rt === 'exempt' ? C.whyInfoExempt : C.whyInfoGoodCause;
 
+    /* Good cause has exactly one blank, and its prompt is in the heading above rather than on a
+       label of its own, so the label is hidden there instead of naming the box twice. Hidden with
+       .sr-only rather than dropped: the textarea still needs an accessible name, and
+       data-explain-prompt still has to carry the prompt because that is what the letter builder
+       matches on to place the text. Exempt keeps visible labels; it can show several at once. */
+    const labelClass = rt === 'goodcause' ? ' class="sr-only"' : '';
+    const explainHeading = rt === 'goodcause' ? C.formExplainHeadingGoodCause : C.formExplainHeading;
     const blanks = prompts.map((p, i) => `<div style="margin:0 0 16px">
-      <label for="f-explain-${i}" style="display:block;font-size:14.5px;font-weight:700;margin:0 0 7px">${esc(p)}</label>
+      <label for="f-explain-${i}"${labelClass} style="display:block;font-size:14.5px;font-weight:700;margin:0 0 7px">${esc(p)}</label>
       <textarea id="f-explain-${i}" data-explain-prompt="${esc(p)}" rows="4" placeholder="Type here…" style="width:100%;font-family:inherit;font-size:16px;line-height:1.5;padding:11px 13px;border:1.5px solid var(--stroke);border-radius:calc(var(--radius) - 3px);resize:vertical"></textarea>
     </div>`).join('');
     /* The statement form is the working part of this screen, so it gets a
@@ -1309,7 +1319,7 @@ function renderResults(){
       <div style="padding:20px">
       ${renderPrivacyCallout('18px')}
       ${printLead}
-      <p style="font-size:15px;font-weight:700;margin:0 0 12px">${esc(C.formExplainHeading)}</p>
+      <p style="font-size:15px;font-weight:700;margin:0 0 12px">${esc(explainHeading)}</p>
       ${blanks}
       <!-- The Client / Agency ID input was here, beside the name. The author took it off the
            screen on 2026-08-06 and asked for the printed letter to carry a blank for it

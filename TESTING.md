@@ -150,7 +150,7 @@ do apply and you are satisfying them. Anyone reviewing these should confirm both
 
 | What the screen says about meeting the rules |
 | --- |
-| Paid work, unpaid work, or training program for 20 hours a week (80 hours a month). |
+| Paid work, unpaid work, and/or DTA training program for 20 hours a week (80 hours a month). |
 
 ### No regular place to sleep
 

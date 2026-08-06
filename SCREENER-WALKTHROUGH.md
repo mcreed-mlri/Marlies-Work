@@ -251,8 +251,11 @@ A temporary loss of transportation, like a broken down car or temporary public t
 **Emergency**
 Any family, personal crisis, or emergency situation, and/or if you need to give care or support to others.
 
-**Employment issues**
-Employer or work environment discriminates on the basis of age, sex, race, religion, ethnicity, or physical or mental disability.
+**Unreasonable Employment issues**
+Employer or workplace discrimination
+The work is an unreasonable health and safety risk
+Job pays less than $15/hour (minimum wage)
+There is a strike
 
 ### 3. You may need to meet the work rules
 
@@ -262,7 +265,7 @@ Employer or work environment discriminates on the basis of age, sex, race, relig
 
 _Then the two ways to meet the rules. Both option headings are bold on the screen:_
 
-> **Paid work, unpaid work, or training program for 20 hours a week (80 hours a month).**
+> **Paid work, unpaid work, and/or DTA training program for 20 hours a week (80 hours a month).**
 
 - Examples of unpaid work can include internships or caring for family or friends who are not disabled or under age 6.
 - [Find a DTA training program](https://snappathtowork.org/)
@@ -416,6 +419,8 @@ I am writing to ask that you update my SNAP case. I believe I am exempt from the
 
 I have a physical health condition that makes it hard for me to work 30 or more hours a week. It has lasted 6 months or more, or I expect it to. I see a health care provider for it regularly, and I can ask them for a letter if you need one.
 
+If DTA has questions about this statement please contact me and send me a notice explaining if you need more information.
+
 Sincerely,
 
 __________________________
@@ -493,6 +498,8 @@ Dear DTA,
 I am writing to ask that you update my SNAP case. I believe I am exempt from the ABAWD work rules and should not have to meet them for the following reason(s):
 
 I take care of an adult who cannot care for themselves. I do this every day. I am the only person providing this care.
+
+If DTA has questions about this statement please contact me and send me a notice explaining if you need more information.
 
 Sincerely,
 
@@ -574,6 +581,8 @@ I am writing to ask that you update my SNAP case. I believe I am exempt from the
 
 I earn enough income to be exempt from the ABAWD work rules. I usually work about 20 to 29 hours a week at one job. I can send you my pay stubs and a letter from my employer.
 
+If DTA has questions about this statement please contact me and send me a notice explaining if you need more information.
+
 Sincerely,
 
 __________________________
@@ -646,6 +655,8 @@ Dear DTA,
 I am writing to ask that you update my SNAP case. I believe I am exempt from the ABAWD work rules and should not have to meet them for the following reason(s):
 
 I do not have a regular place to sleep. I usually sleep in a shelter. This makes it hard for me to work. I have no address or phone to give an employer. I have no reliable way to get to a job. Please review my situation to decide whether I am unable to work under the ABAWD screening.
+
+If DTA has questions about this statement please contact me and send me a notice explaining if you need more information.
 
 Sincerely,
 
@@ -722,11 +733,11 @@ Re:                 SNAP benefits, ABAWD work rules
 
 Dear DTA,
 
-I am writing to explain why I could not meet the ABAWD work rules for one or more months. My good-cause reason is:
-
-No transportation — a temporary loss of transportation, like a broken down car or temporary public transportation shutdown.
+I am writing to explain why I could not meet the ABAWD work rules and missed hours for one or more months due to an unexpected life situation.
 
 My car broke down and I had no other way to get there. I missed hours in July and August 2026. This is still going on.
+
+If DTA has questions about this statement please contact me and send me a notice explaining if you need more information.
 
 Sincerely,
 
@@ -772,6 +783,8 @@ Dear DTA,
 I am writing to ask that you update my SNAP case. I believe I am exempt from the ABAWD work rules and should not have to meet them for the following reason(s):
 
   - I am pregnant
+
+If DTA has questions about this statement please contact me and send me a notice explaining if you need more information.
 
 Sincerely,
 

@@ -204,8 +204,22 @@
           id: 'employment',
           label: 'Yes, I\u2019m dealing with unreasonable employment',
           result: 'Employment issues \u2014 an employer or work environment that discriminates on the basis of age, sex, race, religion, ethnicity, or physical or mental disability.',
-          title: 'Employment issues',
-          detail: ['Employer or work environment discriminates on the basis of age, sex, race, religion, ethnicity, or physical or mental disability.'],
+          /* "Unreasonable Employment issues", and four examples where there was one, 2026-08-07.
+           * The single detail line named only discrimination, which was narrower than the option
+           * label has ever been and much narrower than the six examples now in the question's
+           * help. A "More examples" link carries the rest, so this list is the recognisable four
+           * rather than all six.
+           *
+           * `result` is untouched and is no longer in the letter: the author removed the category
+           * sentence from the letter on the same pass, so this string now reaches only the emailed
+           * summary, which the person sends to themselves. */
+          title: 'Unreasonable Employment issues',
+          detail: [
+            'Employer or workplace discrimination',
+            'The work is an unreasonable health and safety risk',
+            'Job pays less than $' + MA_MIN_WAGE + '/hour (minimum wage)',
+            'There is a strike'
+          ],
           moreExamples: true
         }
       ]
@@ -349,6 +363,11 @@
    * Named rather than inline in buildStatementHTML so both reach SCREENER-COPY.md: they are
    * words a person reads on a letter they sign, and most of that letter's prose is still
    * missing from that document. */
+  /* The last line of every letter, all four results. Victoria's wording, 2026-08-07. Named
+   * copy for the same reason the agency label is: it is a sentence someone signs, so the author
+   * should be able to read it in SCREENER-COPY.md rather than by printing a letter. */
+  const STATEMENT_CLOSING_REQUEST = 'If DTA has questions about this statement please contact me and send me a notice explaining if you need more information.';
+
   const STATEMENT_AGENCY_LABEL = 'Client / DTA Agency ID (if you have one/know it)';
   const STATEMENT_AGENCY_HINT = 'This number is on all DTA notices. This is important to include if you don’t use DTAConnect and you send DTA information by mail, fax, or in person.';
 
@@ -1462,9 +1481,14 @@
      * the person wants, and the list can contain "I have a high school diploma" and "I have
      * had a steady job", which without framing read as arguing the other way. The ask is
      * what makes those bullets evidence rather than filler. */
-    statementHousingLead: 'I do not have a regular place to sleep. Please review whether I am unable to work under the ABAWD work rules.',
+    /* "if I am exempt", not "whether I am unable to work under the ABAWD work rules": Victoria's
+     * wording, 2026-08-07, and the third revision of this sentence in two days. Hers is the
+     * plainest and asks for the thing the person actually wants decided. */
+    statementHousingLead: 'I do not have a regular place to sleep. Please review the information I provide about my situation to decide if I am exempt.',
     statementHousingPicksLead: 'The following is also true for me:',
-    statementDisabilityOtherLead: 'I receive a disability benefit or payment. Please review it when you decide whether I am exempt from the ABAWD work rules.',
+    /* "I get", not "I receive", at the author's request: it matches the voice of every reason
+     * in the catalogue, which all say "I get". */
+    statementDisabilityOtherLead: 'I get a disability benefit or payment. Please review it when you decide whether I am exempt from the ABAWD work rules.',
     /* The parenthetical "(More info on how to contact DTA in the box below)" came off on
      * 2026-08-06: formSendAlternatives now says the same thing a few lines above, and saying it
      * twice on one screen reads as padding. */
@@ -1513,13 +1537,28 @@
     notExemptEmail: 'Email',
     notExemptEmailSuffix: 'if you lost or are about to lose SNAP because of these rules.',
     workRulesHeading: 'To keep getting SNAP, you can meet the ABAWD work rules by doing one of these:',
-    workOption1: 'Paid work, unpaid work, or training program for 20 hours a week (80 hours a month).',
+    /* "and/or" because it can be a combination, Victoria's note, and "DTA training program"
+     * because the link underneath goes to DTA's own programme finder. */
+    workOption1: 'Paid work, unpaid work, and/or DTA training program for 20 hours a week (80 hours a month).',
+    /* Added 2026-08-07. Someone reading a screen headed "you may need to meet the work rules" is
+     * being told to find 20 hours a week, and may already be exempt on income without knowing it:
+     * the earnings limb has no hours floor at all. Reads from the constants so it cannot drift
+     * from the thresholds the decision uses. */
+    workOption1IncomeReminder: 'Remember, if you earn $' + WORK_INCOME_THRESHOLD.toFixed(2) + ' or more a week (even if you are working fewer than 20 hours a week) you are exempt.',
     workOption1Unpaid: 'Examples of unpaid work can include internships or caring for family or friends who are not disabled or under age 6.',
     workOption1Training: 'Find a DTA training program',
     workOption2: 'Community service for a set number of hours each month. The number depends on how much SNAP you get. DTA will tell you how many hours to volunteer.',
     meetingDtaHeading: 'How to tell DTA you are meeting the work rules:',
-    meetingDtaPaid: 'For paid work, send DTA proof of income and hours, such as pay stubs or an employer letter. For unpaid work, tell DTA how you are meeting the work rules and your hours.',
-    meetingDtaStatement: 'Upload a written, signed statement (handwritten note is fine) onto',
+    /* The unpaid-work half was "tell DTA how you are meeting the work rules and your hours",
+     * which asked for an account where DTA wants evidence. Victoria's replacement says what will
+     * actually satisfy them, including that the letter need not be addressed to DTA, which is the
+     * detail that makes it obtainable: someone volunteering at a food pantry can ask for a note
+     * without explaining their SNAP case to the person writing it. */
+    meetingDtaPaid: 'For paid work, send DTA proof of income and hours, such as pay stubs or an employer letter. For unpaid work, send DTA proof such as a letter from the person you do unpaid work for (it does not need to be addressed to DTA) explaining how many hours you are working without pay per week or month.',
+    /* "proof", not "a written, signed statement (handwritten note is fine)". This line is on the
+     * not-exempt screen, where someone is proving they are meeting the rules rather than claiming
+     * an exemption; a signed statement of their own is not what DTA needs there. */
+    meetingDtaStatement: 'Upload proof onto',
     goodCauseInNotExemptBold: 'You may have a good reason for missing work, school, or volunteer hours.',
     goodCauseInNotExemptIntro: 'This includes missing hours before or after your start date.',
     goodCauseInNotExemptBody: 'Tell DTA as soon as possible if you couldn\u2019t meet the work rules for one or more months because of an unexpected life situation like temporary transportation issues, a personal or family emergency, or employment issues.',
@@ -1536,6 +1575,12 @@
      * that before working through the blanks and not after. */
     formSendAlternatives: 'You can also handwrite a statement and send it to DTA by uploading it to your DTAConnect account, mailing it, or dropping it off at a DTA Office. (More on how to contact DTA in the box below.)',
     formExplainHeading: 'In a few sentences:',
+    /* Good cause gets its prompt folded into this heading instead of a bulleted label above a
+     * single box. That result has exactly one blank, so a one-item list of labels above it was
+     * naming the box twice. The author struck the bullet on that page and rewrote the heading to
+     * carry the instruction, 2026-08-07. The exempt result keeps the bulleted labels, because it
+     * can show several boxes at once and each needs saying which is which. */
+    formExplainHeadingGoodCause: 'In a few sentences, explain why you had to miss work, school, or volunteer hours',
     btnNext: 'Next →',
     btnSeeResults: 'See my results →',
     btnGuidedDetailsNext: 'A few more details →',
@@ -1870,9 +1915,23 @@
       }
       body = inner;
     } else if (rt === 'goodcause') {
+      /* The category sentence is gone from the letter as of 2026-08-07, at the author's
+       * direction: "no need to pull screening selection details. just the explanation that the
+       * person shared." It used to sit here in a quoted block, the wording behind whichever of
+       * the three options they picked.
+       *
+       * That removal settles a real problem rather than only shortening the letter. The
+       * employment category read "an employer or work environment that discriminates on the
+       * basis of age, sex, race, religion, ethnicity, or physical or mental disability", while
+       * the option that leads to it now covers a commute over two hours, pay under minimum wage,
+       * a strike, a health and safety risk, and religious observance. Someone who picked it for
+       * any of those was signing an allegation about their employer. With only their own words
+       * in the letter there is nothing left to mis-describe.
+       *
+       * gcText is still passed in and still used by the emailed summary, which is the person
+       * writing to themselves rather than to DTA, so naming the category there is useful. */
       body = `<p style="margin:0 0 14px">Dear DTA,</p>
-        <p style="margin:0 0 14px">I am writing to explain why I could not meet the ABAWD work rules for one or more months. My good-cause reason is:</p>
-        <p style="margin:0 0 14px;padding:12px 14px;border-left:3px solid #333;background:#f7f7f7">${esc(gcText)}</p>`;
+        <p style="margin:0 0 14px">I am writing to explain why I could not meet the ABAWD work rules and missed hours for one or more months due to an unexpected life situation.</p>`;
       if (!composed) body += explainBox(explainTextForPrompt(STATEMENT_PROMPT_GOODCAUSE));
     } else {
       body = `<p style="margin:0 0 14px">Dear DTA,</p>
@@ -1913,6 +1972,13 @@
       ${body}
 
       ${explainContent ? `<div style="margin:0;break-inside:avoid;page-break-inside:avoid">${explainContent}</div>` : ''}
+
+      <!-- On every letter, all four results. Victoria asked for it on the pregnancy example and
+           Tasmiah agreed it should go everywhere. It earns its place: it asks DTA to put any
+           follow-up in writing, which gives the person a record and a notice they can act on
+           rather than a phone call they may miss. Placed after their own explanation and before
+           the signature, so it reads as the last thing they say. -->
+      <p style="margin:22px 0 0">${esc(STATEMENT_CLOSING_REQUEST)}</p>
 
       <div style="margin:28px 0 0;break-inside:avoid;page-break-inside:avoid">
         <p style="margin:0 0 18px">Sincerely,</p>
@@ -2121,6 +2187,7 @@
     exemptReasonsFor,
     exemptReasonEntriesFor,
     REASON_TEXT_BY_ID,
+    STATEMENT_CLOSING_REQUEST,
     STATEMENT_AGENCY_LABEL,
     STATEMENT_AGENCY_HINT,
     resolveReasonIds,

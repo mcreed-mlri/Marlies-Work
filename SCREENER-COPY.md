@@ -445,7 +445,7 @@ The categories listed on this screen:
   More examples link: **none set.** The link is missing for this category and currently has nowhere to go.
 - **Emergency**  Any family, personal crisis, or emergency situation, and/or if you need to give care or support to others.
   More examples link: https://www.masslegalhelp.org/public-benefits-ssi/snap-food-benefits/snap-3-month-time-limit-abawd-work-rules#:~:text=What%20if%20I%20had%20a%20good%20reason%20for%20not%20meeting%20the%20Work%20Rules%3F
-- **Employment issues**  Employer or work environment discriminates on the basis of age, sex, race, religion, ethnicity, or physical or mental disability.
+- **Unreasonable Employment issues**  Employer or workplace discrimination The work is an unreasonable health and safety risk Job pays less than $15/hour (minimum wage) There is a strike
   More examples link: https://www.masslegalhelp.org/public-benefits-ssi/snap-food-benefits/snap-3-month-time-limit-abawd-work-rules#:~:text=What%20if%20I%20had%20a%20good%20reason%20for%20not%20meeting%20the%20Work%20Rules%3F
 
 ## 9. Result: you may need to meet the work rules
@@ -464,7 +464,7 @@ The categories listed on this screen:
 
 **`workOption1`**
 
-> Paid work, unpaid work, or training program for 20 hours a week (80 hours a month).
+> Paid work, unpaid work, and/or DTA training program for 20 hours a week (80 hours a month).
 
 **`workOption1Unpaid`**
 
@@ -484,11 +484,11 @@ The categories listed on this screen:
 
 **`meetingDtaPaid`**
 
-> For paid work, send DTA proof of income and hours, such as pay stubs or an employer letter. For unpaid work, tell DTA how you are meeting the work rules and your hours.
+> For paid work, send DTA proof of income and hours, such as pay stubs or an employer letter. For unpaid work, send DTA proof such as a letter from the person you do unpaid work for (it does not need to be addressed to DTA) explaining how many hours you are working without pay per week or month.
 
 **`meetingDtaStatement`**
 
-> Upload a written, signed statement (handwritten note is fine) onto
+> Upload proof onto
 
 **`goodCauseInNotExemptBold`**
 
@@ -556,7 +556,7 @@ pointed at a list of options that does not appear anywhere in the letter.
 
 **`statementHousingLead`**
 
-> I do not have a regular place to sleep. Please review whether I am unable to work under the ABAWD work rules.
+> I do not have a regular place to sleep. Please review the information I provide about my situation to decide if I am exempt.
 
 **`statementHousingPicksLead`**
 
@@ -564,7 +564,7 @@ pointed at a list of options that does not appear anywhere in the letter.
 
 **`statementDisabilityOtherLead`**
 
-> I receive a disability benefit or payment. Please review it when you decide whether I am exempt from the ABAWD work rules.
+> I get a disability benefit or payment. Please review it when you decide whether I am exempt from the ABAWD work rules.
 
 **`statement.docTitle`**  (the printed page title)
 
@@ -1139,9 +1139,17 @@ anywhere that it is not legal advice.
 These are shown to people too, but did not fit the sections above. Listed so the
 document stays complete.
 
+**`workOption1IncomeReminder`**
+
+> Remember, if you earn $217.50 or more a week (even if you are working fewer than 20 hours a week) you are exempt.
+
 **`formSendAlternatives`**
 
 > You can also handwrite a statement and send it to DTA by uploading it to your DTAConnect account, mailing it, or dropping it off at a DTA Office. (More on how to contact DTA in the box below.)
+
+**`formExplainHeadingGoodCause`**
+
+> In a few sentences, explain why you had to miss work, school, or volunteer hours
 
 **`btnNext`**
 
