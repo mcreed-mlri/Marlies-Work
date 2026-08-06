@@ -56,7 +56,7 @@ Feature: SNAP work rules screening reaches the right outcome
       | var | value |
       | housing | no |
       | housingFollowup | steady_job |
-    Then the variable "outcome" should be "exempt"
+    Then the variable "outcome" should be "housingreview"
 
   Scenario: No place to sleep, diploma and steady job
     Given I start the interview at "snap_abawd.yml"
@@ -64,7 +64,7 @@ Feature: SNAP work rules screening reaches the right outcome
       | var | value |
       | housing | no |
       | housingFollowup | diploma,steady_job |
-    Then the variable "outcome" should be "notexempt"
+    Then the variable "outcome" should be "housingreview"
 
   Scenario: No place to sleep, none of these apply
     Given I start the interview at "snap_abawd.yml"
@@ -72,7 +72,7 @@ Feature: SNAP work rules screening reaches the right outcome
       | var | value |
       | housing | no |
       | housingFollowup | __none |
-    Then the variable "outcome" should be "exempt"
+    Then the variable "outcome" should be "housingreview"
 
   Scenario: Safety concern
     Given I start the interview at "snap_abawd.yml"

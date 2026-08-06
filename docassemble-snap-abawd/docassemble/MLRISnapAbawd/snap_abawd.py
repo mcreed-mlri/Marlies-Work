@@ -57,7 +57,7 @@ REASONS = {
 
 DISABILITY_OTHER_REASON = "I get another disability benefit or payment DTA should review"
 # Just the fact. The old wording carried the ask as well; that lives in the letter.
-HOUSING_EXEMPT_REASON = "I do not have a regular place to sleep"
+HOUSING_EXEMPT_REASON = "I do not have a regular place to sleep at night"
 WORK_REASON_INCOME = "I earn enough money from work to be exempt from the work rules"
 WORK_REASON_HOURS_30 = (
     "I work 30 or more hours a week while earning less than minimum wage"
@@ -143,29 +143,19 @@ def _multi(answers, key):
 
 
 def housing_unable_exempt(answers):
-    """Whether no-regular-place-to-sleep plus the follow-up points to an exemption.
+    """Whether no-regular-place-to-sleep records the housing reason. It always does.
 
-    Only reached when housing is answered "no". Homelessness on its own does not
-    produce an exemption here; the follow-up is what decides, and it decides by
-    absence. See the exhaustive table in DECISION-SPEC.md.
+    This weighed the follow-up combination until 2026-08-07: a high school diploma together
+    with a steady job or full-time study, and no hospitalisation or ongoing care, returned
+    False and the person got no housing reason at all. DTA assesses inability to work from
+    those answers, so there was no determination here to make, and the one being made went
+    against the person with the weakest position.
+
+    The follow-up answers still decide which of two result headings shows, and they print
+    under the reason. Neither is a decision, so neither lives here. Mirrors
+    housingUnableExempt in the JavaScript reference.
     """
-    if answers.get("housing") != "no":
-        return False
-    if "housingFollowup" not in answers or answers.get("housingFollowup") is None:
-        return False
-
-    selected = _multi(answers, "housingFollowup")
-    if selected == NONE:
-        return True
-    if not selected:
-        # Answered, nothing checked. Treated as unanswered, not as "none apply".
-        return False
-
-    if any(opt in selected for opt in HOUSING_HEALTH):
-        return True
-    has_diploma = HOUSING_DIPLOMA in selected
-    has_job_or_school = any(opt in selected for opt in HOUSING_JOB_OR_SCHOOL)
-    return not has_diploma or not has_job_or_school
+    return answers.get("housing") == "no"
 
 
 def disability_reasons(answers):
@@ -243,10 +233,35 @@ def is_age_exempt(answers):
     return answers.get("ageRange") == "no"
 
 
+def has_housing_factors(answers):
+    """Whether any follow-up answer was ticked, as opposed to "No" or nothing.
+
+    Decides which of the two housing headings shows and nothing else. Mirrors
+    hasHousingFactors in the JavaScript reference.
+    """
+    selected = _multi(answers, "housingFollowup")
+    return isinstance(selected, list) and len(selected) > 0
+
+
+def is_housing_review_only(answers):
+    """Whether no regular place to sleep is the only thing the screening found.
+
+    "Only" excludes the housing reason itself: the question is whether anything else would
+    have made them exempt. If something did, the ordinary exempt result shows with housing
+    listed alongside.
+    """
+    if answers.get("housing") != "no":
+        return False
+    return all(r == HOUSING_EXEMPT_REASON for r in exempt_reasons(answers))
+
+
 def result_type(answers):
-    """One of 'ageexempt', 'exempt', 'goodcause', 'notexempt'."""
+    """One of 'ageexempt', 'housingreview', 'exempt', 'goodcause', 'notexempt'."""
     if is_age_exempt(answers):
         return "ageexempt"
+    # Before the exemption list and before good cause; see resultTypeFor in the reference.
+    if is_housing_review_only(answers):
+        return "housingreview"
     if exempt_reasons(answers):
         return "exempt"
     good_cause = answers.get("goodcause")

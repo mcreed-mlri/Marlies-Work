@@ -128,7 +128,7 @@ section: the checklist would otherwise never have you test it at all.
 
 ### Working
 
-Three ways of working count. Confirmed August 2026 against MLRI’s SNAP Advocacy Guide, May 2026, Part 2, Question 61, which gives $217.50 a week, 14.5 hours a week at $15 an hour, and 30 or more hours a week for someone earning below minimum wage. A copy is in reference/ in the repository.
+Three ways of working count. Confirmed August 2026 by MLRI. The same three figures appear in MLRI’s SNAP Advocacy Guide, May 2026, Part 2, Question 61, a copy of which is in reference/. Treat MLRI’s confirmation as the authority rather than the guide: the guide is written after H.R.1 and its own Question 60 notes that DTA’s regulations had not yet caught up when it went out, and MLRI has since said to be careful with its ABAWD sections. The figures themselves are not in dispute.
 
 - [ ] "Yes, I am making $217.50 a week or more (before taxes)" → exempt, listing: I earn enough money from work to be exempt from the work rules
 - [ ] "Yes, I am working at least 14.5 hours a week at $15 or more an hour" → exempt, listing: I earn enough money from work to be exempt from the work rules
@@ -161,12 +161,12 @@ be wrong in a way nobody notices.
 | After answering "No", pick | Expected result |
 | --- | --- |
 | None of the above | **Exempt** |
-| Nothing at all (the follow-up left untouched) | Not exempt on housing |
+| Nothing at all (the follow-up left untouched) | **Exempt** |
 | Hospitalised in the last 6 months | **Exempt** |
 | Sees a provider for an ongoing illness | **Exempt** |
 | Diploma only | **Exempt** |
-| Diploma AND a steady job | Not exempt on housing |
-| Diploma AND full-time student | Not exempt on housing |
+| Diploma AND a steady job | **Exempt** |
+| Diploma AND full-time student | **Exempt** |
 | Diploma, steady job, AND hospitalised | **Exempt** |
 
 - [ ] None of the above
@@ -187,7 +187,7 @@ they actually said and not just the summary line. Read these as a person would: 
 can include things that look like arguments against the exemption, and that is deliberate,
 because DTA is being asked to review the whole picture.
 
-- [ ] Answer **No**, tick two or three options, and go to results. They appear as indented sub-bullets under "I do not have a regular place to sleep", not as separate exemptions with their own ticks.
+- [ ] Answer **No**, tick two or three options, and go to results. They appear as indented sub-bullets under "I do not have a regular place to sleep at night", not as separate exemptions with their own ticks.
 - [ ] They read in the order the options are listed on the question, whatever order you ticked them in.
 - [ ] The green tick appears on the housing reason only, not on each sub-bullet.
 - [ ] Print or save the letter. The same answers appear, introduced by "The following is also true for me:", **above** your own typed explanation. Your words should be the last thing in that section.
@@ -498,9 +498,9 @@ The exempt result tells someone what proof to send, one line per kind of exempti
 the author’s wording, added 2026-08-06. One note appears however many boxes were
 ticked: someone who selects three agencies should be told to send a letter once.
 
-- [ ] Earning enough, or 30+ hours below minimum wage: Send DTA proof of your work income and hours, such as pay stubs or a letter.
-- [ ] Any disability benefit, including Other: Send DTA proof of your disability benefits, such as pay stubs or a letter.
-- [ ] Any state agency: Send DTA proof that you are getting services from a state agency, such as a letter from the agency.
+- [ ] Earning enough, or 30+ hours below minimum wage: Send DTA proof of your work income and hours, such as pay stubs or a letter. If you are having a hard time getting these proofs, tell DTA.
+- [ ] Any disability benefit, including Other: Send DTA proof of your disability benefits, such as pay stubs or a letter. If you are having a hard time getting these proofs, tell DTA.
+- [ ] Any state agency: Send DTA proof that you are getting services from a state agency, such as a letter from the agency. If you are having a hard time getting these proofs, tell DTA.
 - [ ] No regular place to sleep: **no** proof line. The letter already asks DTA to review the housing situation in its own paragraph, so the results card does not repeat it.
 
 - [ ] Tick **three** disability benefits. The proof line appears **once**, not three times.
@@ -598,7 +598,7 @@ of the exemptions are about.
 None of this can be automated and all of it matters more than the rest of this document.
 
 - [ ] **Is the wording right?** Read `SCREENER-WALKTHROUGH.md`, which lays out every word in the order someone meets it. The author has final say on copy.
-- [ ] **Are the thresholds still current?** Confirmed August 2026 against MLRI’s SNAP Advocacy Guide, May 2026, Part 2, Question 61, which gives $217.50 a week, 14.5 hours a week at $15 an hour, and 30 or more hours a week for someone earning below minimum wage. A copy is in reference/ in the repository. Worth re-checking only if a state minimum wage rise or a federal change has landed since.
+- [ ] **Are the thresholds still current?** Confirmed August 2026 by MLRI. The same three figures appear in MLRI’s SNAP Advocacy Guide, May 2026, Part 2, Question 61, a copy of which is in reference/. Treat MLRI’s confirmation as the authority rather than the guide: the guide is written after H.R.1 and its own Question 60 notes that DTA’s regulations had not yet caught up when it went out, and MLRI has since said to be careful with its ABAWD sections. The figures themselves are not in dispute. Worth re-checking only if a state minimum wage rise or a federal change has landed since.
 - [ ] **Is the exemption list complete?** Someone who knows DTA policy should confirm nothing is missing. A missing exemption is a person who stays cut off.
 - [ ] **Would DTA accept the composed letter?** The guided version is archived, but the composed sentences in `SCREENER-COPY.md` section 10 are still worth a legal read if the idea returns.
 - [ ] **Is a composed statement still the claimant's statement?** A question for lawyers, not designers. It sits above their signature.

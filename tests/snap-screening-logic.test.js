@@ -40,14 +40,62 @@ describe('snap-screening-logic', () => {
     assert.equal(classic.resultType({ child14: 'yes' }), 'exempt');
   });
 
-  it('housing none-of-the-above is exempt', () => {
-    assert.equal(classic.resultType({ housing: 'no', housingFollowup: NONE }), 'exempt');
+  /* Rewritten 2026-08-07. No regular place to sleep used to resolve to exempt or, for a diploma
+   * plus a steady job, to notexempt with the housing reason dropped entirely, so that person saw
+   * no bullet and none of their ticked answers. DTA assesses inability to work from those answers,
+   * so there was no determination here for the tool to make and the one it made went against the
+   * person with the weakest position. Every combination is a review now. */
+  it('no regular place to sleep always asks DTA to review', () => {
+    for (const followup of [NONE, undefined, ['diploma'], ['diploma', 'steady_job'], ['hospitalized']]) {
+      const answers = followup === undefined
+        ? { housing: 'no' }
+        : { housing: 'no', housingFollowup: followup };
+      assert.equal(classic2.resultType(answers), 'housingreview', JSON.stringify(answers));
+      assert.ok(
+        classic2.exemptReasons(answers).includes(REASON_TEXT_BY_ID.housing),
+        'the housing reason must carry over on every combination: ' + JSON.stringify(answers)
+      );
+    }
   });
 
-  it('housing with diploma and steady job is not exempt via housing', () => {
-    const answers = { housing: 'no', housingFollowup: ['diploma', 'steady_job'] };
-    assert.equal(housingUnableExempt(answers), false);
-    assert.equal(classic.resultType(answers), 'notexempt');
+  /* Which of the two headings shows is the only thing the follow-up decides now. */
+  it('the follow-up answers choose the heading and nothing else', () => {
+    assert.equal(classic2.hasHousingFactors({ housing: 'no', housingFollowup: ['diploma'] }), true);
+    assert.equal(classic2.hasHousingFactors({ housing: 'no', housingFollowup: NONE }), false);
+    assert.equal(classic2.hasHousingFactors({ housing: 'no' }), false);
+    assert.match(RESULT_COPY.housingReviewHeading, /DTA will need to review/);
+    assert.match(RESULT_COPY.housingReviewHeadingWithFactors, /may be exempt/);
+    assert.match(RESULT_COPY.housingReviewHeadingWithFactors, /DTA will need to review/);
+  });
+
+  /* Housing only wins when it is the only thing found. Anything else and the ordinary exempt
+   * result shows, with housing listed alongside, which is what the author asked for. */
+  it('another exemption outranks the housing review', () => {
+    const answers = { housing: 'no', housingFollowup: NONE, pregnant: 'yes' };
+    assert.equal(classic2.resultType(answers), 'exempt');
+    assert.deepEqual(classic2.exemptReasons(answers), [REASON_TEXT_BY_ID.pregnant, REASON_TEXT_BY_ID.housing]);
+  });
+
+  it('the housing review offers one optional box, not the housing prompt', () => {
+    const answers = { housing: 'no', housingFollowup: ['diploma'] };
+    assert.deepEqual(classic2.statementPrompts(answers), ['Explain your situation in your own words (optional)']);
+  });
+
+  it('the housing letter asks for a review rather than claiming the exemption', () => {
+    const answers = { housing: 'no', housingFollowup: ['diploma'] };
+    const html = SnapScreening.buildStatementHTML({
+      rt: classic2.resultType(answers),
+      rs: classic2.exemptReasons(answers),
+      housingPicks: classic2.housingFollowupLabels(answers),
+      explain: classic2.statementPrompts(answers).map(pr => ({ prompt: pr, text: 'I stay at a shelter.' }))
+    });
+    assert.ok(html.includes(SnapScreening.STATEMENT_HOUSING_REVIEW_OPENING));
+    assert.ok(!html.includes(SnapScreening.STATEMENT_EXEMPT_OPENING), 'must not claim the exemption');
+    // The reason travels as a bullet, not as the exempt letter's housing paragraph.
+    assert.ok(html.includes('<li style="margin:0 0 6px">' + REASON_TEXT_BY_ID.housing + '</li>'));
+    assert.ok(!html.includes(RESULT_COPY.statementHousingLead));
+    assert.ok(html.includes('high school diploma'), 'the ticked answers carry over');
+    assert.ok(html.includes('I stay at a shelter.'));
   });
 
   it('income work is exempt with income reason', () => {
@@ -479,7 +527,10 @@ describe('snap-screening-logic', () => {
     });
 
     it('reach the letter, above the write-in box', () => {
-      const a = { housing: 'no', housingFollowup: ['ongoing_care', 'diploma'] };
+      /* Pregnancy is here to force the exempt result. Housing on its own resolves to the housing
+         review since 2026-08-07, and that letter places the picks differently; the review version
+         has its own test above. */
+      const a = { pregnant: 'yes', housing: 'no', housingFollowup: ['ongoing_care', 'diploma'] };
       const html = SnapScreening.buildStatementHTML({
         rt: classic2.resultType(a),
         rs: classic2.exemptReasons(a),

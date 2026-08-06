@@ -92,7 +92,7 @@ The follow-up is only asked when `housing` is answered "no", meaning no regular 
 sleep. Answering "yes" to `housing` never produces an exemption:
 
 - `housing` = yes: not exempt
-- `housing` = no, follow-up not answered: not exempt
+- `housing` = no, follow-up not answered: exempt
 
 The follow-up options describe things that suggest someone *can* work, so the logic is
 inverted: lacking them is what points to an exemption.
@@ -101,20 +101,20 @@ Option ids, in the order shown: `diploma`, `ongoing_care`, `steady_job`, `full_t
 
 | Selected follow-up options | Exempt | Citation |
 |---|---|---|
-| *(none checked)* | no | |
+| *(none checked)* | yes | |
 | `diploma` | yes | |
 | `ongoing_care` | yes | |
 | `diploma`, `ongoing_care` | yes | |
 | `steady_job` | yes | |
-| `diploma`, `steady_job` | no | |
+| `diploma`, `steady_job` | yes | |
 | `ongoing_care`, `steady_job` | yes | |
 | `diploma`, `ongoing_care`, `steady_job` | yes | |
 | `full_time_student` | yes | |
-| `diploma`, `full_time_student` | no | |
+| `diploma`, `full_time_student` | yes | |
 | `ongoing_care`, `full_time_student` | yes | |
 | `diploma`, `ongoing_care`, `full_time_student` | yes | |
 | `steady_job`, `full_time_student` | yes | |
-| `diploma`, `steady_job`, `full_time_student` | no | |
+| `diploma`, `steady_job`, `full_time_student` | yes | |
 | `ongoing_care`, `steady_job`, `full_time_student` | yes | |
 | `diploma`, `ongoing_care`, `steady_job`, `full_time_student` | yes | |
 | `hospitalized` | yes | |
@@ -135,16 +135,21 @@ Option ids, in the order shown: `diploma`, `ongoing_care`, `steady_job`, `full_t
 | `diploma`, `ongoing_care`, `steady_job`, `full_time_student`, `hospitalized` | yes | |
 | *"none of these apply to me"* | yes | |
 
-In words: someone with no regular place to sleep is treated as possibly unable to work
-unless they checked a high school diploma **and** either a steady job or full-time study,
-**and** checked neither hospitalisation nor ongoing care. Checking nothing at all is
-treated as unanswered, not as "none apply".
+In words: everyone who says they have no regular place to sleep reaches this branch, whatever
+they check in the follow-up and whether they check anything at all. It was a combination test
+until 2026-08-07: a high school diploma together with a steady job or full-time study, and no
+hospitalisation or ongoing care, produced no housing reason at all, so that person saw neither
+a bullet nor any of the answers they had ticked. DTA assesses inability to work from these
+answers, so there was never a determination here for the tool to make, and the one it made went
+against the person with the weakest position: part-time and low-paid, since anyone earning
+$217.50 a week or working 30 hours was already exempt through the work question.
+
+What the follow-up decides now is which of two headings shows, and both say DTA will review.
 
 That description was checked against all 32 rows above and agrees with every one.
 
-Two things for an expert here. The empty selection and the explicit "none of these"
-option produce opposite results, which is correct but easy to misread. And this branch
-records a reason asking DTA to review, rather than asserting an exemption outright.
+For an expert: this branch never asserts an exemption. It records that DTA has to review, which
+is what the SNAP rules leave to them, and the result heading says so in both variants.
 
 ## Good cause
 
@@ -207,7 +212,7 @@ Everything else is always shown, and may be left blank.
 | Hours a week counted below minimum wage | 30 | |
 | Age the rules apply to | 18 through 64 | |
 
-Confirmed August 2026 against MLRI’s SNAP Advocacy Guide, May 2026, Part 2, Question 61, which gives $217.50 a week, 14.5 hours a week at $15 an hour, and 30 or more hours a week for someone earning below minimum wage. A copy is in reference/ in the repository.
+Confirmed August 2026 by MLRI. The same three figures appear in MLRI’s SNAP Advocacy Guide, May 2026, Part 2, Question 61, a copy of which is in reference/. Treat MLRI’s confirmation as the authority rather than the guide: the guide is written after H.R.1 and its own Question 60 notes that DTA’s regulations had not yet caught up when it went out, and MLRI has since said to be careful with its ABAWD sections. The figures themselves are not in dispute.
 
 So the numbers are settled. What is not settled is the housing branch below, where the same
 guide says the follow-up answers are not an automatic exemption in either direction.
@@ -231,9 +236,9 @@ these double as test cases; the JSON carries them in a form a test generator can
 | 30+ hours below minimum wage | `exempt` | I work 30 or more hours a week while earning less than minimum wage |
 | Gets SSI or SSDI | `exempt` | I get SSI or SSDI |
 | Other disability payment only | `exempt` | I get another disability benefit or payment DTA should review |
-| No place to sleep, no diploma | `exempt` | I do not have a regular place to sleep |
-| No place to sleep, diploma and steady job | `notexempt` | *none* |
-| No place to sleep, none of these apply | `exempt` | I do not have a regular place to sleep |
+| No place to sleep, no diploma | `housingreview` | I do not have a regular place to sleep at night |
+| No place to sleep, diploma and steady job | `housingreview` | I do not have a regular place to sleep at night |
+| No place to sleep, none of these apply | `housingreview` | I do not have a regular place to sleep at night |
 | Safety concern | `exempt` | I am experiencing or have experienced domestic violence, stalking, sexual harassment, sexual assault, or another safety situation that makes it hard to work |
 | Several exemptions at once | `exempt` | I live with a child under 14 who should be part of my SNAP case; I am pregnant; I earn enough money from work to be exempt from the work rules |
 | No exemption, transport problem | `goodcause` | *none* |

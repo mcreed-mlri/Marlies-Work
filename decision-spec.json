@@ -184,7 +184,7 @@
   "housingTruthTable": [
     {
       "selected": [],
-      "exempt": false
+      "exempt": true
     },
     {
       "selected": [
@@ -216,7 +216,7 @@
         "diploma",
         "steady_job"
       ],
-      "exempt": false
+      "exempt": true
     },
     {
       "selected": [
@@ -244,7 +244,7 @@
         "diploma",
         "full_time_student"
       ],
-      "exempt": false
+      "exempt": true
     },
     {
       "selected": [
@@ -274,7 +274,7 @@
         "steady_job",
         "full_time_student"
       ],
-      "exempt": false
+      "exempt": true
     },
     {
       "selected": [
@@ -675,9 +675,9 @@
         ]
       },
       "expect": {
-        "outcome": "exempt",
+        "outcome": "housingreview",
         "reasons": [
-          "I do not have a regular place to sleep"
+          "I do not have a regular place to sleep at night"
         ]
       }
     },
@@ -691,8 +691,10 @@
         ]
       },
       "expect": {
-        "outcome": "notexempt",
-        "reasons": []
+        "outcome": "housingreview",
+        "reasons": [
+          "I do not have a regular place to sleep at night"
+        ]
       }
     },
     {
@@ -702,9 +704,9 @@
         "housingFollowup": "__none"
       },
       "expect": {
-        "outcome": "exempt",
+        "outcome": "housingreview",
         "reasons": [
-          "I do not have a regular place to sleep"
+          "I do not have a regular place to sleep at night"
         ]
       }
     },

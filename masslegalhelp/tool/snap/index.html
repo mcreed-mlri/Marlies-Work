@@ -1168,7 +1168,30 @@ function renderResults(){
     <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 16px">${esc(C.resultsHeadLead)}</p>`;
 
   let card = '';
-  if(rt === 'ageexempt'){
+  if(rt === 'housingreview'){
+    /* Same shape and the same green as the exempt card, because the author asked for this screen to
+       look like the exemption one: the reason they picked, then a form to send DTA. Green rather
+       than a third colour invented the day before launch, and the heading carries the meaning in
+       both variants, since each says DTA has to review. Say the word and it becomes neutral.
+
+       Which heading depends only on whether any follow-up answer was ticked. */
+    const reviewHeading = S.hasHousingFactors(state.answers)
+      ? C.housingReviewHeadingWithFactors
+      : C.housingReviewHeading;
+    const items = reasonEntries().map(e => `<li style="display:flex;align-items:flex-start;gap:11px;font-size:16px;line-height:1.5;color:var(--ink);padding:12px 0;border-bottom:1px solid var(--field)">
+      <span aria-hidden="true" style="width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex:none;margin-top:1px">✓</span>
+      <span>${esc(e.text)}${(e.subItems || []).length ? `<ul role="list" style="list-style:disc;margin:8px 0 0;padding-left:22px">${e.subItems.map(x => `<li style="font-size:15px;line-height:1.5;color:var(--prose);margin:0 0 4px">${esc(x)}</li>`).join('')}</ul>` : ''}</span></li>`).join('');
+    card = `<div style="border-radius:var(--radius);overflow:hidden;border:1px solid var(--ok-line)">
+      <div style="background:var(--ok-fill);padding:20px 22px;border-bottom:1px solid var(--ok-line);display:flex;gap:12px;align-items:flex-start">
+        <span aria-hidden="true" style="flex:none;width:30px;height:30px;border-radius:50%;background:var(--ok-strong);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700">✓</span>
+        <h2 class="h-result" style="color:var(--ok-ink);font-weight:400">${esc(reviewHeading)}</h2>
+      </div>
+      <div style="padding:20px 22px;background:#fff">
+        <ul role="list" style="list-style:none;padding:0;margin:0 0 16px">${items}</ul>
+        ${exemptProofNotes(rs).map(n => `<p style="font-size:15.5px;line-height:1.6;color:var(--prose);margin:0 0 14px">${esc(n)}</p>`).join('')}
+        ${learnMore}
+      </div></div>`;
+  } else if(rt === 'ageexempt'){
     /* Wears the same green as the exempt card, because the answer is the same good news,
        but it carries no reasons list and no letter. DTA already holds the date of birth,
        so there is nothing to tell them and nothing to sign; offering a statement form
@@ -1287,10 +1310,12 @@ function renderResults(){
   }
 
   let form = '';
-  if(rt === 'exempt' || rt === 'goodcause'){
-    const formTitle = rt === 'exempt' ? C.formTitleExempt : '';
-    const formLead = rt === 'exempt' ? C.formLeadExempt : C.formLeadGoodCause;
-    const whyInfo = rt === 'exempt' ? C.whyInfoExempt : C.whyInfoGoodCause;
+  if(rt === 'exempt' || rt === 'goodcause' || rt === 'housingreview'){
+    /* The housing review borrows the exempt wording: it is the same act, filling in blanks and
+       sending them to DTA, and its own heading has already said DTA will review. */
+    const formTitle = (rt === 'exempt' || rt === 'housingreview') ? C.formTitleExempt : '';
+    const formLead = rt === 'goodcause' ? C.formLeadGoodCause : C.formLeadExempt;
+    const whyInfo = rt === 'goodcause' ? C.whyInfoGoodCause : C.whyInfoExempt;
 
     /* Good cause has exactly one blank, and its prompt is in the heading above rather than on a
        label of its own, so the label is hidden there instead of naming the box twice. Hidden with
@@ -1377,7 +1402,7 @@ function renderResults(){
   }
 
   let nextSteps = '';
-  if(rt === 'exempt' || rt === 'goodcause'){
+  if(rt === 'exempt' || rt === 'goodcause' || rt === 'housingreview'){
     const stepsLead = rt === 'exempt'
       ? `Fill out and send in <a href="${LINKS.exemptionForm}" target="_blank" rel="noopener">DTA\u2019s exemption form</a> or explain the information to DTA in a written, signed statement (handwritten note is fine):`
       : C.otherWaysGoodCauseLead;
@@ -1395,7 +1420,7 @@ function renderResults(){
 
      lostSnap does show on the age result, and should: someone outside 18 through 64 who
      lost SNAP over these rules is exactly who that address is for. */
-  const footer = `<div style="margin:24px 0 0">${['exempt', 'goodcause', 'notexempt', 'ageexempt'].indexOf(rt) !== -1 ? '' : learnMore}${rt === 'notexempt' ? '' : lostSnap}</div>`;
+  const footer = `<div style="margin:24px 0 0">${['exempt', 'goodcause', 'notexempt', 'ageexempt', 'housingreview'].indexOf(rt) !== -1 ? '' : learnMore}${rt === 'notexempt' ? '' : lostSnap}</div>`;
 
   return `<div class="${animClass()}">${resultsHead}${card}${form}${nextSteps}${footer}
     <div class="no-print" style="display:flex;flex-wrap:wrap;gap:12px;margin-top:22px">

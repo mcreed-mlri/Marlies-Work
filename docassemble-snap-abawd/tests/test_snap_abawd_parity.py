@@ -88,12 +88,25 @@ class HousingTruthTable(unittest.TestCase):
                     + repr(selected),
                 )
 
-    def test_empty_selection_differs_from_none_sentinel(self):
-        """The distinction a port is most likely to lose."""
+    def test_empty_selection_and_none_sentinel_now_agree(self):
+        """They used to produce opposite results. Since 2026-08-07 neither decides anything.
+
+        The distinction mattered when the follow-up combination determined the outcome: an
+        answered-but-empty selection meant unanswered, while the explicit none-of-these meant
+        no factors apply and exempted. Now every combination reaches the same review, so both
+        record the housing reason, and what they differ on is only which heading shows.
+        """
         empty = {"housing": "no", "housingFollowup": []}
         sentinel = {"housing": "no", "housingFollowup": snap_abawd.NONE}
-        self.assertFalse(snap_abawd.housing_unable_exempt(empty))
+        self.assertTrue(snap_abawd.housing_unable_exempt(empty))
         self.assertTrue(snap_abawd.housing_unable_exempt(sentinel))
+        self.assertEqual(snap_abawd.result_type(empty), "housingreview")
+        self.assertEqual(snap_abawd.result_type(sentinel), "housingreview")
+        self.assertFalse(snap_abawd.has_housing_factors(empty))
+        self.assertFalse(snap_abawd.has_housing_factors(sentinel))
+        self.assertTrue(
+            snap_abawd.has_housing_factors({"housing": "no", "housingFollowup": ["diploma"]})
+        )
 
     def test_not_reached_unless_housing_is_no(self):
         for housing in ("yes", None):

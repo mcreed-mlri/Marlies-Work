@@ -209,25 +209,29 @@ w('| *"none of these apply to me"* | ' + (exNone ? 'yes' : 'no') + ' | |');
 json.housingTruthTable.push({ selected: NONE, exempt: exNone });
 blank();
 
-/* State the rule in words, then check the words against the table. */
-const hasDiploma = s => s.includes('diploma');
-const hasJobOrSchool = s => s.includes('steady_job') || s.includes('full_time_student');
-const hasHealth = s => s.includes('hospitalized') || s.includes('ongoing_care');
-const stated = s => (s.length === 0 ? false : hasHealth(s) || !hasDiploma(s) || !hasJobOrSchool(s));
+/* State the rule in words, then check the words against the table. This check earned its keep on
+   2026-08-07: the rule was simplified and the paragraph below still described the old one, which
+   this caught on the first run rather than shipping a spec that contradicted its own table. */
+const stated = () => true;
 const mismatches = subsets.filter(s => stated(s) !== S.housingUnableExempt({ housing: 'no', housingFollowup: s }));
 
-w('In words: someone with no regular place to sleep is treated as possibly unable to work');
-w('unless they checked a high school diploma **and** either a steady job or full-time study,');
-w('**and** checked neither hospitalisation nor ongoing care. Checking nothing at all is');
-w('treated as unanswered, not as "none apply".');
+w('In words: everyone who says they have no regular place to sleep reaches this branch, whatever');
+w('they check in the follow-up and whether they check anything at all. It was a combination test');
+w('until 2026-08-07: a high school diploma together with a steady job or full-time study, and no');
+w('hospitalisation or ongoing care, produced no housing reason at all, so that person saw neither');
+w('a bullet nor any of the answers they had ticked. DTA assesses inability to work from these');
+w('answers, so there was never a determination here for the tool to make, and the one it made went');
+w('against the person with the weakest position: part-time and low-paid, since anyone earning');
+w('$217.50 a week or working 30 hours was already exempt through the work question.');
+blank();
+w('What the follow-up decides now is which of two headings shows, and both say DTA will review.');
 blank();
 w(mismatches.length
   ? '**That description does not match the table** for ' + mismatches.length + ' input(s), which means this document is wrong and needs fixing: ' + JSON.stringify(mismatches)
   : 'That description was checked against all ' + subsets.length + ' rows above and agrees with every one.');
 blank();
-w('Two things for an expert here. The empty selection and the explicit "none of these"');
-w('option produce opposite results, which is correct but easy to misread. And this branch');
-w('records a reason asking DTA to review, rather than asserting an exemption outright.');
+w('For an expert: this branch never asserts an exemption. It records that DTA has to review, which');
+w('is what the SNAP rules leave to them, and the result heading says so in both variants.');
 blank();
 
 /* ------------------------------------------------------------------ *

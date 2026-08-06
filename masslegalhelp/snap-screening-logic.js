@@ -69,7 +69,7 @@
    *
    * The guide itself is in reference/ in the repository, outside the deploy, so the source travels
    * with the code that implements it. */
-  const THRESHOLD_SOURCE = 'Confirmed August 2026 against MLRI’s SNAP Advocacy Guide, May 2026, Part 2, Question 61, which gives $217.50 a week, 14.5 hours a week at $15 an hour, and 30 or more hours a week for someone earning below minimum wage. A copy is in reference/ in the repository.';
+  const THRESHOLD_SOURCE = 'Confirmed August 2026 by MLRI. The same three figures appear in MLRI’s SNAP Advocacy Guide, May 2026, Part 2, Question 61, a copy of which is in reference/. Treat MLRI’s confirmation as the authority rather than the guide: the guide is written after H.R.1 and its own Question 60 notes that DTA’s regulations had not yet caught up when it went out, and MLRI has since said to be careful with its ABAWD sections. The figures themselves are not in dispute.';
 
   const WORK_INCOME_THRESHOLD = 217.5;
   const MA_MIN_WAGE = 15;
@@ -84,7 +84,7 @@
   /* Just the fact. The old wording carried the ask too, "and DTA should review unable-to-work
    * factors", which as a bullet told the reader what DTA should do rather than what is true of
    * them. The ask lives in the letter's own housing paragraph, statementHousingLead. */
-  const HOUSING_EXEMPT_REASON = 'I do not have a regular place to sleep';
+  const HOUSING_EXEMPT_REASON = 'I do not have a regular place to sleep at night';
 
   const HOUSING_OPTION_DEFS = [
     { id: 'diploma', labelClassic: 'I have a high school diploma (including GED or HiSet)', labelV2: 'I have a high school diploma (including GED or HiSet)' },
@@ -411,6 +411,9 @@
   const STATEMENT_SIGN_OFF = 'Sincerely,';
   const STATEMENT_PRINTED_NAME_LABEL = 'Printed name:';
   const STATEMENT_DATE_SIGNED_LABEL = 'Date signed:';
+  /* The housing letter opens by asking for the review rather than claiming the exemption, because
+   * that is what this result is. Author's wording. */
+  const STATEMENT_HOUSING_REVIEW_OPENING = 'I am writing to ask that you update my SNAP case. Please review my information to check if I am exempt from the ABAWD Work Rules.';
   const STATEMENT_EXEMPT_OPENING = 'I am writing to ask that you update my SNAP case. I believe I am exempt from the ABAWD work rules and should not have to meet them for the following reason(s):';
   const STATEMENT_GOODCAUSE_OPENING = 'I am writing to explain why I could not meet the ABAWD work rules and missed hours for one or more months due to an unexpected life situation.';
   const STATEMENT_OTHER_OPENING = 'I am writing about my SNAP case and the ABAWD work rules.';
@@ -446,6 +449,12 @@
   /** Prompts to show, in order. Always at least one so the form is never blank. */
   function statementPromptsFor(reasons, resultType) {
     if (resultType === 'goodcause') return [STATEMENT_PROMPT_GOODCAUSE];
+    /* One optional box on the housing review, the author's choice: "the fill in the blank text
+     * should be tied to the Explain your situation in your own words (optional) bubble." The
+     * housing-specific prompt, "Explain where you sleep and any barriers that make it hard to
+     * work", is not used here. It asks someone to build the case for their own exemption, and on
+     * this result DTA is the one assessing, so an open box they may leave empty is the honest ask. */
+    if (resultType === 'housingreview') return [STATEMENT_PROMPT_FALLBACK];
     const rs = Array.isArray(reasons) ? reasons : [];
     const out = [];
     STATEMENT_PROMPTS.forEach(p => {
@@ -902,7 +911,12 @@
   /** The blocks that apply, in author order. Good cause replaces the rest. */
   function guidedBlocksFor(reasons, resultType) {
     if (resultType === 'goodcause') return [GUIDED_GOODCAUSE_BLOCK];
-    if (resultType !== 'exempt') return [];
+    /* 'housingreview' counts as exempt here. The guided ending is archived, but its blocks are
+     * still read by the copy documents and the unit tests, and when no regular place to sleep moved
+     * out of 'exempt' on 2026-08-07 the housing block stopped being reachable at all: three tests
+     * failed and the walkthrough quietly lost a worked example. Nothing a guided question answers
+     * reaches the decision, so widening this cannot change who comes out exempt. */
+    if (resultType !== 'exempt' && resultType !== 'housingreview') return [];
     const rs = Array.isArray(reasons) ? reasons : [];
     return GUIDED_BLOCKS.filter(b => b.reasons.some(r => rs.indexOf(r) !== -1));
   }
@@ -1153,18 +1167,18 @@
     return Array.isArray(v) ? v : [];
   }
 
+  /* Records the housing reason whenever someone says they have no regular place to sleep.
+   *
+   * It used to weigh the follow-up combination and return false for a diploma plus a steady job,
+   * which meant that person got no housing reason at all: no bullet, no letter paragraph, and
+   * their ticked answers nowhere on the page. DTA assesses these factors, so there was never a
+   * determination here for the tool to make, and the one it made was against the person with the
+   * weakest position. Simplified 2026-08-07 at the author's direction.
+   *
+   * The follow-up answers still matter twice over: they choose which of the two housing headings
+   * shows, and they print under the reason on the card and in the letter. */
   function housingUnableExempt(answers) {
-    if (answers.housing !== 'no') return false;
-    const v = housingFollowupIds(answers);
-    if (v == null) return false;
-    if (v === NONE) return true;
-    if (!v.length) return false;
-    const has = (id) => v.includes(id);
-    const hasDiploma = has('diploma');
-    const hasJobOrSchool = has('steady_job') || has('full_time_student');
-    if (has('hospitalized') || has('ongoing_care')) return true;
-    if (!hasDiploma || !hasJobOrSchool) return true;
-    return false;
+    return answers.housing === 'no';
   }
 
   /**
@@ -1395,8 +1409,36 @@
     return answers.ageRange === 'no';
   }
 
+  /* Any of the five follow-up answers ticked, as opposed to "No" or nothing. This is the whole of
+   * what decides between the two housing headings now.
+   *
+   * It replaces housingUnableExempt as the thing the result turns on. That function weighed the
+   * combination, so a diploma plus a steady job produced a flat not-exempt and the ticked answers
+   * then appeared nowhere. DTA assesses inability to work from these answers; the tool was making
+   * the assessment, and making it against the person in the one case it decided. */
+  function hasHousingFactors(answers) {
+    const v = housingFollowupIds(answers);
+    return Array.isArray(v) && v.length > 0;
+  }
+
+  /* True when no regular place to sleep is the only thing the screening found.
+   *
+   * "Only" excludes the housing reason itself, so this asks whether anything else would have made
+   * them exempt. If something else did, they get the ordinary exempt result and housing is listed
+   * alongside it, which is what the author asked for. */
+  function isHousingReviewOnly(answers, questions) {
+    if (answers.housing !== 'no') return false;
+    return exemptReasonEntriesFor(answers, questions)
+      .every(e => e.id === 'housing');
+  }
+
   function resultTypeFor(answers, questions) {
     if (isAgeExempt(answers)) return 'ageexempt';
+    /* Before the exemption list and before good cause. Someone with no regular place to sleep and
+     * a transport problem gets the housing review, because an exemption review is worth more to
+     * them than an excuse for missed hours, and the author's spec describes this heading for
+     * anyone whose only answer is the housing one. */
+    if (isHousingReviewOnly(answers, questions)) return 'housingreview';
     const exempt = exemptReasonsFor(answers, questions);
     if (exempt.length) return 'exempt';
     const g = answers.goodcause;
@@ -1473,6 +1515,14 @@
   const EXEMPT_HEADING_TEXT = EXEMPT_HEADING_PARTS.map(p => p.text).join('');
 
   /** Shared results-screen copy (author's website draft). Used by all UI variants. */
+  /* Added to all three proof notes on 2026-08-07 at the author's request. All three exemptions
+   * are income-related, so DTA will not take a self-declaration for them, which means the notes
+   * have to ask for documents. This sentence is what stops that being a dead end: someone who
+   * cannot get a pay stub or an agency letter has somewhere to go instead of giving up, and DTA
+   * is obliged to help. One string, because it is the same offer in all three places and reading
+   * three copies of it in this file is how one of them ends up worded differently. */
+  const PROOF_HELP = 'If you are having a hard time getting these proofs, tell DTA.';
+
   const RESULT_COPY = {
     resultsHeadTitle: 'ABAWD Screening Tool Results',
     resultsHeadLead: 'Based on your answers,',
@@ -1505,6 +1555,16 @@
      *
      * No letter. The screening cannot tell anyone their exact age, so the body restates
      * the range rather than asserting which side of it they are on. */
+    /* The housing result, author's wording 2026-08-07. Two headings, and which one depends only on
+     * whether they ticked any of the follow-up answers.
+     *
+     * Neither says the person is exempt, because on this branch nobody can: DTA assesses inability
+     * to work from these answers and the assessment is theirs to make. What the tool had been doing
+     * was deciding for them, and deciding against them in one case, so someone with a diploma and a
+     * steady job was told flatly that they were not exempt on housing and their answers then
+     * appeared nowhere at all. */
+    housingReviewHeading: 'DTA will need to review your information to check if you need to meet the work rules.',
+    housingReviewHeadingWithFactors: 'You may be exempt from the work rules, but DTA will need to review your information to check if you need to meet the work rules.',
     ageExemptHeading: 'You are exempt and do not need to meet the ABAWD work rules because of your age.',
     ageExemptBody: 'If you are younger than 18 or 65 years and older, the ABAWD Work Rules don’t apply to you. DTA should already have your age and date of birth information on file, so you don’t have to take any further action.',
     ageExemptNoticeLead: 'If you are exempt because of age and DTA',
@@ -1561,7 +1621,7 @@
      * reason itself, "I get another disability benefit or payment DTA should review", so
      * keeping a second note that said it again would have said it twice for that one option
      * and nothing at all for the other six. */
-    exemptProofWork: 'Send DTA proof of your work income and hours, such as pay stubs or a letter.',
+    exemptProofWork: 'Send DTA proof of your work income and hours, such as pay stubs or a letter. ' + PROOF_HELP,
     /* Emptied 2026-08-06 at the author's request, along with the disability note that read the
      * same way. Both told someone to give DTA details so DTA could review the exemption, which
      * the letter already does better: its housing paragraph says "I do not have a regular place
@@ -1573,8 +1633,8 @@
      * archived variants read this key, and exemptProofNotes drops empty notes so nothing
      * renders a blank line. */
     exemptProofHousing: '',
-    exemptProofDisability: 'Send DTA proof of your disability benefits, such as pay stubs or a letter.',
-    exemptProofStateAgency: 'Send DTA proof that you are getting services from a state agency, such as a letter from the agency.',
+    exemptProofDisability: 'Send DTA proof of your disability benefits, such as pay stubs or a letter. ' + PROOF_HELP,
+    exemptProofStateAgency: 'Send DTA proof that you are getting services from a state agency, such as a letter from the agency. ' + PROOF_HELP,
     goodCauseHeading: 'You may have a good reason for missing hours',
     goodCauseIntro: 'This includes missing work, school, or volunteer hours before or after your start date.',
     goodCauseLead: 'Tell DTA as soon as you can if you could not meet the work rules for one or more months because of a hard life event, like:',
@@ -1965,6 +2025,29 @@
         });
       }
       body = inner;
+    } else if (rt === 'housingreview') {
+      /* Asks for the review rather than claiming the exemption, and the reason travels as a bullet
+       * rather than as the housing paragraph the exempt letter uses. The author asked for "the
+       * bullet from the results page should carry over", and the paragraph would have made the
+       * request twice: once in the opening and again in its own words.
+       *
+       * The ticked follow-up answers print underneath it, and then whatever the person wrote. */
+      let hr = `<p style="margin:0 0 14px">${esc(STATEMENT_SALUTATION)}</p>
+        <p style="margin:0 0 14px">${esc(STATEMENT_HOUSING_REVIEW_OPENING)}</p>`;
+      /* Same rule the exempt branch uses: a reason a composed paragraph already states does not
+         also get a bullet, or the guided letter says "I do not have a regular place to sleep" twice
+         in a row. */
+      const hrItems = rs.filter(r => !covered.has(r))
+        .map(r => `<li style="margin:0 0 6px">${esc(r)}</li>`).join('');
+      if (hrItems) hr += `<ul style="margin:0 0 16px;padding-left:22px">${hrItems}</ul>`;
+      if (housingPicks.length) {
+        hr += `<p style="margin:0 0 6px">${esc(RESULT_COPY.statementHousingPicksLead)}</p>
+          <ul style="margin:0 0 14px;padding-left:22px">${
+            housingPicks.map(x => `<li style="margin:0 0 6px">${esc(x)}</li>`).join('')
+          }</ul>`;
+      }
+      if (!composed) hr += explainBox(explainTextForPrompt(STATEMENT_PROMPT_FALLBACK));
+      body = hr;
     } else if (rt === 'goodcause') {
       /* The category sentence is gone from the letter as of 2026-08-07, at the author's
        * direction: "no need to pull screening selection details. just the explanation that the
@@ -2194,6 +2277,7 @@
       resultType: (answers) => resultTypeFor(answers, QUESTIONS),
       shouldSkipGoodCause: (answers) => shouldSkipGoodCause(answers, QUESTIONS),
       endsScreeningEarly: (answers) => endsScreeningEarly(answers),
+      hasHousingFactors: (answers) => hasHousingFactors(answers),
       goodCauseText: (answers) => goodCauseText(answers, GC_TEXT),
       statementPrompts: (answers) => statementPromptsFor(exemptReasonsFor(answers, QUESTIONS), resultTypeFor(answers, QUESTIONS)),
       /* Guided mode. Both read the same reasons the write-in prompts do, so a
@@ -2243,6 +2327,7 @@
     STATEMENT_SIGN_OFF,
     STATEMENT_PRINTED_NAME_LABEL,
     STATEMENT_DATE_SIGNED_LABEL,
+    STATEMENT_HOUSING_REVIEW_OPENING,
     STATEMENT_EXEMPT_OPENING,
     STATEMENT_GOODCAUSE_OPENING,
     STATEMENT_OTHER_OPENING,

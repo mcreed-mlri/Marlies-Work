@@ -225,15 +225,15 @@ _Followed by a checklist of the reasons that applied. Every reason the tool can 
 - I am enrolled in school half-time or more
 - I earn enough money from work to be exempt from the work rules
 - I work 30 or more hours a week while earning less than minimum wage
-- I do not have a regular place to sleep
+- I do not have a regular place to sleep at night
 
 _Some of them add a line about what to send DTA:_
 
-> Send DTA proof of your work income and hours, such as pay stubs or a letter.
+> Send DTA proof of your work income and hours, such as pay stubs or a letter. If you are having a hard time getting these proofs, tell DTA.
 
 >
 
-> Send DTA proof of your disability benefits, such as pay stubs or a letter.
+> Send DTA proof of your disability benefits, such as pay stubs or a letter. If you are having a hard time getting these proofs, tell DTA.
 
 ### 2. You may have a good reason for missing hours
 
@@ -318,7 +318,6 @@ _Which boxes appear depends on why the person came out exempt. All of the prompt
 - Explain your caretaking arrangement for the child under 6
 - Explain your work hours, pay, and what proof you can send to DTA
 - Name the disability benefit or payment you receive
-- Explain where you sleep and any barriers that make it hard to work
 - Explain why you had to miss work, school, or volunteer hours
 
 _The last one on that list is worth pausing on. Someone exempt for a reason that needs no explaining, such as being pregnant, still gets a box, and the only prompt the tool has for them is "Explain your reasons in your own words" over an empty space._
@@ -607,10 +606,6 @@ _**What they answered in the screening**_
 
 _**Which gives**_
 
-_The exempt result, listing:_
-
-- I do not have a regular place to sleep
-
 _**What Version B asks next, and what each answer writes**_
 
 _The letter is built up one answer at a time. After each question, what is shown is the whole statement so far, not only the part that answer added, so you can watch it grow._
@@ -652,7 +647,7 @@ Re:                 SNAP benefits, ABAWD work rules
 
 Dear DTA,
 
-I am writing to ask that you update my SNAP case. I believe I am exempt from the ABAWD work rules and should not have to meet them for the following reason(s):
+I am writing to ask that you update my SNAP case. Please review my information to check if I am exempt from the ABAWD Work Rules.
 
 I do not have a regular place to sleep. I usually sleep in a shelter. This makes it hard for me to work. I have no address or phone to give an employer. I have no reliable way to get to a job. Please review my situation to decide whether I am unable to work under the ABAWD screening.
 
@@ -669,7 +664,7 @@ Date signed: August 1, 2026
 
 _In Version A, the same person sees one empty box instead, under:_
 
-- Explain where you sleep and any barriers that make it hard to work
+- Explain your situation in your own words (optional)
 
 ### Example 5: Someone who missed hours because their car broke down
 
@@ -903,7 +898,7 @@ _The signature is drawn with a finger or a mouse, which means someone using a ke
 
 ## The numbers behind the work question
 
-_Not wording, but they decide who comes out exempt and they appear in the questions. Last Confirmed August 2026 against MLRI’s SNAP Advocacy Guide, May 2026, Part 2, Question 61, which gives $217.50 a week, 14.5 hours a week at $15 an hour, and 30 or more hours a week for someone earning below minimum wage. A copy is in reference/ in the repository. 2026, so the article is newer than the tool._
+_Not wording, but they decide who comes out exempt and they appear in the questions. Last Confirmed August 2026 by MLRI. The same three figures appear in MLRI’s SNAP Advocacy Guide, May 2026, Part 2, Question 61, a copy of which is in reference/. Treat MLRI’s confirmation as the authority rather than the guide: the guide is written after H.R.1 and its own Question 60 notes that DTA’s regulations had not yet caught up when it went out, and MLRI has since said to be careful with its ABAWD sections. The figures themselves are not in dispute. 2026, so the article is newer than the tool._
 
 | What | Value |
 | --- | --- |
