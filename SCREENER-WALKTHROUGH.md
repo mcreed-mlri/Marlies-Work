@@ -231,7 +231,7 @@ _Some of them add a line about what to send DTA:_
 
 > Send DTA proof of your work income and hours, such as pay stubs or a letter.
 
-> Tell DTA the details about your housing so they can review your exemption.
+>
 
 > Send DTA proof of your disability benefits, such as pay stubs or a letter.
 

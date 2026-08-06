@@ -41,6 +41,7 @@ const OPEN = {
   formTitleExempt: 'If the good cause heading goes, should this matching one go too?',
   formLeadExempt: 'Your doc says "fill out this form" where this says "fill in the blanks below." Change it?',
   exemptReasonsIntro: 'Already applied: emptied, because the heading above now ends with "because of these reasons:" and this said it a second time.',
+  exemptProofHousing: 'Already applied: emptied at your request, with the disability note that read the same way. Both said to give DTA details so DTA could review the exemption, which the letter already asks for in its housing paragraph. Kept as an empty string rather than deleted so the archived builds still resolve the key.',
   'q.tribe': 'Applied, along with a change to the reason it records. Because the question now asks about a parent or grandparent, most people answering Yes are not themselves enrolled, and the reason prints as a bullet in the letter they sign and send to DTA. It used to read "Alaska Native or member of a Tribe", which had them attest to membership they may not have. It now reads "Alaska Native or Tribe member, including through a parent or grandparent", which you approved on 2026-08-06.',
 };
 

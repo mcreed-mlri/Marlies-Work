@@ -1480,7 +1480,17 @@
      * keeping a second note that said it again would have said it twice for that one option
      * and nothing at all for the other six. */
     exemptProofWork: 'Send DTA proof of your work income and hours, such as pay stubs or a letter.',
-    exemptProofHousing: 'Tell DTA the details about your housing so they can review your exemption.',
+    /* Emptied 2026-08-06 at the author's request, along with the disability note that read the
+     * same way. Both told someone to give DTA details so DTA could review the exemption, which
+     * the letter already does better: its housing paragraph says "I do not have a regular place
+     * to sleep. Please review whether I am unable to work under the ABAWD work rules", and the
+     * follow-up answers print underneath it. The note repeated the ask on the results card
+     * without adding anything to send.
+     *
+     * Kept as an empty string rather than deleted, the same way exemptReasonsIntro was: the
+     * archived variants read this key, and exemptProofNotes drops empty notes so nothing
+     * renders a blank line. */
+    exemptProofHousing: '',
     exemptProofDisability: 'Send DTA proof of your disability benefits, such as pay stubs or a letter.',
     exemptProofStateAgency: 'Send DTA proof that you are getting services from a state agency, such as a letter from the agency.',
     goodCauseHeading: 'You may have a good reason for missing hours',
@@ -1595,6 +1605,8 @@
     const out = [];
     if (rs.includes(WORK_REASON_INCOME) || rs.includes(WORK_REASON_HOURS_30)) out.push(c.exemptProofWork);
     if (rs.includes(HOUSING_EXEMPT_REASON)) out.push(c.exemptProofHousing);
+    /* Emptied notes are dropped here rather than at each call site, so a variant that still
+       carries wording for one keeps it and one that does not renders nothing. */
     /* Matched against the per-option reason texts, because the disability benefits and the
      * state agencies stopped collapsing into one reason each on 2026-08-06. One note however
      * many are ticked: someone who selects three agencies needs to be told to send a letter
@@ -1606,7 +1618,7 @@
     if (rs.includes(REASONS.stateagency) || rs.some(r => STATE_AGENCY_REASON_TEXTS.indexOf(r) !== -1)) {
       out.push(c.exemptProofStateAgency);
     }
-    return out;
+    return out.filter(n => n);
   }
 
   /**

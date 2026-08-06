@@ -441,7 +441,8 @@ blank();
 check('Earning enough, or 30+ hours below minimum wage: ' + strip(C.exemptProofWork));
 check('Any disability benefit, including Other: ' + strip(C.exemptProofDisability));
 check('Any state agency: ' + strip(C.exemptProofStateAgency));
-check('No regular place to sleep: ' + strip(C.exemptProofHousing));
+/* No proof line for housing since 2026-08-06, so this is a check that nothing appears. */
+check('No regular place to sleep: **no** proof line. The letter already asks DTA to review the housing situation in its own paragraph, so the results card does not repeat it.');
 blank();
 check('Tick **three** disability benefits. The proof line appears **once**, not three times.');
 check('Tick **three** state agencies. Same: one line.');

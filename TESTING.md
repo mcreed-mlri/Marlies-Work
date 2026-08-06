@@ -502,7 +502,7 @@ ticked: someone who selects three agencies should be told to send a letter once.
 - [ ] Earning enough, or 30+ hours below minimum wage: Send DTA proof of your work income and hours, such as pay stubs or a letter.
 - [ ] Any disability benefit, including Other: Send DTA proof of your disability benefits, such as pay stubs or a letter.
 - [ ] Any state agency: Send DTA proof that you are getting services from a state agency, such as a letter from the agency.
-- [ ] No regular place to sleep: Tell DTA the details about your housing so they can review your exemption.
+- [ ] No regular place to sleep: **no** proof line. The letter already asks DTA to review the housing situation in its own paragraph, so the results card does not repeat it.
 
 - [ ] Tick **three** disability benefits. The proof line appears **once**, not three times.
 - [ ] Tick **three** state agencies. Same: one line.

@@ -411,7 +411,9 @@ phrase comes from the question that produced it. Then, when relevant, one of the
 
 **`exemptProofHousing`**
 
-> Tell DTA the details about your housing so they can review your exemption.
+*(currently empty)*
+
+> **Question for you:** Already applied: emptied at your request, with the disability note that read the same way. Both said to give DTA details so DTA could review the exemption, which the letter already asks for in its housing paragraph. Kept as an empty string rather than deleted so the archived builds still resolve the key.
 
 **`exemptProofDisability`**
 

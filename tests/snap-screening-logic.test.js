@@ -788,22 +788,25 @@ describe('snap-screening-logic', () => {
     assert.deepEqual(notesFor({ working: 'income_weekly' }), [RESULT_COPY.exemptProofWork]);
     assert.deepEqual(notesFor({ working: 'hours_30' }), [RESULT_COPY.exemptProofWork]);
 
-    assert.deepEqual(notesFor({ housing: 'no', housingFollowup: NONE }), [RESULT_COPY.exemptProofHousing]);
+    /* No proof note for housing since 2026-08-06. Its wording told someone to give DTA details
+       so DTA could review, which the letter's own housing paragraph already asks for. */
+    assert.equal(RESULT_COPY.exemptProofHousing, '');
+    assert.deepEqual(notesFor({ housing: 'no', housingFollowup: NONE }), []);
 
     // Several at once: draft order, no duplicates.
     assert.deepEqual(
       notesFor({ child14: 'yes', working: 'income_weekly', housing: 'no', housingFollowup: NONE, disability: ['other'] }),
-      [RESULT_COPY.exemptProofWork, RESULT_COPY.exemptProofHousing, RESULT_COPY.exemptProofDisability]
+      [RESULT_COPY.exemptProofWork, RESULT_COPY.exemptProofDisability]
     );
 
     // The two work reasons together still yield one sentence.
     assert.deepEqual(exemptProofNotes([WORK_REASON_INCOME, WORK_REASON_HOURS_30]), [RESULT_COPY.exemptProofWork]);
     // Tolerates junk input rather than throwing mid-render.
     assert.deepEqual(exemptProofNotes(undefined), []);
-    assert.deepEqual(exemptProofNotes([HOUSING_EXEMPT_REASON, DISABILITY_OTHER_REASON]).length, 2);
+    assert.deepEqual(exemptProofNotes([HOUSING_EXEMPT_REASON, DISABILITY_OTHER_REASON]).length, 1);
 
     // Every note stands on its own now, so none may keep the "If this is" framing.
-    [RESULT_COPY.exemptProofWork, RESULT_COPY.exemptProofHousing, RESULT_COPY.exemptProofDisability]
+    [RESULT_COPY.exemptProofWork, RESULT_COPY.exemptProofDisability, RESULT_COPY.exemptProofStateAgency]
       .forEach(s => assert.doesNotMatch(s, /^If this is based on/));
   });
 
