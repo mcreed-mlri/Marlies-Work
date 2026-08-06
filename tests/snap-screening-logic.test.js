@@ -746,7 +746,13 @@ describe('snap-screening-logic', () => {
     assert.match(RESULT_COPY.savingTipsBody, /Save as PDF/);
     assert.match(RESULT_COPY.printLead, /\(More info on how to contact DTA in the box below\)$/);
     assert.match(RESULT_COPY.whyInfoLabel, /^Why are we asking for more information\?$/);
-    assert.match(RESULT_COPY.whyInfoExempt, /^Telling DTA about why you missed hours can help them update your SNAP case more quickly\.$/);
+    /* Different sentences since 2026-08-06. They were identical, which put "why you missed
+       hours" on the exempt screen, where the person had no hours to miss. Asserted as a pair so
+       collapsing them back to one is a failure rather than a tidy-up. */
+    assert.match(RESULT_COPY.whyInfoExempt, /^Telling DTA more about your exemption can help them update your SNAP case more quickly\.$/);
+    assert.notEqual(RESULT_COPY.whyInfoExempt, RESULT_COPY.whyInfoGoodCause);
+    assert.notEqual(RESULT_COPY.composedWhyInfoExempt, RESULT_COPY.composedWhyInfoGoodCause);
+    assert.doesNotMatch(RESULT_COPY.whyInfoExempt, /missed hours/);
     assert.match(RESULT_COPY.whyInfoGoodCause, /^Telling DTA about why you missed hours can help them update your SNAP case more quickly\.$/);
     assert.match(RESULT_COPY.otherWaysHeading, /tell DTA/i);
     assert.match(RESULT_COPY.learnMoreLabel, /ABAWD work rules/);

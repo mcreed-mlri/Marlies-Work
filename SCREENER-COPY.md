@@ -648,7 +648,7 @@ An explainer opens next to the signature box:
 
 **`whyInfoExempt`**
 
-> Telling DTA about why you missed hours can help them update your SNAP case more quickly.
+> Telling DTA more about your exemption can help them update your SNAP case more quickly.
 
 **`whyInfoGoodCause`**
 
@@ -700,7 +700,7 @@ so it needs your eye more than anything else in this document.**
 
 **`composedWhyInfoExempt`**
 
-> Telling DTA about why you missed hours can help them update your SNAP case more quickly.
+> Telling DTA more about your exemption can help them update your SNAP case more quickly.
 
 **`composedWhyInfoGoodCause`**
 

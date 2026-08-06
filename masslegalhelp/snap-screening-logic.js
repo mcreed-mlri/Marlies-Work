@@ -1537,10 +1537,19 @@
     composedFormLeadExempt: 'We wrote this from your answers. Read it over, then print or download it to send to DTA.',
     composedFormLeadGoodCause: 'We wrote this from your answers. Read it over, then print or download it to send to DTA.',
     composedChangeLabel: 'Change my answers',
-    composedWhyInfoExempt: 'Telling DTA about why you missed hours can help them update your SNAP case more quickly.',
+    /* Four keys, and until 2026-08-06 all four held the same sentence: "Telling DTA about why
+     * you missed hours can help them update your SNAP case more quickly." The split by result
+     * type was already here, waiting for wording that never arrived.
+     *
+     * Missed hours belong to good cause, which is the screen for someone who did have hours to
+     * meet and did not meet them. On the exempt screen it was the wrong subject: an exempt
+     * person had no hours to miss, and being told to explain missing them invites them to
+     * justify something the exemption makes irrelevant. The write-in blanks beside this note
+     * ask about the exemption, so the note now says so. */
+    composedWhyInfoExempt: 'Telling DTA more about your exemption can help them update your SNAP case more quickly.',
     composedWhyInfoGoodCause: 'Telling DTA about why you missed hours can help them update your SNAP case more quickly.',
     whyInfoLabel: 'Why are we asking for more information?',
-    whyInfoExempt: 'Telling DTA about why you missed hours can help them update your SNAP case more quickly.',
+    whyInfoExempt: 'Telling DTA more about your exemption can help them update your SNAP case more quickly.',
     whyInfoGoodCause: 'Telling DTA about why you missed hours can help them update your SNAP case more quickly.',
     printFormLabel: 'Print or save this form',
     downloadWordLabel: 'Download as Word',
