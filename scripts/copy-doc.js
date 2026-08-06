@@ -403,6 +403,18 @@ section('9. The printable "Tell DTA" statement');
 w('Shown on the exempt and good cause results. Someone fills in the blanks, signs it, and');
 w('mails, faxes, or uploads it to DTA.');
 blank();
+w('**Most of the letter\'s own sentences are not in this document yet.** The fixed prose in');
+w('the letter body, "I do not have a regular place to sleep" and the paragraphs like it, is');
+w('written inline in buildStatementHTML rather than kept as named copy, so there is nothing');
+w('for the generator to pull out. That is a gap on our side, not yours, and it means you');
+w('have been approving a letter you could only read by printing one. Worth fixing; it is a');
+w('change to the code rather than to this document. The one below is named because it was');
+w('added on 2026-08-06 and there was no reason to add a new unreviewable sentence.');
+blank();
+item('statementHousingPicksLead', C.statementHousingPicksLead, {
+  note: 'introduces the ticked housing answers in the letter'
+});
+
 item('statement.docTitle', inline['statement.docTitle'], { note: 'the printed page title' });
 ['formTitleExempt', 'formLeadExempt', 'formLeadGoodCause',
   'formExplainHeading'].forEach(k => item(k, C[k]));

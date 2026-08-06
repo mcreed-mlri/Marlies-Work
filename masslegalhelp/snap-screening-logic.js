@@ -971,6 +971,28 @@
     return false;
   }
 
+  /**
+   * The housing follow-up selections as labels.
+   *
+   * The author asked on 2026-08-06 for these to show on the results page and in the
+   * letter, so DTA sees what the person actually ticked rather than only the summary
+   * line. Note that "I have a high school diploma" and the like can read as arguing
+   * against the exemption; showing them anyway is the point, because DTA is being asked
+   * to review the whole picture and the tool should not curate which answers it passes on.
+   *
+   * Returned in the order the options are listed, not the order they were ticked, so two
+   * people who chose the same things get the same letter. Empty for "None of the above"
+   * and for an unanswered question: neither has a selection to show.
+   */
+  function housingFollowupLabels(answers, questions) {
+    const picked = housingFollowupIds(answers);
+    if (!Array.isArray(picked) || !picked.length) return [];
+    const qs = questions || buildQuestions('classic');
+    const q = qs.find(x => x.id === 'housingFollowup');
+    if (!q || !Array.isArray(q.options)) return [];
+    return q.options.filter(o => picked.indexOf(o.id) !== -1).map(o => o.label);
+  }
+
   function disabilityExempt(answers) {
     const v = answers.disability;
     if (!Array.isArray(v) || !v.length) return false;
@@ -1050,7 +1072,15 @@
     const dis = disabilityReasons(answers);
     if (dis.indexOf(REASONS.disability) !== -1) add('disability');
     if (dis.indexOf(DISABILITY_OTHER_REASON) !== -1) add('disabilityOther');
-    if (housingUnableExempt(answers)) add('housing');
+    /* The housing reason is the only one that carries sub-items: the follow-up question
+     * is the only place someone ticks several specifics under one exemption. */
+    if (housingUnableExempt(answers)) {
+      r.push({
+        id: 'housing',
+        text: REASON_TEXT_BY_ID.housing,
+        subItems: housingFollowupLabels(answers, qs)
+      });
+    }
     if (isIncomeWorkExempt(answers)) add('workIncome');
     if (isHours30WorkExempt(answers)) add('workHours30');
     return r;
@@ -1203,6 +1233,11 @@
     ageExemptNoticeLead: 'If you are exempt because of age and DTA',
     ageExemptNoticeEmphasis: 'still',
     ageExemptNoticeEnd: 'sent you a SNAP and Work notice, please email',
+    /* Introduces the housing follow-up selections in the letter. A named string rather
+     * than a literal in buildStatementHTML so it lands in SCREENER-COPY.md and the author
+     * can read a sentence DTA will read. Most of the write-in letter's fixed prose is
+     * still inline and therefore absent from that document; see the note in copy-doc.js. */
+    statementHousingPicksLead: 'I also told the screening the following:',
     printLead: 'Download or print these results to get a signed letter you can send to DTA. (More info on how to contact DTA in the box below)',
     exemptHeading: EXEMPT_HEADING_TEXT,
     /* Emptied 2026-07-30 at the author's direction. The exempt heading now ends
@@ -1372,7 +1407,13 @@
       rs = [],
       gcText = '',
       today = '',
-      composed = false
+      composed = false,
+      /* Labels, not ids, and passed in rather than derived: this builder takes a result
+       * and a reason list, never the raw answers, so it has no way to look them up.
+       * Defaults to empty, which is also what an unanswered follow-up and "None of the
+       * above" produce, so an older caller that does not pass it still builds a correct
+       * letter with no housing sub-list. */
+      housingPicks = []
     } = opts || {};
     const esc = escHtml;
     const blank = (w) => `<span style="border-bottom:1px solid #111;display:inline-block;min-width:${w};padding:0 2px 2px">${'&nbsp;'.repeat(8)}</span>`;
@@ -1481,6 +1522,18 @@
       }
       if (fixedFor(HOUSING_EXEMPT_REASON)) {
         inner += `<p style="margin:0 0 14px">I do not have a regular place to sleep. Please review the information I provide about my situation to decide whether I am unable to work under the ABAWD screening.</p>`;
+        /* The follow-up selections, the author's request of 2026-08-06. Above the
+         * write-in box, not below it: these are the checkbox answers the screening
+         * already has, and the box is the person's own account, which should be the last
+         * thing DTA reads in this section. Printed as the option wording verbatim, first
+         * person, because that is how the options are written and it reads as the
+         * person's statement rather than as a form dump. */
+        if (housingPicks.length) {
+          inner += `<p style="margin:0 0 6px">${esc(RESULT_COPY.statementHousingPicksLead)}</p>
+            <ul style="margin:0 0 14px;padding-left:22px">${
+              housingPicks.map(p => `<li style="margin:0 0 6px">${esc(p)}</li>`).join('')
+            }</ul>`;
+        }
         if (!composed) inner += explainBox(explainTextForReason(HOUSING_EXEMPT_REASON));
       }
       if (!composed && explainEntries.some(e => e.prompt === STATEMENT_PROMPT_FALLBACK)) {
@@ -1693,6 +1746,8 @@
       migrateAnswers: (answers) => migrateAnswers(answers, v),
       housingUnableExempt: (answers) => housingUnableExempt(answers),
       exemptReasons: (answers) => exemptReasonsFor(answers, QUESTIONS),
+      exemptReasonEntries: (answers) => exemptReasonEntriesFor(answers, QUESTIONS),
+      housingFollowupLabels: (answers) => housingFollowupLabels(answers, QUESTIONS),
       resultType: (answers) => resultTypeFor(answers, QUESTIONS),
       shouldSkipGoodCause: (answers) => shouldSkipGoodCause(answers, QUESTIONS),
       endsScreeningEarly: (answers) => endsScreeningEarly(answers),

@@ -153,6 +153,66 @@ describe('snap-screening-logic', () => {
     });
   });
 
+  /* The author asked on 2026-08-06 for the housing follow-up selections to show on the
+   * results page and in the letter. They are the only exemption with sub-items. */
+  describe('housing follow-up selections', () => {
+    const labels = (a) => classic2.housingFollowupLabels(a);
+    const housingEntry = (a) => classic2.exemptReasonEntries(a).find(e => e.id === 'housing');
+
+    it('are returned in option order, not the order they were ticked', () => {
+      const ticked = labels({ housing: 'no', housingFollowup: ['hospitalized', 'diploma'] });
+      const opts = classic2.qById('housingFollowup').options.map(o => o.label);
+      assert.deepEqual(ticked, opts.filter(l => ticked.includes(l)));
+      assert.ok(ticked[0].includes('high school diploma'), 'diploma is listed first');
+    });
+
+    it('hang off the housing reason as subItems', () => {
+      const e = housingEntry({ housing: 'no', housingFollowup: ['ongoing_care'] });
+      assert.ok(e, 'expected a housing reason');
+      assert.equal(e.subItems.length, 1);
+      assert.match(e.subItems[0], /health care provider/);
+    });
+
+    it('are empty for "None of the above" and for no answer', () => {
+      assert.deepEqual(labels({ housing: 'no', housingFollowup: NONE }), []);
+      assert.deepEqual(labels({ housing: 'no' }), []);
+      // Still exempt, just with nothing to list underneath.
+      assert.deepEqual(housingEntry({ housing: 'no', housingFollowup: NONE }).subItems, []);
+    });
+
+    it('no other reason carries subItems', () => {
+      const entries = classic2.exemptReasonEntries({ pregnant: 'yes', child14: 'yes' });
+      assert.ok(entries.length >= 2);
+      assert.ok(entries.every(e => !e.subItems || !e.subItems.length));
+    });
+
+    it('reach the letter, above the write-in box', () => {
+      const a = { housing: 'no', housingFollowup: ['ongoing_care', 'diploma'] };
+      const html = SnapScreening.buildStatementHTML({
+        rt: classic2.resultType(a),
+        rs: classic2.exemptReasons(a),
+        housingPicks: labels(a),
+        explain: [{ prompt: 'Explain where you sleep and any barriers that make it hard to work', text: 'I sleep in my car.' }]
+      });
+      assert.match(html, /high school diploma/);
+      assert.match(html, /health care provider/);
+      // The person's own words are the last thing DTA reads in that section.
+      assert.ok(
+        html.indexOf('high school diploma') < html.indexOf('I sleep in my car.'),
+        'the ticked answers should print above the write-in box, not below it'
+      );
+    });
+
+    it('a letter built without housingPicks still builds, with no sub-list', () => {
+      const a = { housing: 'no', housingFollowup: ['diploma'] };
+      const html = SnapScreening.buildStatementHTML({
+        rt: classic2.resultType(a), rs: classic2.exemptReasons(a)
+      });
+      assert.match(html, /I do not have a regular place to sleep/);
+      assert.ok(!/high school diploma/.test(html));
+    });
+  });
+
   it('resultType no longer returns meeting', () => {
     assert.notEqual(classic.resultType({ working: 'hours_30' }), 'meeting');
   });

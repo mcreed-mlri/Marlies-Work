@@ -147,6 +147,25 @@ be wrong in a way nobody notices.
 - [ ] Answering **Yes** to "Do you have a regular place to sleep at night?" hides the follow-up entirely.
 - [ ] Answering **No**, picking something, then changing to **Yes** clears the follow-up rather than keeping a hidden answer.
 
+**The ticked answers are echoed back.** The author asked on 2026-08-06 for whatever someone
+ticks in the follow-up to appear on the results page and in the letter, so DTA sees what
+they actually said and not just the summary line. Read these as a person would: the list
+can include things that look like arguments against the exemption, and that is deliberate,
+because DTA is being asked to review the whole picture.
+
+- [ ] Answer **No**, tick two or three options, and go to results. They appear as indented sub-bullets under "No regular place to sleep, and DTA should review unable-to-work factors", not as separate exemptions with their own ticks.
+- [ ] They read in the order the options are listed on the question, whatever order you ticked them in.
+- [ ] The green tick appears on the housing reason only, not on each sub-bullet.
+- [ ] Print or save the letter. The same answers appear, introduced by "I also told the screening the following:", **above** your own typed explanation. Your words should be the last thing in that section.
+- [ ] Tick **None of the above** instead. Still exempt, and no sub-bullets and no list in the letter, because there is nothing to list.
+- [ ] With a screen reader, the sub-bullets are announced as a list belonging to the reason above them, not as five more exemptions.
+
+One case to look at and judge rather than tick. Picking **diploma and a steady job** and
+nothing else is not exempt on housing, so there is no housing reason on the results page
+for the ticked answers to sit under, and they are not shown anywhere. If that reads as the
+tool losing what someone told it, say so: the author asked for these to be echoed back and
+this is the one path where they are not.
+
 ## 3. The age question and its result
 
 Added 2026-08-06 as the first question in section 1. It is the only answer that ends the

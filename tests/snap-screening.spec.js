@@ -95,6 +95,23 @@ test.describe('SNAP ABAWD screening (the shipping build)', () => {
     await expect(page.getByText(/Section 2 of 4/i)).toBeVisible();
   });
 
+  /* The housing follow-up answers are echoed back on the results page as sub-bullets under
+     the housing reason, and in the letter. Author's request, 2026-08-06. */
+  test('housing follow-up picks show as sub-bullets under the housing reason', async ({ page }) => {
+    await startScreener(page);
+    await clickNext(page);                          // past group 1
+    await yn(page, 'housing', 'no').click();        // opens the follow-up
+    await choice(page, 'housingFollowup', 0).click();  // diploma
+    await choice(page, 'housingFollowup', 1).click();  // ongoing care
+    await skipToResults(page);
+    await expect(page.getByRole('heading', { name: EXEMPT_HEADING })).toBeVisible();
+
+    // Nested inside the housing reason's list item, not a sibling exemption.
+    const housingItem = page.locator('li', { hasText: /No regular place to sleep/ }).first();
+    await expect(housingItem.locator('li', { hasText: /high school diploma/ })).toBeVisible();
+    await expect(housingItem.locator('li', { hasText: /health care provider/ })).toBeVisible();
+  });
+
   test('exempt result states the exemption and shows one blank per reason', async ({ page }) => {
     await startScreener(page);
     await yn(page, 'caretaker', 'yes').click();   // group 1

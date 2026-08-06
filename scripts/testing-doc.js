@@ -182,6 +182,26 @@ housingCases.forEach(c => check(c.pick));
 blank();
 check('Answering **Yes** to "Do you have a regular place to sleep at night?" hides the follow-up entirely.');
 check('Answering **No**, picking something, then changing to **Yes** clears the follow-up rather than keeping a hidden answer.');
+blank();
+
+w('**The ticked answers are echoed back.** The author asked on 2026-08-06 for whatever someone');
+w('ticks in the follow-up to appear on the results page and in the letter, so DTA sees what');
+w('they actually said and not just the summary line. Read these as a person would: the list');
+w('can include things that look like arguments against the exemption, and that is deliberate,');
+w('because DTA is being asked to review the whole picture.');
+blank();
+check('Answer **No**, tick two or three options, and go to results. They appear as indented sub-bullets under "' + strip(S.HOUSING_EXEMPT_REASON) + '", not as separate exemptions with their own ticks.');
+check('They read in the order the options are listed on the question, whatever order you ticked them in.');
+check('The green tick appears on the housing reason only, not on each sub-bullet.');
+check('Print or save the letter. The same answers appear, introduced by "' + strip(C.statementHousingPicksLead) + '", **above** your own typed explanation. Your words should be the last thing in that section.');
+check('Tick **' + strip(A.qById('housingFollowup').noneLabel) + '** instead. Still exempt, and no sub-bullets and no list in the letter, because there is nothing to list.');
+check('With a screen reader, the sub-bullets are announced as a list belonging to the reason above them, not as five more exemptions.');
+blank();
+w('One case to look at and judge rather than tick. Picking **diploma and a steady job** and');
+w('nothing else is not exempt on housing, so there is no housing reason on the results page');
+w('for the ticked answers to sit under, and they are not shown anywhere. If that reads as the');
+w('tool losing what someone told it, say so: the author asked for these to be echoed back and');
+w('this is the one path where they are not.');
 
 h2('3. The age question and its result');
 

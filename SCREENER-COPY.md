@@ -529,6 +529,18 @@ The categories listed on this screen:
 Shown on the exempt and good cause results. Someone fills in the blanks, signs it, and
 mails, faxes, or uploads it to DTA.
 
+**Most of the letter's own sentences are not in this document yet.** The fixed prose in
+the letter body, "I do not have a regular place to sleep" and the paragraphs like it, is
+written inline in buildStatementHTML rather than kept as named copy, so there is nothing
+for the generator to pull out. That is a gap on our side, not yours, and it means you
+have been approving a letter you could only read by printing one. Worth fixing; it is a
+change to the code rather than to this document. The one below is named because it was
+added on 2026-08-06 and there was no reason to add a new unreviewable sentence.
+
+**`statementHousingPicksLead`**  (introduces the ticked housing answers in the letter)
+
+> I also told the screening the following:
+
 **`statement.docTitle`**  (the printed page title)
 
 > SNAP Work Rules Statement

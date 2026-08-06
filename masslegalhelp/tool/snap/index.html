@@ -663,6 +663,9 @@ function pageQuestions(){
 function setAns(id, val){ state.answers[id] = val; }
 function clearAns(id){ delete state.answers[id]; }
 function reasons(){ return S.exemptReasons(state.answers); }
+/* Same list as reasons(), with the housing follow-up selections attached to the housing
+   entry. Used by the results card so those show as sub-bullets. */
+function reasonEntries(){ return S.exemptReasonEntries(state.answers); }
 function resultType(){ return S.resultType(state.answers); }
 
 function goToResults(){
@@ -1171,9 +1174,23 @@ function renderResults(){
         ${learnMore}
       </div></div>`;
   } else if(rt === 'exempt'){
-    const items = rs.map(r => `<li style="display:flex;align-items:flex-start;gap:11px;font-size:16px;line-height:1.5;color:var(--ink);padding:12px 0;border-bottom:1px solid var(--field)">
+    /* Sub-bullets, the author's request of 2026-08-06: the housing follow-up answers
+       show under the housing reason so someone can see what they told the tool. A real
+       nested <ul> rather than a second flat row, so a screen reader announces them as
+       belonging to the reason above rather than as five more exemptions.
+
+       The tick stays on the parent only. Repeating it on each child would claim every
+       tick is an exemption in its own right, and these are the specifics behind one. */
+    const items = reasonEntries().map(e => {
+      const subs = (e.subItems || []).length
+        ? `<ul role="list" style="list-style:disc;margin:8px 0 0;padding-left:22px">${
+            e.subItems.map(s => `<li style="font-size:15px;line-height:1.5;color:var(--prose);margin:0 0 4px">${esc(s)}</li>`).join('')
+          }</ul>`
+        : '';
+      return `<li style="display:flex;align-items:flex-start;gap:11px;font-size:16px;line-height:1.5;color:var(--ink);padding:12px 0;border-bottom:1px solid var(--field)">
       <span aria-hidden="true" style="width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex:none;margin-top:1px">✓</span>
-      <span>${esc(r)}</span></li>`).join('');
+      <span>${esc(e.text)}${subs}</span></li>`;
+    }).join('');
     card = `<div style="border-radius:var(--radius);overflow:hidden;border:1px solid var(--ok-line)">
       <div style="background:var(--ok-fill);padding:20px 22px;border-bottom:1px solid var(--ok-line);display:flex;gap:12px;align-items:flex-start">
         <span aria-hidden="true" style="flex:none;width:30px;height:30px;border-radius:50%;background:var(--ok-strong);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700">✓</span>
@@ -1454,6 +1471,7 @@ function statementInnerHTML(sigSrc){
     sigImg: sigImg || '',
     rt: resultType(),
     rs: reasons(),
+    housingPicks: S.housingFollowupLabels(state.answers),
     gcText: S.goodCauseText(state.answers),
     today,
   });
