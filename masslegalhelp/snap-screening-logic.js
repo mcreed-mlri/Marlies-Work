@@ -116,6 +116,19 @@
     { id: 'eaedc', label: 'EAEDC', exempt: true, reason: 'I get EAEDC' },
     { id: 'veteran', label: 'Veteran\u2019s disability benefit', exempt: true, reason: 'I get veteran\u2019s disability benefits' },
     { id: 'workers_comp', label: 'Workers\u2019 compensation', exempt: true, reason: 'I get workers\u2019 compensation' },
+    /* The source qualifies this one and the tool does not. The May 2026 SNAP Advocacy Guide, Q61,
+     * lists the disability benefits as SSI, SSDI, EAEDC, Worker's compensation, Veteran's
+     * disability benefit, Short term disability, and "Paid Family Medical Leave (in most cases)".
+     * Only PFML carries a qualifier.
+     *
+     * Left exempting, deliberately. Dropping it would be wrong, because it does exempt in most
+     * cases, and a person cannot be asked to judge whether theirs is one of them. The claim the
+     * tool makes is already hedged: the result says "You may be exempt", and the letter states the
+     * fact, "I am on Paid Family Medical Leave", which is true either way. DTA decides.
+     *
+     * Recorded here so nobody later hardens that hedge into a promise, and raised with the author
+     * in SCREENER-COPY.md, because whether "in most cases" needs saying out loud is her call and
+     * a lawyer's, not a developer's. */
     { id: 'pfml', label: 'Paid Family Medical Leave', exempt: true, reason: 'I am on Paid Family Medical Leave' },
     { id: 'std', label: 'Short-term disability', exempt: true, reason: 'I get short-term disability benefits' },
     { id: 'ssi_ssdi', label: 'SSI or SSDI', exempt: true, reason: 'I get SSI or SSDI' },
@@ -303,7 +316,13 @@
        * was Yes, and anyone who did not open it answered No and lost the exemption. A
        * question that states its own scope needs no disclosure, so the help is gone rather
        * than kept alongside it. */
-      tribe: { text: 'Are you, or is your parent or grandparent, an Alaska native or a member of an American Indian, Urban Indian, or California Indian tribe?' },
+      /* "Native American" added 2026-08-07 from the source. The May 2026 SNAP Advocacy Guide,
+       * Q61, lists the exemption as "Alaska Native, or a member of an American Indian, Native
+       * American, Urban Indian, or California Indian tribe (or has a parent or grandparent who is
+       * a member)". This question had every category except that one, and the cost of an omission
+       * here is a person reading the list, not finding themselves in it, and answering No to an
+       * exemption they have. Shipping build only; the archived variants keep their wording. */
+      tribe: { text: 'Are you, or is your parent or grandparent, an Alaska native or a member of an American Indian, Native American, Urban Indian, or California Indian tribe?' },
       tafdc: { text: 'Do you get, or are you applying for TAFDC cash assistance benefits?' },
       disability: { text: 'Do you get any of these disability benefits?', noneLabel: 'None of the above' },
       substanceUse: { text: 'Are you participating in a substance use treatment program?', help: 'This can be for drugs or alcohol. It does not have to be a daily program.' },

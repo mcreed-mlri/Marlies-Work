@@ -172,6 +172,8 @@ Help text, shown when someone opens the explainer:
 
 > Do you get any of these disability benefits?
 
+> **Question for you:** One thing from the May 2026 Advocacy Guide, Q61. It lists the qualifying benefits exactly as we have them, with one difference: Paid Family Medical Leave appears as "Paid Family Medical Leave (in most cases)". Ours has no qualifier. We have left it exempting, because dropping it would be wrong and a person cannot be asked to judge whether their own PFML is one of the cases that counts, and because the result already says "may be exempt" while the letter only states the fact that they are on it. But you may want the "in most cases" said out loud somewhere, and that is your call with a lawyer rather than ours.
+
 Help text, shown when someone opens the explainer:
 
 > Choose Other only if you receive a disability benefit or payment that is not listed above. Tell DTA the name of the benefit or payment so they can review it.
@@ -235,7 +237,7 @@ Options:
 
 **`q.tribe`**  (Yes / No; "yes" points to an exemption)
 
-> Are you, or is your parent or grandparent, an Alaska native or a member of an American Indian, Urban Indian, or California Indian tribe?
+> Are you, or is your parent or grandparent, an Alaska native or a member of an American Indian, Native American, Urban Indian, or California Indian tribe?
 
 > **Question for you:** Applied, along with a change to the reason it records. Because the question now asks about a parent or grandparent, most people answering Yes are not themselves enrolled, and the reason prints as a bullet in the letter they sign and send to DTA. It used to read "Alaska Native or member of a Tribe", which had them attest to membership they may not have. It now reads "Alaska Native or Tribe member, including through a parent or grandparent", which you approved on 2026-08-06.
 

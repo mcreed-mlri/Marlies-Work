@@ -176,7 +176,7 @@ This includes high school, vocational/technical school, college, or any educatio
 - Yes, I am working 30 hours or more a week (I make less than minimum wage)
 - None of the above
 
-**Are you, or is your parent or grandparent, an Alaska native or a member of an American Indian, Urban Indian, or California Indian tribe?**
+**Are you, or is your parent or grandparent, an Alaska native or a member of an American Indian, Native American, Urban Indian, or California Indian tribe?**
 
 - Yes
 - No

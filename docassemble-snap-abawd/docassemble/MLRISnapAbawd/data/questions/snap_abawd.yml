@@ -206,7 +206,7 @@ fields:
       - "Yes, I am working 30 hours or more a week (I make less than minimum wage)": hours_30
       - "None of the above": "__none"
     required: False
-  - "Are you, or is your parent or grandparent, an Alaska native or a member of an American Indian, Urban Indian, or California Indian tribe?": tribe
+  - "Are you, or is your parent or grandparent, an Alaska native or a member of an American Indian, Native American, Urban Indian, or California Indian tribe?": tribe
     datatype: yesnoradio
     required: False
 continue button field: school_work_group

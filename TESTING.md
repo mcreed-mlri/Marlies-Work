@@ -65,7 +65,7 @@ work rules when they do not have to.
 | Do you take care of a child or adult who cannot care for themselves? | **Yes** | I take care of a child or adult who cannot care for themselves |
 | Are you pregnant? | **Yes** | I am pregnant |
 | Has a domestic violence or safety situation made it hard for you to work? | **Yes** | I am experiencing or have experienced domestic violence, stalking, sexual harassment, sexual assault, or another safety situation that makes it hard to work |
-| Are you, or is your parent or grandparent, an Alaska native or a member of an American Indian, Urban Indian, or California Indian tribe? | **Yes** | I am an Alaska Native or member of a Tribe (or I am a child or grandchild of a member of a Tribe) |
+| Are you, or is your parent or grandparent, an Alaska native or a member of an American Indian, Native American, Urban Indian, or California Indian tribe? | **Yes** | I am an Alaska Native or member of a Tribe (or I am a child or grandchild of a member of a Tribe) |
 | Do you get, or are you applying for TAFDC cash assistance benefits? | **Yes** | I get or am applying for TAFDC cash assistance |
 | Are you participating in a substance use treatment program? | **Yes** | I am participating in a substance use treatment program |
 | Do you get, or are you applying for unemployment benefits? | **Yes** | I get or am applying for unemployment benefits |
@@ -77,7 +77,7 @@ work rules when they do not have to.
 - [ ] `I take care of a child or adult who cannot care for themselves` — Do you take care of a child or adult who cannot care for themselves?
 - [ ] `I am pregnant` — Are you pregnant?
 - [ ] `I am experiencing or have experienced domestic violence, stalking, sexual harassment, sexual assault, or another safety situation that makes it hard to work` — Has a domestic violence or safety situation made it hard for you to work?
-- [ ] `I am an Alaska Native or member of a Tribe (or I am a child or grandchild of a member of a Tribe)` — Are you, or is your parent or grandparent, an Alaska native or a member of an American Indian, Urban Indian, or California Indian tribe?
+- [ ] `I am an Alaska Native or member of a Tribe (or I am a child or grandchild of a member of a Tribe)` — Are you, or is your parent or grandparent, an Alaska native or a member of an American Indian, Native American, Urban Indian, or California Indian tribe?
 - [ ] `I get or am applying for TAFDC cash assistance` — Do you get, or are you applying for TAFDC cash assistance benefits?
 - [ ] `I am participating in a substance use treatment program` — Are you participating in a substance use treatment program?
 - [ ] `I get or am applying for unemployment benefits` — Do you get, or are you applying for unemployment benefits?
