@@ -403,17 +403,21 @@ section('9. The printable "Tell DTA" statement');
 w('Shown on the exempt and good cause results. Someone fills in the blanks, signs it, and');
 w('mails, faxes, or uploads it to DTA.');
 blank();
-w('**Most of the letter\'s own sentences are not in this document yet.** The fixed prose in');
-w('the letter body, "I do not have a regular place to sleep" and the paragraphs like it, is');
-w('written inline in buildStatementHTML rather than kept as named copy, so there is nothing');
-w('for the generator to pull out. That is a gap on our side, not yours, and it means you');
-w('have been approving a letter you could only read by printing one. Worth fixing; it is a');
-w('change to the code rather than to this document. The one below is named because it was');
-w('added on 2026-08-06 and there was no reason to add a new unreviewable sentence.');
+w('**Some of the letter\'s own sentences are still not in this document.** Parts of the letter');
+w('body are written inline in the code rather than kept as named copy, so there is nothing for');
+w('the generator to pull out, which means you have been approving a letter you could only read');
+w('by printing one. That is a gap on our side, not yours. The three below were pulled out on');
+w('2026-08-06 because they were being reworded anyway; the rest still needs doing, and it is a');
+w('change to the code rather than to this document.');
 blank();
-item('statementHousingPicksLead', C.statementHousingPicksLead, {
-  note: 'introduces the ticked housing answers in the letter'
-});
+w('None of these mentions the screener, which was the point of that rewrite. The letter is');
+w('from the person to their caseworker, so a reference to a tool they filled in elsewhere');
+w('reads as software talking. "I also told the screening the following" and "a disability');
+w('benefit that is not listed above" both went for that reason, the second because "above"');
+w('pointed at a list of options that does not appear anywhere in the letter.');
+blank();
+['statementHousingLead', 'statementHousingPicksLead', 'statementDisabilityOtherLead']
+  .forEach(k => item(k, C[k]));
 
 item('statement.docTitle', inline['statement.docTitle'], { note: 'the printed page title' });
 ['formTitleExempt', 'formLeadExempt', 'formLeadGoodCause',

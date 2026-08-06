@@ -105,7 +105,13 @@
   .card-in{animation:cardIn .3s ease both}
   .opt{
     display:flex;align-items:center;gap:13px;width:100%;
-    font-family:inherit;font-size:16.5px;font-weight:700;text-align:left;
+    /* 500, not 700. Bold suits a two-word Yes or No and is kept there by .opt--yn, but
+       the housing follow-up and the disability list are full sentences, and five bold
+       sentences stacked read as shouting. 500 rather than 400 because MassLegalHelp's
+       Montserrat ships 500, 600 and 700 only; 400 would be synthesised by the browser.
+       Weight is safe to change here: the selected state is carried by the accent border
+       and the filled mark, never by the label. */
+    font-family:inherit;font-size:16.5px;font-weight:500;text-align:left;
     /* Was padding:16px 18px with min-height:52px, which rendered about 60px tall: the
        24px mark plus 32px of padding plus 4px of border. Adding the age question put
        five of these on the first section and ten tiles on one screen, so it came down
@@ -289,7 +295,8 @@
      stays stacked, because two columns of sentence fragments is unreadable. */
   .opt-group{display:flex;flex-direction:column;gap:11px;margin:14px 0 0}
   .opt-group--yn{flex-direction:row}
-  .opt--yn{flex:1;justify-content:center;min-height:52px}
+  /* Yes and No keep the bold: two words, and they are labels rather than sentences. */
+  .opt--yn{flex:1;justify-content:center;min-height:52px;font-weight:700}
   .opt--yn > span:last-child{flex:0 1 auto !important;text-align:center !important}
   /* The age question, as two boxed choices rather than bare radios, so it has
      the same hit target as every option that follows it. */

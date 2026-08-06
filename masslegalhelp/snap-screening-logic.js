@@ -1233,11 +1233,19 @@
     ageExemptNoticeLead: 'If you are exempt because of age and DTA',
     ageExemptNoticeEmphasis: 'still',
     ageExemptNoticeEnd: 'sent you a SNAP and Work notice, please email',
-    /* Introduces the housing follow-up selections in the letter. A named string rather
-     * than a literal in buildStatementHTML so it lands in SCREENER-COPY.md and the author
-     * can read a sentence DTA will read. Most of the write-in letter's fixed prose is
-     * still inline and therefore absent from that document; see the note in copy-doc.js. */
-    statementHousingPicksLead: 'I also told the screening the following:',
+    /* The three sentences below are the letter's own words, in the person's voice, and are
+     * named rather than left inline in buildStatementHTML so they land in SCREENER-COPY.md.
+     * The rest of the letter's fixed prose is still inline and absent from that document;
+     * see the note in copy-doc.js.
+     *
+     * None of them mentions this tool. That was the point of the 2026-08-06 rewrite: the
+     * letter is from the person to their caseworker, and a reference to a screening they
+     * filled in elsewhere reads as software talking, invites DTA to weigh the tool's
+     * opinion instead of the person's own account, and in "not listed above" pointed at a
+     * list of options that is nowhere in the letter. */
+    statementHousingLead: 'I do not have a regular place to sleep. Please review the information I provide about my situation to decide whether I am unable to work under the ABAWD work rules.',
+    statementHousingPicksLead: 'The following is also true for me:',
+    statementDisabilityOtherLead: 'I receive a disability benefit or payment. Please review it when you decide whether I am exempt from the ABAWD work rules.',
     printLead: 'Download or print these results to get a signed letter you can send to DTA. (More info on how to contact DTA in the box below)',
     exemptHeading: EXEMPT_HEADING_TEXT,
     /* Emptied 2026-07-30 at the author's direction. The exempt heading now ends
@@ -1517,11 +1525,11 @@
         inner += explainBox(explainTextForPrompt(workPrompt));
       }
       if (fixedFor(DISABILITY_OTHER_REASON)) {
-        inner += `<p style="margin:0 0 14px">I receive a disability benefit or payment that is not listed above. Please review it as part of my exemption screening.</p>`;
+        inner += `<p style="margin:0 0 14px">${esc(RESULT_COPY.statementDisabilityOtherLead)}</p>`;
         if (!composed) inner += explainBox(explainTextForReason(DISABILITY_OTHER_REASON));
       }
       if (fixedFor(HOUSING_EXEMPT_REASON)) {
-        inner += `<p style="margin:0 0 14px">I do not have a regular place to sleep. Please review the information I provide about my situation to decide whether I am unable to work under the ABAWD screening.</p>`;
+        inner += `<p style="margin:0 0 14px">${esc(RESULT_COPY.statementHousingLead)}</p>`;
         /* The follow-up selections, the author's request of 2026-08-06. Above the
          * write-in box, not below it: these are the checkbox answers the screening
          * already has, and the box is the person's own account, which should be the last

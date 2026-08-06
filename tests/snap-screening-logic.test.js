@@ -153,6 +153,37 @@ describe('snap-screening-logic', () => {
     });
   });
 
+  /* The letter is from the person to their caseworker. Mentioning the tool reads as
+   * software talking and invites DTA to weigh the tool's opinion over the person's own
+   * account, so it was taken out on 2026-08-06 and is asserted rather than trusted: these
+   * sentences are easy to reintroduce while describing what the code does.
+   *
+   * Scoped to the write-in letter. The emails to self may say "screening", because there
+   * the tool is what the reader is being sent back to. */
+  it('the write-in letter never mentions the screener', () => {
+    const cases = [
+      { housing: 'no', housingFollowup: ['diploma'] },
+      { disability: ['other'] },
+      { child14: 'yes', pregnant: 'yes' },
+      { working: 'income_weekly' },
+      { goodcause: 'transport' }
+    ];
+    for (const a of cases) {
+      const html = SnapScreening.buildStatementHTML({
+        rt: classic2.resultType(a),
+        rs: classic2.exemptReasons(a),
+        housingPicks: classic2.housingFollowupLabels(a),
+        gcText: classic2.goodCauseText(a),
+        explain: classic2.statementPrompts(a).map(p => ({ prompt: p, text: '' })),
+        today: 'August 1, 2026'
+      });
+      assert.ok(
+        !/screening|screener/i.test(html),
+        'the letter for ' + JSON.stringify(a) + ' mentions the screener'
+      );
+    }
+  });
+
   /* The author asked on 2026-08-06 for the housing follow-up selections to show on the
    * results page and in the letter. They are the only exemption with sub-items. */
   describe('housing follow-up selections', () => {
@@ -971,8 +1002,11 @@ describe('snap-screening-logic', () => {
         assert.match(writein, /Take care of a child under 6 years old/);
         assert.match(writein, /margin:8px 0 0 18px/);
         assert.match(writein, /I earn enough income to be exempt from the ABAWD work rules\. I can send proof/);
-        assert.match(writein, /I receive a disability benefit or payment that is not listed above/);
-        assert.match(writein, /I do not have a regular place to sleep\. Please review the information I provide/);
+        /* Read from RESULT_COPY rather than quoted, so rewording the letter does not fail a
+           test that is really about guided mode leaving the write-in letter alone. These
+           were quoted literals and the 2026-08-06 rewrite broke them for the wrong reason. */
+        assert.ok(writein.includes(RESULT_COPY.statementDisabilityOtherLead));
+        assert.ok(writein.includes(RESULT_COPY.statementHousingLead));
       });
     });
 

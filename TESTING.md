@@ -156,7 +156,7 @@ because DTA is being asked to review the whole picture.
 - [ ] Answer **No**, tick two or three options, and go to results. They appear as indented sub-bullets under "No regular place to sleep, and DTA should review unable-to-work factors", not as separate exemptions with their own ticks.
 - [ ] They read in the order the options are listed on the question, whatever order you ticked them in.
 - [ ] The green tick appears on the housing reason only, not on each sub-bullet.
-- [ ] Print or save the letter. The same answers appear, introduced by "I also told the screening the following:", **above** your own typed explanation. Your words should be the last thing in that section.
+- [ ] Print or save the letter. The same answers appear, introduced by "The following is also true for me:", **above** your own typed explanation. Your words should be the last thing in that section.
 - [ ] Tick **None of the above** instead. Still exempt, and no sub-bullets and no list in the letter, because there is nothing to list.
 - [ ] With a screen reader, the sub-bullets are announced as a list belonging to the reason above them, not as five more exemptions.
 
