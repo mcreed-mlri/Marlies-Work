@@ -108,7 +108,7 @@ test.describe('SNAP ABAWD screening (the shipping build)', () => {
     await choice(page, 'stateagency', 3).click();       // MA Commission for the Blind
     await skipToResults(page);
     await expect(page.getByRole('heading', { name: EXEMPT_HEADING })).toBeVisible();
-    const item = page.locator('li', { hasText: /Get services from a state agency/ }).first();
+    const item = page.locator('li', { hasText: /I get services from a state agency/ }).first();
     await expect(item.locator('li', { hasText: /Dept\. of Mental Health/ })).toBeVisible();
     await expect(item.locator('li', { hasText: /Commission for the Blind/ })).toBeVisible();
   });
@@ -125,7 +125,7 @@ test.describe('SNAP ABAWD screening (the shipping build)', () => {
     await expect(page.getByRole('heading', { name: EXEMPT_HEADING })).toBeVisible();
 
     // Nested inside the housing reason's list item, not a sibling exemption.
-    const housingItem = page.locator('li', { hasText: /No regular place to sleep/ }).first();
+    const housingItem = page.locator('li', { hasText: /I do not have a regular place to sleep/ }).first();
     await expect(housingItem.locator('li', { hasText: /high school diploma/ })).toBeVisible();
     await expect(housingItem.locator('li', { hasText: /health care provider/ })).toBeVisible();
   });

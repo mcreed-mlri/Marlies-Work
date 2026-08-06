@@ -19,7 +19,7 @@
       "id": "child14",
       "exemptOn": "yes",
       "reasons": [
-        "Live with a child under 14 years old"
+        "I live with a child under 14 who should be part of my SNAP case"
       ],
       "text": "Do you live with a child under 14 years old?"
     },
@@ -27,7 +27,7 @@
       "id": "health",
       "exemptOn": "yes",
       "reasons": [
-        "Have a health reason that makes it hard to work 30 or more hours a week"
+        "I have a health reason that makes it hard to work 30 or more hours a week"
       ],
       "text": "Do you have a health reason or disability that makes it hard to work at least 30 hours a week?"
     },
@@ -35,7 +35,7 @@
       "id": "child6",
       "exemptOn": "yes",
       "reasons": [
-        "Take care of a child under 6 years old"
+        "I take care of a child under 6 years old"
       ],
       "text": "Do you take care of a child under 6 years old?"
     },
@@ -43,7 +43,7 @@
       "id": "caretaker",
       "exemptOn": "yes",
       "reasons": [
-        "Take care of a child or adult who cannot care for themselves"
+        "I take care of a child or adult who cannot care for themselves"
       ],
       "text": "Do you take care of a child or adult who cannot care for themselves?"
     },
@@ -51,7 +51,7 @@
       "id": "pregnant",
       "exemptOn": "yes",
       "reasons": [
-        "Pregnant"
+        "I am pregnant"
       ],
       "text": "Are you pregnant?"
     },
@@ -59,7 +59,7 @@
       "id": "dv",
       "exemptOn": "yes",
       "reasons": [
-        "Domestic violence, stalking, sexual harassment, sexual assault, or another safety situation that affects work"
+        "I am experiencing or have experienced domestic violence, stalking, sexual harassment, sexual assault, or another safety situation that makes it hard to work"
       ],
       "text": "Has a domestic violence or safety situation made it hard for you to work?"
     },
@@ -67,7 +67,7 @@
       "id": "tribe",
       "exemptOn": "yes",
       "reasons": [
-        "Alaska Native or Tribe member, including through a parent or grandparent"
+        "I am an Alaska Native or member of a Tribe (or I am a child or grandchild of a member of a Tribe)"
       ],
       "text": "Are you, or is your parent or grandparent, an Alaska native or a member of an American Indian, Urban Indian, or California Indian tribe?"
     },
@@ -75,7 +75,7 @@
       "id": "tafdc",
       "exemptOn": "yes",
       "reasons": [
-        "Get or applying for TAFDC cash assistance"
+        "I get or am applying for TAFDC cash assistance"
       ],
       "text": "Do you get, or are you applying for TAFDC cash assistance benefits?"
     },
@@ -83,7 +83,7 @@
       "id": "substanceUse",
       "exemptOn": "yes",
       "reasons": [
-        "Participating in a substance use treatment program"
+        "I am participating in a substance use treatment program"
       ],
       "text": "Are you participating in a substance use treatment program?"
     },
@@ -91,7 +91,7 @@
       "id": "unemployment",
       "exemptOn": "yes",
       "reasons": [
-        "Get or applying for unemployment benefits"
+        "I get or am applying for unemployment benefits"
       ],
       "text": "Do you get, or are you applying for unemployment benefits?"
     },
@@ -99,7 +99,7 @@
       "id": "school",
       "exemptOn": "yes",
       "reasons": [
-        "Enrolled in school half-time or more"
+        "I am enrolled in school half-time or more"
       ],
       "text": "Are you enrolled in school half-time or more?"
     }
@@ -110,7 +110,7 @@
       "label": "Yes, I am making $217.50 a week or more (before taxes)",
       "kind": "income",
       "reasons": [
-        "Earn enough income to be exempt from the work rules"
+        "I earn enough money from work to be exempt from the work rules"
       ]
     },
     {
@@ -118,7 +118,7 @@
       "label": "Yes, I am working at least 14.5 hours a week at $15 or more an hour",
       "kind": "income",
       "reasons": [
-        "Earn enough income to be exempt from the work rules"
+        "I earn enough money from work to be exempt from the work rules"
       ]
     },
     {
@@ -126,7 +126,7 @@
       "label": "Yes, I am working 30 hours or more a week (I make less than minimum wage)",
       "kind": "income",
       "reasons": [
-        "Work 30 or more hours a week while earning less than minimum wage"
+        "I work 30 or more hours a week while earning less than minimum wage"
       ]
     }
   ],
@@ -135,49 +135,49 @@
       "id": "eaedc",
       "label": "EAEDC",
       "reasons": [
-        "Get disability benefits"
+        "I get disability benefits"
       ]
     },
     {
       "id": "veteran",
       "label": "Veteran’s disability benefit",
       "reasons": [
-        "Get disability benefits"
+        "I get disability benefits"
       ]
     },
     {
       "id": "workers_comp",
       "label": "Workers’ compensation",
       "reasons": [
-        "Get disability benefits"
+        "I get disability benefits"
       ]
     },
     {
       "id": "pfml",
       "label": "Paid Family Medical Leave",
       "reasons": [
-        "Get disability benefits"
+        "I get disability benefits"
       ]
     },
     {
       "id": "std",
       "label": "Short-term disability",
       "reasons": [
-        "Get disability benefits"
+        "I get disability benefits"
       ]
     },
     {
       "id": "ssi_ssdi",
       "label": "SSI or SSDI",
       "reasons": [
-        "Get disability benefits"
+        "I get disability benefits"
       ]
     },
     {
       "id": "other",
       "label": "Other disability benefit or payment",
       "reasons": [
-        "Get another disability benefit or payment DTA should review"
+        "I get another disability benefit or payment DTA should review"
       ]
     }
   ],
@@ -598,7 +598,7 @@
       "expect": {
         "outcome": "exempt",
         "reasons": [
-          "Pregnant"
+          "I am pregnant"
         ]
       }
     },
@@ -610,7 +610,7 @@
       "expect": {
         "outcome": "exempt",
         "reasons": [
-          "Live with a child under 14 years old"
+          "I live with a child under 14 who should be part of my SNAP case"
         ]
       }
     },
@@ -622,7 +622,7 @@
       "expect": {
         "outcome": "exempt",
         "reasons": [
-          "Earn enough income to be exempt from the work rules"
+          "I earn enough money from work to be exempt from the work rules"
         ]
       }
     },
@@ -634,7 +634,7 @@
       "expect": {
         "outcome": "exempt",
         "reasons": [
-          "Work 30 or more hours a week while earning less than minimum wage"
+          "I work 30 or more hours a week while earning less than minimum wage"
         ]
       }
     },
@@ -648,7 +648,7 @@
       "expect": {
         "outcome": "exempt",
         "reasons": [
-          "Get disability benefits"
+          "I get disability benefits"
         ]
       }
     },
@@ -662,7 +662,7 @@
       "expect": {
         "outcome": "exempt",
         "reasons": [
-          "Get another disability benefit or payment DTA should review"
+          "I get another disability benefit or payment DTA should review"
         ]
       }
     },
@@ -677,7 +677,7 @@
       "expect": {
         "outcome": "exempt",
         "reasons": [
-          "No regular place to sleep, and DTA should review unable-to-work factors"
+          "I do not have a regular place to sleep"
         ]
       }
     },
@@ -704,7 +704,7 @@
       "expect": {
         "outcome": "exempt",
         "reasons": [
-          "No regular place to sleep, and DTA should review unable-to-work factors"
+          "I do not have a regular place to sleep"
         ]
       }
     },
@@ -716,7 +716,7 @@
       "expect": {
         "outcome": "exempt",
         "reasons": [
-          "Domestic violence, stalking, sexual harassment, sexual assault, or another safety situation that affects work"
+          "I am experiencing or have experienced domestic violence, stalking, sexual harassment, sexual assault, or another safety situation that makes it hard to work"
         ]
       }
     },
@@ -730,9 +730,9 @@
       "expect": {
         "outcome": "exempt",
         "reasons": [
-          "Live with a child under 14 years old",
-          "Pregnant",
-          "Earn enough income to be exempt from the work rules"
+          "I live with a child under 14 who should be part of my SNAP case",
+          "I am pregnant",
+          "I earn enough money from work to be exempt from the work rules"
         ]
       }
     },
@@ -766,7 +766,7 @@
       "expect": {
         "outcome": "exempt",
         "reasons": [
-          "Get services from a state agency"
+          "I get services from a state agency"
         ]
       }
     },
@@ -781,7 +781,7 @@
       "expect": {
         "outcome": "exempt",
         "reasons": [
-          "Get services from a state agency"
+          "I get services from a state agency"
         ]
       }
     },
@@ -808,8 +808,8 @@
       "expect": {
         "outcome": "exempt",
         "reasons": [
-          "Get disability benefits",
-          "Get services from a state agency"
+          "I get disability benefits",
+          "I get services from a state agency"
         ]
       }
     },
@@ -843,7 +843,7 @@
       "expect": {
         "outcome": "ageexempt",
         "reasons": [
-          "Pregnant"
+          "I am pregnant"
         ]
       }
     }

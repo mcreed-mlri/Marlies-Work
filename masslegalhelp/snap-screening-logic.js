@@ -65,10 +65,15 @@
   const WORK_HOURS_AT_MIN_WAGE = WORK_INCOME_THRESHOLD / MA_MIN_WAGE;
   const WORK_HOURS_COMPLIANCE = 30;
 
-  const WORK_REASON_INCOME = 'Earn enough income to be exempt from the work rules';
-  const WORK_REASON_HOURS_30 = 'Work 30 or more hours a week while earning less than minimum wage';
-  const DISABILITY_OTHER_REASON = 'Get another disability benefit or payment DTA should review';
-  const HOUSING_EXEMPT_REASON = 'No regular place to sleep, and DTA should review unable-to-work factors';
+  /* "money from work", not "income", at the author's request: income reads as a benefits term
+   * and this limb is about wages. */
+  const WORK_REASON_INCOME = 'I earn enough money from work to be exempt from the work rules';
+  const WORK_REASON_HOURS_30 = 'I work 30 or more hours a week while earning less than minimum wage';
+  const DISABILITY_OTHER_REASON = 'I get another disability benefit or payment DTA should review';
+  /* Just the fact. The old wording carried the ask too, "and DTA should review unable-to-work
+   * factors", which as a bullet told the reader what DTA should do rather than what is true of
+   * them. The ask lives in the letter's own housing paragraph, statementHousingLead. */
+  const HOUSING_EXEMPT_REASON = 'I do not have a regular place to sleep';
 
   const HOUSING_OPTION_DEFS = [
     { id: 'diploma', labelClassic: 'I have a high school diploma (including GED or HiSet)', labelV2: 'I have a high school diploma (including GED or HiSet)' },
@@ -303,25 +308,27 @@
   };
 
   const REASONS = {
-    child14: 'Live with a child under 14 years old',
-    health: 'Have a health reason that makes it hard to work 30 or more hours a week',
-    child6: 'Take care of a child under 6 years old',
-    caretaker: 'Take care of a child or adult who cannot care for themselves',
-    pregnant: 'Pregnant',
-    dv: 'Domestic violence, stalking, sexual harassment, sexual assault, or another safety situation that affects work',
+    /* "my SNAP case", not "your": the author's draft read "your", the only second person in a
+     * list of first-person sentences, in a list printed in a letter the person signs. */
+    child14: 'I live with a child under 14 who should be part of my SNAP case',
+    health: 'I have a health reason that makes it hard to work 30 or more hours a week',
+    child6: 'I take care of a child under 6 years old',
+    caretaker: 'I take care of a child or adult who cannot care for themselves',
+    pregnant: 'I am pregnant',
+    dv: 'I am experiencing or have experienced domestic violence, stalking, sexual harassment, sexual assault, or another safety situation that makes it hard to work',
     /* Widened 2026-08-06 with the question, from "Alaska Native or member of a Tribe".
      * The question asks about a parent or grandparent too, so most people answering Yes are
      * not themselves enrolled, and this reason prints as a bullet in the letter they sign and
      * send to DTA. The old wording had them attest to membership they may not have. No
      * trailing full stop, because every other reason in this list is a bare phrase and they
      * are set as list items. */
-    tribe: 'Alaska Native or Tribe member, including through a parent or grandparent',
-    tafdc: 'Get or applying for TAFDC cash assistance',
-    disability: 'Get disability benefits',
-    substanceUse: 'Participating in a substance use treatment program',
-    unemployment: 'Get or applying for unemployment benefits',
-    stateagency: 'Get services from a state agency',
-    school: 'Enrolled in school half-time or more'
+    tribe: 'I am an Alaska Native or member of a Tribe (or I am a child or grandchild of a member of a Tribe)',
+    tafdc: 'I get or am applying for TAFDC cash assistance',
+    disability: 'I get disability benefits',
+    substanceUse: 'I am participating in a substance use treatment program',
+    unemployment: 'I get or am applying for unemployment benefits',
+    stateagency: 'I get services from a state agency',
+    school: 'I am enrolled in school half-time or more'
   };
 
   /* ---- Write-in prompts for the "Statement to DTA" form ----

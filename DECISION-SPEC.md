@@ -34,17 +34,17 @@ results screen and in the printable statement.
 
 | Question | Exempt when | Reason recorded | Citation |
 |---|---|---|---|
-| `child14` | answer is "yes" | Live with a child under 14 years old | |
-| `health` | answer is "yes" | Have a health reason that makes it hard to work 30 or more hours a week | |
-| `child6` | answer is "yes" | Take care of a child under 6 years old | |
-| `caretaker` | answer is "yes" | Take care of a child or adult who cannot care for themselves | |
-| `pregnant` | answer is "yes" | Pregnant | |
-| `dv` | answer is "yes" | Domestic violence, stalking, sexual harassment, sexual assault, or another safety situation that affects work | |
-| `tribe` | answer is "yes" | Alaska Native or Tribe member, including through a parent or grandparent | |
-| `tafdc` | answer is "yes" | Get or applying for TAFDC cash assistance | |
-| `substanceUse` | answer is "yes" | Participating in a substance use treatment program | |
-| `unemployment` | answer is "yes" | Get or applying for unemployment benefits | |
-| `school` | answer is "yes" | Enrolled in school half-time or more | |
+| `child14` | answer is "yes" | I live with a child under 14 who should be part of my SNAP case | |
+| `health` | answer is "yes" | I have a health reason that makes it hard to work 30 or more hours a week | |
+| `child6` | answer is "yes" | I take care of a child under 6 years old | |
+| `caretaker` | answer is "yes" | I take care of a child or adult who cannot care for themselves | |
+| `pregnant` | answer is "yes" | I am pregnant | |
+| `dv` | answer is "yes" | I am experiencing or have experienced domestic violence, stalking, sexual harassment, sexual assault, or another safety situation that makes it hard to work | |
+| `tribe` | answer is "yes" | I am an Alaska Native or member of a Tribe (or I am a child or grandchild of a member of a Tribe) | |
+| `tafdc` | answer is "yes" | I get or am applying for TAFDC cash assistance | |
+| `substanceUse` | answer is "yes" | I am participating in a substance use treatment program | |
+| `unemployment` | answer is "yes" | I get or am applying for unemployment benefits | |
+| `school` | answer is "yes" | I am enrolled in school half-time or more | |
 
 Any question not listed here cannot produce an exemption by itself. `housing`,
 `housingFollowup`, `working`, and `disability` are handled separately below, because
@@ -56,9 +56,9 @@ One question, pick one. All three options lead to exempt, by two different route
 
 | Option | Label | Exempt | Reason recorded | Citation |
 |---|---|---|---|---|
-| `income_weekly` | Yes, I am making $217.50 a week or more (before taxes) | yes | Earn enough income to be exempt from the work rules | |
-| `hours_min_wage` | Yes, I am working at least 14.5 hours a week at $15 or more an hour | yes | Earn enough income to be exempt from the work rules | |
-| `hours_30` | Yes, I am working 30 hours or more a week (I make less than minimum wage) | yes | Work 30 or more hours a week while earning less than minimum wage | |
+| `income_weekly` | Yes, I am making $217.50 a week or more (before taxes) | yes | I earn enough money from work to be exempt from the work rules | |
+| `hours_min_wage` | Yes, I am working at least 14.5 hours a week at $15 or more an hour | yes | I earn enough money from work to be exempt from the work rules | |
+| `hours_30` | Yes, I am working 30 hours or more a week (I make less than minimum wage) | yes | I work 30 or more hours a week while earning less than minimum wage | |
 | none of these | None of the above | no | none | |
 
 Worth an expert's attention: `hours_30` means 30 or more hours a week while earning
@@ -73,15 +73,15 @@ to review it.
 
 | Option | Label | Reason recorded | Citation |
 |---|---|---|---|
-| `eaedc` | EAEDC | Get disability benefits | |
-| `veteran` | Veteran’s disability benefit | Get disability benefits | |
-| `workers_comp` | Workers’ compensation | Get disability benefits | |
-| `pfml` | Paid Family Medical Leave | Get disability benefits | |
-| `std` | Short-term disability | Get disability benefits | |
-| `ssi_ssdi` | SSI or SSDI | Get disability benefits | |
-| `other` | Other disability benefit or payment | Get another disability benefit or payment DTA should review | |
+| `eaedc` | EAEDC | I get disability benefits | |
+| `veteran` | Veteran’s disability benefit | I get disability benefits | |
+| `workers_comp` | Workers’ compensation | I get disability benefits | |
+| `pfml` | Paid Family Medical Leave | I get disability benefits | |
+| `std` | Short-term disability | I get disability benefits | |
+| `ssi_ssdi` | SSI or SSDI | I get disability benefits | |
+| `other` | Other disability benefit or payment | I get another disability benefit or payment DTA should review | |
 
-Selecting a named benefit and "other" together records both reasons: Get disability benefits; Get another disability benefit or payment DTA should review.
+Selecting a named benefit and "other" together records both reasons: I get disability benefits; I get another disability benefit or payment DTA should review.
 
 ## Housing, and the unable-to-work follow-up
 
@@ -223,26 +223,26 @@ these double as test cases; the JSON carries them in a form a test generator can
 | Example | Outcome | Reasons recorded |
 |---|---|---|
 | Nothing answered | `notexempt` | *none* |
-| Pregnant | `exempt` | Pregnant |
-| Lives with a child under 14 | `exempt` | Live with a child under 14 years old |
-| Earns $217.50 a week or more | `exempt` | Earn enough income to be exempt from the work rules |
-| 30+ hours below minimum wage | `exempt` | Work 30 or more hours a week while earning less than minimum wage |
-| Gets SSI or SSDI | `exempt` | Get disability benefits |
-| Other disability payment only | `exempt` | Get another disability benefit or payment DTA should review |
-| No place to sleep, no diploma | `exempt` | No regular place to sleep, and DTA should review unable-to-work factors |
+| Pregnant | `exempt` | I am pregnant |
+| Lives with a child under 14 | `exempt` | I live with a child under 14 who should be part of my SNAP case |
+| Earns $217.50 a week or more | `exempt` | I earn enough money from work to be exempt from the work rules |
+| 30+ hours below minimum wage | `exempt` | I work 30 or more hours a week while earning less than minimum wage |
+| Gets SSI or SSDI | `exempt` | I get disability benefits |
+| Other disability payment only | `exempt` | I get another disability benefit or payment DTA should review |
+| No place to sleep, no diploma | `exempt` | I do not have a regular place to sleep |
 | No place to sleep, diploma and steady job | `notexempt` | *none* |
-| No place to sleep, none of these apply | `exempt` | No regular place to sleep, and DTA should review unable-to-work factors |
-| Safety concern | `exempt` | Domestic violence, stalking, sexual harassment, sexual assault, or another safety situation that affects work |
-| Several exemptions at once | `exempt` | Live with a child under 14 years old; Pregnant; Earn enough income to be exempt from the work rules |
+| No place to sleep, none of these apply | `exempt` | I do not have a regular place to sleep |
+| Safety concern | `exempt` | I am experiencing or have experienced domestic violence, stalking, sexual harassment, sexual assault, or another safety situation that makes it hard to work |
+| Several exemptions at once | `exempt` | I live with a child under 14 who should be part of my SNAP case; I am pregnant; I earn enough money from work to be exempt from the work rules |
 | No exemption, transport problem | `goodcause` | *none* |
 | No exemption, no good cause | `notexempt` | *none* |
-| Services from one state agency | `exempt` | Get services from a state agency |
-| Services from two state agencies | `exempt` | Get services from a state agency |
+| Services from one state agency | `exempt` | I get services from a state agency |
+| Services from two state agencies | `exempt` | I get services from a state agency |
 | State agencies answered No | `notexempt` | *none* |
-| A disability benefit and a state agency together | `exempt` | Get disability benefits; Get services from a state agency |
+| A disability benefit and a state agency together | `exempt` | I get disability benefits; I get services from a state agency |
 | Not 18 through 64 | `ageexempt` | *none* |
 | Is 18 through 64, nothing else answered | `notexempt` | *none* |
-| Not 18 through 64, and other exemptions answered | `ageexempt` | Pregnant |
+| Not 18 through 64, and other exemptions answered | `ageexempt` | I am pregnant |
 
 ## Notes for the Docassemble port
 

@@ -323,8 +323,8 @@ describe('snap-screening-logic', () => {
       rt: classic2.resultType(a), rs: classic2.exemptReasons(a), subItemsByReason: map
     });
     // Nested, not a sibling bullet: the specifics must sit inside the reason's own list item.
-    assert.match(html, /Get disability benefits<ul[^>]*>\s*<li[^>]*>EAEDC<\/li>/);
-    assert.match(html, /Get services from a state agency<ul[^>]*>\s*<li[^>]*>Dept\. of Mental Health<\/li>/);
+    assert.ok(html.includes(REASON_TEXT_BY_ID.disability + '<ul style="margin:6px 0 0;padding-left:22px"><li style="margin:0 0 4px">EAEDC</li>'));
+    assert.ok(html.includes(REASON_TEXT_BY_ID.stateagency + '<ul style="margin:6px 0 0;padding-left:22px"><li style="margin:0 0 4px">Dept. of Mental Health</li>'));
   });
 
   it('a letter built without subItemsByReason still builds', () => {
@@ -332,7 +332,7 @@ describe('snap-screening-logic', () => {
     const html = SnapScreening.buildStatementHTML({
       rt: classic2.resultType(a), rs: classic2.exemptReasons(a)
     });
-    assert.match(html, /Get disability benefits/);
+    assert.ok(html.includes(REASON_TEXT_BY_ID.disability));
     assert.ok(!/EAEDC/.test(html));
   });
 
@@ -425,7 +425,7 @@ describe('snap-screening-logic', () => {
       agency: '12345',
       explain: 'I need help updating my case.',
       rt: 'exempt',
-      rs: ['Pregnant'],
+      rs: [REASON_TEXT_BY_ID.pregnant],
       today: 'January 1, 2026'
     });
     assert.match(html, /Dear DTA,/);
@@ -509,7 +509,7 @@ describe('snap-screening-logic', () => {
     const both = statementPromptsFor([WORK_REASON_INCOME, WORK_REASON_HOURS_30]);
     assert.equal(both.length, 1);
     assert.deepEqual(statementPromptsFor([], 'goodcause'), ['Explain why you had to miss work, school, or volunteer hours']);
-    assert.equal(statementPromptsFor(['Pregnant']).length, 1);
+    assert.equal(statementPromptsFor([REASON_TEXT_BY_ID.pregnant]).length, 1);
     assert.equal(statementPromptsFor([HOUSING_EXEMPT_REASON]).length, 1);
   });
 
@@ -526,8 +526,8 @@ describe('snap-screening-logic', () => {
       name: 'Jane Doe',
       rt: 'exempt',
       rs: [
-        'Have a health reason that makes it hard to work 30 or more hours a week',
-        'Take care of a child or adult who cannot care for themselves'
+        REASON_TEXT_BY_ID.health,
+        REASON_TEXT_BY_ID.caretaker
       ],
       explain: [
         { prompt: 'Explain the health reason that makes it hard for you to work 30 or more hours a week', text: 'chronic back pain' },
@@ -542,7 +542,7 @@ describe('snap-screening-logic', () => {
   });
 
   it('buildStatementHTML still accepts a plain string explain', () => {
-    const html = SnapScreening.buildStatementHTML({ rt: 'exempt', rs: ['Pregnant'], explain: 'just one box' });
+    const html = SnapScreening.buildStatementHTML({ rt: 'exempt', rs: [REASON_TEXT_BY_ID.pregnant], explain: 'just one box' });
     assert.match(html, /just one box/);
     assert.doesNotMatch(html, /No additional explanation provided/);
   });
@@ -550,13 +550,13 @@ describe('snap-screening-logic', () => {
   it('buildResultsEmailContent carries the result, the reasons, and a way back', () => {
     const { subject, body } = buildResultsEmailContent({
       rt: 'exempt',
-      rs: ['Pregnant'],
+      rs: [REASON_TEXT_BY_ID.pregnant],
       toolUrl: 'https://example.org/tool/snap/'
     });
     assert.match(subject, /Your SNAP work rules screening/);
     assert.match(body, /may be exempt/);
     assert.match(body, /Reasons that applied:/);
-    assert.match(body, /- Pregnant/);
+    assert.ok(body.includes(REASON_TEXT_BY_ID.pregnant));
     assert.match(body, /This email is not the letter/);
     assert.match(body, /https:\/\/example\.org\/tool\/snap\//);
   });
@@ -648,7 +648,7 @@ describe('snap-screening-logic', () => {
     });
 
     it('keeps the whole real summary when the boxes are left empty', () => {
-      const { body } = buildResultsEmailContent({ rt: 'exempt', rs: ['Pregnant'], name: 'Jane Doe' });
+      const { body } = buildResultsEmailContent({ rt: 'exempt', rs: [REASON_TEXT_BY_ID.pregnant], name: 'Jane Doe' });
       assert.equal(buildResultsMailto({ subject: RESULT_COPY.emailSelfSubject, body }).truncated, false);
     });
 
@@ -1106,10 +1106,10 @@ describe('snap-screening-logic', () => {
           d_child6_live: 'yes', d_care_who: 'child'
         });
         // The two explained reasons lose their bullets...
-        assert.doesNotMatch(letter, /<li[^>]*>Take care of a child under 6 years old<\/li>/);
-        assert.doesNotMatch(letter, /<li[^>]*>Take care of a child or adult who cannot care for themselves<\/li>/);
+        assert.ok(!letter.includes('<li style="margin:0 0 6px">' + REASON_TEXT_BY_ID.child6 + '</li>'));
+        assert.ok(!letter.includes(REASON_TEXT_BY_ID.caretaker));
         // ...and the unexplained one keeps its bullet, since nothing repeats it.
-        assert.match(letter, /<li[^>]*>Live with a child under 14 years old<\/li>/);
+        assert.ok(letter.includes('<li style="margin:0 0 6px">' + REASON_TEXT_BY_ID.child14 + '</li>'));
         assert.equal(times(letter, 'I take care of a child under 6 years old'), 1);
       });
 
@@ -1140,8 +1140,8 @@ describe('snap-screening-logic', () => {
        * paragraph actually speaks for. Everything else must be untouched. */
       it('leaves reasons with no composed paragraph exactly as they were', () => {
         const letter = letterFor({ pregnant: 'yes', tafdc: 'yes', tribe: 'yes' });
-        assert.match(letter, /<li[^>]*>Pregnant<\/li>/);
-        assert.match(letter, /<li[^>]*>Get or applying for TAFDC cash assistance<\/li>/);
+        assert.ok(letter.includes(REASON_TEXT_BY_ID.pregnant));
+        assert.ok(letter.includes('<li style="margin:0 0 6px">' + REASON_TEXT_BY_ID.tafdc + '</li>'));
         // Read from the catalogue rather than quoted: this wording was widened on 2026-08-06
         // and the assertion is about the letter listing the reason, not about its exact words.
         assert.ok(letter.includes('<li style="margin:0 0 6px">' + REASON_TEXT_BY_ID.tribe + '</li>'));
@@ -1160,8 +1160,8 @@ describe('snap-screening-logic', () => {
           explain: classic2.statementPrompts(answers).map(p => ({ prompt: p, text: '' })),
           today: 'August 1, 2026'
         });
-        assert.match(writein, /<li[^>]*>Live with a child under 14 years old<\/li>/);
-        assert.match(writein, /Take care of a child under 6 years old/);
+        assert.ok(writein.includes('<li style="margin:0 0 6px">' + REASON_TEXT_BY_ID.child14 + '</li>'));
+        assert.ok(writein.includes(REASON_TEXT_BY_ID.child6));
         assert.match(writein, /margin:8px 0 0 18px/);
         assert.match(writein, /I earn enough income to be exempt from the ABAWD work rules\. I can send proof/);
         /* Read from RESULT_COPY rather than quoted, so rewording the letter does not fail a
@@ -1176,7 +1176,7 @@ describe('snap-screening-logic', () => {
       const explain = classic2.composeStatement(
         { health: 'yes', d_health_kind: 'mental', d_health_care: 'regularly' }, AUG);
       const composed = SnapScreening.buildStatementHTML({
-        name: 'Jane Doe', rt: 'exempt', rs: ['Have a health reason'], explain, composed: true, today: 'August 1, 2026'
+        name: 'Jane Doe', rt: 'exempt', rs: [REASON_TEXT_BY_ID.health], explain, composed: true, today: 'August 1, 2026'
       });
       assert.match(composed, /<p style="margin:0 0 14px">I have a mental health condition/);
       assert.doesNotMatch(composed, /border:1px solid #999/, 'a composed sentence must not print inside a ruled box');
@@ -1187,7 +1187,7 @@ describe('snap-screening-logic', () => {
 
       const writein = SnapScreening.buildStatementHTML({
         rt: 'exempt', explain: [{ prompt: 'Explain the health reason that makes it hard for you to work 30 or more hours a week', text: '' }],
-        rs: ['Have a health reason that makes it hard to work 30 or more hours a week'],
+        rs: [REASON_TEXT_BY_ID.health],
         today: 'August 1, 2026'
       });
       assert.match(writein, /border:1px solid #999/, 'an empty box must still print as a ruled area to write in');

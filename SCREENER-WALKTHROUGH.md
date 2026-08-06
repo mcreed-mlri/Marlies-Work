@@ -210,22 +210,22 @@ _There are three outcomes, and the wording of each is below._
 
 _Followed by a checklist of the reasons that applied. Every reason the tool can name:_
 
-- Live with a child under 14 years old
-- Have a health reason that makes it hard to work 30 or more hours a week
-- Take care of a child under 6 years old
-- Take care of a child or adult who cannot care for themselves
-- Pregnant
-- Domestic violence, stalking, sexual harassment, sexual assault, or another safety situation that affects work
-- Alaska Native or Tribe member, including through a parent or grandparent
-- Get or applying for TAFDC cash assistance
-- Get disability benefits
-- Get another disability benefit or payment DTA should review
-- Participating in a substance use treatment program
-- Get or applying for unemployment benefits
-- Enrolled in school half-time or more
-- Earn enough income to be exempt from the work rules
-- Work 30 or more hours a week while earning less than minimum wage
-- No regular place to sleep, and DTA should review unable-to-work factors
+- I live with a child under 14 who should be part of my SNAP case
+- I have a health reason that makes it hard to work 30 or more hours a week
+- I take care of a child under 6 years old
+- I take care of a child or adult who cannot care for themselves
+- I am pregnant
+- I am experiencing or have experienced domestic violence, stalking, sexual harassment, sexual assault, or another safety situation that makes it hard to work
+- I am an Alaska Native or member of a Tribe (or I am a child or grandchild of a member of a Tribe)
+- I get or am applying for TAFDC cash assistance
+- I get disability benefits
+- I get another disability benefit or payment DTA should review
+- I am participating in a substance use treatment program
+- I get or am applying for unemployment benefits
+- I am enrolled in school half-time or more
+- I earn enough money from work to be exempt from the work rules
+- I work 30 or more hours a week while earning less than minimum wage
+- I do not have a regular place to sleep
 
 _Some of them add a line about what to send DTA:_
 
@@ -364,7 +364,7 @@ _**Which gives**_
 
 _The exempt result, listing:_
 
-- Have a health reason that makes it hard to work 30 or more hours a week
+- I have a health reason that makes it hard to work 30 or more hours a week
 
 _**What Version B asks next, and what each answer writes**_
 
@@ -441,7 +441,7 @@ _**Which gives**_
 
 _The exempt result, listing:_
 
-- Take care of a child or adult who cannot care for themselves
+- I take care of a child or adult who cannot care for themselves
 
 _**What Version B asks next, and what each answer writes**_
 
@@ -519,7 +519,7 @@ _**Which gives**_
 
 _The exempt result, listing:_
 
-- Earn enough income to be exempt from the work rules
+- I earn enough money from work to be exempt from the work rules
 
 _**What Version B asks next, and what each answer writes**_
 
@@ -600,7 +600,7 @@ _**Which gives**_
 
 _The exempt result, listing:_
 
-- No regular place to sleep, and DTA should review unable-to-work factors
+- I do not have a regular place to sleep
 
 _**What Version B asks next, and what each answer writes**_
 
@@ -753,7 +753,7 @@ _**Which gives**_
 
 _The exempt result, listing:_
 
-- Pregnant
+- I am pregnant
 
 _**What Version B asks next**_
 
@@ -771,7 +771,7 @@ Dear DTA,
 
 I am writing to ask that you update my SNAP case. I believe I am exempt from the ABAWD work rules and should not have to meet them for the following reason(s):
 
-  - Pregnant
+  - I am pregnant
 
 Sincerely,
 

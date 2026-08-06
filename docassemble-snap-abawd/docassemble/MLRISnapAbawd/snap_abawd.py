@@ -29,34 +29,37 @@ WORK_HOURS_COMPLIANCE = 30
 
 # Reason text, recorded on the results screen and in the printable statement.
 REASONS = {
-    "child14": "Live with a child under 14 years old",
-    "health": "Have a health reason that makes it hard to work 30 or more hours a week",
-    "child6": "Take care of a child under 6 years old",
-    "caretaker": "Take care of a child or adult who cannot care for themselves",
-    "pregnant": "Pregnant",
+    # First person since 2026-08-06, with the whole catalogue. These print on the results
+    # screen and as bullets in the letter under "I believe I am exempt ... for the following
+    # reason(s)", so bare third-person phrases made the letter change voice at the list.
+    # Mirrors REASONS in the JavaScript reference exactly; the parity job compares them.
+    "child14": "I live with a child under 14 who should be part of my SNAP case",
+    "health": "I have a health reason that makes it hard to work 30 or more hours a week",
+    "child6": "I take care of a child under 6 years old",
+    "caretaker": "I take care of a child or adult who cannot care for themselves",
+    "pregnant": "I am pregnant",
     "dv": (
-        "Domestic violence, stalking, sexual harassment, sexual assault, or "
-        "another safety situation that affects work"
+        "I am experiencing or have experienced domestic violence, stalking, sexual "
+        "harassment, sexual assault, or another safety situation that makes it hard to work"
     ),
-    # Widened 2026-08-06 with the question, which now asks about a parent or grandparent
-    # too. See the note in the JavaScript reference; the old wording had people attest to
-    # membership they may not have.
-    "tribe": "Alaska Native or Tribe member, including through a parent or grandparent",
-    "tafdc": "Get or applying for TAFDC cash assistance",
-    "substanceUse": "Participating in a substance use treatment program",
-    "unemployment": "Get or applying for unemployment benefits",
-    "stateagency": "Get services from a state agency",
-    "school": "Enrolled in school half-time or more",
-    "disability": "Get disability benefits",
+    "tribe": (
+        "I am an Alaska Native or member of a Tribe (or I am a child or grandchild of a "
+        "member of a Tribe)"
+    ),
+    "tafdc": "I get or am applying for TAFDC cash assistance",
+    "substanceUse": "I am participating in a substance use treatment program",
+    "unemployment": "I get or am applying for unemployment benefits",
+    "stateagency": "I get services from a state agency",
+    "school": "I am enrolled in school half-time or more",
+    "disability": "I get disability benefits",
 }
 
-DISABILITY_OTHER_REASON = "Get another disability benefit or payment DTA should review"
-HOUSING_EXEMPT_REASON = (
-    "No regular place to sleep, and DTA should review unable-to-work factors"
-)
-WORK_REASON_INCOME = "Earn enough income to be exempt from the work rules"
+DISABILITY_OTHER_REASON = "I get another disability benefit or payment DTA should review"
+# Just the fact. The old wording carried the ask as well; that lives in the letter.
+HOUSING_EXEMPT_REASON = "I do not have a regular place to sleep"
+WORK_REASON_INCOME = "I earn enough money from work to be exempt from the work rules"
 WORK_REASON_HOURS_30 = (
-    "Work 30 or more hours a week while earning less than minimum wage"
+    "I work 30 or more hours a week while earning less than minimum wage"
 )
 
 # Questions answered yes/no where "yes" alone points to an exemption, in the order

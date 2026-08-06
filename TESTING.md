@@ -59,48 +59,48 @@ work rules when they do not have to.
 
 | Answer this question | With | The letter should list |
 | --- | --- | --- |
-| Do you live with a child under 14 years old? | **Yes** | Live with a child under 14 years old |
-| Do you have a health reason or disability that makes it hard to work at least 30 hours a week? | **Yes** | Have a health reason that makes it hard to work 30 or more hours a week |
-| Do you take care of a child under 6 years old? | **Yes** | Take care of a child under 6 years old |
-| Do you take care of a child or adult who cannot care for themselves? | **Yes** | Take care of a child or adult who cannot care for themselves |
-| Are you pregnant? | **Yes** | Pregnant |
-| Has a domestic violence or safety situation made it hard for you to work? | **Yes** | Domestic violence, stalking, sexual harassment, sexual assault, or another safety situation that affects work |
-| Are you, or is your parent or grandparent, an Alaska native or a member of an American Indian, Urban Indian, or California Indian tribe? | **Yes** | Alaska Native or Tribe member, including through a parent or grandparent |
-| Do you get, or are you applying for TAFDC cash assistance benefits? | **Yes** | Get or applying for TAFDC cash assistance |
-| Are you participating in a substance use treatment program? | **Yes** | Participating in a substance use treatment program |
-| Do you get, or are you applying for unemployment benefits? | **Yes** | Get or applying for unemployment benefits |
-| Are you enrolled in school half-time or more? | **Yes** | Enrolled in school half-time or more |
+| Do you live with a child under 14 years old? | **Yes** | I live with a child under 14 who should be part of my SNAP case |
+| Do you have a health reason or disability that makes it hard to work at least 30 hours a week? | **Yes** | I have a health reason that makes it hard to work 30 or more hours a week |
+| Do you take care of a child under 6 years old? | **Yes** | I take care of a child under 6 years old |
+| Do you take care of a child or adult who cannot care for themselves? | **Yes** | I take care of a child or adult who cannot care for themselves |
+| Are you pregnant? | **Yes** | I am pregnant |
+| Has a domestic violence or safety situation made it hard for you to work? | **Yes** | I am experiencing or have experienced domestic violence, stalking, sexual harassment, sexual assault, or another safety situation that makes it hard to work |
+| Are you, or is your parent or grandparent, an Alaska native or a member of an American Indian, Urban Indian, or California Indian tribe? | **Yes** | I am an Alaska Native or member of a Tribe (or I am a child or grandchild of a member of a Tribe) |
+| Do you get, or are you applying for TAFDC cash assistance benefits? | **Yes** | I get or am applying for TAFDC cash assistance |
+| Are you participating in a substance use treatment program? | **Yes** | I am participating in a substance use treatment program |
+| Do you get, or are you applying for unemployment benefits? | **Yes** | I get or am applying for unemployment benefits |
+| Are you enrolled in school half-time or more? | **Yes** | I am enrolled in school half-time or more |
 
-- [ ] `Live with a child under 14 years old` — Do you live with a child under 14 years old?
-- [ ] `Have a health reason that makes it hard to work 30 or more hours a week` — Do you have a health reason or disability that makes it hard to work at least 30 hours a week?
-- [ ] `Take care of a child under 6 years old` — Do you take care of a child under 6 years old?
-- [ ] `Take care of a child or adult who cannot care for themselves` — Do you take care of a child or adult who cannot care for themselves?
-- [ ] `Pregnant` — Are you pregnant?
-- [ ] `Domestic violence, stalking, sexual harassment, sexual assault, or another safety situation that affects work` — Has a domestic violence or safety situation made it hard for you to work?
-- [ ] `Alaska Native or Tribe member, including through a parent or grandparent` — Are you, or is your parent or grandparent, an Alaska native or a member of an American Indian, Urban Indian, or California Indian tribe?
-- [ ] `Get or applying for TAFDC cash assistance` — Do you get, or are you applying for TAFDC cash assistance benefits?
-- [ ] `Participating in a substance use treatment program` — Are you participating in a substance use treatment program?
-- [ ] `Get or applying for unemployment benefits` — Do you get, or are you applying for unemployment benefits?
-- [ ] `Enrolled in school half-time or more` — Are you enrolled in school half-time or more?
+- [ ] `I live with a child under 14 who should be part of my SNAP case` — Do you live with a child under 14 years old?
+- [ ] `I have a health reason that makes it hard to work 30 or more hours a week` — Do you have a health reason or disability that makes it hard to work at least 30 hours a week?
+- [ ] `I take care of a child under 6 years old` — Do you take care of a child under 6 years old?
+- [ ] `I take care of a child or adult who cannot care for themselves` — Do you take care of a child or adult who cannot care for themselves?
+- [ ] `I am pregnant` — Are you pregnant?
+- [ ] `I am experiencing or have experienced domestic violence, stalking, sexual harassment, sexual assault, or another safety situation that makes it hard to work` — Has a domestic violence or safety situation made it hard for you to work?
+- [ ] `I am an Alaska Native or member of a Tribe (or I am a child or grandchild of a member of a Tribe)` — Are you, or is your parent or grandparent, an Alaska native or a member of an American Indian, Urban Indian, or California Indian tribe?
+- [ ] `I get or am applying for TAFDC cash assistance` — Do you get, or are you applying for TAFDC cash assistance benefits?
+- [ ] `I am participating in a substance use treatment program` — Are you participating in a substance use treatment program?
+- [ ] `I get or am applying for unemployment benefits` — Do you get, or are you applying for unemployment benefits?
+- [ ] `I am enrolled in school half-time or more` — Are you enrolled in school half-time or more?
 
 ### Disability benefits
 
 The disability question takes more than one answer. Each of these on its own should give the
 exempt result.
 
-- [ ] "EAEDC" alone → exempt, listing: Get disability benefits
-- [ ] "Veteran’s disability benefit" alone → exempt, listing: Get disability benefits
-- [ ] "Workers’ compensation" alone → exempt, listing: Get disability benefits
-- [ ] "Paid Family Medical Leave" alone → exempt, listing: Get disability benefits
-- [ ] "Short-term disability" alone → exempt, listing: Get disability benefits
-- [ ] "SSI or SSDI" alone → exempt, listing: Get disability benefits
-- [ ] "Other disability benefit or payment" alone → exempt, listing: Get another disability benefit or payment DTA should review
+- [ ] "EAEDC" alone → exempt, listing: I get disability benefits
+- [ ] "Veteran’s disability benefit" alone → exempt, listing: I get disability benefits
+- [ ] "Workers’ compensation" alone → exempt, listing: I get disability benefits
+- [ ] "Paid Family Medical Leave" alone → exempt, listing: I get disability benefits
+- [ ] "Short-term disability" alone → exempt, listing: I get disability benefits
+- [ ] "SSI or SSDI" alone → exempt, listing: I get disability benefits
+- [ ] "Other disability benefit or payment" alone → exempt, listing: I get another disability benefit or payment DTA should review
 - [ ] "None of the above" alone → **not** exempt on its own.
 - [ ] A named benefit **and** "Other" together → the letter lists both `EAEDC` style reasons, not just one.
 
 **The ticked benefits are echoed back**, from 2026-08-06. Tick two and check both places:
 
-- [ ] On the results page they appear as indented sub-bullets under "Get disability benefits", not as separate exemptions with their own ticks.
+- [ ] On the results page they appear as indented sub-bullets under "I get disability benefits", not as separate exemptions with their own ticks.
 - [ ] In the printed letter they are nested under that same reason.
 - [ ] **"Other" is not one of them.** It has its own reason and its own write-in box, so it should appear as a reason in its own right and not also as a sub-bullet. Tick a named benefit and "Other" together to see it.
 
@@ -111,11 +111,11 @@ list itself, so the tool knows which agency, and the separate Yes/No pair is gon
 it is no longer a yes/no it is absent from the table above, which is why it has its own
 section: the checklist would otherwise never have you test it at all.
 
-- [ ] "MassAbility (formerly Mass Rehab Commission)" alone → exempt, listing: Get services from a state agency
-- [ ] "Dept. of Mental Health" alone → exempt, listing: Get services from a state agency
-- [ ] "Dept. of Developmental Services" alone → exempt, listing: Get services from a state agency
-- [ ] "MA Commission for the Blind" alone → exempt, listing: Get services from a state agency
-- [ ] "MA Commission for Deaf and Hard of Hearing" alone → exempt, listing: Get services from a state agency
+- [ ] "MassAbility (formerly Mass Rehab Commission)" alone → exempt, listing: I get services from a state agency
+- [ ] "Dept. of Mental Health" alone → exempt, listing: I get services from a state agency
+- [ ] "Dept. of Developmental Services" alone → exempt, listing: I get services from a state agency
+- [ ] "MA Commission for the Blind" alone → exempt, listing: I get services from a state agency
+- [ ] "MA Commission for Deaf and Hard of Hearing" alone → exempt, listing: I get services from a state agency
 - [ ] "No" → **not** exempt.
 - [ ] Nothing ticked at all → **not** exempt.
 
@@ -128,9 +128,9 @@ section: the checklist would otherwise never have you test it at all.
 Three ways of working count. The thresholds below were last verified in November 2025 and
 still need someone who knows the rules to confirm them.
 
-- [ ] "Yes, I am making $217.50 a week or more (before taxes)" → exempt, listing: Earn enough income to be exempt from the work rules
-- [ ] "Yes, I am working at least 14.5 hours a week at $15 or more an hour" → exempt, listing: Earn enough income to be exempt from the work rules
-- [ ] "Yes, I am working 30 hours or more a week (I make less than minimum wage)" → exempt, listing: Work 30 or more hours a week while earning less than minimum wage
+- [ ] "Yes, I am making $217.50 a week or more (before taxes)" → exempt, listing: I earn enough money from work to be exempt from the work rules
+- [ ] "Yes, I am working at least 14.5 hours a week at $15 or more an hour" → exempt, listing: I earn enough money from work to be exempt from the work rules
+- [ ] "Yes, I am working 30 hours or more a week (I make less than minimum wage)" → exempt, listing: I work 30 or more hours a week while earning less than minimum wage
 - [ ] "None of the above" → **not** exempt.
 
 | Threshold | Value in the tool |
@@ -185,7 +185,7 @@ they actually said and not just the summary line. Read these as a person would: 
 can include things that look like arguments against the exemption, and that is deliberate,
 because DTA is being asked to review the whole picture.
 
-- [ ] Answer **No**, tick two or three options, and go to results. They appear as indented sub-bullets under "No regular place to sleep, and DTA should review unable-to-work factors", not as separate exemptions with their own ticks.
+- [ ] Answer **No**, tick two or three options, and go to results. They appear as indented sub-bullets under "I do not have a regular place to sleep", not as separate exemptions with their own ticks.
 - [ ] They read in the order the options are listed on the question, whatever order you ticked them in.
 - [ ] The green tick appears on the housing reason only, not on each sub-bullet.
 - [ ] Print or save the letter. The same answers appear, introduced by "The following is also true for me:", **above** your own typed explanation. Your words should be the last thing in that section.
