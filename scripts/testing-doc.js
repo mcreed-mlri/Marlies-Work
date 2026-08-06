@@ -134,6 +134,29 @@ S.DISABILITY_OPTION_DEFS.forEach(o => {
 });
 check('"' + strip(A.qById('disability').noneLabel) + '" alone → **not** exempt on its own.');
 check('A named benefit **and** "Other" together → the letter lists both ' + `\`${S.DISABILITY_OPTION_DEFS.find(o => !o.other && o.exempt).label}\`` + ' style reasons, not just one.');
+blank();
+w('**The ticked benefits are echoed back**, from 2026-08-06. Tick two and check both places:');
+blank();
+check('On the results page they appear as indented sub-bullets under "' + strip(S.REASON_TEXT_BY_ID.disability) + '", not as separate exemptions with their own ticks.');
+check('In the printed letter they are nested under that same reason.');
+check('**"Other" is not one of them.** It has its own reason and its own write-in box, so it should appear as a reason in its own right and not also as a sub-bullet. Tick a named benefit and "Other" together to see it.');
+
+h3('State agencies');
+
+w('This was a yes/no with the agency names printed underneath until 2026-08-06. It is now the');
+w('list itself, so the tool knows which agency, and the separate Yes/No pair is gone. Because');
+w('it is no longer a yes/no it is absent from the table above, which is why it has its own');
+w('section: the checklist would otherwise never have you test it at all.');
+blank();
+S.STATE_AGENCY_OPTION_DEFS.forEach(o => {
+  check('"' + strip(o.label) + '" alone → exempt, listing: ' + A.exemptReasons({ stateagency: [o.id] }).join('; '));
+});
+check('"' + strip(A.qById('stateagency').noneLabel) + '" → **not** exempt.');
+check('Nothing ticked at all → **not** exempt.');
+blank();
+check('The first option reads "' + strip(S.STATE_AGENCY_OPTION_DEFS[0].label) + '". The former name matters: someone whose paperwork still says Mass Rehab has to recognise it here.');
+check('There is **no** separate Yes/No pair under the list. The list is the answer.');
+check('Ticking two agencies shows both as sub-bullets on the results page and in the letter, in the order the options are listed rather than the order you ticked them.');
 
 h3('Working');
 

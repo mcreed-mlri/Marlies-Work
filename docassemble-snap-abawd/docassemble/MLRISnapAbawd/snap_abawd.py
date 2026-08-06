@@ -70,9 +70,18 @@ YES_NO_EXEMPTIONS = (
     "tafdc",
     "substanceUse",
     "unemployment",
-    "stateagency",
     "school",
 )
+
+# stateagency was in the tuple above until 2026-08-06, when the shipping build turned it
+# into a checkbox list of the five agencies. Its answer is a list of ids now, never "yes",
+# so the tuple entry had stopped matching anything: dead rather than wrong. It is handled
+# by state_agency_exempt below instead.
+#
+# That handler sits after the disability reasons deliberately, because that is where the
+# JavaScript records this one. Position would matter to anyone who reintroduces a
+# yes-shaped answer here, so there is a worked example combining a disability benefit with
+# a state agency to pin the order.
 
 # Every disability option exempts. "other" records a different reason, because it
 # asks DTA to review something the screening cannot classify.
@@ -151,6 +160,21 @@ def is_hours_30_work_exempt(answers):
     return answers.get("working") == WORK_HOURS_30_OPTION
 
 
+def state_agency_exempt(answers):
+    """Any of the five agencies ticked exempts.
+
+    "No" is the none sentinel and exempts nobody. Every option points the same way, so
+    unlike the housing follow-up there is no combination to weigh. Mirrors
+    stateAgencyExempt in the JavaScript reference.
+
+    List-only on purpose: the archived builds still ask this as a yes/no, but the spec
+    this port is checked against is generated from the shipping build, where it is a
+    checkbox list.
+    """
+    v = answers.get("stateagency")
+    return isinstance(v, list) and len(v) > 0
+
+
 def exempt_reasons(answers):
     """Every exemption reason the answers support, in the order they are recorded."""
     out = []
@@ -158,6 +182,9 @@ def exempt_reasons(answers):
         if answers.get(key) == "yes":
             out.append(REASONS[key])
     out.extend(disability_reasons(answers))
+    # After the disability reasons, matching the order the JavaScript records them in.
+    if state_agency_exempt(answers):
+        out.append(REASONS["stateagency"])
     if housing_unable_exempt(answers):
         out.append(HOUSING_EXEMPT_REASON)
     if is_income_work_exempt(answers):

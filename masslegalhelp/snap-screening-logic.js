@@ -84,6 +84,22 @@
     { id: 'hours_30', kind: 'income', label: 'I work 30 hours or more a week (I make less than minimum wage)', labelDraft: 'Yes, I am working 30 hours or more a week (I make less than minimum wage)' }
   ];
 
+  /* The five agencies, as answers rather than as a list to read. Ids are short and stable
+   * because they go into stored answers; the labels are the author's wording and can change
+   * without touching anyone's saved state.
+   *
+   * MassAbility carries its former name. The agency was the Massachusetts Rehabilitation
+   * Commission until 2024 and Victoria asked for "formerly" so the parenthesis reads as
+   * history rather than as an alternative name: someone whose paperwork still says Mass
+   * Rehab has to recognise it here. */
+  const STATE_AGENCY_OPTION_DEFS = [
+    { id: 'massability', label: 'MassAbility (formerly Mass Rehab Commission)' },
+    { id: 'dmh', label: 'Dept. of Mental Health' },
+    { id: 'dds', label: 'Dept. of Developmental Services' },
+    { id: 'mcb', label: 'MA Commission for the Blind' },
+    { id: 'mcdhh', label: 'MA Commission for Deaf and Hard of Hearing' }
+  ];
+
   const DISABILITY_OPTION_DEFS = [
     { id: 'eaedc', label: 'EAEDC', exempt: true },
     { id: 'veteran', label: 'Veteran\u2019s disability benefit', exempt: true },
@@ -225,17 +241,21 @@
       tribe: { text: 'Are you an Alaska native or a member of an American Indian, Urban Indian, or California Indian tribe?', help: 'Choose “Yes” if you have a parent or grandparent who is a member of one of these tribes.' },
       tafdc: { text: 'Do you get, or are you applying for TAFDC cash assistance benefits?' },
       disability: { text: 'Do you get any of these disability benefits?', noneLabel: 'None of the above' },
-      substanceUse: { text: 'Are you participating in a substance use treatment program?', help: 'It does not have to be a daily program.' },
+      substanceUse: { text: 'Are you participating in a substance use treatment program?', help: 'This can be for drugs or alcohol. It does not have to be a daily program.' },
       unemployment: { text: 'Do you get, or are you applying for unemployment benefits?' },
+      /* A checkbox list since 2026-08-06, and only in this variant. It was a yes/no with the
+       * five agencies printed underneath as a plain bulleted list, which meant someone read
+       * the names and then answered a question that did not refer to them, and the tool never
+       * learned which agency it was. The author asked for the list to become the answer and
+       * for the selections to show on the results page.
+       *
+       * `noneLabel` is "No", not "None of the above", because that is what she asked for and
+       * because the question is phrased as one: "Do you get services from any of these state
+       * agencies?" The separate Yes/No pair below the list went at the same time. */
       stateagency: {
         text: 'Do you get services from any of these state agencies?',
-        listItems: [
-          'MassAbility',
-          'Dept. of Mental Health',
-          'Dept. of Developmental Services',
-          'MA Commission for the Blind',
-          'MA Commission for Deaf and Hard of Hearing'
-        ]
+        options: STATE_AGENCY_OPTION_DEFS.map(o => ({ id: o.id, label: o.label })),
+        noneLabel: 'No'
       },
       school: {
         text: 'Are you enrolled in school half-time or more?',
@@ -864,7 +884,20 @@
       },
       { id: 'substanceUse', type: 'yn', text: copy.substanceUse.text, exemptOn: 'yes', reason: REASONS.substanceUse },
       { id: 'unemployment', type: 'yn', text: copy.unemployment.text, exemptOn: 'yes', reason: REASONS.unemployment },
-      { id: 'stateagency', type: 'yn', text: copy.stateagency.text, help: copy.stateagency.help, exemptOn: 'yes', reason: REASONS.stateagency },
+      /* Two shapes. classic2 asks it as a checkbox list of the five agencies; the archived
+       * variants ask a plain yes/no and print the names in help text, which is what they
+       * always did and what their copy still provides. Keyed off whether the copy supplies
+       * options, the same way the age question is keyed off whether its copy exists.
+       *
+       * The multi form carries no exemptOn, so exemptReasonEntriesFor's generic loop skips it
+       * and stateAgencyExempt handles it. The yn form still goes through the loop. Neither can
+       * fire twice: stateAgencyExempt only looks at arrays. */
+      copy.stateagency.options
+        ? {
+          id: 'stateagency', type: 'multi', text: copy.stateagency.text,
+          options: copy.stateagency.options, noneLabel: copy.stateagency.noneLabel
+        }
+        : { id: 'stateagency', type: 'yn', text: copy.stateagency.text, help: copy.stateagency.help, exemptOn: 'yes', reason: REASONS.stateagency },
       { id: 'school', type: 'yn', text: copy.school.text, help: copy.school.help, exemptOn: 'yes', reason: REASONS.school },
       {
         id: 'working', type: 'single', text: copy.working.text, help: copy.working.help,
@@ -1015,6 +1048,42 @@
     return v.some(id => exemptIds.includes(id));
   }
 
+  /* Exempt on any agency ticked. "No" is the none sentinel and exempts nobody, which is the
+   * same shape as the disability question rather than the housing follow-up: here every option
+   * points one way, so there is no combination to weigh. */
+  function stateAgencyExempt(answers) {
+    const v = answers.stateagency;
+    return Array.isArray(v) && v.length > 0;
+  }
+
+  /**
+   * Selected labels for a multi-select question, in option order rather than tick order.
+   *
+   * Shared by the state agency and disability questions, both of which the author asked to
+   * show their selections on the results page on 2026-08-06, and by nothing else: the housing
+   * follow-up has its own function because it also feeds a paragraph in the letter.
+   */
+  function selectedLabels(answers, qId, questions, filter) {
+    const v = answers[qId];
+    if (!Array.isArray(v) || !v.length) return [];
+    const qs = questions || buildQuestions('classic');
+    const q = qs.find(x => x.id === qId);
+    if (!q || !Array.isArray(q.options)) return [];
+    return q.options
+      .filter(o => v.indexOf(o.id) !== -1 && (!filter || filter(o)))
+      .map(o => o.label);
+  }
+
+  function stateAgencyLabels(answers, questions) {
+    return selectedLabels(answers, 'stateagency', questions);
+  }
+
+  /* Named benefits only. "Other" is its own reason with its own write-in prompt, so listing it
+   * here as well would have someone explain it in one place and see it in two. */
+  function disabilityNamedLabels(answers, questions) {
+    return selectedLabels(answers, 'disability', questions, o => o.id !== 'other');
+  }
+
   function disabilityReasons(answers) {
     const v = answers.disability;
     if (!Array.isArray(v) || !v.length) return [];
@@ -1085,8 +1154,26 @@
       if (q.exemptOn && v === q.exemptOn) r.push({ id: q.id, text: q.reason });
     }
     const dis = disabilityReasons(answers);
-    if (dis.indexOf(REASONS.disability) !== -1) add('disability');
+    /* Sub-items on the named-benefit reason: the author asked for the ticked benefits to show
+     * on the results page. The reason text says only that someone gets a disability-based
+     * benefit, so without these DTA cannot tell EAEDC from Workers' compensation. */
+    if (dis.indexOf(REASONS.disability) !== -1) {
+      r.push({
+        id: 'disability',
+        text: REASON_TEXT_BY_ID.disability,
+        subItems: disabilityNamedLabels(answers, qs)
+      });
+    }
     if (dis.indexOf(DISABILITY_OTHER_REASON) !== -1) add('disabilityOther');
+    /* Only fires for the classic2 checkbox form; the archived yes/no variants are picked up by
+     * the generic loop above and carry no sub-items, having no ids to carry. */
+    if (stateAgencyExempt(answers)) {
+      r.push({
+        id: 'stateagency',
+        text: REASON_TEXT_BY_ID.stateagency,
+        subItems: stateAgencyLabels(answers, qs)
+      });
+    }
     /* The housing reason is the only one that carries sub-items: the follow-up question
      * is the only place someone ticks several specifics under one exemption. */
     if (housingUnableExempt(answers)) {
@@ -1448,7 +1535,14 @@
        * Defaults to empty, which is also what an unanswered follow-up and "None of the
        * above" produce, so an older caller that does not pass it still builds a correct
        * letter with no housing sub-list. */
-      housingPicks = []
+      housingPicks = [],
+      /* Reason text to the specifics ticked under it, for the reasons that have any: the
+       * disability benefits and the state agencies. Keyed by the reason's own wording rather
+       * than by id because that is what `rs` carries, and this builder has never been given
+       * ids. Empty by default, so a caller that does not pass it gets the letter it always
+       * got. housingPicks stays separate: that one is not a sub-list under a bullet, it is a
+       * paragraph of its own in the housing section. */
+      subItemsByReason = {}
     } = opts || {};
     const esc = escHtml;
     const blank = (w) => `<span style="border-bottom:1px solid #111;display:inline-block;min-width:${w};padding:0 2px 2px">${'&nbsp;'.repeat(8)}</span>`;
@@ -1530,10 +1624,19 @@
         <p style="margin:0 0 14px">I am writing to ask that you update my SNAP case. I believe I am exempt from the ABAWD work rules and should not have to meet them for the following reason(s):</p>`;
       if (exemptReasons.length) {
         const items = exemptReasons.map(r => {
+          /* Which benefit, or which agency. The reason alone says someone gets a
+           * disability-based benefit or uses a state agency, which leaves a caseworker
+           * unable to tell EAEDC from Workers' compensation, or DMH from the Commission
+           * for the Blind, without ringing them. */
+          const subs = (subItemsByReason[r] || []).length
+            ? `<ul style="margin:6px 0 0;padding-left:22px">${
+                subItemsByReason[r].map(s => `<li style="margin:0 0 4px">${esc(s)}</li>`).join('')
+              }</ul>`
+            : '';
           if (!composed && needsExplainBox(r)) {
-            return `<li style="margin:0 0 10px">${esc(r)}${explainBox(explainTextForReason(r))}</li>`;
+            return `<li style="margin:0 0 10px">${esc(r)}${subs}${explainBox(explainTextForReason(r))}</li>`;
           }
-          return `<li style="margin:0 0 6px">${esc(r)}</li>`;
+          return `<li style="margin:0 0 6px">${esc(r)}${subs}</li>`;
         }).join('');
         inner += `<ul style="margin:0 0 16px;padding-left:22px">${items}</ul>`;
       }
@@ -1783,6 +1886,8 @@
       exemptReasons: (answers) => exemptReasonsFor(answers, QUESTIONS),
       exemptReasonEntries: (answers) => exemptReasonEntriesFor(answers, QUESTIONS),
       housingFollowupLabels: (answers) => housingFollowupLabels(answers, QUESTIONS),
+      stateAgencyLabels: (answers) => stateAgencyLabels(answers, QUESTIONS),
+      disabilityNamedLabels: (answers) => disabilityNamedLabels(answers, QUESTIONS),
       resultType: (answers) => resultTypeFor(answers, QUESTIONS),
       shouldSkipGoodCause: (answers) => shouldSkipGoodCause(answers, QUESTIONS),
       endsScreeningEarly: (answers) => endsScreeningEarly(answers),
@@ -1819,6 +1924,7 @@
     HOUSING_OPTION_DEFS,
     WORK_OPTION_DEFS,
     DISABILITY_OPTION_DEFS,
+    STATE_AGENCY_OPTION_DEFS,
     create,
     migrateAnswers,
     housingUnableExempt,

@@ -1480,6 +1480,12 @@ function statementInnerHTML(sigSrc){
     rt: resultType(),
     rs: reasons(),
     housingPicks: S.housingFollowupLabels(state.answers),
+    /* Built from the same entries the results card renders, so the letter and the screen
+       cannot list different specifics under the same reason. */
+    subItemsByReason: reasonEntries().reduce((acc, e) => {
+      if (e.subItems && e.subItems.length) acc[e.text] = e.subItems;
+      return acc;
+    }, {}),
     gcText: S.goodCauseText(state.answers),
     today,
   });

@@ -95,6 +95,24 @@ test.describe('SNAP ABAWD screening (the shipping build)', () => {
     await expect(page.getByText(/Section 2 of 4/i)).toBeVisible();
   });
 
+  /* The state agency question became a checkbox list on 2026-08-06. It is the only question
+     whose type changed, so it is the one most likely to render as the wrong widget. */
+  test('state agencies is a checkbox list, and the ticked ones reach the results', async ({ page }) => {
+    await startScreener(page);
+    await clickNext(page);
+    await clickNext(page);                             // into group 3
+    await expect(page.getByText('MassAbility (formerly Mass Rehab Commission)')).toBeVisible();
+    // The list is the answer now: no Yes/No pair underneath it.
+    await expect(noneOf(page, 'stateagency')).toHaveText(/No/);
+    await choice(page, 'stateagency', 1).click();       // Dept. of Mental Health
+    await choice(page, 'stateagency', 3).click();       // MA Commission for the Blind
+    await skipToResults(page);
+    await expect(page.getByRole('heading', { name: EXEMPT_HEADING })).toBeVisible();
+    const item = page.locator('li', { hasText: /Get services from a state agency/ }).first();
+    await expect(item.locator('li', { hasText: /Dept\. of Mental Health/ })).toBeVisible();
+    await expect(item.locator('li', { hasText: /Commission for the Blind/ })).toBeVisible();
+  });
+
   /* The housing follow-up answers are echoed back on the results page as sub-bullets under
      the housing reason, and in the letter. Author's request, 2026-08-06. */
   test('housing follow-up picks show as sub-bullets under the housing reason', async ({ page }) => {

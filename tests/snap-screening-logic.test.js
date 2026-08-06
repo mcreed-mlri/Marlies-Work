@@ -243,6 +243,104 @@ describe('snap-screening-logic', () => {
     }
   });
 
+  /* Section 3, 2026-08-06. The state agency question stopped being a yes/no with the agency
+   * names printed underneath and became the list itself, so the tool now knows which agency.
+   * The author asked for those and the ticked disability benefits to show on the results page. */
+  describe('the state agency question', () => {
+    it('is a checkbox list in the shipping build and a yes/no in the archive', () => {
+      assert.equal(classic2.qById('stateagency').type, 'multi');
+      assert.equal(classic2.qById('stateagency').noneLabel, 'No');
+      assert.equal(classic.qById('stateagency').type, 'yn');
+      assert.equal(v2.qById('stateagency').type, 'yn');
+    });
+
+    it('exempts on any agency, and not on No', () => {
+      assert.equal(classic2.resultType({ stateagency: ['dmh'] }), 'exempt');
+      assert.equal(classic2.resultType({ stateagency: ['massability', 'mcb'] }), 'exempt');
+      assert.equal(classic2.resultType({ stateagency: NONE }), 'notexempt');
+      assert.equal(classic2.resultType({ stateagency: [] }), 'notexempt');
+      assert.equal(classic2.resultType({}), 'notexempt');
+    });
+
+    it('records the ticked agencies under the reason, in option order', () => {
+      const e = classic2.exemptReasonEntries({ stateagency: ['mcdhh', 'massability'] })
+        .find(x => x.id === 'stateagency');
+      assert.ok(e, 'expected a state agency reason');
+      assert.deepEqual(e.subItems, [
+        'MassAbility (formerly Mass Rehab Commission)',
+        'MA Commission for Deaf and Hard of Hearing'
+      ]);
+    });
+
+    /* The agency was the Massachusetts Rehabilitation Commission until 2024, and someone whose
+     * paperwork still says that has to recognise it in the list. */
+    it('names MassAbility\'s former name', () => {
+      const label = classic2.qById('stateagency').options.find(o => o.id === 'massability').label;
+      assert.match(label, /MassAbility/);
+      assert.match(label, /formerly/);
+      assert.match(label, /Mass Rehab Commission/);
+    });
+
+    it('the archived yes/no form still exempts and carries no sub-items', () => {
+      assert.equal(classic.resultType({ stateagency: 'yes' }), 'exempt');
+      const e = classic.exemptReasonEntries({ stateagency: 'yes' })
+        .find(x => x.id === 'stateagency');
+      assert.ok(e, 'the archived build must still reach this exemption');
+      assert.ok(!e.subItems || !e.subItems.length);
+    });
+  });
+
+  describe('the disability benefits ticked', () => {
+    it('show under the named-benefit reason', () => {
+      const e = classic2.exemptReasonEntries({ disability: ['ssi_ssdi', 'eaedc'] })
+        .find(x => x.id === 'disability');
+      assert.deepEqual(e.subItems, ['EAEDC', 'SSI or SSDI']);
+    });
+
+    /* "Other" has its own reason and its own write-in prompt. Listing it here too would have
+     * someone explain it once and see it twice. */
+    it('leave Other out, since it is its own reason', () => {
+      const entries = classic2.exemptReasonEntries({ disability: ['eaedc', 'other'] });
+      const named = entries.find(x => x.id === 'disability');
+      assert.deepEqual(named.subItems, ['EAEDC']);
+      assert.ok(entries.some(x => x.id === 'disabilityOther'));
+    });
+
+    it('Other on its own produces no sub-items to show', () => {
+      const entries = classic2.exemptReasonEntries({ disability: ['other'] });
+      assert.ok(!entries.some(x => x.id === 'disability'));
+      assert.ok(entries.some(x => x.id === 'disabilityOther'));
+    });
+  });
+
+  it('the letter nests the ticked specifics inside their reason', () => {
+    const a = { disability: ['eaedc'], stateagency: ['dmh'] };
+    const map = classic2.exemptReasonEntries(a).reduce((m, e) => {
+      if (e.subItems && e.subItems.length) m[e.text] = e.subItems;
+      return m;
+    }, {});
+    const html = SnapScreening.buildStatementHTML({
+      rt: classic2.resultType(a), rs: classic2.exemptReasons(a), subItemsByReason: map
+    });
+    // Nested, not a sibling bullet: the specifics must sit inside the reason's own list item.
+    assert.match(html, /Get disability benefits<ul[^>]*>\s*<li[^>]*>EAEDC<\/li>/);
+    assert.match(html, /Get services from a state agency<ul[^>]*>\s*<li[^>]*>Dept\. of Mental Health<\/li>/);
+  });
+
+  it('a letter built without subItemsByReason still builds', () => {
+    const a = { disability: ['eaedc'] };
+    const html = SnapScreening.buildStatementHTML({
+      rt: classic2.resultType(a), rs: classic2.exemptReasons(a)
+    });
+    assert.match(html, /Get disability benefits/);
+    assert.ok(!/EAEDC/.test(html));
+  });
+
+  it('the substance use help says it covers drugs or alcohol', () => {
+    assert.match(classic2.qById('substanceUse').help, /drugs or alcohol/);
+    assert.match(classic2.qById('substanceUse').help, /does not have to be a daily program/);
+  });
+
   /* The author asked on 2026-08-06 for the housing follow-up selections to show on the
    * results page and in the letter. They are the only exemption with sub-items. */
   describe('housing follow-up selections', () => {
@@ -372,8 +470,11 @@ describe('snap-screening-logic', () => {
     assert.match(byId.housing.help, /couch surfing/);
     assert.equal(byId.stateagency.text, 'Do you get services from any of these state agencies?');
     assert.equal(byId.stateagency.helpHtml, undefined);
-    assert.ok(Array.isArray(byId.stateagency.listItems));
-    assert.match(byId.stateagency.listItems.join(' '), /MassAbility/);
+    /* Was listItems, a bulleted list printed under a yes/no. The author replaced it with the
+       list as the answer on 2026-08-06, so the agencies are options now and listItems is gone. */
+    assert.equal(byId.stateagency.listItems, undefined);
+    assert.ok(Array.isArray(byId.stateagency.options));
+    assert.match(byId.stateagency.options.map(o => o.label).join(' '), /MassAbility/);
     assert.equal(classic2.GROUPS[0].title, 'Your Family and Household');
     assert.equal(classic2.GROUPS[2].title, 'Public Benefits and Participating in Programs');
     assert.match(classic2.GOODCAUSE.text, /Is something making it hard to work/);

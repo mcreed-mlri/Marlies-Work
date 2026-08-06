@@ -175,19 +175,20 @@ fields:
     datatype: yesnoradio
     required: False
     help: |
-      It does not have to be a daily program.
+      This can be for drugs or alcohol. It does not have to be a daily program.
   - "Do you get, or are you applying for unemployment benefits?": unemployment
     datatype: yesnoradio
     required: False
   - "Do you get services from any of these state agencies?": stateagency
-    datatype: yesnoradio
+    datatype: checkboxes
+    choices:
+      - "MassAbility (formerly Mass Rehab Commission)": massability
+      - "Dept. of Mental Health": dmh
+      - "Dept. of Developmental Services": dds
+      - "MA Commission for the Blind": mcb
+      - "MA Commission for Deaf and Hard of Hearing": mcdhh
+      - "No": "__none"
     required: False
-    help: |
-      - MassAbility
-      - Dept. of Mental Health
-      - Dept. of Developmental Services
-      - MA Commission for the Blind
-      - MA Commission for Deaf and Hard of Hearing
 continue button field: benefits_group
 ---
 question: "School, work, and background"

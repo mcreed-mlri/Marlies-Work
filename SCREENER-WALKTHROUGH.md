@@ -141,7 +141,7 @@ Choose Other only if you receive a disability benefit or payment that is not lis
 
 **Are you participating in a substance use treatment program?**
 
-It does not have to be a daily program.
+This can be for drugs or alcohol. It does not have to be a daily program.
 
 - Yes
 - No
@@ -153,13 +153,11 @@ It does not have to be a daily program.
 
 **Do you get services from any of these state agencies?**
 
-- MassAbility
+- MassAbility (formerly Mass Rehab Commission)
 - Dept. of Mental Health
 - Dept. of Developmental Services
 - MA Commission for the Blind
 - MA Commission for Deaf and Hard of Hearing
-
-- Yes
 - No
 
 ### Section 4 of 4: School, work, and background
@@ -222,7 +220,6 @@ _Followed by a checklist of the reasons that applied. Every reason the tool can 
 - Get another disability benefit or payment DTA should review
 - Participating in a substance use treatment program
 - Get or applying for unemployment benefits
-- Get services from a state agency
 - Enrolled in school half-time or more
 - Earn enough income to be exempt from the work rules
 - Work 30 or more hours a week while earning less than minimum wage

@@ -44,7 +44,6 @@ results screen and in the printable statement.
 | `tafdc` | answer is "yes" | Get or applying for TAFDC cash assistance | |
 | `substanceUse` | answer is "yes" | Participating in a substance use treatment program | |
 | `unemployment` | answer is "yes" | Get or applying for unemployment benefits | |
-| `stateagency` | answer is "yes" | Get services from a state agency | |
 | `school` | answer is "yes" | Enrolled in school half-time or more | |
 
 Any question not listed here cannot produce an exemption by itself. `housing`,
@@ -187,7 +186,7 @@ Sixteen questions in four groups, every one optional, then the good cause questi
 - `disability` (multi)
 - `substanceUse` (yn, exempts on "yes")
 - `unemployment` (yn, exempts on "yes")
-- `stateagency` (yn, exempts on "yes")
+- `stateagency` (multi)
 
 **Group 4: School, work, and background**
 
@@ -237,6 +236,10 @@ these double as test cases; the JSON carries them in a form a test generator can
 | Several exemptions at once | `exempt` | Live with a child under 14 years old; Pregnant; Earn enough income to be exempt from the work rules |
 | No exemption, transport problem | `goodcause` | *none* |
 | No exemption, no good cause | `notexempt` | *none* |
+| Services from one state agency | `exempt` | Get services from a state agency |
+| Services from two state agencies | `exempt` | Get services from a state agency |
+| State agencies answered No | `notexempt` | *none* |
+| A disability benefit and a state agency together | `exempt` | Get disability benefits; Get services from a state agency |
 | Not 18 through 64 | `ageexempt` | *none* |
 | Is 18 through 64, nothing else answered | `notexempt` | *none* |
 | Not 18 through 64, and other exemptions answered | `ageexempt` | Pregnant |

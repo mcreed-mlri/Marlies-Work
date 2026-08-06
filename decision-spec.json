@@ -96,14 +96,6 @@
       "text": "Do you get, or are you applying for unemployment benefits?"
     },
     {
-      "id": "stateagency",
-      "exemptOn": "yes",
-      "reasons": [
-        "Get services from a state agency"
-      ],
-      "text": "Do you get services from any of these state agencies?"
-    },
-    {
       "id": "school",
       "exemptOn": "yes",
       "reasons": [
@@ -551,9 +543,9 @@
         },
         {
           "id": "stateagency",
-          "type": "yn",
+          "type": "multi",
           "showIf": null,
-          "exemptOn": "yes"
+          "exemptOn": null
         }
       ]
     },
@@ -762,6 +754,63 @@
       "expect": {
         "outcome": "notexempt",
         "reasons": []
+      }
+    },
+    {
+      "name": "Services from one state agency",
+      "answers": {
+        "stateagency": [
+          "dmh"
+        ]
+      },
+      "expect": {
+        "outcome": "exempt",
+        "reasons": [
+          "Get services from a state agency"
+        ]
+      }
+    },
+    {
+      "name": "Services from two state agencies",
+      "answers": {
+        "stateagency": [
+          "massability",
+          "mcdhh"
+        ]
+      },
+      "expect": {
+        "outcome": "exempt",
+        "reasons": [
+          "Get services from a state agency"
+        ]
+      }
+    },
+    {
+      "name": "State agencies answered No",
+      "answers": {
+        "stateagency": "__none"
+      },
+      "expect": {
+        "outcome": "notexempt",
+        "reasons": []
+      }
+    },
+    {
+      "name": "A disability benefit and a state agency together",
+      "answers": {
+        "disability": [
+          "ssi_ssdi"
+        ],
+        "stateagency": [
+          "dmh"
+        ]
+      },
+      "expect": {
+        "outcome": "exempt",
+        "reasons": [
+          "Get disability benefits",
+          "Get services from a state agency"
+        ]
       }
     },
     {

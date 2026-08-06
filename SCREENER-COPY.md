@@ -193,23 +193,24 @@ Options:
 
 Help text, shown when someone opens the explainer:
 
-> It does not have to be a daily program.
+> This can be for drugs or alcohol. It does not have to be a daily program.
 
 **`q.unemployment`**  (Yes / No; "yes" points to an exemption)
 
 > Do you get, or are you applying for unemployment benefits?
 
-**`q.stateagency`**  (Yes / No; "yes" points to an exemption)
+**`q.stateagency`**  (Check all that apply)
 
 > Do you get services from any of these state agencies?
 
-Listed on the question:
+Options:
 
-- MassAbility
+- MassAbility (formerly Mass Rehab Commission)
 - Dept. of Mental Health
 - Dept. of Developmental Services
 - MA Commission for the Blind
 - MA Commission for Deaf and Hard of Hearing
+- No  *(the none-of-these option)*
 
 ### Group 4: School, work, and background
 

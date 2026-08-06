@@ -104,6 +104,35 @@ Feature: SNAP work rules screening reaches the right outcome
       | goodcause | __none |
     Then the variable "outcome" should be "notexempt"
 
+  Scenario: Services from one state agency
+    Given I start the interview at "snap_abawd.yml"
+    And I set the variables to these values
+      | var | value |
+      | stateagency | dmh |
+    Then the variable "outcome" should be "exempt"
+
+  Scenario: Services from two state agencies
+    Given I start the interview at "snap_abawd.yml"
+    And I set the variables to these values
+      | var | value |
+      | stateagency | massability,mcdhh |
+    Then the variable "outcome" should be "exempt"
+
+  Scenario: State agencies answered No
+    Given I start the interview at "snap_abawd.yml"
+    And I set the variables to these values
+      | var | value |
+      | stateagency | __none |
+    Then the variable "outcome" should be "notexempt"
+
+  Scenario: A disability benefit and a state agency together
+    Given I start the interview at "snap_abawd.yml"
+    And I set the variables to these values
+      | var | value |
+      | disability | ssi_ssdi |
+      | stateagency | dmh |
+    Then the variable "outcome" should be "exempt"
+
   Scenario: Not 18 through 64
     Given I start the interview at "snap_abawd.yml"
     And I set the variables to these values

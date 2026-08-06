@@ -69,7 +69,6 @@ work rules when they do not have to.
 | Do you get, or are you applying for TAFDC cash assistance benefits? | **Yes** | Get or applying for TAFDC cash assistance |
 | Are you participating in a substance use treatment program? | **Yes** | Participating in a substance use treatment program |
 | Do you get, or are you applying for unemployment benefits? | **Yes** | Get or applying for unemployment benefits |
-| Do you get services from any of these state agencies? | **Yes** | Get services from a state agency |
 | Are you enrolled in school half-time or more? | **Yes** | Enrolled in school half-time or more |
 
 - [ ] `Live with a child under 14 years old` — Do you live with a child under 14 years old?
@@ -82,7 +81,6 @@ work rules when they do not have to.
 - [ ] `Get or applying for TAFDC cash assistance` — Do you get, or are you applying for TAFDC cash assistance benefits?
 - [ ] `Participating in a substance use treatment program` — Are you participating in a substance use treatment program?
 - [ ] `Get or applying for unemployment benefits` — Do you get, or are you applying for unemployment benefits?
-- [ ] `Get services from a state agency` — Do you get services from any of these state agencies?
 - [ ] `Enrolled in school half-time or more` — Are you enrolled in school half-time or more?
 
 ### Disability benefits
@@ -99,6 +97,31 @@ exempt result.
 - [ ] "Other disability benefit or payment" alone → exempt, listing: Get another disability benefit or payment DTA should review
 - [ ] "None of the above" alone → **not** exempt on its own.
 - [ ] A named benefit **and** "Other" together → the letter lists both `EAEDC` style reasons, not just one.
+
+**The ticked benefits are echoed back**, from 2026-08-06. Tick two and check both places:
+
+- [ ] On the results page they appear as indented sub-bullets under "Get disability benefits", not as separate exemptions with their own ticks.
+- [ ] In the printed letter they are nested under that same reason.
+- [ ] **"Other" is not one of them.** It has its own reason and its own write-in box, so it should appear as a reason in its own right and not also as a sub-bullet. Tick a named benefit and "Other" together to see it.
+
+### State agencies
+
+This was a yes/no with the agency names printed underneath until 2026-08-06. It is now the
+list itself, so the tool knows which agency, and the separate Yes/No pair is gone. Because
+it is no longer a yes/no it is absent from the table above, which is why it has its own
+section: the checklist would otherwise never have you test it at all.
+
+- [ ] "MassAbility (formerly Mass Rehab Commission)" alone → exempt, listing: Get services from a state agency
+- [ ] "Dept. of Mental Health" alone → exempt, listing: Get services from a state agency
+- [ ] "Dept. of Developmental Services" alone → exempt, listing: Get services from a state agency
+- [ ] "MA Commission for the Blind" alone → exempt, listing: Get services from a state agency
+- [ ] "MA Commission for Deaf and Hard of Hearing" alone → exempt, listing: Get services from a state agency
+- [ ] "No" → **not** exempt.
+- [ ] Nothing ticked at all → **not** exempt.
+
+- [ ] The first option reads "MassAbility (formerly Mass Rehab Commission)". The former name matters: someone whose paperwork still says Mass Rehab has to recognise it here.
+- [ ] There is **no** separate Yes/No pair under the list. The list is the answer.
+- [ ] Ticking two agencies shows both as sub-bullets on the results page and in the letter, in the order the options are listed rather than the order you ticked them.
 
 ### Working
 

@@ -334,6 +334,14 @@ const CASES = [
   { name: 'Several exemptions at once', a: { child14: 'yes', pregnant: 'yes', working: 'income_weekly' } },
   { name: 'No exemption, transport problem', a: { goodcause: 'transport' } },
   { name: 'No exemption, no good cause', a: { goodcause: NONE } },
+  { name: 'Services from one state agency', a: { stateagency: ['dmh'] } },
+  { name: 'Services from two state agencies', a: { stateagency: ['massability', 'mcdhh'] } },
+  { name: 'State agencies answered No', a: { stateagency: NONE } },
+  /* Pins the order the reasons come out in, not just which ones. The state agency reason is
+     recorded after the disability reasons; a port that groups it with the plain yes/no
+     exemptions, as this one's Python did before 2026-08-06, would put it before them and
+     fail here. No other example combines the two, so without this row the order is unguarded. */
+  { name: 'A disability benefit and a state agency together', a: { disability: ['ssi_ssdi'], stateagency: ['dmh'] } },
   { name: 'Not 18 through 64', a: { ageRange: 'no' } },
   { name: 'Is 18 through 64, nothing else answered', a: { ageRange: 'yes' } },
   /* Pins the precedence, which is the part of this rule a port is most likely to get
