@@ -388,7 +388,8 @@ section('6. Result: you may be exempt');
 w('Under the heading, the screener lists the reasons the answers point to. Each reason');
 w('phrase comes from the question that produced it. Then, when relevant, one of these:');
 blank();
-['exemptProofWork', 'exemptProofHousing', 'exemptProofDisability'].forEach(k => item(k, C[k]));
+['exemptProofWork', 'exemptProofHousing', 'exemptProofDisability', 'exemptProofStateAgency']
+  .forEach(k => item(k, C[k]));
 
 section('7. Result: you may have a good reason for missing hours');
 ['goodCauseHeading', 'goodCauseIntro', 'goodCauseLead'].forEach(k => item(k, C[k]));

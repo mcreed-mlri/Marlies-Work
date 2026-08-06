@@ -122,6 +122,13 @@
     { id: 'other', label: 'Other disability benefit or payment', exempt: true, other: true, reason: DISABILITY_OTHER_REASON }
   ];
 
+  /* The per-option reason sentences as flat lists, for the "what to send DTA" notes. Those notes
+   * ask "did they tick any disability benefit" rather than which one, and since 2026-08-06 there
+   * is no single collapsed reason to test for. Derived from the definitions rather than listed,
+   * so a new benefit or agency cannot be added without its proof note firing. */
+  const DISABILITY_REASON_TEXTS = DISABILITY_OPTION_DEFS.filter(o => o.exempt).map(o => o.reason);
+  const STATE_AGENCY_REASON_TEXTS = STATE_AGENCY_OPTION_DEFS.map(o => o.reason);
+
   const DISABILITY_OTHER_HELP = 'Choose Other only if you receive a disability benefit or payment that is not listed above. Tell DTA the name of the benefit or payment so they can review it.';
 
   const GOODCAUSE_DEFS = {
@@ -1461,9 +1468,21 @@
      * an empty string rather than deleted because the retired variants still
      * render it; every render site must treat empty as "omit the paragraph". */
     exemptReasonsIntro: '',
-    exemptProofWork: 'Send DTA proof of your income and hours, such as pay stubs or a letter.',
+    /* What to send DTA, one note per kind of exemption. Author's wording, 2026-08-06.
+     *
+     * exemptProofWork gained "work": "proof of your income and hours" could be read as any
+     * income, including the benefits the other questions ask about, and this limb is wages.
+     *
+     * exemptProofDisability was "Tell DTA the details about your disability benefit so they
+     * can review your exemption" and fired only for the Other option. It is now hers and fires
+     * for any benefit ticked. The "please review" ask it used to carry is already in the Other
+     * reason itself, "I get another disability benefit or payment DTA should review", so
+     * keeping a second note that said it again would have said it twice for that one option
+     * and nothing at all for the other six. */
+    exemptProofWork: 'Send DTA proof of your work income and hours, such as pay stubs or a letter.',
     exemptProofHousing: 'Tell DTA the details about your housing so they can review your exemption.',
-    exemptProofDisability: 'Tell DTA the details about your disability benefit so they can review your exemption.',
+    exemptProofDisability: 'Send DTA proof of your disability benefits, such as pay stubs or a letter.',
+    exemptProofStateAgency: 'Send DTA proof that you are getting services from a state agency, such as a letter from the agency.',
     goodCauseHeading: 'You may have a good reason for missing hours',
     goodCauseIntro: 'This includes missing work, school, or volunteer hours before or after your start date.',
     goodCauseLead: 'Tell DTA as soon as you can if you could not meet the work rules for one or more months because of a hard life event, like:',
@@ -1576,7 +1595,17 @@
     const out = [];
     if (rs.includes(WORK_REASON_INCOME) || rs.includes(WORK_REASON_HOURS_30)) out.push(c.exemptProofWork);
     if (rs.includes(HOUSING_EXEMPT_REASON)) out.push(c.exemptProofHousing);
-    if (rs.includes(DISABILITY_OTHER_REASON)) out.push(c.exemptProofDisability);
+    /* Matched against the per-option reason texts, because the disability benefits and the
+     * state agencies stopped collapsing into one reason each on 2026-08-06. One note however
+     * many are ticked: someone who selects three agencies needs to be told to send a letter
+     * once, not three times.
+     *
+     * REASONS.stateagency is checked as well for the archived builds, which still ask that
+     * question as a yes/no and record the collapsed reason. */
+    if (rs.some(r => DISABILITY_REASON_TEXTS.indexOf(r) !== -1)) out.push(c.exemptProofDisability);
+    if (rs.includes(REASONS.stateagency) || rs.some(r => STATE_AGENCY_REASON_TEXTS.indexOf(r) !== -1)) {
+      out.push(c.exemptProofStateAgency);
+    }
     return out;
   }
 

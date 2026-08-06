@@ -765,12 +765,24 @@ describe('snap-screening-logic', () => {
     assert.equal(classic.resultType({ child14: 'yes' }), 'exempt');
     assert.deepEqual(notesFor({ child14: 'yes' }), []);
     assert.deepEqual(notesFor({ pregnant: 'yes' }), []);
-    // A named disability benefit needs no detail; only the "Other" pick does.
-    // Assert the reason list is non-empty first, so a bad option id here cannot
-    // make the "no notes" expectation pass for the wrong reason.
+    /* Any disability benefit asks for proof, from 2026-08-06. It used to be the "Other" pick
+       only, on the reasoning that a named benefit speaks for itself; the author's note ties the
+       proof sentence to the selections generally. Assert the reason list is non-empty first, so
+       a bad option id cannot make an expectation pass for the wrong reason. */
     assert.ok(classic.exemptReasons({ disability: ['ssi_ssdi'] }).length > 0);
-    assert.deepEqual(notesFor({ disability: ['ssi_ssdi'] }), []);
+    assert.deepEqual(notesFor({ disability: ['ssi_ssdi'] }), [RESULT_COPY.exemptProofDisability]);
     assert.deepEqual(notesFor({ disability: ['other'] }), [RESULT_COPY.exemptProofDisability]);
+    // One note however many are ticked, not one per benefit.
+    assert.deepEqual(
+      notesFor({ disability: ['eaedc', 'ssi_ssdi', 'pfml', 'other'] }),
+      [RESULT_COPY.exemptProofDisability]
+    );
+    // Likewise the agencies, on the shipping build and on the archived yes/no form.
+    assert.deepEqual(
+      exemptProofNotes(classic2.exemptReasons({ stateagency: ['dmh', 'mcb', 'dds'] })),
+      [RESULT_COPY.exemptProofStateAgency]
+    );
+    assert.deepEqual(notesFor({ stateagency: 'yes' }), [RESULT_COPY.exemptProofStateAgency]);
 
     // Work-based exemptions ask for pay proof, either route in.
     assert.deepEqual(notesFor({ working: 'income_weekly' }), [RESULT_COPY.exemptProofWork]);

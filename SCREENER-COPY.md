@@ -407,7 +407,7 @@ phrase comes from the question that produced it. Then, when relevant, one of the
 
 **`exemptProofWork`**
 
-> Send DTA proof of your income and hours, such as pay stubs or a letter.
+> Send DTA proof of your work income and hours, such as pay stubs or a letter.
 
 **`exemptProofHousing`**
 
@@ -415,7 +415,11 @@ phrase comes from the question that produced it. Then, when relevant, one of the
 
 **`exemptProofDisability`**
 
-> Tell DTA the details about your disability benefit so they can review your exemption.
+> Send DTA proof of your disability benefits, such as pay stubs or a letter.
+
+**`exemptProofStateAgency`**
+
+> Send DTA proof that you are getting services from a state agency, such as a letter from the agency.
 
 ## 8. Result: you may have a good reason for missing hours
 

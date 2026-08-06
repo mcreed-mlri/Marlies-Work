@@ -432,6 +432,22 @@ check('**Open in my email app instead** opens the mail app with the summary alre
 check('On a machine with no mail app, the fallback panel appears with the text to copy, and "Copy the text" works.');
 check('A very long set of answers still produces a usable email; the summary is trimmed with a note saying so rather than silently cut.');
 
+h3('What to send DTA');
+
+w('The exempt result tells someone what proof to send, one line per kind of exemption. These are');
+w('the author’s wording, added 2026-08-06. One note appears however many boxes were');
+w('ticked: someone who selects three agencies should be told to send a letter once.');
+blank();
+check('Earning enough, or 30+ hours below minimum wage: ' + strip(C.exemptProofWork));
+check('Any disability benefit, including Other: ' + strip(C.exemptProofDisability));
+check('Any state agency: ' + strip(C.exemptProofStateAgency));
+check('No regular place to sleep: ' + strip(C.exemptProofHousing));
+blank();
+check('Tick **three** disability benefits. The proof line appears **once**, not three times.');
+check('Tick **three** state agencies. Same: one line.');
+check('Exempt only for pregnancy, or only for living with a child under 14: **no** proof line at all, because those speak for themselves.');
+check('Exempt for a disability benefit **and** work income: two proof lines, one for each.');
+
 h3('The Client / DTA Agency ID line');
 
 w('The author removed the typed field on 2026-08-06 and asked for the printed letter to carry a');
