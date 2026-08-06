@@ -1167,6 +1167,34 @@ function renderResults(){
   const resultsHead = `<div class="band"><h1 class="h1">${esc(C.resultsHeadTitle)}</h1></div>
     <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 16px">${esc(C.resultsHeadLead)}</p>`;
 
+  /* One builder for the exempt card and the housing-review card. They rendered the same list from
+     two near-identical copies of this markup, and the sub-bullet below is exactly the kind of
+     addition that lands in one and not the other. */
+  function reasonItemsHtml(){
+    return reasonEntries().map(e => {
+      /* Sub-bullets, the author's request of 2026-08-06: the housing follow-up answers show under
+         the housing reason so someone can see what they told the tool. A real nested <ul> rather
+         than a second flat row, so a screen reader announces them as belonging to the reason above
+         rather than as more exemptions.
+
+         The tick stays on the parent only. Repeating it on each child would claim every tick is an
+         exemption in its own right, and these are the specifics behind one.
+
+         The note is a signpost to another programme (EAEDC), not a fact the person told us, so it
+         is the one child that carries a link. It is looked up by reason id rather than read off the
+         entry, which is what keeps it off the printable statement; see REASON_RESULT_NOTES. */
+      const note = S.reasonResultNote(e.id);
+      const kids = (e.subItems || []).map(s => `<li style="font-size:15px;line-height:1.5;color:var(--prose);margin:0 0 4px">${esc(s)}</li>`);
+      if(note) kids.push(`<li style="font-size:15px;line-height:1.5;color:var(--prose);margin:0 0 4px">${esc(note.text)} <a href="${note.href}" target="_blank" rel="noopener">${esc(note.linkLabel)}</a>.</li>`);
+      const subs = kids.length
+        ? `<ul role="list" style="list-style:disc;margin:8px 0 0;padding-left:22px">${kids.join('')}</ul>`
+        : '';
+      return `<li style="display:flex;align-items:flex-start;gap:11px;font-size:16px;line-height:1.5;color:var(--ink);padding:12px 0;border-bottom:1px solid var(--field)">
+      <span aria-hidden="true" style="width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex:none;margin-top:1px">✓</span>
+      <span>${esc(e.text)}${subs}</span></li>`;
+    }).join('');
+  }
+
   let card = '';
   if(rt === 'housingreview'){
     /* Same shape and the same green as the exempt card, because the author asked for this screen to
@@ -1178,9 +1206,7 @@ function renderResults(){
     const reviewHeading = S.hasHousingFactors(state.answers)
       ? C.housingReviewHeadingWithFactors
       : C.housingReviewHeading;
-    const items = reasonEntries().map(e => `<li style="display:flex;align-items:flex-start;gap:11px;font-size:16px;line-height:1.5;color:var(--ink);padding:12px 0;border-bottom:1px solid var(--field)">
-      <span aria-hidden="true" style="width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex:none;margin-top:1px">✓</span>
-      <span>${esc(e.text)}${(e.subItems || []).length ? `<ul role="list" style="list-style:disc;margin:8px 0 0;padding-left:22px">${e.subItems.map(x => `<li style="font-size:15px;line-height:1.5;color:var(--prose);margin:0 0 4px">${esc(x)}</li>`).join('')}</ul>` : ''}</span></li>`).join('');
+    const items = reasonItemsHtml();
     card = `<div style="border-radius:var(--radius);overflow:hidden;border:1px solid var(--ok-line)">
       <div style="background:var(--ok-fill);padding:20px 22px;border-bottom:1px solid var(--ok-line);display:flex;gap:12px;align-items:flex-start">
         <span aria-hidden="true" style="flex:none;width:30px;height:30px;border-radius:50%;background:var(--ok-strong);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700">✓</span>
@@ -1208,23 +1234,7 @@ function renderResults(){
         ${learnMore}
       </div></div>`;
   } else if(rt === 'exempt'){
-    /* Sub-bullets, the author's request of 2026-08-06: the housing follow-up answers
-       show under the housing reason so someone can see what they told the tool. A real
-       nested <ul> rather than a second flat row, so a screen reader announces them as
-       belonging to the reason above rather than as five more exemptions.
-
-       The tick stays on the parent only. Repeating it on each child would claim every
-       tick is an exemption in its own right, and these are the specifics behind one. */
-    const items = reasonEntries().map(e => {
-      const subs = (e.subItems || []).length
-        ? `<ul role="list" style="list-style:disc;margin:8px 0 0;padding-left:22px">${
-            e.subItems.map(s => `<li style="font-size:15px;line-height:1.5;color:var(--prose);margin:0 0 4px">${esc(s)}</li>`).join('')
-          }</ul>`
-        : '';
-      return `<li style="display:flex;align-items:flex-start;gap:11px;font-size:16px;line-height:1.5;color:var(--ink);padding:12px 0;border-bottom:1px solid var(--field)">
-      <span aria-hidden="true" style="width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex:none;margin-top:1px">✓</span>
-      <span>${esc(e.text)}${subs}</span></li>`;
-    }).join('');
+    const items = reasonItemsHtml();
     card = `<div style="border-radius:var(--radius);overflow:hidden;border:1px solid var(--ok-line)">
       <div style="background:var(--ok-fill);padding:20px 22px;border-bottom:1px solid var(--ok-line);display:flex;gap:12px;align-items:flex-start">
         <span aria-hidden="true" style="flex:none;width:30px;height:30px;border-radius:50%;background:var(--ok-strong);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700">✓</span>

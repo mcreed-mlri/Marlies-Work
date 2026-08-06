@@ -377,29 +377,84 @@ renderQuestion(A.GOODCAUSE);
 
 h2('What someone is told at the end');
 
-say('There are three outcomes, and the wording of each is below.');
+/* Five, not three. The age result arrived on 2026-08-06 and the housing review on 2026-08-07,
+ * and neither was written up here: this document was still describing a tool with three endings.
+ * A reader working through it would have met two screens in testing that the walkthrough does
+ * not contain, which is the failure the whole document exists to prevent. */
+say('There are five outcomes, and the wording of each is below. The first two are checked before',
+  'the others, so they replace the rest rather than appearing alongside them.');
 
-h3('1. You may be exempt');
+h3('1. You are exempt because of your age');
+
+say('Reached by answering **No** to the age question, which ends the screening straight away.',
+  'There is no letter on this screen: DTA already holds the date of birth, so there is nothing',
+  'to tell them and nothing to sign.');
+quote(C.ageExemptHeading);
+blank();
+quote(C.ageExemptBody);
+blank();
+say('And, for the case where DTA sent a notice anyway (the emphasis on *still* is the author\'s):');
+quote(C.ageExemptNoticeLead + ' *' + C.ageExemptNoticeEmphasis + '* ' + C.ageExemptNoticeEnd
+  + ' ' + S.LINKS.advocacyEmail + '.');
+blank();
+
+h3('2. You may be exempt');
 // exemptHeadingHtml, not exemptHeading: the plain string loses the emphasis, and
 // which half of this sentence is bold is a decision the author made.
 quote(S.exemptHeadingHtml());
 blank();
 say('Followed by a checklist of the reasons that applied. Every reason the tool can name:');
+/* Derived from the question and option definitions, not a hand-written list of answer sets. That
+ * list had drifted twice over. It passed `{ stateagency: 'yes' }`, which is the archived yes/no
+ * shape and produces nothing on the shipping build, so none of the five state agencies appeared
+ * in this catalogue and neither did their proof note, which reads from the same set. And it named
+ * one disability benefit out of seven. A benefit or agency added to the tool now reaches this
+ * document without anyone remembering to come back here. */
+const REASON_CASES = [];
+A.QUESTIONS.forEach(q => { if (q.exemptOn) REASON_CASES.push({ [q.id]: q.exemptOn }); });
+S.DISABILITY_OPTION_DEFS.filter(o => o.exempt).forEach(o => REASON_CASES.push({ disability: [o.id] }));
+S.STATE_AGENCY_OPTION_DEFS.forEach(o => REASON_CASES.push({ stateagency: [o.id] }));
+S.WORK_OPTION_DEFS.forEach(o => REASON_CASES.push({ working: o.id }));
+REASON_CASES.push({ housing: 'no', housingFollowup: S.NONE });
 const ALL_REASONS = new Set();
-[
-  { child14: 'yes' }, { health: 'yes' }, { child6: 'yes' }, { caretaker: 'yes' },
-  { pregnant: 'yes' }, { dv: 'yes' }, { tribe: 'yes' }, { tafdc: 'yes' },
-  { disability: ['ssi_ssdi'] }, { disability: ['other'] }, { substanceUse: 'yes' },
-  { unemployment: 'yes' }, { stateagency: 'yes' }, { school: 'yes' },
-  { working: 'income_weekly' }, { working: 'hours_30' },
-  { housing: 'no', housingFollowup: S.NONE }
-].forEach(a => A.exemptReasons(a).forEach(r => ALL_REASONS.add(r)));
+REASON_CASES.forEach(a => A.exemptReasons(a).forEach(r => ALL_REASONS.add(r)));
 [...ALL_REASONS].forEach(r => w('- ' + r));
 blank();
 say('Some of them add a line about what to send DTA:');
-[C.exemptProofWork, C.exemptProofHousing, C.exemptProofDisability].forEach(t => { quote(t); blank(); });
+/* Read through exemptProofNotes over every reason the tool can name, rather than listed here.
+ * The hand-written list had three of the four keys and omitted exemptProofStateAgency, which is
+ * the note someone getting services from MassAbility or DMH sees. It also skips the empty
+ * housing note by itself, the same way the results card does. */
+S.exemptProofNotes([...ALL_REASONS]).forEach(t => { quote(t); blank(); });
+say('One reason carries a pointer to a different programme, indented under it on the screen:');
+Object.keys(S.REASON_RESULT_NOTES).forEach(id => {
+  const n = S.REASON_RESULT_NOTES[id];
+  say('Under **' + plain(S.REASON_TEXT_BY_ID[id]) + '**:');
+  quote(n.text + ' [' + n.linkLabel + '](' + n.href + ').');
+  blank();
+});
+say('That line is on this screen only. It is not in the letter, because it is a suggestion to the',
+  'person rather than anything DTA needs to read.');
 
-h3('2. You may have a good reason for missing hours');
+h3('3. DTA needs to review your information');
+
+say('Reached when the only thing the screening found is that the person has no regular place to',
+  'sleep at night. The author\'s rule, 2026-08-07: no regular place to sleep is not an exemption',
+  'the tool can conclude on its own, so this screen asks DTA to decide rather than telling the',
+  'person they are exempt. Answer it alongside any other reason and the normal exempt screen',
+  'above shows instead, with the housing reason listed among the others.');
+say('There are two headings, and which one shows depends on whether the person ticked any of the',
+  'housing follow-up answers. Nothing ticked:');
+quote(C.housingReviewHeading);
+blank();
+say('One or more ticked, because those answers give DTA something to weigh:');
+quote(C.housingReviewHeadingWithFactors);
+blank();
+say('Then the reason, with anything ticked indented under it, and one optional box:');
+[...new Set(A.statementPrompts({ housing: 'no', housingFollowup: ['diploma'] }))].forEach(p => w('- ' + p));
+blank();
+
+h3('4. You may have a good reason for missing hours');
 quote(C.goodCauseHeading);
 blank();
 quote(C.goodCauseIntro);
@@ -414,7 +469,7 @@ A.GOODCAUSE_CATEGORIES.forEach(cat => {
   blank();
 });
 
-h3('3. You may need to meet the work rules');
+h3('5. You may need to meet the work rules');
 quote(C.notExemptHeading);
 blank();
 quote(C.notExemptIntro);

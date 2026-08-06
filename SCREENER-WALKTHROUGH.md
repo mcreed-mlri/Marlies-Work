@@ -202,9 +202,21 @@ These are situations where you missed work, school, or volunteering hours for on
 
 ## What someone is told at the end
 
-_There are three outcomes, and the wording of each is below._
+_There are five outcomes, and the wording of each is below. The first two are checked before the others, so they replace the rest rather than appearing alongside them._
 
-### 1. You may be exempt
+### 1. You are exempt because of your age
+
+_Reached by answering **No** to the age question, which ends the screening straight away. There is no letter on this screen: DTA already holds the date of birth, so there is nothing to tell them and nothing to sign._
+
+> You are exempt and do not need to meet the ABAWD work rules because of your age.
+
+> If you are younger than 18 or 65 years and older, the ABAWD Work Rules don’t apply to you. DTA should already have your age and date of birth information on file, so you don’t have to take any further action.
+
+_And, for the case where DTA sent a notice anyway (the emphasis on *still* is the author's):_
+
+> If you are exempt because of age and DTA *still* sent you a SNAP and Work notice, please email info@masslegalservices.org.
+
+### 2. You may be exempt
 
 > You may be **exempt** and **do not need to meet the ABAWD work rules** because of these reasons:
 
@@ -218,11 +230,21 @@ _Followed by a checklist of the reasons that applied. Every reason the tool can 
 - I am experiencing or have experienced domestic violence, stalking, sexual harassment, sexual assault, or another safety situation that makes it hard to work
 - I am an Alaska Native or member of a Tribe (or I am a child or grandchild of a member of a Tribe)
 - I get or am applying for TAFDC cash assistance
-- I get SSI or SSDI
-- I get another disability benefit or payment DTA should review
 - I am participating in a substance use treatment program
 - I get or am applying for unemployment benefits
 - I am enrolled in school half-time or more
+- I get EAEDC
+- I get veteran’s disability benefits
+- I get workers’ compensation
+- I am on Paid Family Medical Leave
+- I get short-term disability benefits
+- I get SSI or SSDI
+- I get another disability benefit or payment DTA should review
+- I get services from MassAbility (formerly Mass Rehab Commission)
+- I get services from the Dept. of Mental Health
+- I get services from the Dept. of Developmental Services
+- I get services from the MA Commission for the Blind
+- I get services from the MA Commission for Deaf and Hard of Hearing
 - I earn enough money from work to be exempt from the work rules
 - I work 30 or more hours a week while earning less than minimum wage
 - I do not have a regular place to sleep at night
@@ -231,11 +253,35 @@ _Some of them add a line about what to send DTA:_
 
 > Send DTA proof of your work income and hours, such as pay stubs or a letter. If you are having a hard time getting these proofs, tell DTA.
 
->
-
 > Send DTA proof of your disability benefits, such as pay stubs or a letter. If you are having a hard time getting these proofs, tell DTA.
 
-### 2. You may have a good reason for missing hours
+> Send DTA proof that you are getting services from a state agency, such as a letter from the agency. If you are having a hard time getting these proofs, tell DTA.
+
+_One reason carries a pointer to a different programme, indented under it on the screen:_
+
+_Under **I have a health reason that makes it hard to work 30 or more hours a week**:_
+
+> You may qualify for EAEDC cash assistance. [Learn more here](https://www.mass.gov/info-details/emergency-aid-to-the-elderly-disabled-and-children-eaedc).
+
+_That line is on this screen only. It is not in the letter, because it is a suggestion to the person rather than anything DTA needs to read._
+
+### 3. DTA needs to review your information
+
+_Reached when the only thing the screening found is that the person has no regular place to sleep at night. The author's rule, 2026-08-07: no regular place to sleep is not an exemption the tool can conclude on its own, so this screen asks DTA to decide rather than telling the person they are exempt. Answer it alongside any other reason and the normal exempt screen above shows instead, with the housing reason listed among the others._
+
+_There are two headings, and which one shows depends on whether the person ticked any of the housing follow-up answers. Nothing ticked:_
+
+> DTA will need to review your information to check if you need to meet the work rules.
+
+_One or more ticked, because those answers give DTA something to weigh:_
+
+> You may be exempt from the work rules, but DTA will need to review your information to check if you need to meet the work rules.
+
+_Then the reason, with anything ticked indented under it, and one optional box:_
+
+- Explain your situation in your own words (optional)
+
+### 4. You may have a good reason for missing hours
 
 > You may have a good reason for missing hours
 
@@ -257,7 +303,7 @@ The work is an unreasonable health and safety risk
 Job pays less than $15/hour (minimum wage)
 There is a strike
 
-### 3. You may need to meet the work rules
+### 5. You may need to meet the work rules
 
 > You may need to meet the ABAWD work rules
 
@@ -924,6 +970,7 @@ _Every outbound link, worth checking that each still goes somewhere useful._
 - https://www.mass.gov/how-to/supplemental-nutrition-assistance-program-snap-formerly-known-as-food-stamps
 - https://www.masslegalhelp.org/sites/default/files/2025-11/Terminations%20OB3%20KYR%20SNAP%20ABAWDs%20Flyers%20.pdf
 - https://snappathtowork.org/
+- https://www.mass.gov/info-details/emergency-aid-to-the-elderly-disabled-and-children-eaedc
 - info@masslegalservices.org
 
 ---

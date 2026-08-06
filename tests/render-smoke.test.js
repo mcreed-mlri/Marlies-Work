@@ -58,6 +58,7 @@ const SCREENS = {
   'exempt: work income': 'state.answers={working:"income_weekly"}; state.view="results"; render();',
   'exempt: 30 hours': 'state.answers={working:"hours_30"}; state.view="results"; render();',
   'exempt: housing': 'state.answers={housing:"no",housingFollowup:NONE}; state.view="results"; render();',
+  'exempt: health reason': 'state.answers={health:"yes"}; state.view="results"; render();',
   'exempt: other disability': 'state.answers={disability:["other"]}; state.view="results"; render();',
   'exempt: named disability': 'state.answers={disability:["ssi_ssdi"]}; state.view="results"; render();',
   'exempt: several reasons at once':
@@ -488,6 +489,39 @@ describe('screener pages render without throwing', () => {
       });
     }
   }
+});
+
+/* Pat's EAEDC note, 2026-08-07. The logic test asserts it stays off the letter; this asserts it
+ * actually reaches the screen, which is the half that a rendering change breaks silently. The
+ * exempt card and the housing-review card share one item builder, so a note added to a reason is
+ * reached from either. */
+describe('the EAEDC note renders under the health reason', () => {
+  const logic = fs.readFileSync(path.join(MLH, LOGIC_FILE), 'utf8');
+  const src = inlineScript(fs.readFileSync(SHIP, 'utf8'), 'masslegalhelp/tool/snap/index.html');
+
+  function render(answers) {
+    const { ctx, stage } = buildContext();
+    vm.createContext(ctx);
+    vm.runInContext(logic, ctx, { filename: LOGIC_FILE });
+    vm.runInContext(
+      src + '\n;(function(){ state.answers=' + JSON.stringify(answers) + '; state.view="results"; render(); })();',
+      ctx, { filename: 'masslegalhelp/tool/snap/index.html' }
+    );
+    return stage.innerHTML;
+  }
+
+  it('appears as a sub-bullet with a working link', () => {
+    const note = require(path.join(MLH, LOGIC_FILE)).reasonResultNote('health');
+    const html = render({ health: 'yes' });
+    assert.ok(html.includes(note.text), 'the note is not on the results card');
+    assert.ok(html.includes('href="' + note.href + '"'), 'the note has no link');
+    assert.match(html, /<ul role="list" style="list-style:disc/, 'not rendered as a nested list');
+  });
+
+  it('appears for nobody else', () => {
+    assert.ok(!render({ pregnant: 'yes' }).includes('EAEDC'));
+    assert.ok(!render({ child14: 'no', health: 'no' }).includes('EAEDC'));
+  });
 });
 
 /* ------------------------------------------------------------------------- *

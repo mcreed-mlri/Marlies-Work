@@ -927,6 +927,41 @@ describe('snap-screening-logic', () => {
       .forEach(s => assert.doesNotMatch(s, /^If this is based on/));
   });
 
+  /* Pat's EAEDC suggestion, 2026-08-07, with the condition she attached: results page yes,
+     printable statement no. The second half is the part worth a test, because nothing about
+     rendering the note on the card would fail if it also reached the letter. */
+  it('the EAEDC note hangs off the health reason and stays out of the letter', () => {
+    const note = SnapScreening.reasonResultNote('health');
+    assert.ok(note, 'the health reason carries a note');
+    assert.match(note.text, /EAEDC cash assistance/);
+    assert.match(note.href, /emergency-aid-to-the-elderly-disabled-and-children/);
+    assert.equal(note.href, LINKS.eaedc, 'resolves through LINKS rather than a second copy');
+
+    // Not a note on every reason, and unknown ids answer null rather than throwing mid-render.
+    assert.equal(SnapScreening.reasonResultNote('pregnant'), null);
+    assert.equal(SnapScreening.reasonResultNote('nope'), null);
+
+    /* Off the entries, which is what keeps it off the statement: the letter is built from these. */
+    const answers = { health: 'yes' };
+    const entries = exemptReasonEntriesFor(answers, classic2.QUESTIONS);
+    assert.deepEqual(entries.map(e => e.id), ['health']);
+    entries.forEach(e => assert.ok(!('note' in e), 'no note field on an entry'));
+
+    const html = SnapScreening.buildStatementHTML({
+      rt: classic2.resultType(answers),
+      rs: classic2.exemptReasons(answers),
+      explain: classic2.statementPrompts(answers).map(pr => ({ prompt: pr, text: 'My back injury.' }))
+    });
+    assert.ok(html.includes(REASON_TEXT_BY_ID.health), 'the reason itself does travel');
+    assert.ok(!html.includes(note.text), 'the note does not');
+    assert.ok(!html.includes('EAEDC'), 'nor the programme name by any other route');
+    assert.ok(!html.includes(LINKS.eaedc), 'nor the link');
+
+    /* Nor on the emailed summary, which is a record of what the screening concluded. */
+    const mail = buildResultsEmailContent({ resultType: 'exempt', reasonIds: ['health'] });
+    assert.ok(!JSON.stringify(mail).includes('EAEDC'));
+  });
+
   it('must-meet-the-rules copy matches the reviewed edits', () => {
     assert.match(RESULT_COPY.notExemptHeading, /^You may need to meet the ABAWD work rules$/);
     // The "You did not pick a reason to be exempt" sentence was cut.

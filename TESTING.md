@@ -508,6 +508,18 @@ ticked: someone who selects three agencies should be told to send a letter once.
 - [ ] Exempt only for pregnancy, or only for living with a child under 14: **no** proof line at all, because those speak for themselves.
 - [ ] Exempt for a disability benefit **and** work income: two proof lines, one for each.
 
+### The EAEDC pointer
+
+Pat's suggestion, added 2026-08-07. One exemption carries a line pointing at a different
+programme, and the condition attached to it is that it stays off the printable letter. Nothing
+about the screen looks wrong if it leaks into the letter, so that half has to be looked for.
+
+- [ ] Answer so the result lists **I have a health reason that makes it hard to work 30 or more hours a week**. Indented under it: "You may qualify for EAEDC cash assistance. Learn more here."
+- [ ] The link opens https://www.mass.gov/info-details/emergency-aid-to-the-elderly-disabled-and-children-eaedc
+- [ ] **Print or save this form.** The letter lists the reason and does **not** mention EAEDC anywhere.
+- [ ] **Email myself a copy.** The summary does **not** mention EAEDC either.
+- [ ] Exempt for pregnancy instead: no EAEDC line anywhere on the results screen.
+
 ### The Client / DTA Agency ID line
 
 The author removed the typed field on 2026-08-06 and asked for the printed letter to carry a

@@ -250,10 +250,10 @@ Options:
 > Is something making it hard to work, go to school, or volunteer right now?
 
 > **Question for you:** Your six examples of unreasonable employment are in, added to the "What does this mean?" prompt this question already had rather than as a second one beside it. They could not hang off the phrase itself: the options are buttons, and a disclosure inside one would be a button inside a button.
-
-They raise something we have not changed. Those examples widen that option a long way, to include a commute over two hours, pay under minimum wage, a strike, a health and safety risk, and religious observance. But the sentence the letter sends DTA still says only "an employer or work environment that discriminates on the basis of age, sex, race, religion, ethnicity, or physical or mental disability", and the results screen still lists that one line as the whole category. So someone who picks this option because of a two-hour commute signs a letter alleging their employer discriminates, which is both untrue for them and an accusation about a named employer.
-
-Suggested: make the letter sentence true for all six and let the write-in box carry the specifics, for example "Employment issues - my job or workplace situation made it hard for me to meet the work rules." And expand the results-screen list to the same six. Both are your wording to approve, so neither is done.
+>
+> They raise something we have not changed. Those examples widen that option a long way, to include a commute over two hours, pay under minimum wage, a strike, a health and safety risk, and religious observance. But the sentence the letter sends DTA still says only "an employer or work environment that discriminates on the basis of age, sex, race, religion, ethnicity, or physical or mental disability", and the results screen still lists that one line as the whole category. So someone who picks this option because of a two-hour commute signs a letter alleging their employer discriminates, which is both untrue for them and an accusation about a named employer.
+>
+> Suggested: make the letter sentence true for all six and let the write-in box carry the specifics, for example "Employment issues - my job or workplace situation made it hard for me to meet the work rules." And expand the results-screen list to the same six. Both are your wording to approve, so neither is done.
 
 Help text, shown when someone opens "What does this mean?":
 
@@ -426,6 +426,25 @@ phrase comes from the question that produced it. Then, when relevant, one of the
 **`exemptProofStateAgency`**
 
 > Send DTA proof that you are getting services from a state agency, such as a letter from the agency. If you are having a hard time getting these proofs, tell DTA.
+
+Pat's EAEDC suggestion is in. It shows as an indented sub-bullet under one reason, and
+only on this screen: it is not on the printable statement, per her note. It reads:
+
+**`reasonNoteEaedc`**
+
+> You may qualify for EAEDC cash assistance.
+
+> **Question for you:** Added at Pat's suggestion, with the condition attached: it shows on the results screen and not on the printable statement.
+>
+> One thing to confirm, and it is the only reason this is not simply done. The comment did not name which exemption it hangs off, and two were highlighted in the document: "I have a health reason that makes it hard to work 30 or more hours a week" and "I get another disability benefit or payment DTA should review". It is on the health reason, because that reason describes EAEDC's own test, being unable to work because of a disability, and because someone who ticks the other one is already getting a disability payment. If Pat meant the other one, or both, say so and it moves: it is keyed by reason, so it is a one-line change.
+
+**`reasonNoteEaedcLink`**
+
+> Learn more here
+
+The link goes to https://www.mass.gov/info-details/emergency-aid-to-the-elderly-disabled-and-children-eaedc
+
+Currently attached to the reason **I have a health reason that makes it hard to work 30 or more hours a week**
 
 ## 8. Result: you may have a good reason for missing hours
 
@@ -1243,5 +1262,6 @@ document stays complete.
 | `reapply` | https://www.mass.gov/how-to/supplemental-nutrition-assistance-program-snap-formerly-known-as-food-stamps |
 | `getSnapBack` | https://www.masslegalhelp.org/sites/default/files/2025-11/Terminations%20OB3%20KYR%20SNAP%20ABAWDs%20Flyers%20.pdf |
 | `dtaTraining` | https://snappathtowork.org/ |
+| `eaedc` | https://www.mass.gov/info-details/emergency-aid-to-the-elderly-disabled-and-children-eaedc |
 | `advocacyEmail` | info@masslegalservices.org |
 

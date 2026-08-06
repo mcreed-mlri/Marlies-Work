@@ -448,6 +448,22 @@ check('Tick **three** state agencies. Same: one line.');
 check('Exempt only for pregnancy, or only for living with a child under 14: **no** proof line at all, because those speak for themselves.');
 check('Exempt for a disability benefit **and** work income: two proof lines, one for each.');
 
+h3('The EAEDC pointer');
+
+w('Pat\'s suggestion, added 2026-08-07. One exemption carries a line pointing at a different');
+w('programme, and the condition attached to it is that it stays off the printable letter. Nothing');
+w('about the screen looks wrong if it leaks into the letter, so that half has to be looked for.');
+blank();
+Object.keys(S.REASON_RESULT_NOTES).forEach(id => {
+  const n = S.REASON_RESULT_NOTES[id];
+  check('Answer so the result lists **' + strip(S.REASON_TEXT_BY_ID[id]) + '**. Indented under it: "'
+    + strip(n.text) + ' ' + strip(n.linkLabel) + '."');
+  check('The link opens ' + n.href);
+  check('**Print or save this form.** The letter lists the reason and does **not** mention EAEDC anywhere.');
+  check('**Email myself a copy.** The summary does **not** mention EAEDC either.');
+});
+check('Exempt for pregnancy instead: no EAEDC line anywhere on the results screen.');
+
 h3('The Client / DTA Agency ID line');
 
 w('The author removed the typed field on 2026-08-06 and asked for the printed letter to carry a');

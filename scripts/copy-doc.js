@@ -43,6 +43,7 @@ const OPEN = {
   exemptReasonsIntro: 'Already applied: emptied, because the heading above now ends with "because of these reasons:" and this said it a second time.',
   exemptProofHousing: 'Already applied: emptied at your request, with the disability note that read the same way. Both said to give DTA details so DTA could review the exemption, which the letter already asks for in its housing paragraph. Kept as an empty string rather than deleted so the archived builds still resolve the key.',
   'q.disability': 'One thing from the May 2026 Advocacy Guide, Q61. It lists the qualifying benefits exactly as we have them, with one difference: Paid Family Medical Leave appears as "Paid Family Medical Leave (in most cases)". Ours has no qualifier. We have left it exempting, because dropping it would be wrong and a person cannot be asked to judge whether their own PFML is one of the cases that counts, and because the result already says "may be exempt" while the letter only states the fact that they are on it. But you may want the "in most cases" said out loud somewhere, and that is your call with a lawyer rather than ours.',
+  reasonNoteEaedc: 'Added at Pat\'s suggestion, with the condition attached: it shows on the results screen and not on the printable statement.\n\nOne thing to confirm, and it is the only reason this is not simply done. The comment did not name which exemption it hangs off, and two were highlighted in the document: "I have a health reason that makes it hard to work 30 or more hours a week" and "I get another disability benefit or payment DTA should review". It is on the health reason, because that reason describes EAEDC\'s own test, being unable to work because of a disability, and because someone who ticks the other one is already getting a disability payment. If Pat meant the other one, or both, say so and it moves: it is keyed by reason, so it is a one-line change.',
   'q.tribe': 'Applied, along with a change to the reason it records. Because the question now asks about a parent or grandparent, most people answering Yes are not themselves enrolled, and the reason prints as a bullet in the letter they sign and send to DTA. It used to read "Alaska Native or member of a Tribe", which had them attest to membership they may not have. It now reads "Alaska Native or Tribe member, including through a parent or grandparent", which you approved on 2026-08-06.',
 };
 
@@ -183,9 +184,16 @@ function quote(text) {
   toMarkdown(text).split('\n').forEach(l => w(l.trim() === '' ? '>' : '> ' + l));
 }
 
+/* Every paragraph carries the marker, and the blank lines between them carry a bare `>`, or
+ * Markdown ends the quote at the first one. Only the opening paragraph was prefixed until
+ * 2026-08-07, so a question with a second paragraph had that paragraph read as the document's own
+ * narration. `goodcause.text` was three paragraphs long and two of them looked like our prose
+ * rather than something waiting on an answer. */
 function openNote(id) {
   if (!OPEN[id]) return;
-  w('> **Question for you:** ' + OPEN[id]);
+  const paras = OPEN[id].split('\n\n');
+  w('> **Question for you:** ' + paras[0]);
+  paras.slice(1).forEach(p => { w('>'); w('> ' + p); });
   blank();
 }
 
@@ -390,6 +398,17 @@ w('phrase comes from the question that produced it. Then, when relevant, one of 
 blank();
 ['exemptProofWork', 'exemptProofHousing', 'exemptProofDisability', 'exemptProofStateAgency']
   .forEach(k => item(k, C[k]));
+
+w('Pat\'s EAEDC suggestion is in. It shows as an indented sub-bullet under one reason, and');
+w('only on this screen: it is not on the printable statement, per her note. It reads:');
+blank();
+['reasonNoteEaedc', 'reasonNoteEaedcLink'].forEach(k => item(k, C[k]));
+w('The link goes to ' + S.LINKS.eaedc);
+blank();
+Object.keys(S.REASON_RESULT_NOTES).forEach(id => {
+  w('Currently attached to the reason **' + S.REASON_TEXT_BY_ID[id] + '**');
+});
+blank();
 
 section('7. Result: you may have a good reason for missing hours');
 ['goodCauseHeading', 'goodCauseIntro', 'goodCauseLead'].forEach(k => item(k, C[k]));

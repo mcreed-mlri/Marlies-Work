@@ -41,6 +41,7 @@
     reapply: 'https://www.mass.gov/how-to/supplemental-nutrition-assistance-program-snap-formerly-known-as-food-stamps',
     getSnapBack: 'https://www.masslegalhelp.org/sites/default/files/2025-11/Terminations%20OB3%20KYR%20SNAP%20ABAWDs%20Flyers%20.pdf',
     dtaTraining: 'https://snappathtowork.org/',
+    eaedc: 'https://www.mass.gov/info-details/emergency-aid-to-the-elderly-disabled-and-children-eaedc',
     advocacyEmail: 'info@masslegalservices.org'
   };
 
@@ -1633,6 +1634,13 @@
      * archived variants read this key, and exemptProofNotes drops empty notes so nothing
      * renders a blank line. */
     exemptProofHousing: '',
+    /* Pat's suggestion by way of the author, 2026-08-07. Someone who says a health reason makes
+     * it hard to work 30 hours is describing EAEDC's own eligibility test, and this is the one
+     * point in the screening where they can be told so. It is a signpost to a different
+     * programme, not a reason they are exempt, which is why it renders as a sub-bullet under
+     * the reason rather than as a bullet beside it. */
+    reasonNoteEaedc: 'You may qualify for EAEDC cash assistance.',
+    reasonNoteEaedcLink: 'Learn more here',
     exemptProofDisability: 'Send DTA proof of your disability benefits, such as pay stubs or a letter. ' + PROOF_HELP,
     exemptProofStateAgency: 'Send DTA proof that you are getting services from a state agency, such as a letter from the agency. ' + PROOF_HELP,
     goodCauseHeading: 'You may have a good reason for missing hours',
@@ -1799,6 +1807,30 @@
       out.push(c.exemptProofStateAgency);
     }
     return out.filter(n => n);
+  }
+
+  /* Results-page-only notes, keyed by reason id.
+   *
+   * Deliberately NOT a field on the entries `exemptReasonEntriesFor` returns. Pat's condition on
+   * this note is that it stays off the printable statement, and the letter builder is fed those
+   * entries: put the note on an entry and the only thing keeping it out of a legal document
+   * someone signs is that nobody has rendered that field yet. Keyed separately, the results card
+   * has to reach for it by id and nothing else can pick it up by accident.
+   *
+   * Off the emailed summary for the same reason. That email is a record of what the screening
+   * concluded, and this is a pointer to a different programme.
+   *
+   * `href` resolves through LINKS so the note cannot outlive the URL. */
+  const REASON_RESULT_NOTES = {
+    health: {
+      text: RESULT_COPY.reasonNoteEaedc,
+      linkLabel: RESULT_COPY.reasonNoteEaedcLink,
+      href: LINKS.eaedc
+    }
+  };
+
+  function reasonResultNote(id) {
+    return REASON_RESULT_NOTES[id] || null;
   }
 
   /**
@@ -2278,6 +2310,7 @@
       shouldSkipGoodCause: (answers) => shouldSkipGoodCause(answers, QUESTIONS),
       endsScreeningEarly: (answers) => endsScreeningEarly(answers),
       hasHousingFactors: (answers) => hasHousingFactors(answers),
+      reasonResultNote,
       goodCauseText: (answers) => goodCauseText(answers, GC_TEXT),
       statementPrompts: (answers) => statementPromptsFor(exemptReasonsFor(answers, QUESTIONS), resultTypeFor(answers, QUESTIONS)),
       /* Guided mode. Both read the same reasons the write-in prompts do, so a
@@ -2323,6 +2356,8 @@
     exemptReasonsFor,
     exemptReasonEntriesFor,
     REASON_TEXT_BY_ID,
+    REASON_RESULT_NOTES,
+    reasonResultNote,
     STATEMENT_SALUTATION,
     STATEMENT_SIGN_OFF,
     STATEMENT_PRINTED_NAME_LABEL,
