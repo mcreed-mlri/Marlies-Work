@@ -210,7 +210,7 @@ _Followed by a checklist of the reasons that applied. Every reason the tool can 
 - Take care of a child or adult who cannot care for themselves
 - Pregnant
 - Domestic violence, stalking, sexual harassment, sexual assault, or another safety situation that affects work
-- Alaska Native or member of a Tribe
+- Alaska Native or Tribe member, including through a parent or grandparent
 - Get or applying for TAFDC cash assistance
 - Get disability benefits
 - Get another disability benefit or payment DTA should review

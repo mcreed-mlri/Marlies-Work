@@ -283,7 +283,13 @@
     caretaker: 'Take care of a child or adult who cannot care for themselves',
     pregnant: 'Pregnant',
     dv: 'Domestic violence, stalking, sexual harassment, sexual assault, or another safety situation that affects work',
-    tribe: 'Alaska Native or member of a Tribe',
+    /* Widened 2026-08-06 with the question, from "Alaska Native or member of a Tribe".
+     * The question asks about a parent or grandparent too, so most people answering Yes are
+     * not themselves enrolled, and this reason prints as a bullet in the letter they sign and
+     * send to DTA. The old wording had them attest to membership they may not have. No
+     * trailing full stop, because every other reason in this list is a bare phrase and they
+     * are set as list items. */
+    tribe: 'Alaska Native or Tribe member, including through a parent or grandparent',
     tafdc: 'Get or applying for TAFDC cash assistance',
     disability: 'Get disability benefits',
     substanceUse: 'Participating in a substance use treatment program',

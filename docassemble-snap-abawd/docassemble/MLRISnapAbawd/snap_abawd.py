@@ -38,7 +38,10 @@ REASONS = {
         "Domestic violence, stalking, sexual harassment, sexual assault, or "
         "another safety situation that affects work"
     ),
-    "tribe": "Alaska Native or member of a Tribe",
+    # Widened 2026-08-06 with the question, which now asks about a parent or grandparent
+    # too. See the note in the JavaScript reference; the old wording had people attest to
+    # membership they may not have.
+    "tribe": "Alaska Native or Tribe member, including through a parent or grandparent",
     "tafdc": "Get or applying for TAFDC cash assistance",
     "substanceUse": "Participating in a substance use treatment program",
     "unemployment": "Get or applying for unemployment benefits",

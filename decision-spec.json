@@ -67,7 +67,7 @@
       "id": "tribe",
       "exemptOn": "yes",
       "reasons": [
-        "Alaska Native or member of a Tribe"
+        "Alaska Native or Tribe member, including through a parent or grandparent"
       ],
       "text": "Are you, or is your parent or grandparent, an Alaska native or a member of an American Indian, Urban Indian, or California Indian tribe?"
     },

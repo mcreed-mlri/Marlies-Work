@@ -237,7 +237,7 @@ Options:
 
 > Are you, or is your parent or grandparent, an Alaska native or a member of an American Indian, Urban Indian, or California Indian tribe?
 
-> **Question for you:** Applied, and it raises something in the letter. Moving "or is your parent or grandparent" into the question means many more people answer Yes, including people who are not themselves Alaska Native and not themselves enrolled. The reason we record for them still reads "Alaska Native or member of a Tribe", and that reason is printed as a bullet in the letter they sign and send to DTA, so it has them state something about themselves that may not be true. The old help text had the same scope, so this is not new, but it was easy to miss before and will not be now. Suggested wording for the reason: "Alaska Native or Tribe member, including through a parent or grandparent." Your call, and we have not changed it.
+> **Question for you:** Applied, along with a change to the reason it records. Because the question now asks about a parent or grandparent, most people answering Yes are not themselves enrolled, and the reason prints as a bullet in the letter they sign and send to DTA. It used to read "Alaska Native or member of a Tribe", which had them attest to membership they may not have. It now reads "Alaska Native or Tribe member, including through a parent or grandparent", which you approved on 2026-08-06.
 
 ## 3. The good cause question
 

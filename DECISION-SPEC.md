@@ -40,7 +40,7 @@ results screen and in the printable statement.
 | `caretaker` | answer is "yes" | Take care of a child or adult who cannot care for themselves | |
 | `pregnant` | answer is "yes" | Pregnant | |
 | `dv` | answer is "yes" | Domestic violence, stalking, sexual harassment, sexual assault, or another safety situation that affects work | |
-| `tribe` | answer is "yes" | Alaska Native or member of a Tribe | |
+| `tribe` | answer is "yes" | Alaska Native or Tribe member, including through a parent or grandparent | |
 | `tafdc` | answer is "yes" | Get or applying for TAFDC cash assistance | |
 | `substanceUse` | answer is "yes" | Participating in a substance use treatment program | |
 | `unemployment` | answer is "yes" | Get or applying for unemployment benefits | |

@@ -1142,7 +1142,9 @@ describe('snap-screening-logic', () => {
         const letter = letterFor({ pregnant: 'yes', tafdc: 'yes', tribe: 'yes' });
         assert.match(letter, /<li[^>]*>Pregnant<\/li>/);
         assert.match(letter, /<li[^>]*>Get or applying for TAFDC cash assistance<\/li>/);
-        assert.match(letter, /<li[^>]*>Alaska Native or member of a Tribe<\/li>/);
+        // Read from the catalogue rather than quoted: this wording was widened on 2026-08-06
+        // and the assertion is about the letter listing the reason, not about its exact words.
+        assert.ok(letter.includes('<li style="margin:0 0 6px">' + REASON_TEXT_BY_ID.tribe + '</li>'));
       });
 
       /* None of this may reach the write-in letter, where the fixed paragraphs

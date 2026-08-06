@@ -65,7 +65,7 @@ work rules when they do not have to.
 | Do you take care of a child or adult who cannot care for themselves? | **Yes** | Take care of a child or adult who cannot care for themselves |
 | Are you pregnant? | **Yes** | Pregnant |
 | Has a domestic violence or safety situation made it hard for you to work? | **Yes** | Domestic violence, stalking, sexual harassment, sexual assault, or another safety situation that affects work |
-| Are you, or is your parent or grandparent, an Alaska native or a member of an American Indian, Urban Indian, or California Indian tribe? | **Yes** | Alaska Native or member of a Tribe |
+| Are you, or is your parent or grandparent, an Alaska native or a member of an American Indian, Urban Indian, or California Indian tribe? | **Yes** | Alaska Native or Tribe member, including through a parent or grandparent |
 | Do you get, or are you applying for TAFDC cash assistance benefits? | **Yes** | Get or applying for TAFDC cash assistance |
 | Are you participating in a substance use treatment program? | **Yes** | Participating in a substance use treatment program |
 | Do you get, or are you applying for unemployment benefits? | **Yes** | Get or applying for unemployment benefits |
@@ -77,7 +77,7 @@ work rules when they do not have to.
 - [ ] `Take care of a child or adult who cannot care for themselves` — Do you take care of a child or adult who cannot care for themselves?
 - [ ] `Pregnant` — Are you pregnant?
 - [ ] `Domestic violence, stalking, sexual harassment, sexual assault, or another safety situation that affects work` — Has a domestic violence or safety situation made it hard for you to work?
-- [ ] `Alaska Native or member of a Tribe` — Are you, or is your parent or grandparent, an Alaska native or a member of an American Indian, Urban Indian, or California Indian tribe?
+- [ ] `Alaska Native or Tribe member, including through a parent or grandparent` — Are you, or is your parent or grandparent, an Alaska native or a member of an American Indian, Urban Indian, or California Indian tribe?
 - [ ] `Get or applying for TAFDC cash assistance` — Do you get, or are you applying for TAFDC cash assistance benefits?
 - [ ] `Participating in a substance use treatment program` — Are you participating in a substance use treatment program?
 - [ ] `Get or applying for unemployment benefits` — Do you get, or are you applying for unemployment benefits?
