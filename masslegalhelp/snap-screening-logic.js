@@ -396,6 +396,27 @@
   /* The last line of every letter, all four results. Victoria's wording, 2026-08-07. Named
    * copy for the same reason the agency label is: it is a sentence someone signs, so the author
    * should be able to read it in SCREENER-COPY.md rather than by printing a letter. */
+  /* The letter's own fixed prose, named 2026-08-07.
+   *
+   * Every one of these was a literal inside buildStatementHTML. That meant SCREENER-COPY.md, the
+   * document whose whole purpose is to show the author every word the tool says, could not show
+   * them: there was no key to read and no pattern to match. She has been approving a letter she
+   * could only read by printing one, which is how "as part of my exemption screening" survived a
+   * pass that removed every other mention of the screener, and how nobody noticed the letter
+   * changed voice at the reasons list until she read a printout.
+   *
+   * Named rather than left inline because these are the sentences someone signs and sends to a
+   * state agency. Nothing about how they render has changed. */
+  const STATEMENT_SALUTATION = 'Dear DTA,';
+  const STATEMENT_SIGN_OFF = 'Sincerely,';
+  const STATEMENT_PRINTED_NAME_LABEL = 'Printed name:';
+  const STATEMENT_DATE_SIGNED_LABEL = 'Date signed:';
+  const STATEMENT_EXEMPT_OPENING = 'I am writing to ask that you update my SNAP case. I believe I am exempt from the ABAWD work rules and should not have to meet them for the following reason(s):';
+  const STATEMENT_GOODCAUSE_OPENING = 'I am writing to explain why I could not meet the ABAWD work rules and missed hours for one or more months due to an unexpected life situation.';
+  const STATEMENT_OTHER_OPENING = 'I am writing about my SNAP case and the ABAWD work rules.';
+  const STATEMENT_WORK_INCOME_LEAD = 'I earn enough income to be exempt from the ABAWD work rules. I can send proof of my income and hours, such as pay stubs or a letter from my employer.';
+  const STATEMENT_WORK_HOURS_30_LEAD = 'I work 30 or more hours per week while earning less than minimum wage. I can send proof of my hours and pay.';
+
   const STATEMENT_CLOSING_REQUEST = 'If DTA has questions about this statement please contact me and send me a notice explaining if you need more information.';
 
   const STATEMENT_AGENCY_LABEL = 'Client / DTA Agency ID (if you have one/know it)';
@@ -1881,8 +1902,8 @@
     if (rt === 'exempt') {
       const specialReasons = [WORK_REASON_INCOME, WORK_REASON_HOURS_30, DISABILITY_OTHER_REASON, HOUSING_EXEMPT_REASON];
       const exemptReasons = rs.filter(r => !specialReasons.includes(r) && !covered.has(r));
-      let inner = `<p style="margin:0 0 14px">Dear DTA,</p>
-        <p style="margin:0 0 14px">I am writing to ask that you update my SNAP case. I believe I am exempt from the ABAWD work rules and should not have to meet them for the following reason(s):</p>`;
+      let inner = `<p style="margin:0 0 14px">${esc(STATEMENT_SALUTATION)}</p>
+        <p style="margin:0 0 14px">${esc(STATEMENT_EXEMPT_OPENING)}</p>`;
       if (exemptReasons.length) {
         const items = exemptReasons.map(r => {
           /* Which benefit, or which agency. The reason alone says someone gets a
@@ -1907,10 +1928,10 @@
       const fixedFor = (reason) => rs.includes(reason) && !covered.has(reason);
       const showWorkExplain = !composed && (fixedFor(WORK_REASON_INCOME) || fixedFor(WORK_REASON_HOURS_30));
       if (fixedFor(WORK_REASON_INCOME)) {
-        inner += `<p style="margin:0 0 14px">I earn enough income to be exempt from the ABAWD work rules. I can send proof of my income and hours, such as pay stubs or a letter from my employer.</p>`;
+        inner += `<p style="margin:0 0 14px">${esc(STATEMENT_WORK_INCOME_LEAD)}</p>`;
       }
       if (fixedFor(WORK_REASON_HOURS_30)) {
-        inner += `<p style="margin:0 0 14px">I work 30 or more hours per week while earning less than minimum wage. I can send proof of my hours and pay.</p>`;
+        inner += `<p style="margin:0 0 14px">${esc(STATEMENT_WORK_HOURS_30_LEAD)}</p>`;
       }
       if (showWorkExplain) {
         inner += explainBox(explainTextForPrompt(workPrompt));
@@ -1960,12 +1981,12 @@
        *
        * gcText is still passed in and still used by the emailed summary, which is the person
        * writing to themselves rather than to DTA, so naming the category there is useful. */
-      body = `<p style="margin:0 0 14px">Dear DTA,</p>
-        <p style="margin:0 0 14px">I am writing to explain why I could not meet the ABAWD work rules and missed hours for one or more months due to an unexpected life situation.</p>`;
+      body = `<p style="margin:0 0 14px">${esc(STATEMENT_SALUTATION)}</p>
+        <p style="margin:0 0 14px">${esc(STATEMENT_GOODCAUSE_OPENING)}</p>`;
       if (!composed) body += explainBox(explainTextForPrompt(STATEMENT_PROMPT_GOODCAUSE));
     } else {
-      body = `<p style="margin:0 0 14px">Dear DTA,</p>
-        <p style="margin:0 0 14px">I am writing about my SNAP case and the ABAWD work rules.</p>`;
+      body = `<p style="margin:0 0 14px">${esc(STATEMENT_SALUTATION)}</p>
+        <p style="margin:0 0 14px">${esc(STATEMENT_OTHER_OPENING)}</p>`;
     }
 
     /* Guided mode composed these sentences from pick-lists, so they are prose
@@ -2011,10 +2032,10 @@
       <p style="margin:22px 0 0">${esc(STATEMENT_CLOSING_REQUEST)}</p>
 
       <div style="margin:28px 0 0;break-inside:avoid;page-break-inside:avoid">
-        <p style="margin:0 0 18px">Sincerely,</p>
+        <p style="margin:0 0 18px">${esc(STATEMENT_SIGN_OFF)}</p>
         ${sigBlock}
-        <div style="font-size:11pt;margin:0 0 2px">${name ? esc(name) : 'Printed name: _________________________________'}</div>
-        <div style="font-size:10.5pt;color:#444">Date signed: ${today ? esc(today) : '________________'}</div>
+        <div style="font-size:11pt;margin:0 0 2px">${name ? esc(name) : esc(STATEMENT_PRINTED_NAME_LABEL) + ' _________________________________'}</div>
+        <div style="font-size:10.5pt;color:#444">${esc(STATEMENT_DATE_SIGNED_LABEL)} ${today ? esc(today) : '________________'}</div>
       </div>
     </div>`;
   }
@@ -2218,6 +2239,15 @@
     exemptReasonsFor,
     exemptReasonEntriesFor,
     REASON_TEXT_BY_ID,
+    STATEMENT_SALUTATION,
+    STATEMENT_SIGN_OFF,
+    STATEMENT_PRINTED_NAME_LABEL,
+    STATEMENT_DATE_SIGNED_LABEL,
+    STATEMENT_EXEMPT_OPENING,
+    STATEMENT_GOODCAUSE_OPENING,
+    STATEMENT_OTHER_OPENING,
+    STATEMENT_WORK_INCOME_LEAD,
+    STATEMENT_WORK_HOURS_30_LEAD,
     STATEMENT_CLOSING_REQUEST,
     STATEMENT_AGENCY_LABEL,
     STATEMENT_AGENCY_HINT,

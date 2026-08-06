@@ -476,6 +476,10 @@ The categories listed on this screen:
 
 > Find a DTA training program
 
+**`workOption1IncomeReminder`**
+
+> Remember, if you earn $217.50 or more a week (even if you are working fewer than 20 hours a week) you are exempt.
+
 **`workOption2`**
 
 > Community service for a set number of hours each month. The number depends on how much SNAP you get. DTA will tell you how many hours to volunteer.
@@ -543,18 +547,40 @@ The categories listed on this screen:
 Shown on the exempt and good cause results. Someone fills in the blanks, signs it, and
 mails, faxes, or uploads it to DTA.
 
-**Some of the letter's own sentences are still not in this document.** Parts of the letter
-body are written inline in the code rather than kept as named copy, so there is nothing for
-the generator to pull out, which means you have been approving a letter you could only read
-by printing one. That is a gap on our side, not yours. The three below were pulled out on
-2026-08-06 because they were being reworded anyway; the rest still needs doing, and it is a
-change to the code rather than to this document.
+**The whole letter is in this document now.** Until 2026-08-07 most of its sentences were
+written inline in the code with no key to read them by, so this document could not show them
+and you were approving a letter you could only see by printing one. That is how "as part of
+my exemption screening" survived a pass that took the word screener out of everywhere else.
+Every fixed sentence the letter can print is below.
 
 None of these mentions the screener, which was the point of that rewrite. The letter is
 from the person to their caseworker, so a reference to a tool they filled in elsewhere
 reads as software talking. "I also told the screening the following" and "a disability
 benefit that is not listed above" both went for that reason, the second because "above"
 pointed at a list of options that does not appear anywhere in the letter.
+
+It opens the same way whichever result someone reached:
+
+**`statement.salutation`**
+
+> Dear DTA,
+
+Then one of these three, depending on the result:
+
+**`statement.exemptOpening`**  (the exempt result)
+
+> I am writing to ask that you update my SNAP case. I believe I am exempt from the ABAWD work rules and should not have to meet them for the following reason(s):
+
+**`statement.goodCauseOpening`**  (the good cause result)
+
+> I am writing to explain why I could not meet the ABAWD work rules and missed hours for one or more months due to an unexpected life situation.
+
+**`statement.otherOpening`**  (any other result)
+
+> I am writing about my SNAP case and the ABAWD work rules.
+
+On the exempt letter, some reasons add a paragraph of their own, because each says something
+the bulleted list cannot:
 
 **`statementHousingLead`**
 
@@ -567,6 +593,32 @@ pointed at a list of options that does not appear anywhere in the letter.
 **`statementDisabilityOtherLead`**
 
 > I get a disability benefit or payment. Please review it when you decide whether I am exempt from the ABAWD work rules.
+
+**`statement.workIncomeLead`**
+
+> I earn enough income to be exempt from the ABAWD work rules. I can send proof of my income and hours, such as pay stubs or a letter from my employer.
+
+**`statement.workHours30Lead`**
+
+> I work 30 or more hours per week while earning less than minimum wage. I can send proof of my hours and pay.
+
+Every letter ends this way:
+
+**`statement.closingRequest`**  (on all four results)
+
+> If DTA has questions about this statement please contact me and send me a notice explaining if you need more information.
+
+**`statement.signOff`**
+
+> Sincerely,
+
+**`statement.printedNameLabel`**  (with a ruled line when no name was typed)
+
+> Printed name:
+
+**`statement.dateSignedLabel`**
+
+> Date signed:
 
 **`statement.docTitle`**  (the printed page title)
 
@@ -588,9 +640,17 @@ pointed at a list of options that does not appear anywhere in the letter.
 
 > To tell DTA why you missed work hours, you can use the tool below to create a written statement with your results. Fill in the blanks, save or print a copy, and send it to DTA.
 
+**`formSendAlternatives`**
+
+> You can also handwrite a statement and send it to DTA by uploading it to your DTAConnect account, mailing it, or dropping it off at a DTA Office. (More on how to contact DTA in the box below.)
+
 **`formExplainHeading`**
 
 > In a few sentences:
+
+**`formExplainHeadingGoodCause`**
+
+> In a few sentences, explain why you had to miss work, school, or volunteer hours
 
 The prompt above the box someone writes in depends on why they came out exempt.
 All of them:
@@ -1140,18 +1200,6 @@ anywhere that it is not legal advice.
 
 These are shown to people too, but did not fit the sections above. Listed so the
 document stays complete.
-
-**`workOption1IncomeReminder`**
-
-> Remember, if you earn $217.50 or more a week (even if you are working fewer than 20 hours a week) you are exempt.
-
-**`formSendAlternatives`**
-
-> You can also handwrite a statement and send it to DTA by uploading it to your DTAConnect account, mailing it, or dropping it off at a DTA Office. (More on how to contact DTA in the box below.)
-
-**`formExplainHeadingGoodCause`**
-
-> In a few sentences, explain why you had to miss work, school, or volunteer hours
 
 **`btnNext`**
 

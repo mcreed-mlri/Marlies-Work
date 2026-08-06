@@ -405,7 +405,7 @@ blank();
 
 section('8. Result: you may need to meet the work rules');
 ['notExemptHeading', 'notExemptIntro', 'workRulesHeading', 'workOption1', 'workOption1Unpaid',
-  'workOption1Training', 'workOption2', 'meetingDtaHeading', 'meetingDtaPaid',
+  'workOption1Training', 'workOption1IncomeReminder', 'workOption2', 'meetingDtaHeading', 'meetingDtaPaid',
   'meetingDtaStatement', 'goodCauseInNotExemptBold', 'goodCauseInNotExemptIntro',
   'goodCauseInNotExemptBody', 'goodCauseInNotExemptLink', 'notExemptStartOver',
   'notExemptReapplyLead', 'notExemptReapplyLink', 'notExemptReapplyEnd', 'notExemptSnapBack',
@@ -418,12 +418,11 @@ section('9. The printable "Tell DTA" statement');
 w('Shown on the exempt and good cause results. Someone fills in the blanks, signs it, and');
 w('mails, faxes, or uploads it to DTA.');
 blank();
-w('**Some of the letter\'s own sentences are still not in this document.** Parts of the letter');
-w('body are written inline in the code rather than kept as named copy, so there is nothing for');
-w('the generator to pull out, which means you have been approving a letter you could only read');
-w('by printing one. That is a gap on our side, not yours. The three below were pulled out on');
-w('2026-08-06 because they were being reworded anyway; the rest still needs doing, and it is a');
-w('change to the code rather than to this document.');
+w('**The whole letter is in this document now.** Until 2026-08-07 most of its sentences were');
+w('written inline in the code with no key to read them by, so this document could not show them');
+w('and you were approving a letter you could only see by printing one. That is how "as part of');
+w('my exemption screening" survived a pass that took the word screener out of everywhere else.');
+w('Every fixed sentence the letter can print is below.');
 blank();
 w('None of these mentions the screener, which was the point of that rewrite. The letter is');
 w('from the person to their caseworker, so a reference to a tool they filled in elsewhere');
@@ -431,12 +430,34 @@ w('reads as software talking. "I also told the screening the following" and "a d
 w('benefit that is not listed above" both went for that reason, the second because "above"');
 w('pointed at a list of options that does not appear anywhere in the letter.');
 blank();
+w('It opens the same way whichever result someone reached:');
+blank();
+item('statement.salutation', S.STATEMENT_SALUTATION);
+
+w('Then one of these three, depending on the result:');
+blank();
+item('statement.exemptOpening', S.STATEMENT_EXEMPT_OPENING, { note: 'the exempt result' });
+item('statement.goodCauseOpening', S.STATEMENT_GOODCAUSE_OPENING, { note: 'the good cause result' });
+item('statement.otherOpening', S.STATEMENT_OTHER_OPENING, { note: 'any other result' });
+
+w('On the exempt letter, some reasons add a paragraph of their own, because each says something');
+w('the bulleted list cannot:');
+blank();
 ['statementHousingLead', 'statementHousingPicksLead', 'statementDisabilityOtherLead']
   .forEach(k => item(k, C[k]));
+item('statement.workIncomeLead', S.STATEMENT_WORK_INCOME_LEAD);
+item('statement.workHours30Lead', S.STATEMENT_WORK_HOURS_30_LEAD);
+
+w('Every letter ends this way:');
+blank();
+item('statement.closingRequest', S.STATEMENT_CLOSING_REQUEST, { note: 'on all four results' });
+item('statement.signOff', S.STATEMENT_SIGN_OFF);
+item('statement.printedNameLabel', S.STATEMENT_PRINTED_NAME_LABEL, { note: 'with a ruled line when no name was typed' });
+item('statement.dateSignedLabel', S.STATEMENT_DATE_SIGNED_LABEL);
 
 item('statement.docTitle', inline['statement.docTitle'], { note: 'the printed page title' });
-['formTitleExempt', 'formLeadExempt', 'formLeadGoodCause',
-  'formExplainHeading'].forEach(k => item(k, C[k]));
+['formTitleExempt', 'formLeadExempt', 'formLeadGoodCause', 'formSendAlternatives',
+  'formExplainHeading', 'formExplainHeadingGoodCause'].forEach(k => item(k, C[k]));
 
 /* The prompt above the writing box changes with the answers, so listing only one
  * would hide most of this copy from review. */
