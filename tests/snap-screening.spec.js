@@ -108,9 +108,9 @@ test.describe('SNAP ABAWD screening (the shipping build)', () => {
     await choice(page, 'stateagency', 3).click();       // MA Commission for the Blind
     await skipToResults(page);
     await expect(page.getByRole('heading', { name: EXEMPT_HEADING })).toBeVisible();
-    const item = page.locator('li', { hasText: /I get services from a state agency/ }).first();
-    await expect(item.locator('li', { hasText: /Dept\. of Mental Health/ })).toBeVisible();
-    await expect(item.locator('li', { hasText: /Commission for the Blind/ })).toBeVisible();
+    /* Flat since 2026-08-06: one reason per agency, not a nest under a collapsed one. */
+    await expect(page.getByText('I get services from the Dept. of Mental Health')).toBeVisible();
+    await expect(page.getByText('I get services from the MA Commission for the Blind')).toBeVisible();
   });
 
   /* The housing follow-up answers are echoed back on the results page as sub-bullets under

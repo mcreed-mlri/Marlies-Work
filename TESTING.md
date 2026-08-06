@@ -88,12 +88,12 @@ work rules when they do not have to.
 The disability question takes more than one answer. Each of these on its own should give the
 exempt result.
 
-- [ ] "EAEDC" alone → exempt, listing: I get disability benefits
-- [ ] "Veteran’s disability benefit" alone → exempt, listing: I get disability benefits
-- [ ] "Workers’ compensation" alone → exempt, listing: I get disability benefits
-- [ ] "Paid Family Medical Leave" alone → exempt, listing: I get disability benefits
-- [ ] "Short-term disability" alone → exempt, listing: I get disability benefits
-- [ ] "SSI or SSDI" alone → exempt, listing: I get disability benefits
+- [ ] "EAEDC" alone → exempt, listing: I get EAEDC
+- [ ] "Veteran’s disability benefit" alone → exempt, listing: I get veteran’s disability benefits
+- [ ] "Workers’ compensation" alone → exempt, listing: I get workers’ compensation
+- [ ] "Paid Family Medical Leave" alone → exempt, listing: I am on Paid Family Medical Leave
+- [ ] "Short-term disability" alone → exempt, listing: I get short-term disability benefits
+- [ ] "SSI or SSDI" alone → exempt, listing: I get SSI or SSDI
 - [ ] "Other disability benefit or payment" alone → exempt, listing: I get another disability benefit or payment DTA should review
 - [ ] "None of the above" alone → **not** exempt on its own.
 - [ ] A named benefit **and** "Other" together → the letter lists both `EAEDC` style reasons, not just one.
@@ -111,11 +111,11 @@ list itself, so the tool knows which agency, and the separate Yes/No pair is gon
 it is no longer a yes/no it is absent from the table above, which is why it has its own
 section: the checklist would otherwise never have you test it at all.
 
-- [ ] "MassAbility (formerly Mass Rehab Commission)" alone → exempt, listing: I get services from a state agency
-- [ ] "Dept. of Mental Health" alone → exempt, listing: I get services from a state agency
-- [ ] "Dept. of Developmental Services" alone → exempt, listing: I get services from a state agency
-- [ ] "MA Commission for the Blind" alone → exempt, listing: I get services from a state agency
-- [ ] "MA Commission for Deaf and Hard of Hearing" alone → exempt, listing: I get services from a state agency
+- [ ] "MassAbility (formerly Mass Rehab Commission)" alone → exempt, listing: I get services from MassAbility (formerly Mass Rehab Commission)
+- [ ] "Dept. of Mental Health" alone → exempt, listing: I get services from the Dept. of Mental Health
+- [ ] "Dept. of Developmental Services" alone → exempt, listing: I get services from the Dept. of Developmental Services
+- [ ] "MA Commission for the Blind" alone → exempt, listing: I get services from the MA Commission for the Blind
+- [ ] "MA Commission for Deaf and Hard of Hearing" alone → exempt, listing: I get services from the MA Commission for Deaf and Hard of Hearing
 - [ ] "No" → **not** exempt.
 - [ ] Nothing ticked at all → **not** exempt.
 

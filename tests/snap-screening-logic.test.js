@@ -262,14 +262,23 @@ describe('snap-screening-logic', () => {
       assert.equal(classic2.resultType({}), 'notexempt');
     });
 
-    it('records the ticked agencies under the reason, in option order', () => {
-      const e = classic2.exemptReasonEntries({ stateagency: ['mcdhh', 'massability'] })
-        .find(x => x.id === 'stateagency');
-      assert.ok(e, 'expected a state agency reason');
-      assert.deepEqual(e.subItems, [
-        'MassAbility (formerly Mass Rehab Commission)',
-        'MA Commission for Deaf and Hard of Hearing'
+    it('records one reason per agency ticked, in option order', () => {
+      const e = classic2.exemptReasonEntries({ stateagency: ['mcdhh', 'massability'] });
+      assert.deepEqual(e.map(x => x.id), ['stateagency:massability', 'stateagency:mcdhh']);
+      assert.deepEqual(e.map(x => x.text), [
+        'I get services from MassAbility (formerly Mass Rehab Commission)',
+        'I get services from the MA Commission for Deaf and Hard of Hearing'
       ]);
+      // Flat, not nested: each agency is a reason someone is exempt in its own right.
+      assert.ok(e.every(x => !x.subItems));
+    });
+
+    /* The email endpoint is handed ids and looks the words up server-side, so an id the
+     * catalogue does not know is a reason that silently vanishes from someone's summary. */
+    it('every per-agency id resolves for the email endpoint', () => {
+      const e = classic2.exemptReasonEntries({ stateagency: ['massability', 'dmh', 'dds', 'mcb', 'mcdhh'] });
+      assert.equal(e.length, 5);
+      assert.deepEqual(resolveReasonIds(e.map(x => x.id)), e.map(x => x.text));
     });
 
     /* The agency was the Massachusetts Rehabilitation Commission until 2024, and someone whose
@@ -291,49 +300,54 @@ describe('snap-screening-logic', () => {
   });
 
   describe('the disability benefits ticked', () => {
-    it('show under the named-benefit reason', () => {
-      const e = classic2.exemptReasonEntries({ disability: ['ssi_ssdi', 'eaedc'] })
-        .find(x => x.id === 'disability');
-      assert.deepEqual(e.subItems, ['EAEDC', 'SSI or SSDI']);
+    it('each become their own reason, in option order', () => {
+      const e = classic2.exemptReasonEntries({ disability: ['ssi_ssdi', 'eaedc'] });
+      assert.deepEqual(e.map(x => x.id), ['disability:eaedc', 'disability:ssi_ssdi']);
+      assert.deepEqual(e.map(x => x.text), ['I get EAEDC', 'I get SSI or SSDI']);
+      assert.ok(e.every(x => !x.subItems));
     });
 
-    /* "Other" has its own reason and its own write-in prompt. Listing it here too would have
-     * someone explain it once and see it twice. */
-    it('leave Other out, since it is its own reason', () => {
-      const entries = classic2.exemptReasonEntries({ disability: ['eaedc', 'other'] });
-      const named = entries.find(x => x.id === 'disability');
-      assert.deepEqual(named.subItems, ['EAEDC']);
-      assert.ok(entries.some(x => x.id === 'disabilityOther'));
+    /* "Other" keeps the disabilityOther id rather than gaining a second id for the same
+     * sentence, and it is the one that carries a write-in prompt. */
+    it('Other keeps its own id and reason', () => {
+      const e = classic2.exemptReasonEntries({ disability: ['eaedc', 'other'] });
+      assert.deepEqual(e.map(x => x.id), ['disability:eaedc', 'disabilityOther']);
+      assert.equal(e[1].text, DISABILITY_OTHER_REASON);
+      assert.ok(!REASON_TEXT_BY_ID['disability:other'], 'one id per sentence, not two');
     });
 
-    it('Other on its own produces no sub-items to show', () => {
-      const entries = classic2.exemptReasonEntries({ disability: ['other'] });
-      assert.ok(!entries.some(x => x.id === 'disability'));
-      assert.ok(entries.some(x => x.id === 'disabilityOther'));
+    it('every per-benefit id resolves for the email endpoint', () => {
+      const e = classic2.exemptReasonEntries({
+        disability: ['eaedc', 'veteran', 'workers_comp', 'pfml', 'std', 'ssi_ssdi', 'other']
+      });
+      assert.equal(e.length, 7);
+      assert.deepEqual(resolveReasonIds(e.map(x => x.id)), e.map(x => x.text));
     });
   });
 
-  it('the letter nests the ticked specifics inside their reason', () => {
-    const a = { disability: ['eaedc'], stateagency: ['dmh'] };
-    const map = classic2.exemptReasonEntries(a).reduce((m, e) => {
+  /* Only the housing follow-up nests now. Its answers are not reasons anyone is exempt: they
+   * are facts DTA weighs, and a diploma or a steady job can point against the person, so as
+   * peer bullets under "for the following reason(s)" they would misstate the claim. */
+  it('the letter nests only the housing follow-up, and lists the rest flat', () => {
+    const a = { disability: ['eaedc'], stateagency: ['dmh'], housing: 'no', housingFollowup: ['diploma'] };
+    const entries = classic2.exemptReasonEntries(a);
+    const map = entries.reduce((m, e) => {
       if (e.subItems && e.subItems.length) m[e.text] = e.subItems;
       return m;
     }, {});
-    const html = SnapScreening.buildStatementHTML({
-      rt: classic2.resultType(a), rs: classic2.exemptReasons(a), subItemsByReason: map
-    });
-    // Nested, not a sibling bullet: the specifics must sit inside the reason's own list item.
-    assert.ok(html.includes(REASON_TEXT_BY_ID.disability + '<ul style="margin:6px 0 0;padding-left:22px"><li style="margin:0 0 4px">EAEDC</li>'));
-    assert.ok(html.includes(REASON_TEXT_BY_ID.stateagency + '<ul style="margin:6px 0 0;padding-left:22px"><li style="margin:0 0 4px">Dept. of Mental Health</li>'));
-  });
+    assert.deepEqual(Object.keys(map), [REASON_TEXT_BY_ID.housing], 'housing is the only nest');
 
-  it('a letter built without subItemsByReason still builds', () => {
-    const a = { disability: ['eaedc'] };
     const html = SnapScreening.buildStatementHTML({
-      rt: classic2.resultType(a), rs: classic2.exemptReasons(a)
+      rt: classic2.resultType(a), rs: classic2.exemptReasons(a), subItemsByReason: map,
+      /* The housing reason is a special in the letter: excluded from the bullet list and
+         rendered as its own paragraph, which takes the picks through housingPicks rather than
+         subItemsByReason. Two mechanisms for the same answers, which is worth knowing. */
+      housingPicks: classic2.housingFollowupLabels(a),
+      explain: classic2.statementPrompts(a).map(pr => ({ prompt: pr, text: '' }))
     });
-    assert.ok(html.includes(REASON_TEXT_BY_ID.disability));
-    assert.ok(!/EAEDC/.test(html));
+    assert.ok(html.includes('<li style="margin:0 0 6px">I get EAEDC</li>'), 'benefit is a flat bullet');
+    assert.ok(html.includes('<li style="margin:0 0 6px">I get services from the Dept. of Mental Health</li>'));
+    assert.ok(html.includes('high school diploma'), 'the follow-up answer still reaches the letter');
   });
 
   it('the substance use help says it covers drugs or alcohol', () => {

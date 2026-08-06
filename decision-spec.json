@@ -135,42 +135,42 @@
       "id": "eaedc",
       "label": "EAEDC",
       "reasons": [
-        "I get disability benefits"
+        "I get EAEDC"
       ]
     },
     {
       "id": "veteran",
       "label": "Veteran’s disability benefit",
       "reasons": [
-        "I get disability benefits"
+        "I get veteran’s disability benefits"
       ]
     },
     {
       "id": "workers_comp",
       "label": "Workers’ compensation",
       "reasons": [
-        "I get disability benefits"
+        "I get workers’ compensation"
       ]
     },
     {
       "id": "pfml",
       "label": "Paid Family Medical Leave",
       "reasons": [
-        "I get disability benefits"
+        "I am on Paid Family Medical Leave"
       ]
     },
     {
       "id": "std",
       "label": "Short-term disability",
       "reasons": [
-        "I get disability benefits"
+        "I get short-term disability benefits"
       ]
     },
     {
       "id": "ssi_ssdi",
       "label": "SSI or SSDI",
       "reasons": [
-        "I get disability benefits"
+        "I get SSI or SSDI"
       ]
     },
     {
@@ -648,7 +648,7 @@
       "expect": {
         "outcome": "exempt",
         "reasons": [
-          "I get disability benefits"
+          "I get SSI or SSDI"
         ]
       }
     },
@@ -766,7 +766,7 @@
       "expect": {
         "outcome": "exempt",
         "reasons": [
-          "I get services from a state agency"
+          "I get services from the Dept. of Mental Health"
         ]
       }
     },
@@ -781,7 +781,8 @@
       "expect": {
         "outcome": "exempt",
         "reasons": [
-          "I get services from a state agency"
+          "I get services from MassAbility (formerly Mass Rehab Commission)",
+          "I get services from the MA Commission for Deaf and Hard of Hearing"
         ]
       }
     },
@@ -808,8 +809,8 @@
       "expect": {
         "outcome": "exempt",
         "reasons": [
-          "I get disability benefits",
-          "I get services from a state agency"
+          "I get SSI or SSDI",
+          "I get services from the Dept. of Mental Health"
         ]
       }
     },

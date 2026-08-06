@@ -139,7 +139,7 @@ class WorkAndDisability(unittest.TestCase):
         answers = {"disability": ["ssi_ssdi", "other"]}
         self.assertEqual(
             snap_abawd.exempt_reasons(answers),
-            [snap_abawd.REASONS["disability"], snap_abawd.DISABILITY_OTHER_REASON],
+            [snap_abawd.DISABILITY_REASONS["ssi_ssdi"], snap_abawd.DISABILITY_OTHER_REASON],
         )
 
     def test_disability_none_sentinel_exempts_nobody(self):
@@ -178,7 +178,7 @@ class ReasonOrderIsStable(unittest.TestCase):
             [
                 snap_abawd.REASONS["child14"],
                 snap_abawd.REASONS["pregnant"],
-                snap_abawd.REASONS["disability"],
+                snap_abawd.DISABILITY_REASONS["ssi_ssdi"],
                 snap_abawd.HOUSING_EXEMPT_REASON,
                 snap_abawd.WORK_REASON_INCOME,
             ],

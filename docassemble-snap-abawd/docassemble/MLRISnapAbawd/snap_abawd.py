@@ -94,6 +94,28 @@ YES_NO_EXEMPTIONS = (
 DISABILITY_NAMED = ("eaedc", "veteran", "workers_comp", "pfml", "std", "ssi_ssdi")
 DISABILITY_OTHER = "other"
 
+# One reason per benefit ticked since 2026-08-06, in this order, replacing a single collapsed
+# "I get disability benefits". Order matters: the parity job compares the reason list against
+# decision-spec.json, and the JavaScript emits these in option order.
+DISABILITY_REASONS = {
+    "eaedc": "I get EAEDC",
+    "veteran": "I get veteran’s disability benefits",
+    "workers_comp": "I get workers’ compensation",
+    "pfml": "I am on Paid Family Medical Leave",
+    "std": "I get short-term disability benefits",
+    "ssi_ssdi": "I get SSI or SSDI",
+}
+
+# Likewise one per agency, replacing a collapsed "I get services from a state agency".
+STATE_AGENCY_ORDER = ("massability", "dmh", "dds", "mcb", "mcdhh")
+STATE_AGENCY_REASONS = {
+    "massability": "I get services from MassAbility (formerly Mass Rehab Commission)",
+    "dmh": "I get services from the Dept. of Mental Health",
+    "dds": "I get services from the Dept. of Developmental Services",
+    "mcb": "I get services from the MA Commission for the Blind",
+    "mcdhh": "I get services from the MA Commission for Deaf and Hard of Hearing",
+}
+
 # Housing follow-up options. These describe things suggesting someone can work, so
 # the logic below is inverted: lacking them is what points to an exemption.
 HOUSING_HEALTH = ("hospitalized", "ongoing_care")
@@ -146,16 +168,27 @@ def housing_unable_exempt(answers):
 
 
 def disability_reasons(answers):
-    """Reasons recorded for the disability question. Named benefits collapse to one."""
+    """One reason per benefit ticked, in option order.
+
+    The named benefits used to collapse into a single reason. Each is its own now, so the
+    letter says which benefit. "Other" keeps its separate reason: it is the one asking DTA
+    to review something the screening cannot classify.
+    """
     selected = _multi(answers, "disability")
     if selected == NONE or not selected:
         return []
-    out = []
-    if any(opt in selected for opt in DISABILITY_NAMED):
-        out.append(REASONS["disability"])
+    out = [DISABILITY_REASONS[opt] for opt in DISABILITY_NAMED if opt in selected]
     if DISABILITY_OTHER in selected:
         out.append(DISABILITY_OTHER_REASON)
     return out
+
+
+def state_agency_reasons(answers):
+    """One reason per agency ticked, in option order. Empty for "No" and for no answer."""
+    selected = _multi(answers, "stateagency")
+    if selected == NONE or not selected:
+        return []
+    return [STATE_AGENCY_REASONS[opt] for opt in STATE_AGENCY_ORDER if opt in selected]
 
 
 def is_income_work_exempt(answers):
@@ -189,8 +222,7 @@ def exempt_reasons(answers):
             out.append(REASONS[key])
     out.extend(disability_reasons(answers))
     # After the disability reasons, matching the order the JavaScript records them in.
-    if state_agency_exempt(answers):
-        out.append(REASONS["stateagency"])
+    out.extend(state_agency_reasons(answers))
     if housing_unable_exempt(answers):
         out.append(HOUSING_EXEMPT_REASON)
     if is_income_work_exempt(answers):

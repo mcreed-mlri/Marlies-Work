@@ -218,7 +218,7 @@ _Followed by a checklist of the reasons that applied. Every reason the tool can 
 - I am experiencing or have experienced domestic violence, stalking, sexual harassment, sexual assault, or another safety situation that makes it hard to work
 - I am an Alaska Native or member of a Tribe (or I am a child or grandchild of a member of a Tribe)
 - I get or am applying for TAFDC cash assistance
-- I get disability benefits
+- I get SSI or SSDI
 - I get another disability benefit or payment DTA should review
 - I am participating in a substance use treatment program
 - I get or am applying for unemployment benefits

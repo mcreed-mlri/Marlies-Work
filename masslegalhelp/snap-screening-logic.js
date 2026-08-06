@@ -98,21 +98,28 @@
    * history rather than as an alternative name: someone whose paperwork still says Mass
    * Rehab has to recognise it here. */
   const STATE_AGENCY_OPTION_DEFS = [
-    { id: 'massability', label: 'MassAbility (formerly Mass Rehab Commission)' },
-    { id: 'dmh', label: 'Dept. of Mental Health' },
-    { id: 'dds', label: 'Dept. of Developmental Services' },
-    { id: 'mcb', label: 'MA Commission for the Blind' },
-    { id: 'mcdhh', label: 'MA Commission for Deaf and Hard of Hearing' }
+    { id: 'massability', label: 'MassAbility (formerly Mass Rehab Commission)', reason: 'I get services from MassAbility (formerly Mass Rehab Commission)' },
+    { id: 'dmh', label: 'Dept. of Mental Health', reason: 'I get services from the Dept. of Mental Health' },
+    { id: 'dds', label: 'Dept. of Developmental Services', reason: 'I get services from the Dept. of Developmental Services' },
+    { id: 'mcb', label: 'MA Commission for the Blind', reason: 'I get services from the MA Commission for the Blind' },
+    /* "from", not "for". The author's draft had "for" on this one line and "from" on the other
+     * four; confirmed as a slip. */
+    { id: 'mcdhh', label: 'MA Commission for Deaf and Hard of Hearing', reason: 'I get services from the MA Commission for Deaf and Hard of Hearing' }
   ];
 
   const DISABILITY_OPTION_DEFS = [
-    { id: 'eaedc', label: 'EAEDC', exempt: true },
-    { id: 'veteran', label: 'Veteran\u2019s disability benefit', exempt: true },
-    { id: 'workers_comp', label: 'Workers\u2019 compensation', exempt: true },
-    { id: 'pfml', label: 'Paid Family Medical Leave', exempt: true },
-    { id: 'std', label: 'Short-term disability', exempt: true },
-    { id: 'ssi_ssdi', label: 'SSI or SSDI', exempt: true },
-    { id: 'other', label: 'Other disability benefit or payment', exempt: true, other: true }
+    /* `reason` is the sentence that reaches the results card and the letter, one per benefit
+     * since 2026-08-06. They used to collapse into a single "I get disability benefits", which
+     * left a caseworker unable to tell EAEDC from Workers' compensation. Each is the author's
+     * own wording rather than a prefix on the label: note "I am on Paid Family Medical Leave"
+     * where the others say "I get", and the plurals she added. */
+    { id: 'eaedc', label: 'EAEDC', exempt: true, reason: 'I get EAEDC' },
+    { id: 'veteran', label: 'Veteran\u2019s disability benefit', exempt: true, reason: 'I get veteran\u2019s disability benefits' },
+    { id: 'workers_comp', label: 'Workers\u2019 compensation', exempt: true, reason: 'I get workers\u2019 compensation' },
+    { id: 'pfml', label: 'Paid Family Medical Leave', exempt: true, reason: 'I am on Paid Family Medical Leave' },
+    { id: 'std', label: 'Short-term disability', exempt: true, reason: 'I get short-term disability benefits' },
+    { id: 'ssi_ssdi', label: 'SSI or SSDI', exempt: true, reason: 'I get SSI or SSDI' },
+    { id: 'other', label: 'Other disability benefit or payment', exempt: true, other: true, reason: DISABILITY_OTHER_REASON }
   ];
 
   const DISABILITY_OTHER_HELP = 'Choose Other only if you receive a disability benefit or payment that is not listed above. Tell DTA the name of the benefit or payment so they can review it.';
@@ -1137,14 +1144,18 @@
     return selectedLabels(answers, 'disability', questions, o => o.id !== 'other');
   }
 
+  /* One reason per benefit ticked, in option order, since 2026-08-06. The named benefits used
+   * to collapse into a single "I get disability benefits", which is what the author asked to
+   * change: the results card and the letter now say which benefit, so a caseworker does not
+   * have to ring to find out.
+   *
+   * "Other" keeps its own separate reason, as it always did, because it is the one that asks
+   * DTA to review something the screening cannot classify and it carries its own write-in
+   * prompt. */
   function disabilityReasons(answers) {
     const v = answers.disability;
     if (!Array.isArray(v) || !v.length) return [];
-    const hasStandardBenefit = DISABILITY_OPTION_DEFS.some(o => o.exempt && !o.other && v.includes(o.id));
-    const out = [];
-    if (hasStandardBenefit) out.push(REASONS.disability);
-    if (v.includes('other')) out.push(DISABILITY_OTHER_REASON);
-    return out;
+    return DISABILITY_OPTION_DEFS.filter(o => o.exempt && v.indexOf(o.id) !== -1).map(o => o.reason);
   }
 
   function isIncomeWorkExempt(answers) {
@@ -1190,6 +1201,26 @@
     workHours30: WORK_REASON_HOURS_30
   };
 
+  /* Per-selection ids, added 2026-08-06 when the disability benefits and the state agencies
+   * stopped collapsing into one reason each. Built from the option definitions rather than
+   * typed out, so a new benefit or agency cannot arrive without an id.
+   *
+   * This map is what resolveReasonIds reads, and that is what the email endpoint uses: the
+   * browser sends ids and the server looks up the words, so an id the map does not know is a
+   * reason that silently vanishes from someone's emailed summary. A test asserts that every id
+   * exemptReasonEntriesFor can emit resolves through here.
+   *
+   * "Other" is absent on purpose: it keeps the disabilityOther id above, so its sentence has
+   * one id rather than two. The collapsed `disability` and `stateagency` entries above stay
+   * for the archived yes/no variants, which still record them. */
+  DISABILITY_OPTION_DEFS.forEach(o => {
+    if (o.other) return;
+    REASON_TEXT_BY_ID['disability:' + o.id] = o.reason;
+  });
+  STATE_AGENCY_OPTION_DEFS.forEach(o => {
+    REASON_TEXT_BY_ID['stateagency:' + o.id] = o.reason;
+  });
+
   /**
    * The exempt reasons that apply, as `{ id, text }`.
    *
@@ -1206,29 +1237,32 @@
       const v = answers[q.id];
       if (q.exemptOn && v === q.exemptOn) r.push({ id: q.id, text: q.reason });
     }
-    const dis = disabilityReasons(answers);
-    /* Sub-items on the named-benefit reason: the author asked for the ticked benefits to show
-     * on the results page. The reason text says only that someone gets a disability-based
-     * benefit, so without these DTA cannot tell EAEDC from Workers' compensation. */
-    if (dis.indexOf(REASONS.disability) !== -1) {
-      r.push({
-        id: 'disability',
-        text: REASON_TEXT_BY_ID.disability,
-        subItems: disabilityNamedLabels(answers, qs)
-      });
-    }
-    if (dis.indexOf(DISABILITY_OTHER_REASON) !== -1) add('disabilityOther');
-    /* Only fires for the classic2 checkbox form; the archived yes/no variants are picked up by
-     * the generic loop above and carry no sub-items, having no ids to carry. */
+    /* One entry per benefit ticked, and one per agency. Flat, not nested, because each of these
+     * is a reason someone is exempt in its own right: "I get EAEDC" and "I get services from
+     * the Dept. of Mental Health" each stand alone.
+     *
+     * The housing follow-up below is deliberately not like this and stays nested. Those answers
+     * are not reasons anyone is exempt; they are facts DTA weighs, and two of them, a diploma
+     * and a steady job, can point against the person. Promoted to peer bullets under "for the
+     * following reason(s)" they would have the letter claim something it does not mean.
+     *
+     * Ids are namespaced per option so resolveReasonIds can resolve them for the email
+     * endpoint, which does not trust the browser for the words it sends. "Other" keeps its
+     * existing disabilityOther id rather than gaining a second one for the same sentence. */
+    DISABILITY_OPTION_DEFS.forEach(o => {
+      if (!o.exempt || disabilityReasons(answers).indexOf(o.reason) === -1) return;
+      r.push({ id: o.other ? 'disabilityOther' : 'disability:' + o.id, text: o.reason });
+    });
+    /* Only the classic2 checkbox form reaches here. The archived yes/no variants are picked up
+     * by the generic loop above, which records the collapsed reason they have always had. */
     if (stateAgencyExempt(answers)) {
-      r.push({
-        id: 'stateagency',
-        text: REASON_TEXT_BY_ID.stateagency,
-        subItems: stateAgencyLabels(answers, qs)
+      const picked = answers.stateagency;
+      STATE_AGENCY_OPTION_DEFS.forEach(o => {
+        if (picked.indexOf(o.id) === -1) return;
+        r.push({ id: 'stateagency:' + o.id, text: o.reason });
       });
     }
-    /* The housing reason is the only one that carries sub-items: the follow-up question
-     * is the only place someone ticks several specifics under one exemption. */
+    /* The housing reason is the only one that carries sub-items; see the note above for why. */
     if (housingUnableExempt(answers)) {
       r.push({
         id: 'housing',

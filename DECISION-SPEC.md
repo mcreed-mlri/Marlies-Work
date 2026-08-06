@@ -73,15 +73,15 @@ to review it.
 
 | Option | Label | Reason recorded | Citation |
 |---|---|---|---|
-| `eaedc` | EAEDC | I get disability benefits | |
-| `veteran` | Veteran’s disability benefit | I get disability benefits | |
-| `workers_comp` | Workers’ compensation | I get disability benefits | |
-| `pfml` | Paid Family Medical Leave | I get disability benefits | |
-| `std` | Short-term disability | I get disability benefits | |
-| `ssi_ssdi` | SSI or SSDI | I get disability benefits | |
+| `eaedc` | EAEDC | I get EAEDC | |
+| `veteran` | Veteran’s disability benefit | I get veteran’s disability benefits | |
+| `workers_comp` | Workers’ compensation | I get workers’ compensation | |
+| `pfml` | Paid Family Medical Leave | I am on Paid Family Medical Leave | |
+| `std` | Short-term disability | I get short-term disability benefits | |
+| `ssi_ssdi` | SSI or SSDI | I get SSI or SSDI | |
 | `other` | Other disability benefit or payment | I get another disability benefit or payment DTA should review | |
 
-Selecting a named benefit and "other" together records both reasons: I get disability benefits; I get another disability benefit or payment DTA should review.
+Selecting a named benefit and "other" together records both reasons: I get SSI or SSDI; I get another disability benefit or payment DTA should review.
 
 ## Housing, and the unable-to-work follow-up
 
@@ -227,7 +227,7 @@ these double as test cases; the JSON carries them in a form a test generator can
 | Lives with a child under 14 | `exempt` | I live with a child under 14 who should be part of my SNAP case |
 | Earns $217.50 a week or more | `exempt` | I earn enough money from work to be exempt from the work rules |
 | 30+ hours below minimum wage | `exempt` | I work 30 or more hours a week while earning less than minimum wage |
-| Gets SSI or SSDI | `exempt` | I get disability benefits |
+| Gets SSI or SSDI | `exempt` | I get SSI or SSDI |
 | Other disability payment only | `exempt` | I get another disability benefit or payment DTA should review |
 | No place to sleep, no diploma | `exempt` | I do not have a regular place to sleep |
 | No place to sleep, diploma and steady job | `notexempt` | *none* |
@@ -236,10 +236,10 @@ these double as test cases; the JSON carries them in a form a test generator can
 | Several exemptions at once | `exempt` | I live with a child under 14 who should be part of my SNAP case; I am pregnant; I earn enough money from work to be exempt from the work rules |
 | No exemption, transport problem | `goodcause` | *none* |
 | No exemption, no good cause | `notexempt` | *none* |
-| Services from one state agency | `exempt` | I get services from a state agency |
-| Services from two state agencies | `exempt` | I get services from a state agency |
+| Services from one state agency | `exempt` | I get services from the Dept. of Mental Health |
+| Services from two state agencies | `exempt` | I get services from MassAbility (formerly Mass Rehab Commission); I get services from the MA Commission for Deaf and Hard of Hearing |
 | State agencies answered No | `notexempt` | *none* |
-| A disability benefit and a state agency together | `exempt` | I get disability benefits; I get services from a state agency |
+| A disability benefit and a state agency together | `exempt` | I get SSI or SSDI; I get services from the Dept. of Mental Health |
 | Not 18 through 64 | `ageexempt` | *none* |
 | Is 18 through 64, nothing else answered | `notexempt` | *none* |
 | Not 18 through 64, and other exemptions answered | `ageexempt` | I am pregnant |
