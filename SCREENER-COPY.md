@@ -224,11 +224,7 @@ Help text, shown when someone opens the explainer:
 
 **`q.working`**  (Pick one)
 
-> Are you currently working for pay?
-
-Help text, shown when someone opens the explainer:
-
-> Choose the option that applies to you.
+> Are you currently working for pay? Choose the option that applies to you.
 
 Options:
 
@@ -239,11 +235,9 @@ Options:
 
 **`q.tribe`**  (Yes / No; "yes" points to an exemption)
 
-> Are you an Alaska native or a member of an American Indian, Urban Indian, or California Indian tribe?
+> Are you, or is your parent or grandparent, an Alaska native or a member of an American Indian, Urban Indian, or California Indian tribe?
 
-Help text, shown when someone opens the explainer:
-
-> Choose “Yes” if you have a parent or grandparent who is a member of one of these tribes.
+> **Question for you:** Applied, and it raises something in the letter. Moving "or is your parent or grandparent" into the question means many more people answer Yes, including people who are not themselves Alaska Native and not themselves enrolled. The reason we record for them still reads "Alaska Native or member of a Tribe", and that reason is printed as a bullet in the letter they sign and send to DTA, so it has them state something about themselves that may not be true. The old help text had the same scope, so this is not new, but it was easy to miss before and will not be now. Suggested wording for the reason: "Alaska Native or Tribe member, including through a parent or grandparent." Your call, and we have not changed it.
 
 ## 3. The good cause question
 

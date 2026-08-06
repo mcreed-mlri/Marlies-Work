@@ -40,6 +40,8 @@ const OPEN = {
   formTitleExempt: 'If the good cause heading goes, should this matching one go too?',
   formLeadExempt: 'Your doc says "fill out this form" where this says "fill in the blanks below." Change it?',
   exemptReasonsIntro: 'Already applied: emptied, because the heading above now ends with "because of these reasons:" and this said it a second time.',
+  'q.tribe': 'Applied, and it raises something in the letter. Moving "or is your parent or grandparent" into the question means many more people answer Yes, including people who are not themselves Alaska Native and not themselves enrolled. The reason we record for them still reads "Alaska Native or member of a Tribe", and that reason is printed as a bullet in the letter they sign and send to DTA, so it has them state something about themselves that may not be true. The old help text had the same scope, so this is not new, but it was easy to miss before and will not be now. Suggested wording for the reason: "Alaska Native or Tribe member, including through a parent or grandparent." Your call, and we have not changed it.',
+  'reason.tribe': 'See the note on the tribe question above. This is the wording that appears on the results screen and as a bullet in the signed letter.',
 };
 
 /* ---- Strings inline in the page markup. Each must match exactly once. ---- */

@@ -169,18 +169,14 @@ This includes high school, vocational/technical school, college, or any educatio
 - Yes
 - No
 
-**Are you currently working for pay?**
-
-Choose the option that applies to you.
+**Are you currently working for pay? Choose the option that applies to you.**
 
 - Yes, I am making $217.50 a week or more (before taxes)
 - Yes, I am working at least 14.5 hours a week at $15 or more an hour
 - Yes, I am working 30 hours or more a week (I make less than minimum wage)
 - None of the above
 
-**Are you an Alaska native or a member of an American Indian, Urban Indian, or California Indian tribe?**
-
-Choose “Yes” if you have a parent or grandparent who is a member of one of these tribes.
+**Are you, or is your parent or grandparent, an Alaska native or a member of an American Indian, Urban Indian, or California Indian tribe?**
 
 - Yes
 - No

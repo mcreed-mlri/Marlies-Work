@@ -238,7 +238,13 @@
         text: 'Has a domestic violence or safety situation made it hard for you to work?',
         helpHtml: 'This includes stalking, harassment, abuse, assault, or any health/safety concerns that make it hard for you to work. DTA has domestic violence specialists in each local office who can help. Find their <a href="' + LINKS.dvServices + '" target="_blank" rel="noopener">contact info here</a>. Your answer stays private.'
       },
-      tribe: { text: 'Are you an Alaska native or a member of an American Indian, Urban Indian, or California Indian tribe?', help: 'Choose “Yes” if you have a parent or grandparent who is a member of one of these tribes.' },
+      /* The parent-or-grandparent case moved from the help text into the question on
+       * 2026-08-06. It was the whole substance of that help: someone whose grandparent is
+       * enrolled but who is not themselves had to open a disclosure to find out the answer
+       * was Yes, and anyone who did not open it answered No and lost the exemption. A
+       * question that states its own scope needs no disclosure, so the help is gone rather
+       * than kept alongside it. */
+      tribe: { text: 'Are you, or is your parent or grandparent, an Alaska native or a member of an American Indian, Urban Indian, or California Indian tribe?' },
       tafdc: { text: 'Do you get, or are you applying for TAFDC cash assistance benefits?' },
       disability: { text: 'Do you get any of these disability benefits?', noneLabel: 'None of the above' },
       substanceUse: { text: 'Are you participating in a substance use treatment program?', help: 'This can be for drugs or alcohol. It does not have to be a daily program.' },
@@ -261,7 +267,12 @@
         text: 'Are you enrolled in school half-time or more?',
         help: 'This includes high school, vocational/technical school, college, or any education and training program. You can ask your school if you\'re unsure if you are enrolled half-time or more.'
       },
-      working: { text: 'Are you currently working for pay?', help: 'Choose the option that applies to you.', noneLabel: 'None of the above' }
+      /* "Choose the option that applies to you." was help text behind a "What does this
+       * mean?" disclosure. The author folded it into the question on 2026-08-06 and asked for
+       * the disclosure to go with it: it is an instruction about how to answer rather than an
+       * explanation of anything, so hiding it behind a click put it where the person who
+       * needed it was least likely to look. */
+      working: { text: 'Are you currently working for pay? Choose the option that applies to you.', noneLabel: 'None of the above' }
     }
   };
 
