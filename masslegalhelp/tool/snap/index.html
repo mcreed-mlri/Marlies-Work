@@ -1302,6 +1302,9 @@ function renderResults(){
         <p style="font-size:15px;line-height:1.55;color:var(--prose);margin:0">${esc(formLead)}</p>
         ${hintTip('why-info', C.whyInfoLabel, whyInfo, true)}
       </div>
+      <!-- Inside the header band with the lead, not down in the body: someone who would rather
+           write by hand should find that out before working through the blanks, not after. -->
+      <p style="font-size:15px;line-height:1.55;color:var(--prose);margin:10px 0 0">${esc(C.formSendAlternatives)}</p>
       </div>
       <div style="padding:20px">
       ${renderPrivacyCallout('18px')}

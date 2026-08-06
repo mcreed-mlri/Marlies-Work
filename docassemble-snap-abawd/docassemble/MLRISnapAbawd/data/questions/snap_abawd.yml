@@ -240,11 +240,11 @@ subquestion: |
   * ${ reason }
   % endfor
 
-  To tell DTA you are exempt, you can fill in the blanks below with your results and send it to DTA.
+  To tell DTA you are exempt, you can use the tool below to create a written statement with your results. Fill in the blanks, save or print a copy, and send it to DTA.
   % elif outcome == 'goodcause':
   This includes missing work, school, or volunteer hours before or after your start date.
 
-  To tell DTA why you missed work hours, you can fill in the blanks below with your results and send it to DTA.
+  To tell DTA why you missed work hours, you can use the tool below to create a written statement with your results. Fill in the blanks, save or print a copy, and send it to DTA.
   % else:
   Based on your responses, you may not be exempt from the ABAWD work rules.
 

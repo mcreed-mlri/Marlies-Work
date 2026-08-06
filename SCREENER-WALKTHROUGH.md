@@ -299,7 +299,7 @@ _The results screen says:_
 
 > Tell DTA that you are exempt as soon as you can.
 
-> To tell DTA you are exempt, you can fill in the blanks below with your results and send it to DTA.
+> To tell DTA you are exempt, you can use the tool below to create a written statement with your results. Fill in the blanks, save or print a copy, and send it to DTA.
 
 > **Your information is private.** MLRI will not save any personal information you share on this form.
 
@@ -309,7 +309,7 @@ _Then a heading, and under it one empty box for each thing that needs explaining
 
 _Which boxes appear depends on why the person came out exempt. All of the prompts:_
 
-- Explain your reasons in your own words
+- Explain your situation in your own words (optional)
 - Explain the health reason that makes it hard for you to work 30 or more hours a week
 - Explain your caretaking responsibilities or arrangement
 - Explain your caretaking arrangement for the child under 6
@@ -784,7 +784,7 @@ Date signed: August 1, 2026
 
 _In Version A, the same person sees one empty box instead, under:_
 
-- Explain your reasons in your own words
+- Explain your situation in your own words (optional)
 
 ## Where the multiple-choice version is worse
 

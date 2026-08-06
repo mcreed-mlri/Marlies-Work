@@ -354,7 +354,7 @@ Four results are possible. This block appears on more than one of them.
 
 **`printLead`**
 
-> Download or print these results to get a signed letter you can send to DTA. (More info on how to contact DTA in the box below)
+> Download or print these results to get a signed letter you can send to DTA.
 
 **`lostSnapIntro`**
 
@@ -578,13 +578,13 @@ pointed at a list of options that does not appear anywhere in the letter.
 
 **`formLeadExempt`**
 
-> To tell DTA you are exempt, you can fill in the blanks below with your results and send it to DTA.
+> To tell DTA you are exempt, you can use the tool below to create a written statement with your results. Fill in the blanks, save or print a copy, and send it to DTA.
 
-> **Question for you:** Your doc says "fill out this form" where this says "fill in the blanks below." Change it?
+> **Question for you:** Resolved 2026-08-06 by your own rewrite: it now says the tool creates a written statement, then what to do with it. A new line beside it, formSendAlternatives, says the form is not the only route, so someone who would rather write by hand learns that before working through the blanks.
 
 **`formLeadGoodCause`**
 
-> To tell DTA why you missed work hours, you can fill in the blanks below with your results and send it to DTA.
+> To tell DTA why you missed work hours, you can use the tool below to create a written statement with your results. Fill in the blanks, save or print a copy, and send it to DTA.
 
 **`formExplainHeading`**
 
@@ -593,7 +593,7 @@ pointed at a list of options that does not appear anywhere in the letter.
 The prompt above the box someone writes in depends on why they came out exempt.
 All of them:
 
-- Explain your reasons in your own words
+- Explain your situation in your own words (optional)
 - Explain where you sleep and any barriers that make it hard to work
 - Explain your work hours, pay, and what proof you can send to DTA
 - Name the disability benefit or payment you receive
@@ -1138,6 +1138,10 @@ anywhere that it is not legal advice.
 
 These are shown to people too, but did not fit the sections above. Listed so the
 document stays complete.
+
+**`formSendAlternatives`**
+
+> You can also handwrite a statement and send it to DTA by uploading it to your DTAConnect account, mailing it, or dropping it off at a DTA Office. (More on how to contact DTA in the box below.)
 
 **`btnNext`**
 

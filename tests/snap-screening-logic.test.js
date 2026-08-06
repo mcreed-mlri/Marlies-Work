@@ -744,7 +744,13 @@ describe('snap-screening-logic', () => {
     assert.match(RESULT_COPY.printFormLabel, /^Print or save this form$/);
     assert.match(RESULT_COPY.downloadWordLabel, /^Download as Word$/);
     assert.match(RESULT_COPY.savingTipsBody, /Save as PDF/);
-    assert.match(RESULT_COPY.printLead, /\(More info on how to contact DTA in the box below\)$/);
+    /* The parenthetical came off on 2026-08-06: formSendAlternatives says it a few lines above
+       on the same screen. Asserted as absent so it does not drift back in and appear twice. */
+    assert.doesNotMatch(RESULT_COPY.printLead, /More info on how to contact DTA/);
+    assert.match(RESULT_COPY.formSendAlternatives, /More on how to contact DTA in the box below/);
+    assert.match(RESULT_COPY.formSendAlternatives, /handwrite a statement/);
+    assert.match(RESULT_COPY.formLeadExempt, /^To tell DTA you are exempt, you can use the tool below/);
+    assert.match(RESULT_COPY.formLeadGoodCause, /use the tool below to create a written statement/);
     assert.match(RESULT_COPY.whyInfoLabel, /^Why are we asking for more information\?$/);
     /* Different sentences since 2026-08-06. They were identical, which put "why you missed
        hours" on the exempt screen, where the person had no hours to miss. Asserted as a pair so

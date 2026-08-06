@@ -357,7 +357,11 @@
    * explaining. Reasons not listed here (pregnant, TAFDC, unemployment, and so
    * on) speak for themselves and get no blank. */
   const STATEMENT_PROMPT_GOODCAUSE = 'Explain why you had to miss work, school, or volunteer hours';
-  const STATEMENT_PROMPT_FALLBACK = 'Explain your reasons in your own words';
+  /* "situation", not "reasons", and marked optional, 2026-08-06. This is the box someone gets
+   * when their exemption needs no specific detail, pregnancy being the clearest case, so it was
+   * asking them to justify something that speaks for itself. Saying it is optional is the honest
+   * version: they can sign and send with it empty. */
+  const STATEMENT_PROMPT_FALLBACK = 'Explain your situation in your own words (optional)';
 
   const STATEMENT_PROMPTS = [
     { reason: REASONS.health, prompt: 'Explain the health reason that makes it hard for you to work 30 or more hours a week' },
@@ -1461,7 +1465,10 @@
     statementHousingLead: 'I do not have a regular place to sleep. Please review whether I am unable to work under the ABAWD work rules.',
     statementHousingPicksLead: 'The following is also true for me:',
     statementDisabilityOtherLead: 'I receive a disability benefit or payment. Please review it when you decide whether I am exempt from the ABAWD work rules.',
-    printLead: 'Download or print these results to get a signed letter you can send to DTA. (More info on how to contact DTA in the box below)',
+    /* The parenthetical "(More info on how to contact DTA in the box below)" came off on
+     * 2026-08-06: formSendAlternatives now says the same thing a few lines above, and saying it
+     * twice on one screen reads as padding. */
+    printLead: 'Download or print these results to get a signed letter you can send to DTA.',
     exemptHeading: EXEMPT_HEADING_TEXT,
     /* Emptied 2026-07-30 at the author's direction. The exempt heading now ends
      * with "because of these reasons:", so this sentence said it twice. Kept as
@@ -1518,8 +1525,16 @@
     goodCauseInNotExemptBody: 'Tell DTA as soon as possible if you couldn\u2019t meet the work rules for one or more months because of an unexpected life situation like temporary transportation issues, a personal or family emergency, or employment issues.',
     goodCauseInNotExemptLink: 'Learn more here',
     formTitleExempt: 'Tell DTA that you are exempt as soon as you can.',
-    formLeadExempt: 'To tell DTA you are exempt, you can fill in the blanks below with your results and send it to DTA.',
-    formLeadGoodCause: 'To tell DTA why you missed work hours, you can fill in the blanks below with your results and send it to DTA.',
+    /* Rewritten 2026-08-06. "Fill in the blanks below with your results and send it to DTA" made
+     * the form sound like the only route, and named the mechanism before saying what it produces.
+     * These now say what the tool makes, then what to do with it. This also settles the open
+     * question about "fill out this form" versus "fill in the blanks below". */
+    formLeadExempt: 'To tell DTA you are exempt, you can use the tool below to create a written statement with your results. Fill in the blanks, save or print a copy, and send it to DTA.',
+    formLeadGoodCause: 'To tell DTA why you missed work hours, you can use the tool below to create a written statement with your results. Fill in the blanks, save or print a copy, and send it to DTA.',
+    /* The form is not the only way, and saying so belongs here rather than in the contact panel
+     * further down: someone who cannot use the tool, or would rather write by hand, should learn
+     * that before working through the blanks and not after. */
+    formSendAlternatives: 'You can also handwrite a statement and send it to DTA by uploading it to your DTAConnect account, mailing it, or dropping it off at a DTA Office. (More on how to contact DTA in the box below.)',
     formExplainHeading: 'In a few sentences:',
     btnNext: 'Next →',
     btnSeeResults: 'See my results →',
