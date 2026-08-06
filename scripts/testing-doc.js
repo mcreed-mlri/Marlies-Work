@@ -135,11 +135,14 @@ S.DISABILITY_OPTION_DEFS.forEach(o => {
 check('"' + strip(A.qById('disability').noneLabel) + '" alone → **not** exempt on its own.');
 check('A named benefit **and** "Other" together → the letter lists both ' + `\`${S.DISABILITY_OPTION_DEFS.find(o => !o.other && o.exempt).label}\`` + ' style reasons, not just one.');
 blank();
-w('**The ticked benefits are echoed back**, from 2026-08-06. Tick two and check both places:');
+w('**Each ticked benefit is its own reason**, from 2026-08-06. They used to collapse into one');
+w('"I get disability benefits" line, which left a caseworker unable to tell EAEDC from');
+w('workers compensation. Tick two and check both places:');
 blank();
-check('On the results page they appear as indented sub-bullets under "' + strip(S.REASON_TEXT_BY_ID.disability) + '", not as separate exemptions with their own ticks.');
-check('In the printed letter they are nested under that same reason.');
-check('**"Other" is not one of them.** It has its own reason and its own write-in box, so it should appear as a reason in its own right and not also as a sub-bullet. Tick a named benefit and "Other" together to see it.');
+check('On the results page each appears as its own ticked reason, flat, not indented under a parent line.');
+check('In the printed letter each is its own bullet.');
+check('The order follows the order of the options on the question, not the order you ticked them.');
+check('**"Other" reads differently from the rest.** It is the one asking DTA to review something, so it should say "' + strip(S.DISABILITY_OTHER_REASON) + '" rather than naming a benefit.');
 
 h3('State agencies');
 
@@ -156,7 +159,7 @@ check('Nothing ticked at all → **not** exempt.');
 blank();
 check('The first option reads "' + strip(S.STATE_AGENCY_OPTION_DEFS[0].label) + '". The former name matters: someone whose paperwork still says Mass Rehab has to recognise it here.');
 check('There is **no** separate Yes/No pair under the list. The list is the answer.');
-check('Ticking two agencies shows both as sub-bullets on the results page and in the letter, in the order the options are listed rather than the order you ticked them.');
+check('Ticking two agencies gives **two** reasons on the results page and two bullets in the letter, each naming its agency, in the order the options are listed rather than the order you ticked them.');
 
 h3('Working');
 
@@ -428,6 +431,19 @@ check('The panel says sending from this page is not set up yet, and **Send** sta
 check('**Open in my email app instead** opens the mail app with the summary already filled in.');
 check('On a machine with no mail app, the fallback panel appears with the text to copy, and "Copy the text" works.');
 check('A very long set of answers still produces a usable email; the summary is trimmed with a note saying so rather than silently cut.');
+
+h3('The Client / DTA Agency ID line');
+
+w('The author removed the typed field on 2026-08-06 and asked for the printed letter to carry a');
+w('blank for it instead. So this is the one thing on the letter that exists nowhere on screen,');
+w('which makes it the easiest to lose without noticing.');
+blank();
+check('There is **no** Client / Agency ID box to type into anywhere in the form. Only **Your name**.');
+check('Print or save the letter. It has a ruled blank labelled "' + strip(S.STATEMENT_AGENCY_LABEL) + '", whether or not anything else was filled in.');
+check('Under that blank it reads: ' + strip(S.STATEMENT_AGENCY_HINT));
+check('Download the Word version and email it to yourself. The blank is in both.');
+check('The emailed **summary** carries no ID and no blank for one. It is a text reminder, not the letter.');
+check('The blank is wide enough to hand-write eight or nine digits on a printed page.');
 
 h3('The signature');
 

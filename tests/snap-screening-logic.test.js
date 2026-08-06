@@ -2,6 +2,9 @@
 
 const { describe, it } = require('node:test');
 const assert = require('node:assert/strict');
+// Read for the one assertion that a field is absent from the page rather than the module.
+const fs = require('node:fs');
+const path = require('node:path');
 const SnapScreening = require('../masslegalhelp/snap-screening-logic.js');
 
 const { NONE, WORK_REASON_INCOME, WORK_REASON_HOURS_30, DISABILITY_OTHER_REASON, HOUSING_EXEMPT_REASON, LINKS, RESULT_COPY, exemptHeadingHtml, exemptProofNotes, buildDtaContactsHtml, buildResultsEmailContent, buildResultsMailto, MAILTO_MAX_URL, create, migrateAnswers, resultTypeFor, exemptReasonsFor, exemptReasonEntriesFor, REASON_TEXT_BY_ID, resolveReasonIds, buildGcText, housingUnableExempt, buildQuestions, statementPromptsFor, goodCauseCategories } = SnapScreening;
@@ -348,6 +351,44 @@ describe('snap-screening-logic', () => {
     assert.ok(html.includes('<li style="margin:0 0 6px">I get EAEDC</li>'), 'benefit is a flat bullet');
     assert.ok(html.includes('<li style="margin:0 0 6px">I get services from the Dept. of Mental Health</li>'));
     assert.ok(html.includes('high school diploma'), 'the follow-up answer still reaches the letter');
+  });
+
+  /* The author removed the on-screen Client / Agency ID field on 2026-08-06 and asked for the
+   * printed letter to carry a blank for it instead. Asserted because the two halves are in
+   * different files: deleting the input is in the page, printing the blank is in the builder,
+   * and doing one without the other either loses the line or asks twice. */
+  describe('the Client / DTA Agency ID line', () => {
+    const letter = (opts) => SnapScreening.buildStatementHTML(
+      Object.assign({ rt: 'exempt', rs: [REASON_TEXT_BY_ID.pregnant] }, opts || {}));
+
+    it('prints on the letter even when nobody typed a number', () => {
+      const html = letter();
+      assert.ok(html.includes(SnapScreening.STATEMENT_AGENCY_LABEL));
+      assert.ok(html.includes(SnapScreening.STATEMENT_AGENCY_HINT));
+      // A ruled blank to write on, not an empty cell.
+      assert.match(html, /border-bottom:1px solid #bbb/);
+    });
+
+    it('still prints a number when a caller passes one, for the archived builds', () => {
+      assert.ok(letter({ agency: '12345678' }).includes('12345678'));
+    });
+
+    it('is gone from the on-screen form', () => {
+      const page = fs.readFileSync(
+        path.join(__dirname, '..', 'masslegalhelp', 'tool', 'snap', 'index.html'), 'utf8');
+      assert.ok(!/id="f-agency"/.test(page), 'the typed field should not be back');
+      assert.ok(/id="f-name"/.test(page), 'the name field stays');
+    });
+
+    /* The emailed summary never carried the ID, deliberately. With no field it cannot, but the
+     * assertion stays: the reason it must not is privacy, not the absence of an input. */
+    it('never reaches the emailed summary', () => {
+      const { body } = buildResultsEmailContent({
+        rt: 'exempt', rs: [REASON_TEXT_BY_ID.pregnant], agency: '12345678'
+      });
+      assert.ok(!body.includes('12345678'));
+      assert.ok(!body.includes(SnapScreening.STATEMENT_AGENCY_LABEL));
+    });
   });
 
   it('the substance use help says it covers drugs or alcohol', () => {

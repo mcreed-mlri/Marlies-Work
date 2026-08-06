@@ -77,7 +77,6 @@ const INLINE = [
   // The printable statement
   { id: 'statement.docTitle', re: /<title>(SNAP Work Rules Statement)<\/title>/ },
   { id: 'statement.nameLabel', re: />(Your name)</ },
-  { id: 'statement.agencyLabel', re: />(Client \/ Agency ID \(if you have one\))</ },
   { id: 'statement.sigLabel', re: />(Signature)</ },
   { id: 'statement.sigHint', re: /id="sig-hint"[^>]*>([^<]+)</ },
   { id: 'hint.signatures.title', re: /hintTip\('sig', '([^']+)'/ },
@@ -456,7 +455,15 @@ blank();
 
 w('The fields someone fills in:');
 blank();
-['statement.nameLabel', 'statement.agencyLabel', 'statement.sigLabel', 'statement.sigHint']
+w('The Client / DTA Agency ID line is on the printed letter only. The author removed the');
+w('on-screen field on 2026-08-06: most people do not know the number from memory, so asking');
+w('for it in the form meant either skipping it or breaking off to find a DTA notice. On paper');
+w('it is a blank to fill in with the notice to hand.');
+blank();
+item('statement.agencyLabel', S.STATEMENT_AGENCY_LABEL);
+item('statement.agencyHint', S.STATEMENT_AGENCY_HINT, { note: 'printed under the blank line' });
+
+['statement.nameLabel', 'statement.sigLabel', 'statement.sigHint']
   .forEach(id => item(id, inline[id]));
 item('page.sigAlt', inline['page.sigAlt'], { note: 'under the signature pad' });
 w('An explainer opens next to the signature box:');

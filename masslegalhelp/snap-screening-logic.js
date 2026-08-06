@@ -338,6 +338,13 @@
     school: 'I am enrolled in school half-time or more'
   };
 
+  /* The Client / DTA Agency ID line on the printed letter, author's wording, 2026-08-06.
+   * Named rather than inline in buildStatementHTML so both reach SCREENER-COPY.md: they are
+   * words a person reads on a letter they sign, and most of that letter's prose is still
+   * missing from that document. */
+  const STATEMENT_AGENCY_LABEL = 'Client / DTA Agency ID (if you have one/know it)';
+  const STATEMENT_AGENCY_HINT = 'This number is on all DTA notices. This is important to include if you don’t use DTAConnect and you send DTA information by mail, fax, or in person.';
+
   /* ---- Write-in prompts for the "Statement to DTA" form ----
    * The author's draft shows one labelled blank per exemption that needs
    * explaining. Reasons not listed here (pregnant, TAFDC, unemployment, and so
@@ -1640,6 +1647,33 @@
         <td style="padding:5px 0;border-bottom:1px solid #bbb;color:#111">${value ? esc(value) : blank('280px')}</td>
       </tr>`;
 
+    /* The Client / DTA Agency ID row, always printed and always blank.
+     *
+     * It used to appear only when someone typed the number into the form, and the author
+     * removed that input on 2026-08-06: most people do not know the number from memory, so
+     * asking on screen meant either skipping it or breaking off to find a DTA notice. On the
+     * printed letter they can fill it in with the notice in front of them, which is also when
+     * they are most likely to have it.
+     *
+     * Two consequences worth knowing. The `agency` option is still accepted and still printed
+     * if a caller passes one, because the archived builds pass theirs. And the emailed summary
+     * carries no ID at all now rather than by deliberate omission: there is no field to leak.
+     *
+     * The hint is the author's wording and sits under the rule rather than beside the label,
+     * because it explains where to find the number, which is only useful once someone is
+     * looking at the empty line. */
+    /* Spans both columns rather than sitting in the 108px label column like the rows above it.
+     * That column fits "Date" and "From"; this label is forty-five characters and would wrap to
+     * four cramped lines beside its own blank. Full width, label then rule then hint, reads as
+     * one thing to fill in. */
+    const agencyRow = () => `<tr>
+        <td colspan="2" style="padding:9px 0 5px;color:#111">
+          <div style="font-weight:700;color:#222;margin:0 0 3px">${esc(STATEMENT_AGENCY_LABEL)}</div>
+          <div style="border-bottom:1px solid #bbb;padding:0 0 3px">${agency ? esc(agency) : blank('280px')}</div>
+          <div style="font-size:9.5pt;color:#444;padding:3px 0 0;line-height:1.35">${esc(STATEMENT_AGENCY_HINT)}</div>
+        </td>
+      </tr>`;
+
     /* `explain` is either a plain string or, for pages that show one labelled
      * blank per exemption, an array of { prompt, text }. Composed entries also
      * carry { reasons }, which is what the coverage check below reads. Resolved
@@ -1807,7 +1841,7 @@
         ${addrRow('Date', today)}
         ${addrRow('To', 'Massachusetts Department of Transitional Assistance (DTA)')}
         ${addrRow('From', name)}
-        ${agency ? addrRow('Client / Agency ID', agency) : ''}
+        ${agencyRow()}
         ${addrRow('Re', 'SNAP benefits, ABAWD work rules')}
       </table>
 
@@ -2022,6 +2056,8 @@
     exemptReasonsFor,
     exemptReasonEntriesFor,
     REASON_TEXT_BY_ID,
+    STATEMENT_AGENCY_LABEL,
+    STATEMENT_AGENCY_HINT,
     resolveReasonIds,
     resultTypeFor,
     shouldSkipGoodCause,

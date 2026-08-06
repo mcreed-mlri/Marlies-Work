@@ -98,11 +98,14 @@ exempt result.
 - [ ] "None of the above" alone → **not** exempt on its own.
 - [ ] A named benefit **and** "Other" together → the letter lists both `EAEDC` style reasons, not just one.
 
-**The ticked benefits are echoed back**, from 2026-08-06. Tick two and check both places:
+**Each ticked benefit is its own reason**, from 2026-08-06. They used to collapse into one
+"I get disability benefits" line, which left a caseworker unable to tell EAEDC from
+workers compensation. Tick two and check both places:
 
-- [ ] On the results page they appear as indented sub-bullets under "I get disability benefits", not as separate exemptions with their own ticks.
-- [ ] In the printed letter they are nested under that same reason.
-- [ ] **"Other" is not one of them.** It has its own reason and its own write-in box, so it should appear as a reason in its own right and not also as a sub-bullet. Tick a named benefit and "Other" together to see it.
+- [ ] On the results page each appears as its own ticked reason, flat, not indented under a parent line.
+- [ ] In the printed letter each is its own bullet.
+- [ ] The order follows the order of the options on the question, not the order you ticked them.
+- [ ] **"Other" reads differently from the rest.** It is the one asking DTA to review something, so it should say "I get another disability benefit or payment DTA should review" rather than naming a benefit.
 
 ### State agencies
 
@@ -121,7 +124,7 @@ section: the checklist would otherwise never have you test it at all.
 
 - [ ] The first option reads "MassAbility (formerly Mass Rehab Commission)". The former name matters: someone whose paperwork still says Mass Rehab has to recognise it here.
 - [ ] There is **no** separate Yes/No pair under the list. The list is the answer.
-- [ ] Ticking two agencies shows both as sub-bullets on the results page and in the letter, in the order the options are listed rather than the order you ticked them.
+- [ ] Ticking two agencies gives **two** reasons on the results page and two bullets in the letter, each naming its agency, in the order the options are listed rather than the order you ticked them.
 
 ### Working
 
@@ -489,6 +492,19 @@ getting to it.
 - [ ] **Open in my email app instead** opens the mail app with the summary already filled in.
 - [ ] On a machine with no mail app, the fallback panel appears with the text to copy, and "Copy the text" works.
 - [ ] A very long set of answers still produces a usable email; the summary is trimmed with a note saying so rather than silently cut.
+
+### The Client / DTA Agency ID line
+
+The author removed the typed field on 2026-08-06 and asked for the printed letter to carry a
+blank for it instead. So this is the one thing on the letter that exists nowhere on screen,
+which makes it the easiest to lose without noticing.
+
+- [ ] There is **no** Client / Agency ID box to type into anywhere in the form. Only **Your name**.
+- [ ] Print or save the letter. It has a ruled blank labelled "Client / DTA Agency ID (if you have one/know it)", whether or not anything else was filled in.
+- [ ] Under that blank it reads: This number is on all DTA notices. This is important to include if you don’t use DTAConnect and you send DTA information by mail, fax, or in person.
+- [ ] Download the Word version and email it to yourself. The blank is in both.
+- [ ] The emailed **summary** carries no ID and no blank for one. It is a text reminder, not the letter.
+- [ ] The blank is wide enough to hand-write eight or nine digits on a printed page.
 
 ### The signature
 

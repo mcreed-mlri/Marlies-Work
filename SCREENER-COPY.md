@@ -595,13 +595,22 @@ All of them:
 
 The fields someone fills in:
 
-**`statement.nameLabel`**
-
-> Your name
+The Client / DTA Agency ID line is on the printed letter only. The author removed the
+on-screen field on 2026-08-06: most people do not know the number from memory, so asking
+for it in the form meant either skipping it or breaking off to find a DTA notice. On paper
+it is a blank to fill in with the notice to hand.
 
 **`statement.agencyLabel`**
 
-> Client / Agency ID (if you have one)
+> Client / DTA Agency ID (if you have one/know it)
+
+**`statement.agencyHint`**  (printed under the blank line)
+
+> This number is on all DTA notices. This is important to include if you don’t use DTAConnect and you send DTA information by mail, fax, or in person.
+
+**`statement.nameLabel`**
+
+> Your name
 
 **`statement.sigLabel`**
 

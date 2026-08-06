@@ -1308,10 +1308,13 @@ function renderResults(){
       ${printLead}
       <p style="font-size:15px;font-weight:700;margin:0 0 12px">${esc(C.formExplainHeading)}</p>
       ${blanks}
-      <div class="form-row">
-        <div><label for="f-name" style="display:block;font-size:14px;font-weight:700;margin:0 0 6px">Your name</label><input id="f-name" autocomplete="name" style="${inputStyle}"></div>
-        <div><label for="f-agency" style="display:block;font-size:14px;font-weight:700;margin:0 0 6px">Client / Agency ID (if you have one)</label><input id="f-agency" style="${inputStyle}"></div>
-      </div>
+      <!-- The Client / Agency ID input was here, beside the name. The author took it off the
+           screen on 2026-08-06 and asked for the printed letter to carry a blank for it
+           instead. Most people do not know the number from memory, and typing it here meant
+           either leaving it out or going to find a DTA notice mid-form; on paper they can fill
+           it in with the notice in front of them. Nothing is lost from the letter, which now
+           always prints the line. See buildStatementHTML. -->
+      <div><label for="f-name" style="display:block;font-size:14px;font-weight:700;margin:0 0 6px">Your name</label><input id="f-name" autocomplete="name" style="${inputStyle}"></div>
       <div style="margin:14px 0 0">
         <div class="hint-tip-wrap" style="margin:0 0 6px">
           <div id="sig-label" style="font-size:14px;font-weight:700;margin:0">Signature</div>

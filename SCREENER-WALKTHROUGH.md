@@ -878,7 +878,9 @@ _Neither version can write these, and neither tries to._
 
 > Your name
 
-> Client / Agency ID (if you have one)
+> Client / DTA Agency ID (if you have one/know it)
+
+_This number is on all DTA notices. This is important to include if you don’t use DTAConnect and you send DTA information by mail, fax, or in person._
 
 > Signature
 

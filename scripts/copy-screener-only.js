@@ -42,7 +42,6 @@ const INLINE = [
   { id: 'btn.deleteAnswers', re: />(Delete my answers)</ },
   { id: 'statement.docTitle', re: /<title>(SNAP Work Rules Statement)<\/title>/ },
   { id: 'statement.nameLabel', re: />(Your name)</ },
-  { id: 'statement.agencyLabel', re: />(Client \/ Agency ID \(if you have one\))</ },
   { id: 'statement.sigLabel', re: />(Signature)</ },
   { id: 'statement.sigHint', re: /id="sig-hint"[^>]*>([^<]+)</ },
   { id: 'hint.signatures.title', re: /hintTip\('sig', '([^']+)'/ },
@@ -158,7 +157,6 @@ function emitDtaContacts(upload) {
 
 function emitFormFields() {
   emitCopy('statement.nameLabel');
-  emitCopy('statement.agencyLabel');
   emitCopy('statement.sigLabel');
   emitCopy('hint.signatures.title');
   emitCopy('hint.signatures.body');

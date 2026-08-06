@@ -83,7 +83,6 @@ const INLINE = [
   { id: 'dtaNote', re: /<p [^>]*>(The Department of Transitional Assistance[\s\S]*?)<\/p>/ },
   { id: 'answerAny', re: /<p [^>]*>(Answer any that apply to you\.[\s\S]*?)<\/p>/ },
   { id: 'nameLabel', re: />(Your name)</ },
-  { id: 'agencyLabel', re: />(Client \/ Agency ID \(if you have one\))</ },
   { id: 'sigLabel', re: />(Signature)</ },
   { id: 'sigAlt', re: /<p id="sig-alt"[^>]*>([^<]+)<\/p>/ }
 ];
@@ -727,7 +726,11 @@ h2('What the person still has to do themselves');
 say('Neither version can write these, and neither tries to.');
 quote(inline.nameLabel);
 blank();
-quote(inline.agencyLabel);
+/* On the printed letter only since 2026-08-06: the on-screen field went, and the letter
+   carries a blank with a hint about where to find the number. */
+quote(S.STATEMENT_AGENCY_LABEL);
+blank();
+say(S.STATEMENT_AGENCY_HINT);
 blank();
 quote(inline.sigLabel);
 blank();
