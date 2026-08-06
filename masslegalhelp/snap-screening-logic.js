@@ -1258,7 +1258,19 @@
      * filled in elsewhere reads as software talking, invites DTA to weigh the tool's
      * opinion instead of the person's own account, and in "not listed above" pointed at a
      * list of options that is nowhere in the letter. */
-    statementHousingLead: 'I do not have a regular place to sleep. Please review the information I provide about my situation to decide whether I am unable to work under the ABAWD work rules.',
+    /* Shortened 2026-08-06, from "Please review the information I provide about my situation
+     * to decide whether I am unable to work under the ABAWD work rules." Twelve words of
+     * hedge before the sentence said anything, and a caseworker skimming a page of these
+     * reads the ask, not the run-up.
+     *
+     * The ask itself stays, and should. This is the only exemption the screening cannot
+     * assert: every other one is a fact, while no regular place to sleep is evidence toward
+     * being unable to work, which is why the reason text says DTA should review. Cut the
+     * request entirely and the letter states a fact and then a list with nothing saying what
+     * the person wants, and the list can contain "I have a high school diploma" and "I have
+     * had a steady job", which without framing read as arguing the other way. The ask is
+     * what makes those bullets evidence rather than filler. */
+    statementHousingLead: 'I do not have a regular place to sleep. Please review whether I am unable to work under the ABAWD work rules.',
     statementHousingPicksLead: 'The following is also true for me:',
     statementDisabilityOtherLead: 'I receive a disability benefit or payment. Please review it when you decide whether I am exempt from the ABAWD work rules.',
     printLead: 'Download or print these results to get a signed letter you can send to DTA. (More info on how to contact DTA in the box below)',

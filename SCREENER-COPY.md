@@ -540,7 +540,7 @@ pointed at a list of options that does not appear anywhere in the letter.
 
 **`statementHousingLead`**
 
-> I do not have a regular place to sleep. Please review the information I provide about my situation to decide whether I am unable to work under the ABAWD work rules.
+> I do not have a regular place to sleep. Please review whether I am unable to work under the ABAWD work rules.
 
 **`statementHousingPicksLead`**
 
