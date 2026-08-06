@@ -82,7 +82,6 @@ const INLINE = [
   { id: 'startButton', re: />(Click here to check[^<]*)</ },
   { id: 'dtaNote', re: /<p [^>]*>(The Department of Transitional Assistance[\s\S]*?)<\/p>/ },
   { id: 'answerAny', re: /<p [^>]*>(Answer any that apply to you\.[\s\S]*?)<\/p>/ },
-  { id: 'scopeReminder', re: /<p [^>]*>(Remember, this tool is for people[\s\S]*?)<\/p>/ },
   { id: 'nameLabel', re: />(Your name)</ },
   { id: 'agencyLabel', re: />(Client \/ Agency ID \(if you have one\))</ },
   { id: 'sigLabel', re: />(Signature)</ },
@@ -349,8 +348,6 @@ quote(inline.dtaNote);
 h2('The questions');
 
 quote(inline.answerAny);
-blank();
-quote(inline.scopeReminder);
 blank();
 say('Nothing is required, and clicking an answer a second time clears it. The questions come',
   'in four sections.');

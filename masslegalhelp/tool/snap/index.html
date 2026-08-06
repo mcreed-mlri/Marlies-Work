@@ -1109,16 +1109,17 @@ function renderPage(){
      on the first group only. It used to repeat above all four, which read as
      nagging by the third one. Someone who reaches group 2 has already answered
      optional questions and knows how this works. */
-  /* Two lines rather than one, and one bolded fact each. The author's words and their
-     order are unchanged; only where the paragraph breaks is a formatting call. As one
-     three-sentence muted paragraph it had no anchor, and the sentence that matters most
-     to someone deciding whether to keep going, that nothing is required, sat in the
-     middle of it. Splitting also separates how to use the tool from who it is for.
-     Bold marks the load-bearing fact, which is the convention the start page already
-     uses on "18 through 64" and "Many adults are exempt". */
+  /* A second line was here for one day, the author's "Remember, this tool is for people 18
+     through 64 who were told by DTA that they have to meet the ABAWD Work Rules." She asked
+     for it out again on 2026-08-06.
+
+     Worth knowing why before anyone puts it back: it contradicted the age question added the
+     same day. That question gives someone outside 18 through 64 a definite exempt result, so
+     the tool does serve them, and a line saying it is for people 18 through 64 told them to
+     leave before it could. The bold on "Every question is optional." stays; that sentence
+     still carries the group-1 note on its own. */
   const optionalNote = state.step === 0
-    ? `<p style="font-size:15.5px;line-height:1.55;color:var(--muted);margin:8px 0 0">Answer any that apply to you. <strong>Every question is optional.</strong></p>
-       <p style="font-size:15.5px;line-height:1.55;color:var(--muted);margin:6px 0 0">Remember, this tool is for people <strong>18 through 64</strong> who were told by DTA that they have to meet the ABAWD Work Rules.</p>`
+    ? `<p style="font-size:15.5px;line-height:1.55;color:var(--muted);margin:8px 0 0">Answer any that apply to you. <strong>Every question is optional.</strong></p>`
     : '';
 
   const header = state.gc ? '' : `<div style="margin:0 0 20px">

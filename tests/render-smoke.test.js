@@ -364,19 +364,11 @@ describe('the optional-questions note appears above group 1 only', () => {
         'it renders above every group again. The author asked for group 1 only.'
       );
 
-      /* The scope reminder landed with the age question on 2026-08-06 and is group 1 only
-       * for the same reason. Shipping build only: the archive predates it. */
-      if (!build.guided) {
-        assert.match(
-          src, /Remember, this tool is for people <strong>18 through 64<\/strong>/,
-          build.label + ': the scope reminder is gone, or no longer bolds the age range.'
-        );
-        assert.ok(
-          /state\.step === 0[\s\S]{0,700}?Remember, this tool is for people/.test(src),
-          build.label + ': the scope reminder is not gated on state.step === 0, so it '
-          + 'repeats above every group.'
-        );
-      }
+      /* A scope reminder, "this tool is for people 18 through 64 who were told by DTA...",
+       * was asserted here for one day. The author asked for it out again on 2026-08-06
+       * because it contradicted the age question added alongside it: that question gives
+       * someone outside the range a definite exempt result, so the tool does serve them.
+       * Nothing to assert now, and no guard is needed against its return. */
     });
   }
 });

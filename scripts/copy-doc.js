@@ -61,12 +61,10 @@ const INLINE = [
      is not one. */
   { id: 'page.startButton', re: />(Click here to check[^<]*)</ },
   { id: 'page.dtaNote', re: /<p [^>]*>(The Department of Transitional Assistance[\s\S]*?)<\/p>/ },
-  /* Two paragraphs since 2026-08-06. They were one, and the author's addition made it
-     three sentences with no anchor, so it splits after "optional." Two ids rather than
-     one because they are now two editable strings: how to use the tool, and who it is
-     for. Both carry bold, which the converter keeps. */
+  /* Captures to the first </p> rather than to a fixed ending, because this sentence now
+     carries bold on "Every question is optional." and briefly had a second paragraph
+     beside it, page.scopeReminder, which the author asked back out the same day. */
   { id: 'page.answerAny', re: /<p [^>]*>(Answer any that apply to you\.[\s\S]*?)<\/p>/ },
-  { id: 'page.scopeReminder', re: /<p [^>]*>(Remember, this tool is for people[\s\S]*?)<\/p>/ },
   { id: 'page.sigAlt', re: /<p id="sig-alt"[^>]*>([^<]+)<\/p>/ },
   // Buttons and navigation (skip/startOver/delete still inline in the page)
   { id: 'btn.skipToResults', re: />(Skip to results)</ },
@@ -267,7 +265,6 @@ w('question, and the good cause question in section 3 is skipped when the answer
 w('point to an exemption.');
 blank();
 item('page.answerAny', inline['page.answerAny'], { note: 'above group 1 only' });
-item('page.scopeReminder', inline['page.scopeReminder'], { note: 'above group 1 only' });
 
 A.GROUPS.forEach((g, gi) => {
   sub('Group ' + (gi + 1) + ': ' + g.title);

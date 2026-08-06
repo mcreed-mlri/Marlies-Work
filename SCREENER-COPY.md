@@ -87,10 +87,6 @@ point to an exemption.
 
 > **Question for you:** Applied: this now shows above group 1 only, per your note that it "only needs to be said once in section 1." It used to repeat above all four groups.
 
-**`page.scopeReminder`**  (above group 1 only)
-
-> Remember, this tool is for people **18 through 64** who were told by DTA that they have to meet the ABAWD Work Rules.
-
 ### Group 1: Your Family and Household
 
 **`q.ageRange`**  (Yes / No)

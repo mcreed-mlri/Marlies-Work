@@ -48,8 +48,6 @@ _A note on what this tool is not. It does not send anything to DTA, it does not 
 
 > Answer any that apply to you. **Every question is optional.**
 
-> Remember, this tool is for people **18 through 64** who were told by DTA that they have to meet the ABAWD Work Rules.
-
 _Nothing is required, and clicking an answer a second time clears it. The questions come in four sections._
 
 ### Section 1 of 4: Your Family and Household
