@@ -429,7 +429,7 @@
   "goodCauseOptions": [
     {
       "id": "transport",
-      "label": "Yes — my ride broke down or I have temporary transportation issues",
+      "label": "Yes, my ride broke down or I have temporary transportation issues",
       "outcome": "goodcause",
       "statementText": "No transportation — a temporary loss of transportation, like a broken down car or temporary public transportation shutdown."
     },

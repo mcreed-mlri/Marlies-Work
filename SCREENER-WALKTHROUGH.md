@@ -195,7 +195,7 @@ These are situations where you missed work, school, or volunteering hours for on
  - Job pays less than $15/hour (minimum wage)
  - There is a strike
 
-- Yes — my ride broke down or I have temporary transportation issues
+- Yes, my ride broke down or I have temporary transportation issues
 - Yes, I have a family or personal emergency
 - Yes, I’m dealing with unreasonable employment
 - This question does not apply to me / I’m not sure

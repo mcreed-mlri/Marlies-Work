@@ -216,7 +216,7 @@ fields:
   - "Is something making it hard to work, go to school, or volunteer right now?": goodcause
     datatype: radio
     choices:
-      - "Yes — my ride broke down or I have temporary transportation issues": transport
+      - "Yes, my ride broke down or I have temporary transportation issues": transport
       - "Yes, I have a family or personal emergency": emergency
       - "Yes, I’m dealing with unreasonable employment": employment
       - "This question does not apply to me / I’m not sure": "__none"

@@ -266,7 +266,7 @@ Help text, shown when someone opens "What does this mean?":
 
 Options:
 
-- **`goodcause.transport`**  Yes — my ride broke down or I have temporary transportation issues
+- **`goodcause.transport`**  Yes, my ride broke down or I have temporary transportation issues
 - **`goodcause.emergency`**  Yes, I have a family or personal emergency
 - **`goodcause.employment`**  Yes, I’m dealing with unreasonable employment
 - This question does not apply to me / I’m not sure  *(the none-of-these option)*

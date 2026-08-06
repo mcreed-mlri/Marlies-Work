@@ -163,7 +163,12 @@
       options: [
         {
           id: 'transport',
-          label: 'Yes \u2014 my ride broke down or I have temporary transportation issues',
+          /* Comma, not an em dash. This was the only em dash in any question or option label
+           * in the shipping build, and it was a half-converted leftover: the classic variant
+           * uses commas throughout, v2 uses em dashes throughout, and this variant took v2's
+           * phrasing here and classic's punctuation in the two options below it. Also the
+           * house style, which is no em dashes. */
+          label: 'Yes, my ride broke down or I have temporary transportation issues',
           result: 'No transportation \u2014 a temporary loss of transportation, like a broken down car or temporary public transportation shutdown.',
           title: 'No transportation',
           detail: ['A temporary loss of transportation, like a broken down car or temporary public transportation shutdown.']
