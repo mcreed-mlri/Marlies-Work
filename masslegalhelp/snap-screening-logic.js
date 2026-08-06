@@ -137,7 +137,28 @@
      * which lists every category rather than only the one selected. */
     classic2: {
       text: 'Is something making it hard to work, go to school, or volunteer right now?',
+      /* The author asked on 2026-08-06 for a "what does this mean" prompt carrying examples of
+       * unreasonable employment, anchored to that phrase in the third option. It could not go
+       * there: the options are buttons, and a disclosure trigger inside one would be a button
+       * inside a button, which is invalid and would not fire. It could have become a second
+       * disclosure under the options, but this question already has one, and two info toggles
+       * stacked on a single question is worse than one that covers both. So the examples join
+       * the existing prompt, under a heading of their own so the general sentence still reads
+       * as the general sentence.
+       *
+       * `help` stays for the archived variants; only this one has the list, so only this one
+       * needs helpHtml. */
       help: 'These are situations where you missed work, school, or volunteering hours for one or more months because of an unexpected life event.',
+      helpHtml: 'These are situations where you missed work, school, or volunteering hours for one or more months because of an unexpected life event.'
+        + '<p style="margin:12px 0 6px;font-weight:700">Some examples of unreasonable employment:</p>'
+        + '<ul style="margin:0;padding-left:22px">'
+        + '<li>Employer or workplace discrimination</li>'
+        + '<li>The work is a risk to your health and safety</li>'
+        + '<li>Work interferes with your religious observances or beliefs</li>'
+        + '<li>Traveling to and from work takes over 2 hours, or, if you walk to work, the round trip commute is over 2 miles</li>'
+        + '<li>Job pays less than $' + MA_MIN_WAGE + '/hour (minimum wage)</li>'
+        + '<li>There is a strike</li>'
+        + '</ul>',
       noneLabel: 'This question does not apply to me / I\u2019m not sure',
       options: [
         {
@@ -938,6 +959,9 @@
       type: 'single',
       text: def.text,
       help: def.help,
+      /* Only classic2 sets this, to carry a list inside the help. renderHelp prefers
+       * helpHtml when both are present, so the archived variants keep their plain sentence. */
+      helpHtml: def.helpHtml,
       noneLabel: def.noneLabel,
       options: def.options.map(o => ({ id: o.id, label: o.label }))
     };

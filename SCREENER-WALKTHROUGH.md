@@ -187,7 +187,13 @@ _Anyone who comes out exempt never sees this. It is only asked of someone the sc
 
 **Is something making it hard to work, go to school, or volunteer right now?**
 
-These are situations where you missed work, school, or volunteering hours for one or more months because of an unexpected life event.
+These are situations where you missed work, school, or volunteering hours for one or more months because of an unexpected life event.Some examples of unreasonable employment:
+ - Employer or workplace discrimination
+ - The work is a risk to your health and safety
+ - Work interferes with your religious observances or beliefs
+ - Traveling to and from work takes over 2 hours, or, if you walk to work, the round trip commute is over 2 miles
+ - Job pays less than $15/hour (minimum wage)
+ - There is a strike
 
 - Yes — my ride broke down or I have temporary transportation issues
 - Yes, I have a family or personal emergency

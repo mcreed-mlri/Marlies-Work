@@ -222,7 +222,7 @@ fields:
       - "This question does not apply to me / I’m not sure": "__none"
     required: False
     help: |
-      These are situations where you missed work, school, or volunteering hours for one or more months because of an unexpected life event.
+      These are situations where you missed work, school, or volunteering hours for one or more months because of an unexpected life event.Some examples of unreasonable employment:Employer or workplace discriminationThe work is a risk to your health and safetyWork interferes with your religious observances or beliefsTraveling to and from work takes over 2 hours, or, if you walk to work, the round trip commute is over 2 milesJob pays less than $15/hour (minimum wage)There is a strike
 continue button field: good_cause_group
 ---
 event: results_screen

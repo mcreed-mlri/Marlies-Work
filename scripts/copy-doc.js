@@ -36,6 +36,7 @@ const OPEN = {
   'page.answerAny': 'Applied: this now shows above group 1 only, per your note that it "only needs to be said once in section 1." It used to repeat above all four groups.',
   'page.sigAlt': 'Added 2026-07-30, and not yours, so overwrite it freely. The signature pad only works with a finger or a mouse, so someone using a keyboard, a switch, or a screen reader cannot sign in the browser at all. The printed statement already leaves a ruled line when the pad is empty, so that route worked; nothing on the page said so. This sentence says it. If you would rather fold it into the line above, that is one sentence instead of two and we will make the swap.',
   goodCauseIntro: 'Is "work, school, or volunteer hours" replacing the old sentence, or inserting into it? In other words, does it end at "volunteer hours." or continue "...volunteer hours before or after your start date."?',
+  'goodcause.text': 'Your six examples of unreasonable employment are in, added to the "What does this mean?" prompt this question already had rather than as a second one beside it. They could not hang off the phrase itself: the options are buttons, and a disclosure inside one would be a button inside a button.\n\nThey raise something we have not changed. Those examples widen that option a long way, to include a commute over two hours, pay under minimum wage, a strike, a health and safety risk, and religious observance. But the sentence the letter sends DTA still says only "an employer or work environment that discriminates on the basis of age, sex, race, religion, ethnicity, or physical or mental disability", and the results screen still lists that one line as the whole category. So someone who picks this option because of a two-hour commute signs a letter alleging their employer discriminates, which is both untrue for them and an accusation about a named employer.\n\nSuggested: make the letter sentence true for all six and let the write-in box carry the specifics, for example "Employment issues - my job or workplace situation made it hard for me to meet the work rules." And expand the results-screen list to the same six. Both are your wording to approve, so neither is done.',
   goodCauseInNotExemptIntro: 'This is a second copy of the good cause sentence, shown on the "may need to meet the work rules" screen. Your note did not mention it. Should it change the same way?',
   formTitleExempt: 'If the good cause heading goes, should this matching one go too?',
   formLeadExempt: 'Your doc says "fill out this form" where this says "fill in the blanks below." Change it?',
@@ -154,8 +155,20 @@ function toMarkdown(s) {
     .replace(/<a [^>]*href="([^"]+)"[^>]*>(.*?)<\/a>/g, '[$2]($1)')
     .replace(/<br\s*\/?>\s*<br\s*\/?>/g, '\n\n')
     .replace(/<br\s*\/?>/g, '\n')
+    /* Block elements, added 2026-08-06 with the good-cause examples. Without these the
+       stripper below ran them together, and the six examples of unreasonable employment
+       reached the author as one unreadable paragraph with no breaks and no bullets. Bold
+       is applied before the tags go, so a bold sub-heading survives as a heading. */
+    .replace(/<p [^>]*style="[^"]*font-weight:700[^"]*"[^>]*>([\s\S]*?)<\/p>/g, '\n\n**$1**\n')
+    .replace(/<\/(p|ul|ol)>/g, '\n')
+    .replace(/<(p|ul|ol)\b[^>]*>/g, '\n')
+    .replace(/<li[^>]*>/g, '- ')
+    .replace(/<\/li>/g, '\n')
     .replace(/<\/?strong>/g, '**')
     .replace(/<[^>]+>/g, '')
+    // Three or more newlines is always an artefact of the conversion above, never intent.
+    .replace(/\n{3,}/g, '\n\n')
+    .replace(/[ \t]+\n/g, '\n')
     .trim();
 }
 
@@ -311,7 +324,11 @@ section('3. The good cause question');
 
 const GC = A.GOODCAUSE;
 item('goodcause.text', GC.text, { note: 'asked last, and skipped when an exemption already applies' });
-if (GC.help) { w('Help text:'); blank(); toMarkdown(GC.help).split('\n').forEach(l => w('> ' + l)); blank(); }
+/* helpHtml first: classic2 carries the examples of unreasonable employment as a list, and
+   reading `help` alone printed the general sentence and silently dropped six bullets the
+   author had just asked for. */
+const gcHelp = GC.helpHtml || GC.help;
+if (gcHelp) { w('Help text, shown when someone opens "What does this mean?":'); blank(); toMarkdown(gcHelp).split('\n').forEach(l => w('> ' + l)); blank(); }
 w('Options:');
 blank();
 GC.options.forEach(o => w('- **`goodcause.' + o.id + '`**  ' + toMarkdown(o.label)));

@@ -245,9 +245,24 @@ Options:
 
 > Is something making it hard to work, go to school, or volunteer right now?
 
-Help text:
+> **Question for you:** Your six examples of unreasonable employment are in, added to the "What does this mean?" prompt this question already had rather than as a second one beside it. They could not hang off the phrase itself: the options are buttons, and a disclosure inside one would be a button inside a button.
+
+They raise something we have not changed. Those examples widen that option a long way, to include a commute over two hours, pay under minimum wage, a strike, a health and safety risk, and religious observance. But the sentence the letter sends DTA still says only "an employer or work environment that discriminates on the basis of age, sex, race, religion, ethnicity, or physical or mental disability", and the results screen still lists that one line as the whole category. So someone who picks this option because of a two-hour commute signs a letter alleging their employer discriminates, which is both untrue for them and an accusation about a named employer.
+
+Suggested: make the letter sentence true for all six and let the write-in box carry the specifics, for example "Employment issues - my job or workplace situation made it hard for me to meet the work rules." And expand the results-screen list to the same six. Both are your wording to approve, so neither is done.
+
+Help text, shown when someone opens "What does this mean?":
 
 > These are situations where you missed work, school, or volunteering hours for one or more months because of an unexpected life event.
+> 
+> **Some examples of unreasonable employment:**
+> 
+> - Employer or workplace discrimination
+> - The work is a risk to your health and safety
+> - Work interferes with your religious observances or beliefs
+> - Traveling to and from work takes over 2 hours, or, if you walk to work, the round trip commute is over 2 miles
+> - Job pays less than $15/hour (minimum wage)
+> - There is a strike
 
 Options:
 

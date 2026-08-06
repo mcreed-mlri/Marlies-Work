@@ -1028,8 +1028,11 @@ function renderHelp(q){
   if(open){
     // Inset text with a left rule is the long-standing convention for guidance
     // callouts in government content (GOV.UK inset text, USWDS site alerts).
+    /* A div, not a p. helpHtml can now carry a list, and a ul inside a p is invalid: the
+       browser closes the paragraph early and the list falls outside the tinted callout,
+       losing the background and the left rule. Nothing else about it changes. */
     // impeccable-disable-next-line side-tab
-    help += `<p style="font-size:15px;line-height:1.6;color:var(--prose);margin:10px 0 0;padding:13px 15px;background:var(--soft);border-radius:var(--radius);border-left:4px solid var(--accent)">${body}</p>`;
+    help += `<div style="font-size:15px;line-height:1.6;color:var(--prose);margin:10px 0 0;padding:13px 15px;background:var(--soft);border-radius:var(--radius);border-left:4px solid var(--accent)">${body}</div>`;
   }
   help += `</div>`;
   return help;
