@@ -1,6 +1,6 @@
 /**
  * SNAP ABAWD screening: shared decision logic for classic + v2 UIs.
- * Thresholds last verified against Mass.gov / MLH guidance: Nov 2025.
+ * Thresholds: see THRESHOLD_SOURCE below for the citation and the date.
  */
 (function (root, factory) {
   if (typeof module === 'object' && module.exports) {
@@ -60,6 +60,17 @@
    * is only correct while the other two are 217.5 and 15; a Massachusetts minimum wage rise
    * would have left it silently stale. Massachusetts raises it by statute, so that was a
    * matter of time rather than a hypothetical. */
+  /* Where these numbers come from and when they were last checked, as one string.
+   *
+   * The same claim used to be written out separately in eight files: this module's header, two
+   * READMEs, the Python port, and four generators. It said "last verified November 2025 and still
+   * needs an expert" everywhere, and keeping eight copies of a fact that changes is how the next
+   * confirmation goes stale in seven places. Every generator reads this now.
+   *
+   * The guide itself is in reference/ in the repository, outside the deploy, so the source travels
+   * with the code that implements it. */
+  const THRESHOLD_SOURCE = 'Confirmed August 2026 against MLRI’s SNAP Advocacy Guide, May 2026, Part 2, Question 61, which gives $217.50 a week, 14.5 hours a week at $15 an hour, and 30 or more hours a week for someone earning below minimum wage. A copy is in reference/ in the repository.';
+
   const WORK_INCOME_THRESHOLD = 217.5;
   const MA_MIN_WAGE = 15;
   const WORK_HOURS_AT_MIN_WAGE = WORK_INCOME_THRESHOLD / MA_MIN_WAGE;
@@ -2138,7 +2149,7 @@
       NONE,
       PRODUCTION_QUICK_EXIT_URL,
       LINKS,
-      WORK_INCOME_THRESHOLD,
+    WORK_INCOME_THRESHOLD,
       MA_MIN_WAGE,
       WORK_HOURS_AT_MIN_WAGE,
       WORK_HOURS_COMPLIANCE,
@@ -2184,6 +2195,7 @@
     PRODUCTION_QUICK_EXIT_URL,
     LINKS,
     VARIANTS,
+    THRESHOLD_SOURCE,
     WORK_INCOME_THRESHOLD,
     MA_MIN_WAGE,
     WORK_HOURS_AT_MIN_WAGE,

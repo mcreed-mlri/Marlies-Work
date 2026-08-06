@@ -112,10 +112,16 @@ checked. If a second live build ever appears, restore the drift guard before the
 - **Guided ending.** Archived at `archive/snap-guided/` for records. The shipping build is
   write-in only. Section 10 of `SCREENER-COPY.md` still lists every composed sentence if
   the idea returns.
-- **Thresholds.** Last verified November 2025. MLRI's own ABAWD article on MassLegalHelp
-  was reviewed February 2026 and is therefore newer than this tool, so the income and hour
-  figures still need an SME. The age wording was settled on 2026-08-03 and now reads "18 through
-  64" everywhere; that reading of the federal cap is still worth confirming.
+- **Thresholds. Settled 2026-08-07.** Confirmed against MLRI's SNAP Advocacy Guide, May 2026,
+  Part 2, Question 61, which gives $217.50 a week, 14.5 hours at $15 an hour, and 30 or more
+  hours a week below minimum wage. The guide is in `reference/`. The citation lives in
+  `THRESHOLD_SOURCE` in `snap-screening-logic.js` and every generated document reads it from
+  there, so it cannot go stale in one place and not another. The age wording was settled on
+  2026-08-03 and reads "18 through 64" everywhere, which the same question confirms.
+- **The housing follow-up is still open, and it is the one correctness question left.** The
+  guide says those screening answers "are not an 'automatic' exemption" and that DTA assesses.
+  The tool currently returns a flat not-exempt for a diploma plus a steady job, and the ticked
+  answers then appear nowhere. It should say DTA has to review instead. Waiting on the author.
 - **Languages.** English only. MassLegalHelp publishes the ABAWD article in Spanish, and
   its language selector lives in the Drupal header, which a statically served tool at a
   path will not participate in.

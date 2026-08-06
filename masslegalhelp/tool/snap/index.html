@@ -168,12 +168,12 @@
   }
   a.topbar-brand:hover .topbar-logo{opacity:.92}
   .topbar-logo{display:block;width:272px;max-width:calc(100vw - 150px);height:auto}
-  .topbar-title{
-    font-family:"Libre Baskerville",Georgia,serif;font-size:30px;font-weight:700;
-    letter-spacing:-.01em;line-height:1.12;color:#fff;white-space:nowrap;padding-bottom:2px;
-    text-rendering:optimizeLegibility;font-synthesis:none;
-  }
-  .topbar-sub{font-size:14px;font-weight:600;opacity:1;line-height:1.14;color:#fff;margin-top:2px}
+  /* .topbar-title and .topbar-sub were here, styling the wordmark and tagline that used to sit
+     in the header. Both became artwork when the header text was replaced by mlh-logo.svg, so the
+     rules had nothing wearing them. check-pages.js only catches the opposite case, a class in the
+     markup with no rule behind it, which is why they sat here unnoticed and why copy-doc.js has
+     carried a note about them since the rebrand. The accessible name a screen reader announces in
+     place of the logo is on .topbar-brand, and that is what copy-doc extracts now. */
   .btn-exit{
     flex:none;font-size:14px;font-weight:700;color:var(--navy);background:#fff;border:none;
     border-radius:6px;padding:10px 16px;cursor:pointer;min-height:44px;

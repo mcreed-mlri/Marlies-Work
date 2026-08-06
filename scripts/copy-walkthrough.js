@@ -746,7 +746,7 @@ say('The signature is drawn with a finger or a mouse, which means someone using 
 h2('The numbers behind the work question');
 
 say('Not wording, but they decide who comes out exempt and they appear in the questions. Last',
-  'checked November 2025, and the MLRI article on MassLegalHelp was reviewed in February',
+  S.THRESHOLD_SOURCE,
   '2026, so the article is newer than the tool.');
 w('| What | Value |');
 w('| --- | --- |');

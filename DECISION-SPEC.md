@@ -207,8 +207,10 @@ Everything else is always shown, and may be left blank.
 | Hours a week counted below minimum wage | 30 | |
 | Age the rules apply to | 18 through 64 | |
 
-Income and hours were last verified November 2025 and still need an expert. MLRI's ABAWD
-article on MassLegalHelp was reviewed February 2026 and is therefore newer than they are.
+Confirmed August 2026 against MLRI’s SNAP Advocacy Guide, May 2026, Part 2, Question 61, which gives $217.50 a week, 14.5 hours a week at $15 an hour, and 30 or more hours a week for someone earning below minimum wage. A copy is in reference/ in the repository.
+
+So the numbers are settled. What is not settled is the housing branch below, where the same
+guide says the follow-up answers are not an automatic exemption in either direction.
 
 The age wording was settled on 2026-08-03. The article says "between 18 and 65", which
 does not say whether a 65-year-old is included, and the federal rule caps at 64 with 65

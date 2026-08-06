@@ -903,7 +903,7 @@ _The signature is drawn with a finger or a mouse, which means someone using a ke
 
 ## The numbers behind the work question
 
-_Not wording, but they decide who comes out exempt and they appear in the questions. Last checked November 2025, and the MLRI article on MassLegalHelp was reviewed in February 2026, so the article is newer than the tool._
+_Not wording, but they decide who comes out exempt and they appear in the questions. Last Confirmed August 2026 against MLRI’s SNAP Advocacy Guide, May 2026, Part 2, Question 61, which gives $217.50 a week, 14.5 hours a week at $15 an hour, and 30 or more hours a week for someone earning below minimum wage. A copy is in reference/ in the repository. 2026, so the article is newer than the tool._
 
 | What | Value |
 | --- | --- |

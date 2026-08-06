@@ -102,10 +102,16 @@ Keeping them means custom CSS in this package.
 
 ## Still open, and not ours to settle
 
-The income and hour thresholds were last verified November 2025 and still need an expert.
-Working 30 or more hours a week below minimum wage currently routes to exempt on its own,
-which someone should confirm. `DECISION-SPEC.md` has a Citation column against every rule,
-and every row is currently blank.
+The income and hour thresholds are settled: confirmed 2026-08-07 against MLRI's SNAP Advocacy
+Guide, May 2026, Part 2, Question 61, which gives all three of them including the 30 hours a
+week below minimum wage. The guide is in `reference/` and the citation is `THRESHOLD_SOURCE`
+in the JavaScript reference.
+
+What is still open is the housing follow-up. The same question in the guide says those
+screening answers are not an automatic exemption and that DTA assesses inability to work from
+them. The port mirrors the JavaScript, which currently returns a determinate answer, so both
+will need the same change. `DECISION-SPEC.md` has a Citation column against every rule and the
+rows are still blank; Question 61 now covers most of them.
 
 The age wording was settled on 2026-08-03 and now reads "18 through 64"
 everywhere. MLRI's ABAWD article says "between 18 and 65", which does not say whether a

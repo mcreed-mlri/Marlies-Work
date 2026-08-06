@@ -128,8 +128,7 @@ section: the checklist would otherwise never have you test it at all.
 
 ### Working
 
-Three ways of working count. The thresholds below were last verified in November 2025 and
-still need someone who knows the rules to confirm them.
+Three ways of working count. Confirmed August 2026 against MLRI’s SNAP Advocacy Guide, May 2026, Part 2, Question 61, which gives $217.50 a week, 14.5 hours a week at $15 an hour, and 30 or more hours a week for someone earning below minimum wage. A copy is in reference/ in the repository.
 
 - [ ] "Yes, I am making $217.50 a week or more (before taxes)" → exempt, listing: I earn enough money from work to be exempt from the work rules
 - [ ] "Yes, I am working at least 14.5 hours a week at $15 or more an hour" → exempt, listing: I earn enough money from work to be exempt from the work rules
@@ -599,7 +598,7 @@ of the exemptions are about.
 None of this can be automated and all of it matters more than the rest of this document.
 
 - [ ] **Is the wording right?** Read `SCREENER-WALKTHROUGH.md`, which lays out every word in the order someone meets it. The author has final say on copy.
-- [ ] **Are the thresholds current?** $217.50 a week and $15 an hour were last verified in November 2025. MLRI's own ABAWD article was reviewed in February 2026, so the article is newer than the tool.
+- [ ] **Are the thresholds still current?** Confirmed August 2026 against MLRI’s SNAP Advocacy Guide, May 2026, Part 2, Question 61, which gives $217.50 a week, 14.5 hours a week at $15 an hour, and 30 or more hours a week for someone earning below minimum wage. A copy is in reference/ in the repository. Worth re-checking only if a state minimum wage rise or a federal change has landed since.
 - [ ] **Is the exemption list complete?** Someone who knows DTA policy should confirm nothing is missing. A missing exemption is a person who stays cut off.
 - [ ] **Would DTA accept the composed letter?** The guided version is archived, but the composed sentences in `SCREENER-COPY.md` section 10 are still worth a legal read if the idea returns.
 - [ ] **Is a composed statement still the claimant's statement?** A question for lawyers, not designers. It sits above their signature.

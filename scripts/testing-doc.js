@@ -163,8 +163,7 @@ check('Ticking two agencies gives **two** reasons on the results page and two bu
 
 h3('Working');
 
-w('Three ways of working count. The thresholds below were last verified in November 2025 and');
-w('still need someone who knows the rules to confirm them.');
+w('Three ways of working count. ' + S.THRESHOLD_SOURCE);
 blank();
 S.WORK_OPTION_DEFS.forEach(o => {
   const answers = { working: o.id };
@@ -541,7 +540,7 @@ h2('11. Things only a person can judge');
 w('None of this can be automated and all of it matters more than the rest of this document.');
 blank();
 check('**Is the wording right?** Read `SCREENER-WALKTHROUGH.md`, which lays out every word in the order someone meets it. The author has final say on copy.');
-check('**Are the thresholds current?** $' + S.WORK_INCOME_THRESHOLD.toFixed(2) + ' a week and $' + S.MA_MIN_WAGE + ' an hour were last verified in November 2025. MLRI\'s own ABAWD article was reviewed in February 2026, so the article is newer than the tool.');
+check('**Are the thresholds still current?** ' + S.THRESHOLD_SOURCE + ' Worth re-checking only if a state minimum wage rise or a federal change has landed since.');
 check('**Is the exemption list complete?** Someone who knows DTA policy should confirm nothing is missing. A missing exemption is a person who stays cut off.');
 check('**Would DTA accept the composed letter?** The guided version is archived, but the composed sentences in `SCREENER-COPY.md` section 10 are still worth a legal read if the idea returns.');
 check('**Is a composed statement still the claimant\'s statement?** A question for lawyers, not designers. It sits above their signature.');

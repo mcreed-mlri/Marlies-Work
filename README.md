@@ -188,7 +188,9 @@ Before go-live:
 
 - Confirm **Terms of Use** wording matches the hosting organization.
 - Verify DTA contact info (phone, fax, mail) against current Mass.gov guidance.
-- Have an SME spot-check thresholds in `snap-screening-logic.js` (last verified Nov 2025: $217.50/week, 14.5×$15, 30 hrs/week below minimum wage, 20 hrs/week or 80 hrs/month requirement).
+- ~~Have an SME spot-check thresholds in `snap-screening-logic.js`.~~ **Done 2026-08-07.** Confirmed against MLRI's SNAP Advocacy Guide, May 2026, Part 2, Question 61: $217.50/week, 14.5 hrs at $15, 30 hrs/week below minimum wage, and 20 hrs/week or 80 hrs/month to meet the rules. The guide is in `reference/`; the citation is `THRESHOLD_SOURCE` in `snap-screening-logic.js`, which every generated document reads rather than restating.
+- **Housing follow-up: DTA assesses, so the tool should not decide.** The same Question 61 says those screening answers "are not an 'automatic' exemption". The tool returns a flat not-exempt for a diploma plus a steady job, and the ticked answers then show nowhere. It should record that DTA has to review. Waiting on the author; this is the last correctness question before launch.
+- **Proof notes may be stricter than the rule.** Question 61 ends: proof is needed for income-based exemptions, and "otherwise, DTA only needs a self-declaration unless the statement is questionable." The disability and state agency proof lines ask for more than that. Author's wording, so hers to soften.
 - **Quick exit** is live in `masslegalhelp/tool/snap/index.html` and clears storage before navigating. The preview build keeps a **← Back** button, now pointing at `/screener/`. Previously read: on the live Court Forms Online site, replace it with **Quick exit** that jumps to a neutral external URL (see `PRODUCTION_QUICK_EXIT_URL` in `snap-screening-logic.js` and the deploy note below).
 
 ### Preview vs production top bar

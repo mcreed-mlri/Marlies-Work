@@ -19,7 +19,8 @@ matter expert, particularly the age range and the 30-hours-below-minimum-wage ro
 # follow-up. Any port that collapses them into an empty set is wrong.
 NONE = "__none"
 
-# Thresholds. Last verified November 2025 against Mass.gov and MassLegalHelp
+# Thresholds. Confirmed August 2026 against MLRI's SNAP Advocacy Guide, May 2026, Part 2,
+# Question 61. See THRESHOLD_SOURCE in the JavaScript reference; the guide is in reference/.
 # guidance. These move when state or federal rules change, which is why they are
 # named constants in one place rather than inline in question text.
 WORK_INCOME_THRESHOLD = 217.50

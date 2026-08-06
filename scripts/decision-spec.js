@@ -294,8 +294,10 @@ w('| Hours a week at minimum wage that exempt | ' + S.WORK_HOURS_AT_MIN_WAGE + '
 w('| Hours a week counted below minimum wage | ' + S.WORK_HOURS_COMPLIANCE + ' | |');
 w('| Age the rules apply to | 18 through 64 | |');
 blank();
-w('Income and hours were last verified November 2025 and still need an expert. MLRI\'s ABAWD');
-w('article on MassLegalHelp was reviewed February 2026 and is therefore newer than they are.');
+w(S.THRESHOLD_SOURCE);
+w('');
+w('So the numbers are settled. What is not settled is the housing branch below, where the same');
+w('guide says the follow-up answers are not an automatic exemption in either direction.');
 blank();
 w('The age wording was settled on 2026-08-03. The article says "between 18 and 65", which');
 w('does not say whether a 65-year-old is included, and the federal rule caps at 64 with 65');
