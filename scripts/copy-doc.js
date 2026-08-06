@@ -636,7 +636,7 @@ w('exempt. Last checked November 2025.');
 blank();
 w('| What | Value |');
 w('|---|---|');
-w('| Weekly earnings that make someone exempt | $' + S.WORK_INCOME_THRESHOLD + ' before taxes |');
+w('| Weekly earnings that make someone exempt | $' + S.WORK_INCOME_THRESHOLD.toFixed(2) + ' before taxes |');
 w('| Massachusetts minimum wage | $' + S.MA_MIN_WAGE + ' an hour |');
 w('| Hours a week at minimum wage that make someone exempt | ' + S.WORK_HOURS_AT_MIN_WAGE + ' |');
 w('| Hours a week that count while earning under minimum wage | ' + S.WORK_HOURS_COMPLIANCE + ' |');

@@ -148,10 +148,25 @@ check('"' + strip(A.qById('working').noneLabel) + '" → **not** exempt.');
 blank();
 w('| Threshold | Value in the tool |');
 w('| --- | --- |');
-w('| Weekly earnings that make someone exempt | $' + S.WORK_INCOME_THRESHOLD + ' |');
-w('| Minimum wage used | $' + S.MA_MIN_WAGE + ' an hour |');
-w('| Hours a week at minimum wage | ' + S.WORK_HOURS_AT_MIN_WAGE + ' |');
-w('| Hours that count as meeting the rules | ' + S.WORK_HOURS_COMPLIANCE + ' |');
+w('| Weekly earnings that make someone exempt | $' + S.WORK_INCOME_THRESHOLD.toFixed(2) + ' before taxes |');
+w('| Massachusetts minimum wage used | $' + S.MA_MIN_WAGE + ' an hour |');
+w('| Hours a week at that wage that make someone exempt | ' + S.WORK_HOURS_AT_MIN_WAGE + ' |');
+/* Was labelled "Hours that count as meeting the rules", which was wrong and wrong in the
+   one way this tool cannot afford. 30 hours is an *exemption* threshold: work that much and
+   the rules do not apply to you. Meeting the rules is 20 hours a week, 80 a month, which is
+   what RESULT_COPY.workOption1 tells people on screen. A tester checking this table against
+   the screen would have found 30 against 20 and had no way to know which was right.
+   copy-doc.js and decision-spec.js both had it right; this was the outlier. */
+w('| Hours a week that exempt while earning under minimum wage | ' + S.WORK_HOURS_COMPLIANCE + ' |');
+w('| Hours a week that count as **meeting** the rules | 20 (80 a month), per the wording below |');
+blank();
+w('Those are two different numbers doing two different jobs, and the difference is the whole');
+w('tool: 30 hours a week means the work rules do not apply to you, 20 hours a week means they');
+w('do apply and you are satisfying them. Anyone reviewing these should confirm both.');
+blank();
+w('| What the screen says about meeting the rules |');
+w('| --- |');
+w('| ' + strip(C.workOption1) + ' |');
 
 h3('No regular place to sleep');
 
@@ -470,7 +485,7 @@ h2('11. Things only a person can judge');
 w('None of this can be automated and all of it matters more than the rest of this document.');
 blank();
 check('**Is the wording right?** Read `SCREENER-WALKTHROUGH.md`, which lays out every word in the order someone meets it. The author has final say on copy.');
-check('**Are the thresholds current?** $' + S.WORK_INCOME_THRESHOLD + ' a week and $' + S.MA_MIN_WAGE + ' an hour were last verified in November 2025. MLRI\'s own ABAWD article was reviewed in February 2026, so the article is newer than the tool.');
+check('**Are the thresholds current?** $' + S.WORK_INCOME_THRESHOLD.toFixed(2) + ' a week and $' + S.MA_MIN_WAGE + ' an hour were last verified in November 2025. MLRI\'s own ABAWD article was reviewed in February 2026, so the article is newer than the tool.');
 check('**Is the exemption list complete?** Someone who knows DTA policy should confirm nothing is missing. A missing exemption is a person who stays cut off.');
 check('**Would DTA accept the composed letter?** The guided version is archived, but the composed sentences in `SCREENER-COPY.md` section 10 are still worth a legal read if the idea returns.');
 check('**Is a composed statement still the claimant\'s statement?** A question for lawyers, not designers. It sits above their signature.');

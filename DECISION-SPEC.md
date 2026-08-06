@@ -202,7 +202,7 @@ Everything else is always shown, and may be left blank.
 
 | Value | Currently | Citation |
 |---|---|---|
-| Weekly earnings that exempt | $217.5 before taxes | |
+| Weekly earnings that exempt | $217.50 before taxes | |
 | Massachusetts minimum wage | $15 an hour | |
 | Hours a week at minimum wage that exempt | 14.5 | |
 | Hours a week counted below minimum wage | 30 | |

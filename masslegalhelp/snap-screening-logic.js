@@ -45,9 +45,24 @@
   };
 
   /* ---- Work-rule thresholds (MA ABAWD) ---- */
+  /* Two different jobs, and the difference is what the tool is about.
+   *
+   * WORK_INCOME_THRESHOLD and WORK_HOURS_COMPLIANCE are *exemption* limbs: earn this much a
+   * week, or work this many hours, and the ABAWD rules do not apply to you. 217.50 is 30
+   * hours at the federal minimum wage of 7.25, which is where the pairing comes from.
+   *
+   * Meeting the rules is a different and lower bar, 20 hours a week or 80 a month, and it
+   * lives in RESULT_COPY.workOption1 rather than here because nothing decides on it: the
+   * screening tells someone how to report it, it never concludes it. Do not add a constant
+   * for 20 and wire it into a decision without reading that copy first.
+   *
+   * WORK_HOURS_AT_MIN_WAGE is derived, not declared. It was 14.5 as its own literal, which
+   * is only correct while the other two are 217.5 and 15; a Massachusetts minimum wage rise
+   * would have left it silently stale. Massachusetts raises it by statute, so that was a
+   * matter of time rather than a hypothetical. */
   const WORK_INCOME_THRESHOLD = 217.5;
   const MA_MIN_WAGE = 15;
-  const WORK_HOURS_AT_MIN_WAGE = 14.5;
+  const WORK_HOURS_AT_MIN_WAGE = WORK_INCOME_THRESHOLD / MA_MIN_WAGE;
   const WORK_HOURS_COMPLIANCE = 30;
 
   const WORK_REASON_INCOME = 'Earn enough income to be exempt from the work rules';

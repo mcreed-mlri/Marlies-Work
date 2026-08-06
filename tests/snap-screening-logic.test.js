@@ -153,6 +153,65 @@ describe('snap-screening-logic', () => {
     });
   });
 
+  /* The work thresholds appear twice: as constants, and spelled out inside the option
+   * labels the author wrote. Nothing tied the two together, so changing MA_MIN_WAGE moved
+   * the constant, the copy documents and the decision spec, and left the label on screen
+   * still saying $15. Massachusetts raises its minimum wage by statute, so that is a
+   * question of when.
+   *
+   * Asserted rather than fixed by computing the labels, because the wording is the author's
+   * and she should keep control of it. This fails until whoever changed a threshold also
+   * changed the sentence, which is the point.
+   */
+  describe('the work thresholds and the labels agree', () => {
+    const optLabel = (id) => SnapScreening.WORK_OPTION_DEFS.find(o => o.id === id).label;
+    const money = (n) => '$' + n.toFixed(2);
+
+    it('the weekly income option names the threshold', () => {
+      assert.ok(
+        optLabel('income_weekly').includes(money(SnapScreening.WORK_INCOME_THRESHOLD)),
+        'income_weekly says "' + optLabel('income_weekly') + '" but the threshold is '
+        + money(SnapScreening.WORK_INCOME_THRESHOLD)
+      );
+    });
+
+    it('the hours-at-minimum-wage option names both numbers', () => {
+      const label = optLabel('hours_min_wage');
+      assert.ok(
+        label.includes(String(SnapScreening.WORK_HOURS_AT_MIN_WAGE)),
+        label + ' does not name ' + SnapScreening.WORK_HOURS_AT_MIN_WAGE + ' hours'
+      );
+      assert.ok(
+        label.includes('$' + SnapScreening.MA_MIN_WAGE),
+        label + ' does not name $' + SnapScreening.MA_MIN_WAGE + ' an hour'
+      );
+    });
+
+    it('the 30-hour option names the hours that exempt', () => {
+      assert.ok(optLabel('hours_30').includes(String(SnapScreening.WORK_HOURS_COMPLIANCE)));
+    });
+
+    it('hours at minimum wage is the weekly threshold divided by the wage', () => {
+      assert.equal(
+        SnapScreening.WORK_HOURS_AT_MIN_WAGE,
+        SnapScreening.WORK_INCOME_THRESHOLD / SnapScreening.MA_MIN_WAGE
+      );
+      // The two income limbs are one test expressed two ways, and are meant to be.
+      assert.equal(
+        SnapScreening.WORK_HOURS_AT_MIN_WAGE * SnapScreening.MA_MIN_WAGE,
+        SnapScreening.WORK_INCOME_THRESHOLD
+      );
+    });
+
+    /* 30 hours exempts; 20 hours a week is what meeting the rules takes. Conflating them is
+     * the mistake this project can least afford, and TESTING.md made exactly it. */
+    it('meeting the rules is stated as 20 hours, not the 30 that exempts', () => {
+      assert.match(RESULT_COPY.workOption1, /20 hours a week/);
+      assert.match(RESULT_COPY.workOption1, /80 hours a month/);
+      assert.notEqual(SnapScreening.WORK_HOURS_COMPLIANCE, 20);
+    });
+  });
+
   /* The letter is from the person to their caseworker. Mentioning the tool reads as
    * software talking and invites DTA to weigh the tool's opinion over the person's own
    * account, so it was taken out on 2026-08-06 and is asserted rather than trusted: these

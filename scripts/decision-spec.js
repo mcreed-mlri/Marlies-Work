@@ -288,7 +288,7 @@ section('Numbers, and who has to confirm them');
 
 w('| Value | Currently | Citation |');
 w('|---|---|---|');
-w('| Weekly earnings that exempt | $' + S.WORK_INCOME_THRESHOLD + ' before taxes | |');
+w('| Weekly earnings that exempt | $' + S.WORK_INCOME_THRESHOLD.toFixed(2) + ' before taxes | |');
 w('| Massachusetts minimum wage | $' + S.MA_MIN_WAGE + ' an hour | |');
 w('| Hours a week at minimum wage that exempt | ' + S.WORK_HOURS_AT_MIN_WAGE + ' | |');
 w('| Hours a week counted below minimum wage | ' + S.WORK_HOURS_COMPLIANCE + ' | |');

@@ -112,10 +112,19 @@ still need someone who knows the rules to confirm them.
 
 | Threshold | Value in the tool |
 | --- | --- |
-| Weekly earnings that make someone exempt | $217.5 |
-| Minimum wage used | $15 an hour |
-| Hours a week at minimum wage | 14.5 |
-| Hours that count as meeting the rules | 30 |
+| Weekly earnings that make someone exempt | $217.50 before taxes |
+| Massachusetts minimum wage used | $15 an hour |
+| Hours a week at that wage that make someone exempt | 14.5 |
+| Hours a week that exempt while earning under minimum wage | 30 |
+| Hours a week that count as **meeting** the rules | 20 (80 a month), per the wording below |
+
+Those are two different numbers doing two different jobs, and the difference is the whole
+tool: 30 hours a week means the work rules do not apply to you, 20 hours a week means they
+do apply and you are satisfying them. Anyone reviewing these should confirm both.
+
+| What the screen says about meeting the rules |
+| --- |
+| Paid work, unpaid work, or training program for 20 hours a week (80 hours a month). |
 
 ### No regular place to sleep
 
@@ -535,7 +544,7 @@ of the exemptions are about.
 None of this can be automated and all of it matters more than the rest of this document.
 
 - [ ] **Is the wording right?** Read `SCREENER-WALKTHROUGH.md`, which lays out every word in the order someone meets it. The author has final say on copy.
-- [ ] **Are the thresholds current?** $217.5 a week and $15 an hour were last verified in November 2025. MLRI's own ABAWD article was reviewed in February 2026, so the article is newer than the tool.
+- [ ] **Are the thresholds current?** $217.50 a week and $15 an hour were last verified in November 2025. MLRI's own ABAWD article was reviewed in February 2026, so the article is newer than the tool.
 - [ ] **Is the exemption list complete?** Someone who knows DTA policy should confirm nothing is missing. A missing exemption is a person who stays cut off.
 - [ ] **Would DTA accept the composed letter?** The guided version is archived, but the composed sentences in `SCREENER-COPY.md` section 10 are still worth a legal read if the idea returns.
 - [ ] **Is a composed statement still the claimant's statement?** A question for lawyers, not designers. It sits above their signature.

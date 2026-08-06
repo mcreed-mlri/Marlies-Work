@@ -1063,7 +1063,7 @@ exempt. Last checked November 2025.
 
 | What | Value |
 |---|---|
-| Weekly earnings that make someone exempt | $217.5 before taxes |
+| Weekly earnings that make someone exempt | $217.50 before taxes |
 | Massachusetts minimum wage | $15 an hour |
 | Hours a week at minimum wage that make someone exempt | 14.5 |
 | Hours a week that count while earning under minimum wage | 30 |
