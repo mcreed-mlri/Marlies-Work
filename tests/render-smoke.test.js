@@ -491,6 +491,67 @@ describe('screener pages render without throwing', () => {
   }
 });
 
+/* The review-only affordances, driven on a production hostname.
+ *
+ * publish-mlh.js already refuses to publish a review-only parent path unless samplesAllowed()
+ * is present in the file. That checks the gate exists. It cannot check the gate works, and a
+ * samplesAllowed() that returned true would satisfy it perfectly.
+ *
+ * What is behind the gate is worth the difference. "Screener home" points at ../../../screener/,
+ * which is outside the deploy root and 404s in production. ?sample= jumps straight to a result
+ * screen, so a URL shared in front of the public would show a reader a result that is not theirs.
+ *
+ * Driven on masslegalhelp.org and on a plausible near-miss, because the gate is an allowlist and
+ * the failure that matters is it saying yes to a host it should not. */
+describe('review-only modes stay off a production host', () => {
+  const logic = fs.readFileSync(path.join(MLH, LOGIC_FILE), 'utf8');
+  const src = inlineScript(fs.readFileSync(SHIP, 'utf8'), 'masslegalhelp/tool/snap/index.html');
+
+  function on(hostname, search) {
+    const { ctx, stage } = buildContext();
+    ctx.location = {
+      href: 'https://' + hostname + '/tool/snap/' + (search || ''),
+      hostname, search: search || '', pathname: '/tool/snap/'
+    };
+    vm.createContext(ctx);
+    vm.runInContext(logic, ctx, { filename: LOGIC_FILE });
+    vm.runInContext(src, ctx, { filename: 'masslegalhelp/tool/snap/index.html' });
+    return { ctx, stage };
+  }
+
+  for (const host of ['www.masslegalhelp.org', 'masslegalhelp.org', 'masslegalhelp.org.evil.test']) {
+    it('no Screener home link on ' + host, () => {
+      const { ctx } = on(host);
+      assert.equal(
+        ctx.samplesAllowed(), false,
+        host + ' is treated as a review host, so ?sample= and the Screener home link are live in front of the public.'
+      );
+      const slot = ctx.document.getElementById('review-home-slot');
+      assert.equal(
+        slot.children.length, 0,
+        'A Screener home link was injected on ' + host + '. It points outside the deploy root and 404s.'
+      );
+    });
+
+    it('?sample= does nothing on ' + host, () => {
+      const { ctx, stage } = on(host, '?sample=exempt');
+      assert.equal(ctx.applySampleFromURL(), false, '?sample= was honoured on ' + host);
+      assert.ok(!stage.innerHTML.includes('Sample result'), 'the sample banner rendered on ' + host);
+    });
+  }
+
+  /* The other direction, so the tests above cannot pass by the feature being broken everywhere.
+     The team is using this today. */
+  it('still works on a review host', () => {
+    const { ctx } = on('localhost');
+    assert.equal(ctx.samplesAllowed(), true, 'samples are off on localhost, so the team cannot review');
+    assert.ok(
+      ctx.document.getElementById('review-home-slot').children.length > 0,
+      'the Screener home link is gone from review hosts too'
+    );
+  });
+});
+
 /* The approved footer text lives in both shipping pages, because there is no build step and no
  * shared stylesheet or partial to hold it. Two copies of one approved sentence is exactly the
  * shape that drifted twice before, when there were two copies of the logic module: an edit lands
