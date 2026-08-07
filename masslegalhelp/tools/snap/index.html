@@ -208,10 +208,15 @@
      markup with no rule behind it, which is why they sat here unnoticed and why copy-doc.js has
      carried a note about them since the rebrand. The accessible name a screen reader announces in
      place of the logo is on .topbar-brand, and that is what copy-doc extracts now. */
-  .btn-exit{
-    flex:none;font-size:14px;font-weight:700;color:var(--navy);background:#fff;border:none;
-    border-radius:6px;padding:10px 16px;cursor:pointer;min-height:44px;
+  /* Was .btn-exit on a <button>. It is an <a> now, so it needs the display and the
+     text-decoration a button never did; without them it renders as underlined navy text on
+     white rather than as the pill it has always looked like. */
+  .btn-topbar{
+    flex:none;display:inline-flex;align-items:center;justify-content:center;
+    font-size:14px;font-weight:700;color:var(--navy);background:#fff;border:none;
+    border-radius:6px;padding:10px 16px;min-height:44px;text-decoration:none;
   }
+  .btn-topbar:hover{color:var(--navy);background:#f0f3f9}
   .topbar-actions{flex:none;display:flex;align-items:center;gap:10px}
   .btn-review{
     display:none;align-items:center;justify-content:center;min-height:44px;
@@ -416,7 +421,7 @@
   .site-footer :focus-visible{outline-color:var(--yellow)}
   @media (max-width:640px){
     .topbar-inner{min-height:62px;padding:9px max(12px, env(safe-area-inset-right)) 9px max(12px, env(safe-area-inset-left));gap:10px}
-    .btn-exit{font-size:13px;padding:9px 12px}
+    .btn-topbar{font-size:13px;padding:9px 12px}
     .btn-review{font-size:13px;padding:8px 10px}
     #stage{padding:16px max(14px, env(safe-area-inset-right)) 48px max(14px, env(safe-area-inset-left))}
     .form-row{grid-template-columns:1fr}
@@ -434,7 +439,7 @@
   /* MassLegalHelp stack their masthead on a phone: the wordmark centred on its own row, the
      controls centred underneath. Ours does the same from here down.
 
-     560px rather than something tighter. Side by side, the wordmark and a lone Quick exit fit to
+     560px rather than something tighter. Side by side, the wordmark and a lone Learn More fit to
      about 410px, so this is not where it breaks; it is where they stop doing it side by side, and
      matching their masthead is the point. It costs about 50px of header height on a phone. */
   @media (max-width:560px){
@@ -453,8 +458,8 @@
     /* The same viewport-relative guess as the rule above it, 8px different, and gone for the
        same reason. */
     .topbar-actions{flex-direction:column;align-items:stretch;gap:6px}
-    .btn-review,.btn-exit{min-height:44px}
-    .btn-exit{padding:8px 10px}
+    .btn-review,.btn-topbar{min-height:44px}
+    .btn-topbar{padding:8px 10px}
     .q-nav{flex-direction:column}
     .q-nav > [data-action="back"],.q-nav > [data-action="next"]{width:100%;flex:auto}
   }
@@ -612,10 +617,12 @@
      is done better by the convention every site already uses: the wordmark links
      home. That costs a little fidelity to their masthead and buys one less thing
      competing with the question. -->
-<!-- A <header>, not a <div>. This bar holds the link home and Quick exit, and as a
-     bare div both of them sat outside every landmark on the page: a screen reader
-     user cycling landmarks got main and contentinfo and never reached the control
-     that exists for someone who needs to leave this page immediately. -->
+<!-- A <header>, not a <div>. This bar holds the link home and the Learn More link,
+     and as a bare div both sat outside every landmark on the page: a screen reader
+     user cycling landmarks got main and contentinfo and reached neither. The
+     argument was first made about Quick exit, which is gone, and it survives it:
+     controls outside every landmark are hard to find by any route that is not
+     reading the page top to bottom. -->
 <header class="no-print topbar">
   <div class="topbar-inner">
     <!-- Two wordmarks, swapped at the same 560px the masthead stacks at. MassLegalHelp drop
@@ -636,7 +643,22 @@
     </a>
     <div class="topbar-actions">
       <span id="review-home-slot"></span>
-      <button type="button" class="btn-exit" data-action="quick-exit">Quick exit</button>
+      <!-- Learn More, MLRI's decision of 2026-08-07, in place of Quick exit.
+           New tab, like every other outbound link here, so reading the article does not lose a
+           half-answered screening. The URL is LINKS.abawd, the same one the intro and the result
+           screens point at, rather than a second copy of it in the markup.
+
+           What went with Quick exit is worth knowing, and is raised in masslegalhelp/README.md.
+           It was the only control that erased the answers and left no history entry, and the only
+           one on the question screens at all: "Delete my answers" is on the results screen, so
+           between the domestic violence question and the end there is now no fast way out.
+           Answers still live in sessionStorage and still die when the tab closes.
+
+           The href is written out rather than interpolated: this header is static markup, so it
+           works with no JavaScript, and a ${} here would have rendered as those four characters.
+           A test holds it equal to LINKS.abawd, which is the same URL the intro and the result
+           screens use, so the two copies cannot drift. -->
+      <a class="btn-topbar" href="https://www.masslegalhelp.org/public-benefits-ssi/snap-food-benefits/snap-3-month-time-limit-abawd-work-rules" target="_blank" rel="noopener">Learn More</a>
     </div>
   </div>
 </header>
@@ -726,10 +748,13 @@
              The wordmark in the header links home and has done all along, and that convention
              carries most people. What it does not carry is a phone. Its only cue at rest is
              a:hover, which a touch screen never fires, so in the top bar the one thing that
-             looks tappable is Quick exit, which clears the answers and calls location.replace to
-             a weather site with no confirm and no history entry. Someone who wants MassLegalHelp
-             and does not think to tap a picture has exactly one visible control, and it is the
-             worst one for them.
+             looks tappable is the Learn More link beside it, and that goes to one article
+             rather than to the site. Someone who wants MassLegalHelp and does not think to tap
+             a picture has one visible control and it is not the one they want.
+
+             That argument was first written against Quick exit, when the single visible control
+             cleared the answers and left for a weather site. Replacing it with Learn More took
+             the sharp edge off and left the reason intact.
 
              The footer wordmark used to be the second way back. It came out this morning at
              MLRI's request, which took the tool from two routes to one and left the unobvious
@@ -761,7 +786,7 @@
 /* Shared screening logic (see snap-screening-logic.js).
  * 'classic2' is the author's website copy draft in the classic design. */
 const S = SnapScreening.create('classic2');
-const { GOODCAUSE_CATEGORIES, GROUPS, NONE, PRODUCTION_QUICK_EXIT_URL, LINKS } = S;
+const { GOODCAUSE_CATEGORIES, GROUPS, NONE, LINKS } = S;
 const { RESULT_COPY, exemptHeadingHtml, exemptProofNotes, buildDtaContactsHtml, buildResultsEmailContent, buildResultsMailto } = SnapScreening;
 
 /* ------------------------------------------------------------------ *
@@ -2123,19 +2148,15 @@ document.addEventListener('click', (e) => {
       SAMPLE_MODE = false;
       state.view = 'intro'; state.step = 0; state.gc = false; state.helpOpen = {}; state.answers = {}; renderWithMotion(); break;
     case 'delete-answers': deleteAnswers(); break;
-    /* Quick exit has to leave nothing behind, not just navigate away.
+    /* The 'quick-exit' case was here until 2026-08-07, when MLRI replaced the control with a
+     * Learn More link. It cleared STORAGE_KEY and then called location.replace, in that order,
+     * because clearing after navigating does not run, and it used replace rather than href so no
+     * history entry survived for Back to return to.
      *
-     * replace(), not href, so no history entry survives for Back to return to.
-     * And the stored answers go first: this control exists for someone who needs
-     * to stop being on this page right now, and leaving "pregnant: yes" or a
-     * domestic violence answer in storage for the next person on a shared
-     * phone defeats the entire point of it.
-     *
-     * Clearing before navigating, not after, because after does not run. */
-    case 'quick-exit':
-      try{ sessionStorage.removeItem(STORAGE_KEY); }catch(e){ /* storage blocked; nothing to clear */ }
-      window.location.replace(PRODUCTION_QUICK_EXIT_URL);
-      break;
+     * Recorded because the reasoning still applies to whatever fills the gap. It was the only
+     * control that erased the answers, and the only one on the question screens at all: "Delete
+     * my answers" is on the results screen, so someone partway through the domestic violence or
+     * pregnancy questions now has no fast way out. Raised in masslegalhelp/README.md. */
     case 'print': printForm(); break;
     case 'download-doc': downloadDoc(); break;
     case 'email-self': emailResults(); break;

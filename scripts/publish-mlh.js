@@ -303,8 +303,9 @@ if (/function applySampleFromURL/.test(shipHtml)) {
 /* ---- Notes, not failures ---- */
 const bytes = files.reduce((n, f) => n + fs.statSync(f.abs).size, 0);
 notes.push(files.length + ' files, ' + Math.round(bytes / 1024) + 'KB');
-const quickExit = /PRODUCTION_QUICK_EXIT_URL\s*=\s*'([^']+)'/.exec(fs.readFileSync(here, 'utf8'));
-if (quickExit) notes.push('Quick exit currently goes to ' + quickExit[1] + '. Confirm that is intended.');
+/* A note naming the Quick exit destination was here, and it was the last unanswered item this
+ * script reported before a publish. MLRI replaced that control with a Learn More link on
+ * 2026-08-07, so there is no neutral-site question left to confirm. */
 
 /* ---- Report ---- */
 console.log('Publishing ' + PREFIX + '/ as a deploy repository root.\n');

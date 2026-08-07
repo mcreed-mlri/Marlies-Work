@@ -106,7 +106,7 @@ const INLINE = [
      months, because check-pages.js looks for the opposite case, a class in the
      markup with no rule behind it. Deleted 2026-08-07. */
   { id: 'chrome.brandLabel', re: /class="topbar-brand"[^>]*aria-label="([^"]+)"/ },
-  { id: 'chrome.quickExit', re: /data-action="quick-exit"[^>]*>([^<]+)</ }
+  { id: 'chrome.learnMore', re: /<a class="btn-topbar"[^>]*>([^<]+)</ }
   /* footer.disclaimer was here. The footer paragraph came out on 2026-07-30 pending
      a legal footer nobody has drafted yet, so there is no string left to extract.
      The wording is preserved in the footer comment in index.html rather than here,
@@ -117,7 +117,7 @@ const INLINE = [
  * because the project rule is that author copy outranks editorial instinct, and
  * these were written to fill a gap, not handed over for review. */
 const DEVELOPER_WRITTEN = new Set([
-  'chrome.tabTitle', 'chrome.brandLabel', 'chrome.quickExit',
+  'chrome.tabTitle', 'chrome.brandLabel', 'chrome.learnMore',
   'page.sigAlt', 'exemptProofHeading', 'footer.homeLink'
 ]);
 
@@ -737,7 +737,7 @@ w('and they are on the page right now, so they need your review the same as anyt
 w('The footer disclaimer used to head this list. It is yours now, approved 2026-08-07, so it');
 w('has moved out of this section and into the footer section below.');
 blank();
-['chrome.tabTitle', 'chrome.brandLabel', 'chrome.quickExit',
+['chrome.tabTitle', 'chrome.brandLabel', 'chrome.learnMore',
   'page.sigAlt'].forEach(id => item(id, inline[id]));
 
 sub('The footer');
@@ -771,8 +771,8 @@ blank();
 w('The first of those is the way back to the site in words, added 2026-08-07 and not yours, so');
 w('reword it freely. The wordmark in the top bar has always linked home, but its only cue is a');
 w('mouse hover, which a phone never fires; so on a phone the one thing in that bar that looks');
-w('tappable is Quick exit, which clears the answers and leaves for a weather site with no');
-w('warning. The footer wordmark used to be the second way back and came out this morning at your');
+w('tappable is the Learn More link, and that goes to one article rather than to the site. The');
+w('footer wordmark used to be the second way back and came out this morning at your');
 w('request. This is that route in text. It opens in the same tab, unlike the two beside it,');
 w('because someone using it means to leave.');
 blank();

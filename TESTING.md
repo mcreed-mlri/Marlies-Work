@@ -52,7 +52,7 @@ If any of these fail, stop and report it. Nothing further is worth testing.
 - [ ] Answering nothing at all and clicking through to the end gives the "may need to meet the work rules" result.
 - [ ] Answering **Yes** to "Are you pregnant?" and skipping to results gives the exempt result.
 - [ ] The exempt result offers a letter, and "Print or save this form" opens a print dialog.
-- [ ] **Quick exit** in the top bar leaves the site immediately, and pressing Back does not return to the answers.
+- [ ] **Learn More** in the top bar opens the MassLegalHelp ABAWD article in a new tab, and the screening is still there in the original tab.
 
 ## 2. Every exemption, one at a time
 
@@ -558,7 +558,7 @@ than hoping they turn up in another section.
 ### The header
 
 - [ ] The wordmark goes to masslegalhelp.org. It is the way back to the site for anyone who does not scroll to the footer.
-- [ ] **On a phone,** the masthead stacks: wordmark centred on its own row, **Quick exit** centred underneath. That is what MassLegalHelp do on theirs.
+- [ ] **On a phone,** the masthead stacks: wordmark centred on its own row, **Learn More** centred underneath. That is what MassLegalHelp do on theirs.
 - [ ] **On a phone,** the wordmark reads **Mass Legal Help** only. "Massachusetts Legal Information" is dropped below 560px, as on their site.
 - [ ] Narrow the browser slowly from wide to about 320px. The buttons **never** touch or overlap the wordmark at any width in between. This broke once and only showed on a phone.
 - [ ] The wordmark is noticeably smaller on a phone than on a desktop, and never wider than the screen.
@@ -578,9 +578,9 @@ than hoping they turn up in another section.
 The questions cover pregnancy, disability, substance use treatment, and domestic violence. The
 working assumption is a shared or borrowed phone.
 
-- [ ] **Quick exit** leaves the site immediately.
-- [ ] After Quick exit, pressing Back does **not** return to a screen with answers on it.
-- [ ] After Quick exit, reopening the tool shows the start page with nothing filled in.
+- [ ] **Learn More** goes to the same article the intro links to, and opens in a new tab so a half-answered screening is not lost.
+- [ ] Closing the tab and reopening the tool shows the start page with nothing filled in. Answers live in sessionStorage, so the tab closing is what clears them.
+- [ ] **Delete my answers** on the results screen clears them. Note that it is only on the results screen: partway through the questions there is now nothing that erases answers, which went with Quick exit on 2026-08-07 and is flagged in masslegalhelp/README.md.
 - [ ] **Delete my answers** on the results screen clears everything and returns to the start.
 - [ ] Closing the tab and reopening the tool shows the start page, not the previous answers.
 - [ ] Refreshing mid-way keeps the answers, so a stray reload does not mean starting over.
@@ -648,7 +648,7 @@ None of this can be automated and all of it matters more than the rest of this d
 - [ ] **Does it read as though it respects the person?** Someone in this situation has usually been told no several times already.
 - [ ] **The legal footer.** The disclaimer came out on 2026-07-30 and has not been replaced, so nothing currently says this is not legal advice, sends nothing to DTA, and does not change a SNAP case. All three are true and worth saying.
 - [ ] **Terms of Use and Privacy Policy links.** Absent, because the URLs are unknown. Get them from the vendor.
-- [ ] **Quick exit destination.** Currently weather.com. Confirm that is the right neutral site.
+- [ ] **No fast way off the question screens.** Quick exit was replaced by Learn More, so nothing erases answers or leaves without a history entry until the results screen. A decision for MLRI rather than a defect.
 - [ ] **Languages.** English only. MassLegalHelp publishes the ABAWD article in Spanish.
 
 ## 13. What is already checked automatically
@@ -670,7 +670,7 @@ python docassemble-snap-abawd/tests/test_good_cause_text.py
 | Every composed sentence, and that guided answers never change the decision | `tests/snap-screening-logic.test.js` |
 | That the letter never states a reason twice | `tests/snap-screening-logic.test.js` |
 | Every screen rendering without throwing | `tests/render-smoke.test.js` |
-| Answers never reaching localStorage, and Quick exit clearing them | `tests/render-smoke.test.js` |
+| Answers never reaching localStorage, and the top-bar link matching LINKS.abawd | `tests/render-smoke.test.js` |
 | No parent-relative path that would 404 in production | `scripts/publish-mlh.js` |
 | The copy documents matching the code | the `generated-files` CI job |
 | A walk through both versions in a real browser | `tests/snap-screening.spec.js`, CI only |

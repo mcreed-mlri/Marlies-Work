@@ -17,8 +17,9 @@
      with its own copy of this file. Nothing in the shipping build read it, and a
      parent path in the module that ships is a 404 waiting for someone to use it.
      scripts/publish-mlh.js found it. */
-  /** Production deploy: swap the top-bar Back button for Quick exit using this URL (neutral external site). See README. */
-  const PRODUCTION_QUICK_EXIT_URL = 'https://www.weather.com/';
+  /* PRODUCTION_QUICK_EXIT_URL was here, https://www.weather.com/. MLRI replaced Quick exit with
+   * a Learn More link on 2026-08-07, so nothing reads it and the launch question about whether
+   * weather.com was the right neutral site is closed by the control going away. */
 
   /** Copy variants. 'classic2' carries the author's website copy draft (see README). */
   const VARIANTS = ['classic', 'v2', 'classic2'];
@@ -2360,7 +2361,6 @@
 
     return {
       NONE,
-      PRODUCTION_QUICK_EXIT_URL,
       LINKS,
     WORK_INCOME_THRESHOLD,
       MA_MIN_WAGE,
@@ -2407,7 +2407,6 @@
 
   return {
     NONE,
-    PRODUCTION_QUICK_EXIT_URL,
     LINKS,
     VARIANTS,
     THRESHOLD_SOURCE,

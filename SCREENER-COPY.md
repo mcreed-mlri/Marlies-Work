@@ -1214,9 +1214,9 @@ has moved out of this section and into the footer section below.
 
 > Mass Legal Help home
 
-**`chrome.quickExit`**  **[written by the developer, not you]**
+**`chrome.learnMore`**  **[written by the developer, not you]**
 
-> Quick exit
+> Learn More
 
 **`page.sigAlt`**  **[written by the developer, not you]**
 
@@ -1269,8 +1269,8 @@ navigate away from a half-finished form:
 The first of those is the way back to the site in words, added 2026-08-07 and not yours, so
 reword it freely. The wordmark in the top bar has always linked home, but its only cue is a
 mouse hover, which a phone never fires; so on a phone the one thing in that bar that looks
-tappable is Quick exit, which clears the answers and leaves for a weather site with no
-warning. The footer wordmark used to be the second way back and came out this morning at your
+tappable is the Learn More link, and that goes to one article rather than to the site. The
+footer wordmark used to be the second way back and came out this morning at your
 request. This is that route in text. It opens in the same tab, unlike the two beside it,
 because someone using it means to leave.
 

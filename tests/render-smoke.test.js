@@ -425,31 +425,51 @@ describe('the shipping build stores answers per tab only', () => {
  * ever quotes composed copy again, bring this back with it; the shape above worked and
  * caught a real drift twice. */
 
-/* Quick exit is a safety control, and the failure mode is silent: it navigates
- * away correctly while leaving the answers behind. Only the shipping build has it;
- * the preview builds still use a Back button to the hub. */
-describe('Quick exit clears the stored answers', () => {
-  it('masslegalhelp/tools/snap/index.html', () => {
-    const src = inlineScript(fs.readFileSync(SHIP, 'utf8'), 'masslegalhelp/tools/snap/index.html');
-    const handler = /case 'quick-exit':[\s\S]*?break;/.exec(src);
-    assert.ok(handler, 'no quick-exit handler found. The top-bar control is the only way out.');
+/* The top-bar control.
+ *
+ * This asserted Quick exit until 2026-08-07: that it cleared STORAGE_KEY, that it used
+ * location.replace rather than href so Back could not return to the answers, and that it cleared
+ * before navigating because clearing after does not run. MLRI replaced it with a Learn More link
+ * that day, so those assertions are gone rather than failing against a control that no longer
+ * exists.
+ *
+ * What is asserted now is smaller because the control does less. The one thing worth holding is
+ * the URL: it is written out in static markup so the header works without JavaScript, which means
+ * there are two copies of it, and the page's own LINKS.abawd is the other. Both shipping pages
+ * point at the article the intro and the result screens point at, or one of them is quietly
+ * sending people somewhere else. */
+describe('the top-bar Learn More link', () => {
+  const S = require(path.join(MLH, LOGIC_FILE));
 
-    assert.match(
-      handler[0], /removeItem\(STORAGE_KEY\)/,
-      'Quick exit navigates away without clearing STORAGE_KEY, so a domestic violence ' +
-      'or pregnancy answer stays readable to anyone who reopens the tab.'
-    );
-    assert.match(
-      handler[0], /location\.replace/,
-      'Quick exit must use location.replace, not href, or Back returns to the answers.'
-    );
-    // Clearing after navigation would not run.
-    const clearAt = handler[0].indexOf('removeItem');
-    const navAt = handler[0].indexOf('location.replace');
-    assert.ok(
-      clearAt < navAt,
-      'Quick exit navigates before clearing storage, so the clear never happens.'
-    );
+  for (const p of [
+    { label: 'masslegalhelp/tools/snap/index.html', file: SHIP },
+    { label: 'masslegalhelp/tools/index.html', file: path.join(MLH, 'tools', 'index.html') }
+  ]) {
+    it(p.label, () => {
+      const html = fs.readFileSync(p.file, 'utf8');
+      const m = /<a class="btn-topbar" href="([^"]+)"[^>]*>([^<]+)<\/a>/.exec(html);
+      assert.ok(m, p.label + ': no top-bar link. The header has no control at all.');
+      assert.equal(m[2].trim(), 'Learn More');
+      assert.equal(
+        m[1], S.LINKS.abawd,
+        p.label + ': the top-bar link and LINKS.abawd have drifted apart, so the header sends '
+        + 'people somewhere the rest of the tool does not.'
+      );
+      assert.match(html, /<a class="btn-topbar"[^>]*target="_blank"[^>]*rel="noopener"/,
+        p.label + ': the link should open in a new tab, or reading the article loses a '
+        + 'half-answered screening.');
+    });
+  }
+
+  /* Nothing should still be reaching for the control that went. */
+  it('no quick-exit handler survives on either page', () => {
+    for (const p of [SHIP, path.join(MLH, 'tools', 'index.html')]) {
+      const code = fs.readFileSync(p, 'utf8')
+        .replace(/<!--[\s\S]*?-->/g, '')
+        .replace(/\/\*[\s\S]*?\*\//g, '');
+      assert.doesNotMatch(code, /quick-exit/, 'a quick-exit hook is left behind with no control to fire it');
+      assert.doesNotMatch(code, /PRODUCTION_QUICK_EXIT_URL/, 'the exit URL is still being read');
+    }
   });
 });
 
@@ -660,15 +680,16 @@ describe('the footer holds together across both shipping pages', () => {
 
   /* The way back to the site, in words. The header wordmark links home too, but its only cue at
      rest is a:hover, which a touch screen never fires, so on a phone the one control in the top
-     bar that looks tappable is Quick exit: it clears the answers and replaces the location with
-     no confirm and no history entry. This link is the route that does not depend on someone
-     thinking to tap a picture, and it is the last one on the page that leads anywhere but out. */
+     bar that looks tappable is the Learn More link, and that goes to a single article rather
+     than to the site. This is the route that does not depend on someone thinking to tap a
+     picture. */
   it('every page keeps a plain-text way back to MassLegalHelp', () => {
     for (const p of found) {
       assert.ok(
         p.legal.some(l => l === 'MassLegalHelp.org -> https://www.masslegalhelp.org/'),
         p.label + ': the only way back to the site is now the header wordmark, which on a phone '
-        + 'has no visual cue at all. The one control that looks tappable up there is Quick exit.'
+        + 'has no visual cue at all. The one control that looks tappable up there is Learn More, '
+        + 'which goes to one article.'
       );
     }
   });

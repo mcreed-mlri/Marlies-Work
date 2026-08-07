@@ -55,8 +55,17 @@ outranks matching a host font. Headings briefly pointed at a `--serif` token rea
 `'Domine', Georgia, serif` against a font file that never arrived, so they shipped in Georgia
 until 2026-07-30. Revisit only with the file in hand and a decision to go with it.
 
-The top-bar control is **Quick exit**, not Back. It calls `location.replace()`, so it
-leaves no history entry and Back cannot return to a screen holding answers.
+The top-bar control is **Learn More**, a link to the MassLegalHelp ABAWD article, from
+2026-08-07. Its href is written out in the markup rather than read from the module, so the
+header needs no JavaScript; a test holds it equal to `LINKS.abawd` so the two copies cannot
+drift.
+
+It replaced **Quick exit**, which called `location.replace()` after clearing the stored
+answers, so no history entry survived for Back to return to. Recorded because of what went
+with it rather than as history: that was the only control that erased the answers, and the
+only one on the question screens at all. **Delete my answers** is on the results screen, so
+someone partway through the domestic violence or pregnancy questions now has no fast way
+out. Raised with MLRI; the decision is theirs.
 
 `?sample=exempt|goodcause|notexempt` jumps straight to a result screen, and is gated to
 review hosts by `SAMPLE_HOSTS` and `samplesAllowed()`. It is inert on masslegalhelp.org. The
@@ -71,7 +80,7 @@ Answers live in `sessionStorage`, not `localStorage`: they survive a refresh and
 when the tab closes. The questions cover pregnancy, disability, substance use treatment and
 domestic violence, and the working assumption is a shared or monitored phone, so a day of
 recoverable answers is a worse trade than losing resume-tomorrow on a three-minute screening.
-Quick exit erases them before it navigates.
+Closing the tab is what erases them now; the control that did it on demand went on 2026-08-07.
 
 No `vendor/lucide.min.js`. This build inlines its SVGs, so that 361KB dependency would be
 dead weight.
@@ -102,8 +111,13 @@ each is waiting on a decision or on the vendor.
   three is on the page now. That may be deliberate, and the host site's terms may be meant
   to cover it. It is raised in `SCREENER-COPY.md` under `page.footerAbout` and has not been
   changed, because the words are MLRI's.
-- **Quick exit destination.** Currently `weather.com`, set in `PRODUCTION_QUICK_EXIT_URL`
-  in the logic module. Confirm that is the right neutral site.
+- **No fast way off the question screens.** Quick exit was replaced by Learn More on
+  2026-08-07 at MLRI's direction, which closes the old question about whether `weather.com`
+  was the right neutral destination by removing the control. What it leaves open is the gap
+  it filled: **Delete my answers** is on the results screen only, so between the domestic
+  violence question and the end there is nothing that erases the answers or leaves without a
+  history entry. Worth a decision rather than an assumption, given the questions this tool
+  asks and the shared-phone assumption above.
 - **Terms of Use and Privacy Policy. Linked as of 2026-08-07,** to
   `masslegalhelp.org/terms-use` and `masslegalhelp.org/privacy-policy`, on MassLegalHelp's
   darker `#0c1639` sub-strip under the footer text. What is still open is narrower: this

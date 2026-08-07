@@ -119,7 +119,7 @@ check('Clicking **Click here to check if the ABAWD work rules apply to you** ope
 check('Answering nothing at all and clicking through to the end gives the "may need to meet the work rules" result.');
 check('Answering **Yes** to "Are you pregnant?" and skipping to results gives the exempt result.');
 check('The exempt result offers a letter, and "Print or save this form" opens a print dialog.');
-check('**Quick exit** in the top bar leaves the site immediately, and pressing Back does not return to the answers.');
+check('**Learn More** in the top bar opens the MassLegalHelp ABAWD article in a new tab, and the screening is still there in the original tab.');
 
 h2('2. Every exemption, one at a time');
 
@@ -529,7 +529,7 @@ blank();
 h3('The header');
 
 check('The wordmark goes to masslegalhelp.org. It is the way back to the site for anyone who does not scroll to the footer.');
-check('**On a phone,** the masthead stacks: wordmark centred on its own row, **Quick exit** centred underneath. That is what MassLegalHelp do on theirs.');
+check('**On a phone,** the masthead stacks: wordmark centred on its own row, **Learn More** centred underneath. That is what MassLegalHelp do on theirs.');
 check('**On a phone,** the wordmark reads **Mass Legal Help** only. "Massachusetts Legal Information" is dropped below 560px, as on their site.');
 /* The specific regression. It was drawn over the wordmark on a review host and nobody had a
    check that would have caught it, because it only shows at some widths and never on a laptop. */
@@ -553,9 +553,9 @@ h2('8. Privacy and safety');
 w('The questions cover pregnancy, disability, substance use treatment, and domestic violence. The');
 w('working assumption is a shared or borrowed phone.');
 blank();
-check('**Quick exit** leaves the site immediately.');
-check('After Quick exit, pressing Back does **not** return to a screen with answers on it.');
-check('After Quick exit, reopening the tool shows the start page with nothing filled in.');
+check('**Learn More** goes to the same article the intro links to, and opens in a new tab so a half-answered screening is not lost.');
+check('Closing the tab and reopening the tool shows the start page with nothing filled in. Answers live in sessionStorage, so the tab closing is what clears them.');
+check('**Delete my answers** on the results screen clears them. Note that it is only on the results screen: partway through the questions there is now nothing that erases answers, which went with Quick exit on 2026-08-07 and is flagged in masslegalhelp/README.md.');
 check('**Delete my answers** on the results screen clears everything and returns to the start.');
 check('Closing the tab and reopening the tool shows the start page, not the previous answers.');
 check('Refreshing mid-way keeps the answers, so a stray reload does not mean starting over.');
@@ -625,7 +625,7 @@ check('**Is a composed statement still the claimant\'s statement?** A question f
 check('**Does it read as though it respects the person?** Someone in this situation has usually been told no several times already.');
 check('**The legal footer.** The disclaimer came out on 2026-07-30 and has not been replaced, so nothing currently says this is not legal advice, sends nothing to DTA, and does not change a SNAP case. All three are true and worth saying.');
 check('**Terms of Use and Privacy Policy links.** Absent, because the URLs are unknown. Get them from the vendor.');
-check('**Quick exit destination.** Currently weather.com. Confirm that is the right neutral site.');
+check('**No fast way off the question screens.** Quick exit was replaced by Learn More, so nothing erases answers or leaves without a history entry until the results screen. A decision for MLRI rather than a defect.');
 check('**Languages.** English only. MassLegalHelp publishes the ABAWD article in Spanish.');
 
 h2('13. What is already checked automatically');
@@ -647,7 +647,7 @@ w('| The JavaScript and the Python Docassemble port agreeing | `test_snap_abawd_
 w('| Every composed sentence, and that guided answers never change the decision | `tests/snap-screening-logic.test.js` |');
 w('| That the letter never states a reason twice | `tests/snap-screening-logic.test.js` |');
 w('| Every screen rendering without throwing | `tests/render-smoke.test.js` |');
-w('| Answers never reaching localStorage, and Quick exit clearing them | `tests/render-smoke.test.js` |');
+w('| Answers never reaching localStorage, and the top-bar link matching LINKS.abawd | `tests/render-smoke.test.js` |');
 w('| No parent-relative path that would 404 in production | `scripts/publish-mlh.js` |');
 w('| The copy documents matching the code | the `generated-files` CI job |');
 w('| A walk through both versions in a real browser | `tests/snap-screening.spec.js`, CI only |');
