@@ -326,32 +326,42 @@
   .age-opt:hover{border-color:var(--line-hover);background:var(--field)}
   .age-opt input{width:20px;height:20px;accent-color:var(--accent)}
   input,textarea,select{font-size:16px;max-width:100%}
+  /* The footer is the gold rule, the navy band, and MLRI's text. Nothing else.
+   *
+   * Five rules used to live here and are named so nobody wonders where they went, since all five
+   * were load-bearing for a layout that no longer exists: .site-footer-inner held a logo left and
+   * a meta block right; .footer-logo sized the wordmark; .footer-meta and .footer-kicker were the
+   * right-aligned "Interactive tools" label; .footer-note was the one-liner under it.
+   *
+   * The wordmark went on 2026-08-07 at MLRI's direction, on the grounds that it is already in the
+   * header. Recorded because it is a deliberate departure from MassLegalHelp, who do repeat
+   * theirs in both places, and the next person to compare the two pages side by side will notice
+   * and should not have to guess whether it was an oversight.
+   *
+   * Removing it emptied .site-footer-inner, which would have gone on adding 58px of padding
+   * around nothing, so the whole row went with it and the text is now the footer. Its own top
+   * border went too: it was separating the paragraph from the logo row above.
+   *
+   * The paragraph is left-aligned on the same gutter as the header wordmark, and capped for
+   * measure so lines do not run the width of a large monitor. White at 92% over the footer navy
+   * is 11.51:1. */
   .site-footer{border-top:9px solid var(--gold);background:var(--ink);color:#fff;margin-top:40px}
-  .site-footer-inner{
-    padding:28px max(var(--chrome-gutter), env(safe-area-inset-right)) 30px max(var(--chrome-gutter), env(safe-area-inset-left));
-    display:flex;align-items:center;justify-content:space-between;gap:24px;
-  }
-  .footer-logo{display:block;width:210px;max-width:100%;height:auto}
-  /* .footer-meta and .footer-kicker were here, the right-aligned block holding "Interactive
-     tools" over the old one-liner. Both went on 2026-08-07 with the label itself: once MLRI's
-     text moved to its own row below, the kicker was a heading with nothing under it, set hard
-     right against empty space. The logo is now the only thing in the top row. */
-  /* The approved footer text, 2026-08-07, gets its own row under the logo rather than the slot
-     inside .footer-meta that the old one-liner used. That slot is right-aligned, and three
-     sentences of ragged-left body text is hard work to read. This is the one paragraph in the
-     footer anyone is meant to actually read, so it is left-aligned, on the same gutter as the
-     logo above it, and capped for measure so the lines do not run the width of a large monitor.
-
-     .footer-note went with the old one-liner. Nothing wore it, which is the state the retired
-     .topbar-title and .topbar-sub rules sat in unnoticed for a fortnight.
-
-     White at 92% over the footer navy is 11.51:1, so the smaller size is not buying trouble. */
-  .footer-about{border-top:1px solid rgba(255,255,255,.22)}
+  /* Sits in the content column, not on the chrome gutter, and matches #stage exactly: same
+   * max-width, same auto margins, same 16px. So the paragraph starts where every sentence the
+   * reader has just read starts, rather than out on the left with the header wordmark.
+   *
+   * That is a deliberate departure from MassLegalHelp, whose footer content does sit on the
+   * gutter. Theirs is a logo and three columns of links, which fills the width; ours is one
+   * paragraph, and left alone out there it reads as stranded rather than as the end of the
+   * document. To go back, swap the two values for --chrome-gutter and drop the auto margins.
+   *
+   * The block is centred; the text inside it is not. Three sentences set centre-aligned would be
+   * ragged on both edges. */
   .footer-about-inner{
-    max-width:1100px;
-    padding:18px max(var(--chrome-gutter), env(safe-area-inset-right)) 26px max(var(--chrome-gutter), env(safe-area-inset-left));
+    max-width:760px;margin:0 auto;
+    padding:26px max(16px, env(safe-area-inset-right)) 30px max(16px, env(safe-area-inset-left));
   }
-  .footer-about p{margin:0;font-size:13.5px;line-height:1.65;color:rgba(255,255,255,.92)}
+  .footer-about-inner p{margin:0;font-size:13.5px;line-height:1.65;color:rgba(255,255,255,.92)}
   @media (max-width:640px){
     .topbar-inner{min-height:62px;padding:9px max(12px, env(safe-area-inset-right)) 9px max(12px, env(safe-area-inset-left));gap:10px}
     .btn-exit{font-size:13px;padding:9px 12px}
@@ -367,12 +377,7 @@
     .qcard{padding:14px 16px;box-shadow:5px 5px 0 0 var(--band-edge);margin-right:5px;margin-bottom:5px}
     .q-nav{gap:10px;margin-left:0;margin-right:0;border:1px solid var(--panel);border-radius:12px}
     .q-nav > [data-action="back"]{flex:0 0 36%}
-    .site-footer-inner{padding:24px max(14px, env(safe-area-inset-right)) 26px max(14px, env(safe-area-inset-left));align-items:flex-start}
-    .footer-logo{width:185px}
     #start-btn{width:100%}
-  }
-  @media (max-width:520px){
-    .site-footer-inner{flex-direction:column;gap:18px}
   }
   @media (max-width:360px){
     .topbar-logo{max-width:calc(100vw - 142px)}
@@ -605,11 +610,6 @@
      nothing to DTA, and it does not change their case. Whatever replaces it has to
      carry them. Tracked in masslegalhelp/README.md under "Before this goes live". -->
 <footer class="site-footer no-print">
-  <div class="site-footer-inner">
-    <a href="https://www.masslegalhelp.org/" aria-label="Mass Legal Help home">
-      <img class="footer-logo" src="../assets/mlh-logo.svg" alt="">
-    </a>
-  </div>
   <!-- Approved by MLRI on 2026-08-07, and their wording, not ours. It replaces "A testing
        preview from Mass Legal Help.", which described the review site.
 
@@ -623,10 +623,8 @@
 
        Identical on tool/index.html. A test asserts the two match, because a sentence copied into
        two files is how the pair drifts. -->
-  <div class="footer-about">
-    <div class="footer-about-inner">
-      <p>This tool was developed by the Massachusetts Law Reform Institute to help give you more information about the SNAP work rules. The Department of Transitional Assistance (DTA) runs the SNAP program in Massachusetts. The SNAP ABAWD Work Rules are different from MassHealth work rules.</p>
-    </div>
+  <div class="footer-about-inner">
+    <p>This tool was developed by the Massachusetts Law Reform Institute to help give you more information about the SNAP work rules. The Department of Transitional Assistance (DTA) runs the SNAP program in Massachusetts. The SNAP ABAWD Work Rules are different from MassHealth work rules.</p>
   </div>
 </footer>
 
