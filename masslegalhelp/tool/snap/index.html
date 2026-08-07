@@ -83,6 +83,23 @@
     --danger:#a12b2b;
     --danger-line:#c58484; /* 3:1, so the outline of a bare button is a real boundary */
     --radius:10px;
+    /* The gutter the navy bar and the footer hold their contents off the viewport edge.
+     *
+     * One token because the header and the footer have to agree. They did not: the header's
+     * inner was capped at 1040px and the footer's at 760px, both centred, so on a wide screen
+     * the footer wordmark sat about 140px further right than the header wordmark. Two logos of
+     * the same brand not lining up with each other is the kind of thing that reads as sloppy
+     * without a viewer being able to say why.
+     *
+     * Neither is capped now. MassLegalHelp's own bars run nearly the full width with a small
+     * gutter, and their header and footer wordmarks sit at the same place. Measured off a
+     * screenshot of their live article page rather than the page itself, which is not something
+     * this machine can load: their wordmark sat about 104px in at a viewport of about 1832px,
+     * which is the 5.7% below. Adjust here and both bars on both pages move together.
+     *
+     * The content column stays 760px and centred. That is deliberate and matches them too:
+     * their chrome is wide while their article text is not. */
+    --chrome-gutter:clamp(18px, 5.7vw, 120px);
   }
   *{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
@@ -149,9 +166,9 @@
     border-bottom:9px solid var(--gold);
   }
   .topbar-inner{
-    max-width:1040px;margin:0 auto;min-height:74px;width:100%;
+    min-height:74px;width:100%;
     display:flex;align-items:center;justify-content:space-between;gap:16px;
-    padding:10px max(18px, env(safe-area-inset-right)) 10px max(18px, env(safe-area-inset-left));
+    padding:10px max(var(--chrome-gutter), env(safe-area-inset-right)) 10px max(var(--chrome-gutter), env(safe-area-inset-left));
   }
   /* The dark strip above the header. On their site it holds the language
      selector; here it holds the one link back to masslegalhelp.org, which is
@@ -311,7 +328,7 @@
   input,textarea,select{font-size:16px;max-width:100%}
   .site-footer{border-top:9px solid var(--gold);background:var(--ink);color:#fff;margin-top:40px}
   .site-footer-inner{
-    max-width:760px;margin:0 auto;padding:28px max(16px, env(safe-area-inset-right)) 30px max(16px, env(safe-area-inset-left));
+    padding:28px max(var(--chrome-gutter), env(safe-area-inset-right)) 30px max(var(--chrome-gutter), env(safe-area-inset-left));
     display:flex;align-items:center;justify-content:space-between;gap:24px;
   }
   .footer-logo{display:block;width:210px;max-width:100%;height:auto}
