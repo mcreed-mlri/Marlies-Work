@@ -1,29 +1,32 @@
-<!-- The MassLegalHelp header, at 32px.
+<!-- MLH, lifted from MassLegalHelp's own wordmark.
 
-     The tool had no favicon at all, so browsers asked for /favicon.ico, got a 404, and showed
-     their default. On a subdomain that is the whole identity a tab or a bookmark carries.
+     mlh-logo.svg carries "Mass Legal Help" as 13 outlined paths, one per letter. The pairs prove
+     it: both s glyphs measure 15.6 wide, both l 9.9, both a 18.5, both e 17.0, and M, L and H
+     share a 25.3 cap height. So these three paths are their real letterforms, not an imitation,
+     and the favicon cannot drift from the wordmark in the header above it.
 
-     This is their chrome reduced rather than a mark anybody invented: the navy bar, #1e2e5f, and
-     the gold rule under it, #eab736, along the bottom edge in roughly the proportion the real
-     header uses (9px of a 74px bar, so about an eighth). Both values are measured and recorded
-     in MASSLEGALHELP-BRAND.md. Nothing here is a wordmark or a letterform, because drawing one
-     for somebody else's brand is not ours to do.
+     Generated once rather than drawn, by a script kept in the scratchpad; the measurements above
+     are the check that the glyph order has not moved. Composition is ours: the three set side by
+     side with the wordmark's own letter spacing, about 2.2 units, white on the header navy.
 
-     The gold bar is clipped to the rounded rectangle. Without the clip its square corners sit
-     outside the navy at the bottom two corners, which is invisible at 16px and obvious at 512.
+     MLH is a wide monogram in a square box, so it sits as a band across the middle. That is what
+     three letters at a 3:1 ratio do; the alternative is shrinking them until they are illegible.
 
-     A placeholder in the sense that MassLegalHelp's own favicon would be better if MLRI can
-     supply it. It could not be fetched: masslegalhelp.org/favicon.ico is a 404 and the site sits
-     behind a Cloudflare bot challenge, so there was nothing to copy.
+     If MLRI can supply MassLegalHelp's real favicon this should give way to it. This was built
+     because it could not be fetched: their /favicon.ico is a 404 and the site sits behind a
+     Cloudflare bot challenge, so there was nothing to copy.
 
-     SVG only. It is the one image format the deploy allowlist permits, and it keeps this to a
-     single file at any size. Safari before 17 ignores SVG favicons and falls back to
-     /favicon.ico, which is the 404 that exists today, so this is an improvement everywhere and a
-     regression nowhere. -->
+     SVG only. It is the one image format the deploy allowlist permits. Safari before 17 ignores
+     SVG favicons and falls back to /favicon.ico, which is the 404 that exists today, so this
+     improves every browser and regresses none. -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Mass Legal Help">
   <clipPath id="r"><rect width="32" height="32" rx="6"/></clipPath>
   <g clip-path="url(#r)">
     <rect width="32" height="32" fill="#1e2e5f"/>
-    <rect y="28" width="32" height="4" fill="#eab736"/>
+    <g fill="#ffffff" transform="translate(2 11.700) scale(0.33995)">
+      <path transform="translate(0.000 -2.940)" d="M22.19,2.94,15.649,24.531h-.141L9.424,2.94H0V4.979l2.954.739V25.481L0,26.219v2.04H8.862v-2.04L6.3,25.481V5.752l6.259,22.507h4.993l6.4-22.507V25.481l-2.568.738v2.04H31.473v-2.04l-2.954-.738V5.718l2.954-.739V2.94Z"/>
+      <path transform="translate(-98.502 -2.940)" d="M140.052,5.718v19.9h8.51l1.2-6.084h2.989v8.721H132.175v-2.04l3.306-.738V5.718l-3.306-.738V2.94H143.71v2.04Z"/>
+      <path transform="translate(-212.951 -2.940)" d="M292.36,5.718V25.481l2.954.738v2.04H284.835v-2.04l2.954-.738V16.549H276.923v8.932l2.954.738v2.04H269.4v-2.04l2.954-.738V5.718L269.4,4.979V2.94h10.479v2.04l-2.954.738v8.265h10.866s.738-6.014,0-8.265-2.954-.738-2.954-.738V2.94h10.479v2.04Z"/>
+    </g>
   </g>
 </svg>
