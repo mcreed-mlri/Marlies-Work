@@ -11,6 +11,11 @@ to test against: not "does the page work" but "would this actually get someone r
 A box that will not tick is worth more than a whole page that will. Write down what you did,
 what you expected, and what happened, and it can be fixed.
 
+**If you are testing before a launch, skip section 5.** It covers the archived
+guided build, which is kept for records and is not what anyone will see, and it is
+47 of the 213 checks here. Everything else is the shipping tool.
+Section 2 is the heart of it: every exemption, one at a time.
+
 ## Before you start
 
 There is no build step and no `npm` on the authoring machine. Serve the folder and open it:
