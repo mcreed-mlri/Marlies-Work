@@ -27,6 +27,15 @@ which refuses to publish without them.
 Moving to a path later costs nothing in here. Every reference is relative and the publish guards
 enforce that, so a Worker mapping `/tools/*` to this root would serve it unchanged.
 
+The subdomain inherits the zone's security settings, which is worth knowing before it puzzles
+somebody. On the day it went up, `curl` and other non-browser clients got `403` from
+`tools.masslegalhelp.org` while the same paths on `mlri-snap-abawd.pages.dev` served normally,
+because MassLegalHelp's existing bot and WAF protection covers every hostname in the zone.
+Browsers are unaffected. Two consequences: an uptime monitor or a link checker pointed at the
+subdomain may need allowlisting, and if something looks broken there, try the `pages.dev`
+hostname first, since that one is outside the zone and isolates the deployment from the zone's
+rules.
+
 Four things this build depends on:
 
 Every path is relative, so it works at any subpath. `/interview`, `/screeners`, or a
