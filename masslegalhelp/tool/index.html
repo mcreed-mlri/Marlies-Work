@@ -28,6 +28,7 @@
      * <style>. If one moves, move the other. The value and the working are recorded once, in
      * tool/snap/index.html. */
     --chrome-gutter:clamp(18px, 5.7vw, 120px);
+    --strip:#0c1639;
   }
   *{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
@@ -120,6 +121,21 @@
     padding:26px max(16px, env(safe-area-inset-right)) 30px max(16px, env(safe-area-inset-left));
   }
   .footer-about-inner p{margin:0;font-size:13.5px;line-height:1.65;color:rgba(255,255,255,.92)}
+  /* MassLegalHelp's darker sub-strip. Matches the screener, where the reasoning is recorded,
+     including what is deliberately not on it and why the focus ring changes colour here. */
+  .footer-legal{background:var(--strip)}
+  .footer-legal-inner{
+    max-width:1040px;margin:0 auto;
+    padding:0 max(16px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left));
+    display:flex;flex-wrap:wrap;align-items:center;gap:0 28px;
+  }
+  .footer-legal-inner a{
+    display:inline-flex;align-items:center;min-height:44px;
+    color:#fff;font-size:13.5px;font-weight:700;
+    text-decoration:underline;text-underline-offset:3px;
+  }
+  .footer-legal-inner a:hover{color:var(--yellow)}
+  .site-footer :focus-visible{outline-color:var(--yellow)}
   @media (max-width:760px){
     .topbar-inner{min-height:62px;padding:9px max(12px, env(safe-area-inset-right)) 9px max(12px, env(safe-area-inset-left));gap:10px}
     .btn-exit{font-size:13px;padding:9px 12px}
@@ -190,6 +206,12 @@
        is recorded in the matching comment in tool/snap/index.html. -->
   <div class="footer-about-inner">
     <p>This tool was developed by the Massachusetts Law Reform Institute to help give you more information about the SNAP work rules. The Department of Transitional Assistance (DTA) runs the SNAP program in Massachusetts. The SNAP ABAWD Work Rules are different from MassHealth work rules.</p>
+  </div>
+  <div class="footer-legal">
+    <div class="footer-legal-inner">
+      <a href="https://www.masslegalhelp.org/terms-use" target="_blank" rel="noopener">Terms of Use</a>
+      <a href="https://www.masslegalhelp.org/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a>
+    </div>
   </div>
 </footer>
 

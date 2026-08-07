@@ -567,7 +567,14 @@ describe('the approved footer text is the same on both shipping pages', () => {
     const html = fs.readFileSync(p.file, 'utf8');
     const m = /<div class="footer-about-inner">\s*<p>([\s\S]*?)<\/p>/.exec(html);
     assert.ok(m, p.label + ' has no footer text. It is MLRI-approved copy, not decoration.');
-    return { label: p.label, text: m[1].replace(/\s+/g, ' ').trim() };
+    /* Scoped to the strip, not the page. Matching every masslegalhelp.org link in the file swept
+       up the landing page's own link to the ABAWD article, so the two pages "differed" on a link
+       that has nothing to do with the footer. */
+    const block = /<div class="footer-legal-inner">([\s\S]*?)<\/div>/.exec(html);
+    assert.ok(block, p.label + ' has no Terms and Privacy strip.');
+    const legal = [...block[1].matchAll(/<a href="([^"]+)"[^>]*>([^<]+)<\/a>/g)]
+      .map(x => x[2].trim() + ' -> ' + x[1]);
+    return { label: p.label, text: m[1].replace(/\s+/g, ' ').trim(), legal };
   });
 
   it('the two pages match word for word', () => {
@@ -584,6 +591,32 @@ describe('the approved footer text is the same on both shipping pages', () => {
     assert.match(t, /developed by the Massachusetts Law Reform Institute/);
     assert.match(t, /Department of Transitional Assistance \(DTA\) runs the SNAP program/);
     assert.match(t, /different from MassHealth work rules/);
+  });
+
+  /* Terms of Use and Privacy Policy, added 2026-08-07 once MLRI supplied the URLs. Their absence
+     was on the launch checklist for a week, on the grounds that a Terms link going nowhere on a
+     public benefits page is worse than no link at all. Which cuts both ways: a link that is
+     present and wrong is the failure this asserts against. */
+  it('both pages carry the same Terms and Privacy links', () => {
+    assert.deepEqual(found[0].legal, found[1].legal, 'the footer links differ between the pages');
+    assert.deepEqual(found[0].legal, [
+      'Terms of Use -> https://www.masslegalhelp.org/terms-use',
+      'Privacy Policy -> https://www.masslegalhelp.org/privacy-policy'
+    ]);
+  });
+
+  /* The footer band is #1f2c5c and the strip under it #0c1639, and the default focus ring is
+     #1f2c5c: 1:1 on the band and 1.32:1 on the strip. Before these links there was nothing
+     focusable down there to reveal it. Gold is 12.48:1 on the strip. */
+  it('focus is visible on the two links a keyboard user can reach', () => {
+    for (const p of PAGES_WITH_FOOTER) {
+      const css = fs.readFileSync(p.file, 'utf8');
+      assert.match(
+        css, /\.site-footer :focus-visible\{outline-color:var\(--yellow\)\}/,
+        p.label + ': the footer focus ring is still the default navy, which is invisible on the '
+        + 'footer. Tabbing to Terms of Use would show nothing.'
+      );
+    }
   });
 });
 

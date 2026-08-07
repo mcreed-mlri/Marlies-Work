@@ -76,6 +76,8 @@ const INLINE = [
      every other string does, with an id to quote back. The identical copy on the tools landing
      page is held in step by a test rather than by this document. */
   { id: 'page.footerAbout', re: /<div class="footer-about-inner">\s*<p>([\s\S]*?)<\/p>/ },
+  { id: 'footer.termsLink', re: /<a href="https:\/\/www\.masslegalhelp\.org\/terms-use"[^>]*>([^<]+)</ },
+  { id: 'footer.privacyLink', re: /<a href="https:\/\/www\.masslegalhelp\.org\/privacy-policy"[^>]*>([^<]+)</ },
   // Buttons and navigation (skip/startOver/delete still inline in the page)
   { id: 'btn.skipToResults', re: />(Skip to results)</ },
   { id: 'btn.startOver', re: />([^<]{0,4}Start over)</ },
@@ -749,9 +751,19 @@ blank();
 w('The MassHealth sentence is a good catch that nobody here had thought of. Two sets of work');
 w('requirements are live at once and people do conflate them.');
 blank();
-w('**Still missing:** Terms of Use and Privacy Policy links, because their URLs were never');
-w('supplied and a Terms link that goes nowhere on a public benefits page is worse than no link.');
-w('This version also has no Terms of Use checkbox at all, which earlier versions did.');
+w('Under the text sits MassLegalHelp\'s darker sub-strip, carrying the two links you sent on');
+w('2026-08-07. Both open in a new tab, so reading the terms halfway through a screening does not');
+w('navigate away from a half-finished form:');
+blank();
+['footer.termsLink', 'footer.privacyLink'].forEach(id => item(id, inline[id]));
+w('Their own strip carries two more things that are not here. Social icons, which you did not');
+w('ask for. And `©2026 Massachusetts Legal Assistance Corporation`, which came off on 2026-07-30');
+w('along with the "Funded by the Massachusetts Legal Assistance Corporation" credit: both were');
+w('copied from MassLegalHelp\'s footer, where they describe their site, and on this page the');
+w('copyright asserts MLAC owns something MLRI wrote. Say the word if you want either back.');
+blank();
+w('**Still open:** this version has no Terms of Use checkbox, which earlier versions did. Linking');
+w('the terms is not the same as asking someone to accept them, so that is still a decision.');
 blank();
 
 /* ---- Leftovers, so nothing can go missing ---- */

@@ -1227,9 +1227,26 @@ would be worse to leave it unsaid.
 The MassHealth sentence is a good catch that nobody here had thought of. Two sets of work
 requirements are live at once and people do conflate them.
 
-**Still missing:** Terms of Use and Privacy Policy links, because their URLs were never
-supplied and a Terms link that goes nowhere on a public benefits page is worse than no link.
-This version also has no Terms of Use checkbox at all, which earlier versions did.
+Under the text sits MassLegalHelp's darker sub-strip, carrying the two links you sent on
+2026-08-07. Both open in a new tab, so reading the terms halfway through a screening does not
+navigate away from a half-finished form:
+
+**`footer.termsLink`**
+
+> Terms of Use
+
+**`footer.privacyLink`**
+
+> Privacy Policy
+
+Their own strip carries two more things that are not here. Social icons, which you did not
+ask for. And `©2026 Massachusetts Legal Assistance Corporation`, which came off on 2026-07-30
+along with the "Funded by the Massachusetts Legal Assistance Corporation" credit: both were
+copied from MassLegalHelp's footer, where they describe their site, and on this page the
+copyright asserts MLAC owns something MLRI wrote. Say the word if you want either back.
+
+**Still open:** this version has no Terms of Use checkbox, which earlier versions did. Linking
+the terms is not the same as asking someone to accept them, so that is still a decision.
 
 ## 16. Everything else
 

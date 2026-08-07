@@ -100,6 +100,10 @@
      * The content column stays 760px and centred. That is deliberate and matches them too:
      * their chrome is wide while their article text is not. */
     --chrome-gutter:clamp(18px, 5.7vw, 120px);
+    /* MassLegalHelp's darker sub-strip, measured and recorded in MASSLEGALHELP-BRAND.md, where it
+     * is the bar above their header. They use the same value under their footer for Terms of Use
+     * and Privacy Policy, which is what it carries here. White on it is 17.65:1. */
+    --strip:#0c1639;
   }
   *{box-sizing:border-box}
   html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
@@ -362,6 +366,36 @@
     padding:26px max(16px, env(safe-area-inset-right)) 30px max(16px, env(safe-area-inset-left));
   }
   .footer-about-inner p{margin:0;font-size:13.5px;line-height:1.65;color:rgba(255,255,255,.92)}
+  /* MassLegalHelp's darker sub-strip, 2026-08-07, once MLRI supplied the two URLs. Theirs also
+   * carries social icons and a `©2026 Massachusetts Legal Assistance Corporation` line. Neither
+   * is here: the icons were not asked for, and the copyright asserts MLAC owns a page MLRI wrote,
+   * which is why it and the MLAC funding credit came off on 2026-07-30. Raised rather than
+   * decided; if MLRI want the credit back it is theirs to want.
+   *
+   * Same column as the paragraph above, so the whole footer reads as one block.
+   *
+   * New tab, matching every other outbound link in the tool. It also means someone reading the
+   * terms mid-screening does not navigate away from a half-finished form. */
+  .footer-legal{background:var(--strip)}
+  .footer-legal-inner{
+    max-width:760px;margin:0 auto;
+    padding:0 max(16px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left));
+    display:flex;flex-wrap:wrap;align-items:center;gap:0 28px;
+  }
+  /* 44px min-height is the WCAG 2.5.5 target floor this build holds everywhere else. Underlined
+     because colour alone must not be what says "link", and white is 17.65:1 on the strip. */
+  .footer-legal-inner a{
+    display:inline-flex;align-items:center;min-height:44px;
+    color:#fff;font-size:13.5px;font-weight:700;
+    text-decoration:underline;text-underline-offset:3px;
+  }
+  .footer-legal-inner a:hover{color:var(--yellow)}
+  /* The default ring is --accent-dark, #1f2c5c, which is 1.32:1 on the strip and 1:1 on the
+     footer band itself. A keyboard user tabbing into the footer would have seen nothing at all.
+     Gold is 12.48:1 on the strip and 9.21:1 on the band, the same swap .topbar already makes.
+     This was latent rather than new: the footer wordmark was a link with the same invisible ring
+     until it came out earlier today. */
+  .site-footer :focus-visible{outline-color:var(--yellow)}
   @media (max-width:640px){
     .topbar-inner{min-height:62px;padding:9px max(12px, env(safe-area-inset-right)) 9px max(12px, env(safe-area-inset-left));gap:10px}
     .btn-exit{font-size:13px;padding:9px 12px}
@@ -625,6 +659,12 @@
        two files is how the pair drifts. -->
   <div class="footer-about-inner">
     <p>This tool was developed by the Massachusetts Law Reform Institute to help give you more information about the SNAP work rules. The Department of Transitional Assistance (DTA) runs the SNAP program in Massachusetts. The SNAP ABAWD Work Rules are different from MassHealth work rules.</p>
+  </div>
+  <div class="footer-legal">
+    <div class="footer-legal-inner">
+      <a href="https://www.masslegalhelp.org/terms-use" target="_blank" rel="noopener">Terms of Use</a>
+      <a href="https://www.masslegalhelp.org/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a>
+    </div>
   </div>
 </footer>
 

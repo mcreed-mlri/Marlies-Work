@@ -104,11 +104,12 @@ each is waiting on a decision or on the vendor.
   changed, because the words are MLRI's.
 - **Quick exit destination.** Currently `weather.com`, set in `PRODUCTION_QUICK_EXIT_URL`
   in the logic module. Confirm that is the right neutral site.
-- **Terms of Use and Privacy Policy.** The footer has no links to either, because they are
-  not in MassLegalHelp's `<footer>` element and their URLs are unknown. Get them from the
-  vendor. Separately, this build has no Terms of Use checkbox at all, unlike the other
-  variants, so decide whether the tool inherits the host site's terms or needs its own
-  gate.
+- **Terms of Use and Privacy Policy. Linked as of 2026-08-07,** to
+  `masslegalhelp.org/terms-use` and `masslegalhelp.org/privacy-policy`, on MassLegalHelp's
+  darker `#0c1639` sub-strip under the footer text. What is still open is narrower: this
+  build has no Terms of Use checkbox, unlike the retired variants. Linking the terms is not
+  the same as asking someone to accept them, so whether the tool inherits the host site's
+  terms or needs its own gate is still a decision.
 - **Two vendor items, both in the deploy contract above.** It needs its own Pages project or
   repo, because a project containing `functions/` puts the public tool behind the preview
   site's password. And confirm the Worker strips `masslegalhelp.org` cookies and retains
