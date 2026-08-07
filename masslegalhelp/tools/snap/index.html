@@ -543,6 +543,14 @@
       max-width:100%;min-width:0;
     }
     .hint-tip-wrap .hint-tip--icon.is-open .hint-tip-btn{align-self:flex-start}
+    /* An icon tip that sits inside a paragraph rather than beside it, which is where the
+       why-info one moved to on 2026-08-07. Its panel has to drop below the line instead of
+       trying to sit on it, the same thing .hint-tip--term.is-open above does for the ABAWD
+       definition. Selector rather than a new modifier class, because "is it in a paragraph" is
+       exactly the condition and nothing has to remember to pass a flag. */
+    p > .hint-tip--icon.is-open{
+      display:inline-flex;flex-direction:column;align-items:flex-start;max-width:100%;
+    }
     .hint-tip-btn--icon{min-height:44px;min-width:44px;justify-content:center}
     .hint-tip-panel{
       display:block;position:static;width:100%;max-width:100%;box-sizing:border-box;box-shadow:none;
@@ -1345,8 +1353,18 @@ function renderResults(){
       const subs = kids.length
         ? `<ul role="list" style="list-style:disc;margin:8px 0 0;padding-left:22px">${kids.join('')}</ul>`
         : '';
+      /* Outlined, not filled. The card already opens with a filled tick in the green band, which
+         is the result icon the other result screens share, and a column of solid green discs
+         under it repeated the same mark at almost the same size all the way down the list. The
+         two were doing different jobs and looking like one thing said twice: the heading tick
+         says the answer is good news, these say which reasons applied.
+
+         The tick shape stays, because it still means "this one is true of you", and the circle
+         stays so these read as a level above the disc sub-bullets indented under them. Only the
+         weight comes off. #1e7a45 on white is 5.35:1, so the ring is a real boundary and the
+         glyph inside it is legible rather than decorative. */
       return `<li style="display:flex;align-items:flex-start;gap:11px;font-size:16px;line-height:1.5;color:var(--ink);padding:12px 0;border-bottom:1px solid var(--field)">
-      <span aria-hidden="true" style="width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex:none;margin-top:1px">✓</span>
+      <span aria-hidden="true" style="width:21px;height:21px;border-radius:50%;border:1.5px solid var(--green);color:var(--green);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:none;margin-top:2px">✓</span>
       <span>${esc(e.text)}${subs}</span></li>`;
     }).join('');
   }
@@ -1499,13 +1517,16 @@ function renderResults(){
     form = `<div style="margin:26px 0 0;background:#fff;border:1.5px solid var(--panel);border-radius:12px;overflow:hidden">
       <div style="background:var(--field);border-bottom:1px solid var(--panel);padding:16px 20px">
       ${formTitle ? `<h3 style="font-size:19px;line-height:1.3;margin:0 0 8px">${esc(formTitle)}</h3>` : ''}
-      <div class="hint-tip-wrap" style="margin:0">
-        <p style="font-size:15px;line-height:1.55;color:var(--prose);margin:0">${esc(formLead)}</p>
-        ${hintTip('why-info', C.whyInfoLabel, whyInfo, true)}
-      </div>
+      <!-- The tip sits inside the paragraph, after the full stop, rather than beside it.
+           .hint-tip-wrap is a flex row, so a lead this long filled the line and pushed the (i)
+           onto one of its own, where it read as a control belonging to nothing. It still works
+           for the Signature label below, which is three words. -->
+      <p style="font-size:15px;line-height:1.55;color:var(--prose);margin:0">${esc(formLead)} ${hintTip('why-info', C.whyInfoLabel, whyInfo, true)}</p>
       <!-- Inside the header band with the lead, not down in the body: someone who would rather
-           write by hand should find that out before working through the blanks, not after. -->
-      <p style="font-size:15px;line-height:1.55;color:var(--prose);margin:10px 0 0">${esc(C.formSendAlternatives)}</p>
+           write by hand should find that out before working through the blanks, not after.
+           Set quieter than the lead above it, because it is the alternative rather than the
+           instruction, and two paragraphs of equal weight made the band read as a wall. -->
+      <p style="font-size:14px;line-height:1.55;color:var(--muted);margin:8px 0 0">${esc(C.formSendAlternatives)}</p>
       </div>
       <div style="padding:20px">
       ${renderPrivacyCallout('18px')}
