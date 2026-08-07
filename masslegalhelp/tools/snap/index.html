@@ -932,15 +932,21 @@ function optNum(n){
  * taken off the intro on 2026-08-06 for spending that vocabulary on a reassurance. Blue is what
  * this page already uses for "read this", which is what these are.
  *
- * Same shape as the privacy callout for that reason, with a heading, which the privacy one does
- * not have, to tell the two apart and to say what the panel is for.
+ * Teal was the obvious way to tell it apart from the privacy panel, which shares this fill, and
+ * it is the one hue that cannot work here. A pale teal is 1.00:1 against --ok-fill, the green
+ * this card's own header wears, and shares its hue, so inside this card it would read as green
+ * that had gone slightly wrong rather than as a colour of its own.
+ *
+ * So the two panels differ in shape instead: this one carries a 4px --accent bar down its left
+ * edge and a heading, and the privacy one has neither. A bar is visible at a glance and at any
+ * zoom, which two pale tints a hue apart are not.
  *
  * One panel however many notes apply. Someone exempt on work income, a disability benefit and a
  * state agency gets three sentences, and three separate boxes would be worse than the prose. */
 function renderProofCallout(reasons){
   const notes = exemptProofNotes(reasons);
   if(!notes.length) return '';
-  return `<div style="display:flex;align-items:flex-start;gap:12px;background:var(--soft);border-radius:var(--radius);padding:15px 17px;margin:0 0 16px">
+  return `<div style="display:flex;align-items:flex-start;gap:12px;background:var(--soft);border-left:4px solid var(--accent);border-radius:var(--radius);padding:15px 17px;margin:0 0 16px">
     <span aria-hidden="true" style="width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;margin-top:1px">
       <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v5h5"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
     </span>
