@@ -854,3 +854,20 @@ say('Generated from the screener itself by `scripts/copy-walkthrough.js`. Re-run
 fs.writeFileSync(OUT, lines.join('\n').replace(/\n{3,}/g, '\n\n').trimEnd() + '\n', 'utf8');
 console.log('Wrote ' + path.relative(ROOT, OUT).split(path.sep).join('/'));
 console.log('  ' + EXAMPLES.length + ' worked examples, ' + ALL_BLOCKS.length + ' sentences');
+
+/* Both outputs from the one command.
+ *
+ * The --docs variant is written to _local/, which is untracked, so neither `git status` nor the
+ * CI job that regenerates every generated file and diffs it can see that one fall behind. It is
+ * the only generated document in this repository with nothing watching it, and on 2026-08-07 it
+ * turned out to be four days and 219 lines stale: no housing review, no EAEDC note, missing two
+ * of the five endings and every state agency reason. Somebody could have pasted that into a
+ * Google Doc and reviewed a tool that no longer exists.
+ *
+ * DOCS_MODE changes the content in several places, not just the filename, so the document has to
+ * be built twice. A second pass in a child process is the smallest way to do that without
+ * restructuring the whole script into a function. `--docs` on its own still works for anyone who
+ * wants only that file, and the child cannot recurse because it is the one running with the flag. */
+if (!DOCS_MODE) {
+  require('child_process').execFileSync(process.execPath, [__filename, '--docs'], { stdio: 'inherit' });
+}

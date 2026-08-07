@@ -60,9 +60,9 @@ overwrites its own output and nothing else:
 
 ```
 scripts/copy-doc.js                 regenerates SCREENER-COPY.md from the code
-scripts/copy-walkthrough.js         regenerates SCREENER-WALKTHROUGH.md from the code
-scripts/copy-walkthrough.js --docs  the same, rebuilt for pasting into Google Docs,
-                                    written to _local/ and not tracked
+scripts/copy-walkthrough.js         regenerates SCREENER-WALKTHROUGH.md, and the Google Docs
+                                    copy in _local/ with it, since nothing watches that one
+scripts/copy-walkthrough.js --docs  only the Google Docs copy, if that is all you want
 scripts/testing-doc.js              regenerates TESTING.md from the code
 scripts/decision-spec.js            regenerates DECISION-SPEC.md and decision-spec.json
 scripts/gen-docassemble.js          regenerates the interview YAML and ALKiln feature file
