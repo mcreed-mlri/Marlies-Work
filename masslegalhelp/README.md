@@ -43,6 +43,20 @@ so it is a thing to do rather than a thing to ask.
 MLRI has the Cloudflare account for `masslegalhelp.org`, so this does not need the vendor.
 Two routes work and one does not.
 
+Worth knowing which of these steps can reach the live site, because most of them cannot. A
+GitHub repo, a push to it, and a Cloudflare Pages project are separate resources: creating a
+Pages project never reads or writes the DNS zone, and it comes with its own `pages.dev`
+hostname. The zone is touched only when a custom domain is added, and that adds one record
+for a hostname that does not exist yet; DNS records are per-hostname, so it cannot alter the
+apex or `www`. The one step with real reach is the Access policy, which gates exactly the
+hostname it is given.
+
+So there is a version of this that touches `masslegalhelp.org` not at all: deploy to the
+Pages project, protect the `pages.dev` hostname, and stop. The cost is that a `.pages.dev`
+host matches the review allowlist, so `?sample=` and **Screener home** are live there. That
+is irrelevant to a copy review and matters only for confirming those are absent in
+production, which needs the real hostname and can wait for it.
+
 **Cloudflare Access on the path is the one to reach for.** A policy scoped to
 `masslegalhelp.org/tools/snap-abawd*` in Zero Trust, allowing named addresses or a one-time
 PIN to an `@mlri.org` address. No code, no environment variable, and turning it off is a
