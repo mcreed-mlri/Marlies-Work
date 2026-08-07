@@ -40,7 +40,7 @@ const INLINE = [
   { id: 'btn.skipToResults', re: />(Skip to results)</ },
   { id: 'btn.startOver', re: />([^<]{0,4}Start over)</ },
   { id: 'btn.deleteAnswers', re: />(Delete my answers)</ },
-  { id: 'statement.docTitle', re: /<title>(SNAP Work Rules Statement)<\/title>/ },
+  { id: 'statement.docTitle', re: /<title>(SNAP ABAWD Work Rules Statement)<\/title>/ },
   { id: 'statement.nameLabel', re: />(Your name)</ },
   { id: 'statement.sigLabel', re: />(Signature)</ },
   { id: 'statement.sigHint', re: /id="sig-hint"[^>]*>([^<]+)</ },

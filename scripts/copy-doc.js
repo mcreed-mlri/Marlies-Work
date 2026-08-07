@@ -87,14 +87,18 @@ const INLINE = [
   // Warnings and inline notes
   { id: 'page.skippedWarning', re: />(If you skipped questions[^<]+)</ },
   // The printable statement
-  { id: 'statement.docTitle', re: /<title>(SNAP Work Rules Statement)<\/title>/ },
+  { id: 'statement.docTitle', re: /<title>(SNAP ABAWD Work Rules Statement)<\/title>/ },
   { id: 'statement.nameLabel', re: />(Your name)</ },
   { id: 'statement.sigLabel', re: />(Signature)</ },
   { id: 'statement.sigHint', re: /id="sig-hint"[^>]*>([^<]+)</ },
   { id: 'hint.signatures.title', re: /hintTip\('sig', '([^']+)'/ },
   { id: 'hint.signatures.body', re: /hintTip\('sig', '[^']+', '((?:[^'\\]|\\.)+)'/ },
   // Chrome and footer. These are not the author's; see the flagged section.
-  { id: 'chrome.tabTitle', re: /<title>(SNAP Work Rules Screening[^<]*)<\/title>/ },
+  /* Anchored on the wording deliberately. When the title gained "ABAWD" on 2026-08-07 this
+     pattern stopped matching, and copy-doc treats an inline pattern that no longer matches as a
+     hard error rather than a silent omission, so it said so instead of quietly dropping the
+     string from the review document. */
+  { id: 'chrome.tabTitle', re: /<title>(SNAP ABAWD Work Rules Screening[^<]*)<\/title>/ },
   /* chrome.wordmark and chrome.tagline were here, reading .topbar-title and
      .topbar-sub. Both stopped matching when the header text was replaced by
      MassLegalHelp's logo file: the words are inside mlh-logo.svg now, so they are

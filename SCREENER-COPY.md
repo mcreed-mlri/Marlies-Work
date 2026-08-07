@@ -666,7 +666,7 @@ Every letter ends this way:
 
 **`statement.docTitle`**  (the printed page title)
 
-> SNAP Work Rules Statement
+> SNAP ABAWD Work Rules Statement
 
 **`formTitleExempt`**
 
@@ -1208,7 +1208,7 @@ has moved out of this section and into the footer section below.
 
 **`chrome.tabTitle`**  **[written by the developer, not you]**
 
-> SNAP Work Rules Screening | Massachusetts Legal Help
+> SNAP ABAWD Work Rules Screening | Massachusetts Legal Help
 
 **`chrome.brandLabel`**  **[written by the developer, not you]**
 
