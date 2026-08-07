@@ -1939,7 +1939,10 @@
         <td colspan="2" style="padding:9px 0 5px;color:#111">
           <div style="font-weight:700;color:#222;margin:0 0 3px">${esc(STATEMENT_AGENCY_LABEL)}</div>
           <div style="border-bottom:${agency ? RULE_VALUE : RULE_WRITE};padding:0 0 5px">${agency ? esc(agency) : '&nbsp;'}</div>
-          <div style="font-size:9.5pt;color:#444;padding:3px 0 0;line-height:1.35">${esc(STATEMENT_AGENCY_HINT)}</div>
+          <!-- Italic, because it is the one line on the page addressed to the person holding the
+               letter rather than to DTA. Upright it read as part of what they were telling
+               DTA. -->
+          <div style="font-size:9.5pt;font-style:italic;color:#555;padding:3px 0 0;line-height:1.35">${esc(STATEMENT_AGENCY_HINT)}</div>
         </td>
       </tr>`;
 
@@ -1978,9 +1981,20 @@
       });
     }
 
+    /* A box only when there is nothing in it.
+     *
+     * This printed a ruled grey field either way, so someone who typed their explanation got
+     * their own sentence boxed off from the letter around it, looking like a form nobody had
+     * taken the fields off. It is the single thing that made a finished letter read as a
+     * half-filled form, and it is what someone signs and sends to DTA.
+     *
+     * Filled, the words are set as a paragraph like the rest of the letter, indented to sit
+     * under the bullet they belong to. Empty, the box stays exactly as it was: that is the space
+     * to write in by hand, and someone printing a blank copy needs to see where. */
     const explainBox = (text) => {
-      const inner = String(text == null ? '' : text).trim() ? esc(text) : '&nbsp;';
-      return `<div style="margin:8px 0 0 18px;border:1px solid #999;padding:12px 14px;min-height:48px;white-space:pre-wrap;background:#fafafa">${inner}</div>`;
+      const t = String(text == null ? '' : text).trim();
+      if (t) return `<div style="margin:8px 0 0 18px;white-space:pre-wrap">${esc(t)}</div>`;
+      return `<div style="margin:8px 0 0 18px;border:1px solid #999;padding:12px 14px;min-height:48px;background:#fafafa">&nbsp;</div>`;
     };
 
     function explainTextForPrompt(prompt) {
@@ -2155,8 +2169,13 @@
         ${addrRow('Date', today)}
         ${addrRow('To', 'Massachusetts Department of Transitional Assistance (DTA)')}
         ${addrRow('From', name)}
-        ${agencyRow()}
         ${addrRow('Re', 'SNAP benefits, ABAWD work rules')}
+        <!-- Last, not between From and Re. It is the only row that spans both columns and the
+             only one carrying a note under it, so sitting in the middle it broke the four
+             one-line rows into two halves and pushed Re away from the addresses it belongs
+             with. Date, To, From, Re is the block a reader expects; the field to fill in by
+             hand comes after it. -->
+        ${agencyRow()}
       </table>
 
       ${body}

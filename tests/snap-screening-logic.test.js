@@ -1426,6 +1426,21 @@ describe('snap-screening-logic', () => {
       });
       assert.match(writein, /border:1px solid #999/, 'an empty box must still print as a ruled area to write in');
       assert.doesNotMatch(writein, /Explain the health reason/);
+
+      /* Once someone types into that blank, the box goes and their words are set as a paragraph.
+         Until 2026-08-07 the ruled grey field printed either way, so a finished letter carried
+         the person's own sentence boxed off from the letter around it, looking like a form
+         nobody had taken the fields off. This is what they sign and send to DTA. */
+      const filled = SnapScreening.buildStatementHTML({
+        rt: 'exempt', rs: [REASON_TEXT_BY_ID.health], today: 'August 1, 2026',
+        explain: [{ prompt: 'Explain the health reason that makes it hard for you to work 30 or more hours a week', text: 'I have an autoimmune disease.' }]
+      });
+      assert.ok(filled.includes('I have an autoimmune disease.'));
+      assert.doesNotMatch(
+        filled, /border:1px solid #999/,
+        'the person typed an answer, so it must read as part of the letter rather than sit in a ruled field'
+      );
+      assert.doesNotMatch(filled, /background:#fafafa/, 'nor keep the empty box shading');
     });
 
     /* Until 2026-08-04 this test asserted the opposite: that the emailed summary
