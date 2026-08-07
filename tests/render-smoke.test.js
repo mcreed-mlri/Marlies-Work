@@ -552,6 +552,38 @@ describe('review-only modes stay off a production host', () => {
   });
 });
 
+/* The header wordmark must not be sized against the viewport.
+ *
+ * It was `max-width:calc(100vw - 150px)`, a guess at how much room the top-bar buttons take,
+ * measured against the viewport rather than against the space the flex row actually leaves. Any
+ * set of controls wider than the guess overflowed the row and the buttons were drawn on top of
+ * the wordmark, which is what a review host showed with two of them. A second copy of the same
+ * guess, 8px different, sat in the 360px query.
+ *
+ * A source assertion because the DOM shim does no layout, so nothing here can observe an
+ * overlap. Narrow, but it is the specific thing that broke, and it broke silently: the page
+ * renders, the tests pass, and only a person looking at a phone sees it. */
+describe('the header wordmark is sized by its container, not the viewport', () => {
+  for (const p of [
+    { label: 'masslegalhelp/tools/snap/index.html', file: SHIP },
+    { label: 'masslegalhelp/tools/index.html', file: path.join(MLH, 'tools', 'index.html') }
+  ]) {
+    it(p.label, () => {
+      const css = fs.readFileSync(p.file, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+      const rules = [...css.matchAll(/\.topbar-logo\s*\{([^}]*)\}/g)].map(m => m[1]);
+      assert.ok(rules.length, p.label + ': no .topbar-logo rule at all.');
+      for (const body of rules) {
+        assert.doesNotMatch(
+          body, /\d+vw/,
+          p.label + ': .topbar-logo is sized against the viewport again. That number has to stay '
+          + 'in step with the width of the top-bar buttons, and when it does not the buttons are '
+          + 'drawn over the wordmark. Use max-width:100% and let the flex row do it.'
+        );
+      }
+    });
+  }
+});
+
 /* The footer, across both shipping pages.
  *
  * The legal strip is on both, in two copies, because there is no build step and no shared

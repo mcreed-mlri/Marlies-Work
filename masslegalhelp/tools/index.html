@@ -52,8 +52,10 @@
   }
   .topbar-brand{display:flex;align-items:center;flex:1 1 auto;min-width:0;color:inherit;text-decoration:none}
   .topbar-brand:hover .topbar-logo{opacity:.92}
+  /* max-width:100%, not a viewport-relative guess at how wide the buttons are. The reasoning is
+     recorded on the screener, where the guess was drawing them over the wordmark. */
   .topbar-logo{
-    display:block;width:272px;max-width:calc(100vw - 150px);height:auto;
+    display:block;width:272px;max-width:100%;height:auto;
   }
   .topbar-title{
     font-family:"Libre Baskerville",Georgia,serif;font-size:30px;font-weight:700;
@@ -153,8 +155,15 @@
     .tool-card .privacy p{font-size:14px;line-height:1.5}
     .info-panel{margin-top:28px}
   }
+  /* MassLegalHelp's stacked mobile masthead, matching the screener: wordmark centred on its own
+     row, controls centred underneath. */
+  @media (max-width:560px){
+    .topbar-inner{flex-direction:column;align-items:center;gap:12px}
+    .topbar-brand{flex:none;width:100%;justify-content:center}
+    .topbar-actions{width:100%;justify-content:center}
+  }
   @media (max-width:360px){
-    .topbar-logo{max-width:calc(100vw - 142px)}
+    /* The second copy of the viewport-relative guess was here, 8px different. Gone with it. */
     .topbar-actions{flex-direction:column;align-items:stretch;gap:6px}
     .btn-review,.btn-exit{min-height:44px}
     .btn-exit{padding:8px 10px}

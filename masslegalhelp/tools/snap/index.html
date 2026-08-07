@@ -188,7 +188,16 @@
     color:inherit;text-decoration:none;
   }
   a.topbar-brand:hover .topbar-logo{opacity:.92}
-  .topbar-logo{display:block;width:272px;max-width:calc(100vw - 150px);height:auto}
+  /* max-width:100%, not calc(100vw - 150px).
+   *
+   * That 150px was a guess at how much room the buttons take, measured against the viewport
+   * rather than against the space this flex row actually leaves. Any set of controls wider than
+   * the guess overflowed the row and the buttons were drawn over the wordmark. Two buttons did
+   * it, which is what a review host shows, and the shipping one alone came close.
+   *
+   * The anchor is already flex:1 1 auto with min-width:0, so it shrinks; 100% then clamps the
+   * image to whatever it was given. No number to keep in step with the buttons. */
+  .topbar-logo{display:block;width:272px;max-width:100%;height:auto}
   /* .topbar-title and .topbar-sub were here, styling the wordmark and tagline that used to sit
      in the header. Both became artwork when the header text was replaced by mlh-logo.svg, so the
      rules had nothing wearing them. check-pages.js only catches the opposite case, a class in the
@@ -418,8 +427,20 @@
     .q-nav > [data-action="back"]{flex:0 0 36%}
     #start-btn{width:100%}
   }
+  /* MassLegalHelp stack their masthead on a phone: the wordmark centred on its own row, the
+     controls centred underneath. Ours does the same from here down.
+
+     560px rather than something tighter. Side by side, the wordmark and a lone Quick exit fit to
+     about 410px, so this is not where it breaks; it is where they stop doing it side by side, and
+     matching their masthead is the point. It costs about 50px of header height on a phone. */
+  @media (max-width:560px){
+    .topbar-inner{flex-direction:column;align-items:center;gap:12px}
+    a.topbar-brand{flex:none;width:100%;justify-content:center}
+    .topbar-actions{width:100%;justify-content:center}
+  }
   @media (max-width:360px){
-    .topbar-logo{max-width:calc(100vw - 142px)}
+    /* The same viewport-relative guess as the rule above it, 8px different, and gone for the
+       same reason. */
     .topbar-actions{flex-direction:column;align-items:stretch;gap:6px}
     .btn-review,.btn-exit{min-height:44px}
     .btn-exit{padding:8px 10px}
