@@ -104,6 +104,30 @@ w('`?sample=` only works on a review host (localhost, 127.0.0.1, a `.pages.dev`'
 w('preview, or a `file://` URL). It is inert on masslegalhelp.org, which is deliberate and is');
 w('itself something to test.');
 blank();
+
+h3('Testing it from somewhere other than this machine');
+
+w('The preview site is on Cloudflare Pages, behind the HTTP Basic gate in `functions/_middleware.js`,');
+w('and that gate covers every folder in the repository automatically. So the shipping build is');
+w('already reachable at `/masslegalhelp/tools/snap/` on the preview domain, password-protected,');
+w('and every push to `main` redeploys it. Nothing has to be set up to share it with a reviewer.');
+blank();
+w('**Two things are true there that will not be true in production,** so a pass done only on the');
+w('preview is not a pass on what ships:');
+blank();
+w('- `?sample=` works, and the top bar shows a **Screener home** button. Both are gated to review');
+w('  hosts and a `.pages.dev` domain is one. On masslegalhelp.org neither exists.');
+w('- The preview registers a service worker and the shipping build does not. If a fix has been');
+w('  pushed and a reviewer still sees the old page, that is why: hard-refresh, or see the cache');
+w('  version note in the repository README.');
+blank();
+w('Putting it behind a password **on masslegalhelp.org itself** is a different job and belongs to');
+w('the vendor: Cloudflare Access in front of the path, or auth in their Worker. Do not copy');
+w('`functions/_middleware.js` into `masslegalhelp/` to get there. `scripts/publish-mlh.js` refuses');
+w('it, and the reason is worth more than the guard: the build under test would then carry auth');
+w('code that has to be taken out before launch, and that removal is a step someone can forget.');
+w('A gate in front of the files keeps the files identical to what goes public.');
+blank();
 check('Have a real phone to hand, not just a narrow browser window. The signature pad, the print dialog, and the mail app all behave differently on a real device.');
 check('Have a printer or a "Save as PDF" option available.');
 check('If you can, borrow a screen reader for the accessibility section: VoiceOver on a Mac or iPhone, Narrator on Windows, TalkBack on Android.');

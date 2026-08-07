@@ -37,6 +37,29 @@ Then open the screener and, if you need the archived guided build, its copy:
 preview, or a `file://` URL). It is inert on masslegalhelp.org, which is deliberate and is
 itself something to test.
 
+### Testing it from somewhere other than this machine
+
+The preview site is on Cloudflare Pages, behind the HTTP Basic gate in `functions/_middleware.js`,
+and that gate covers every folder in the repository automatically. So the shipping build is
+already reachable at `/masslegalhelp/tools/snap/` on the preview domain, password-protected,
+and every push to `main` redeploys it. Nothing has to be set up to share it with a reviewer.
+
+**Two things are true there that will not be true in production,** so a pass done only on the
+preview is not a pass on what ships:
+
+- `?sample=` works, and the top bar shows a **Screener home** button. Both are gated to review
+  hosts and a `.pages.dev` domain is one. On masslegalhelp.org neither exists.
+- The preview registers a service worker and the shipping build does not. If a fix has been
+  pushed and a reviewer still sees the old page, that is why: hard-refresh, or see the cache
+  version note in the repository README.
+
+Putting it behind a password **on masslegalhelp.org itself** is a different job and belongs to
+the vendor: Cloudflare Access in front of the path, or auth in their Worker. Do not copy
+`functions/_middleware.js` into `masslegalhelp/` to get there. `scripts/publish-mlh.js` refuses
+it, and the reason is worth more than the guard: the build under test would then carry auth
+code that has to be taken out before launch, and that removal is a step someone can forget.
+A gate in front of the files keeps the files identical to what goes public.
+
 - [ ] Have a real phone to hand, not just a narrow browser window. The signature pad, the print dialog, and the mail app all behave differently on a real device.
 - [ ] Have a printer or a "Save as PDF" option available.
 - [ ] If you can, borrow a screen reader for the accessibility section: VoiceOver on a Mac or iPhone, Narrator on Windows, TalkBack on Android.
