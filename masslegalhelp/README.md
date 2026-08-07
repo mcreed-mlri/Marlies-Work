@@ -32,11 +32,23 @@ service worker on a production origin is not something to hand a vendor.
 Fonts are self-hosted in `fonts/`. Nothing here makes an external request, so the tool
 cannot be broken by a third party and sends no data to one.
 
-If the Worker sits on the `masslegalhelp.org` origin, requests to this path will carry
-`masslegalhelp.org` cookies. The Worker must strip them, and request logging must not retain
-them. This tool asks about pregnancy, disability, domestic violence, and personal safety.
-That used to read "confirm with the vendor"; MLRI holds the Cloudflare login for the domain,
-so it is a thing to do rather than a thing to ask.
+Requests to this tool will carry `masslegalhelp.org` cookies, wherever it is served from.
+MassLegalHelp sets them on `.masslegalhelp.org`, with the leading dot, so they reach every
+subdomain as well as every path. A subdomain does not avoid this and neither does a Worker at
+a path; the two are equal on it, which is why the choice between them turns on other things.
+
+What the tool does with them is nothing. It never reads `document.cookie` and makes no
+network request of any kind: no fetch, no XHR, no beacon. The exposure is entirely in logs. A
+request log that keeps the Cookie header can tie an identifiable session to "used the SNAP
+ABAWD screener", on a tool that asks about pregnancy, disability, domestic violence and
+personal safety.
+
+Strip the header at the edge. This used to say the Worker must do it, which is misleading now
+that a subdomain is the plan, because a subdomain has no Worker and a reader would conclude
+the requirement cannot be met. It can, without one: a Transform Rule doing HTTP request header
+modification, matching the tool's hostname and removing `Cookie`. Check what Logpush retains
+for the zone while you are there. MLRI holds the Cloudflare login, so this is a thing to do
+rather than a thing to ask the vendor.
 
 ## Gating it while it is being tested
 
@@ -175,8 +187,10 @@ each is waiting on a decision, and the hosting ones are MLRI's own to make.
 - **Two hosting items, both in the deploy contract above, and both MLRI's own to do rather
   than the vendor's, since MLRI holds the Cloudflare login for the domain.** It needs its own
   Pages project or repo, because a project containing `functions/` puts the public tool behind
-  the preview site's password. And the Worker has to strip `masslegalhelp.org` cookies and
-  retain none in its logs, on a tool that asks about pregnancy and domestic violence.
+  the preview site's password. And a Transform Rule has to strip the `Cookie` header for the
+  tool's hostname, because MassLegalHelp's cookies are set on `.masslegalhelp.org` and so
+  follow it to a subdomain as readily as to a path. The tool reads none of them; the point is
+  that logs should not be able to tie a session to a screening about domestic violence.
 - **Author copy edits.** Several are applied; several are waiting on the author. See
   `SCREENER-COPY.md` in the MLRI source repository, which lists every string and prints each
   open question beside the text it is about.
