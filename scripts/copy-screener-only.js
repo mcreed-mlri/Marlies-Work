@@ -378,8 +378,6 @@ function emitGoodCauseCard() {
     if (cat.moreExamplesTip.length) {
       w('- More examples (opens on hover, does not link out):');
       cat.moreExamplesTip.forEach(x => w('  - ' + plain(x)));
-    } else if (cat.moreExamplesUrl) {
-      w('- [More examples](' + cat.moreExamplesUrl + ')');
     }
     blank();
   });

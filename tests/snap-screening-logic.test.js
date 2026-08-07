@@ -679,14 +679,29 @@ describe('snap-screening-logic', () => {
     assert.ok(cats.every(c => c.detail.length > 0));
     assert.equal(goodCauseCategories('classic2').length, 3);
 
-    /* "More examples" as of 2026-08-07, at MLRI's direction: gone from Emergency, and a hover
-       panel rather than a link out on Employment. No category carries both, because the render
-       site picks one and a category holding both would silently show only the panel. */
-    assert.equal(cats.find(c => c.id === 'emergency').moreExamplesUrl, '');
-    assert.deepEqual(cats.find(c => c.id === 'emergency').moreExamplesTip, []);
-    assert.equal(cats.find(c => c.id === 'employment').moreExamplesUrl, '');
-    assert.equal(cats.find(c => c.id === 'employment').moreExamplesTip.length, 3);
-    assert.ok(cats.every(c => !(c.moreExamplesUrl && c.moreExamplesTip.length)));
+    /* "More examples" as of 2026-08-07: a hover panel on two categories, and no links out
+       anywhere. moreExamplesUrl and the flag behind it are gone, so a category either has a
+       panel or has nothing. */
+    assert.ok(cats.every(c => !('moreExamplesUrl' in c)));
+    assert.equal(cats.find(c => c.id === 'transport').moreExamplesTip.length, 0);
+
+    /* The emergency examples belong here and not on employment, which is where they were sent
+       first. The category someone picks is the one their emailed summary names, so a person who
+       opened an employment panel after a bereavement and recognised themselves in it would have
+       carried the wrong category. Asserted by content, not by count, because that is the part
+       that was wrong. */
+    const emergency = cats.find(c => c.id === 'emergency').moreExamplesTip;
+    assert.equal(emergency.length, 3);
+    assert.ok(emergency.some(x => /A death/.test(x)));
+    assert.ok(emergency.some(x => /child care/.test(x)));
+
+    /* Employment carries the two of the six examples in the question's help that its four detail
+       lines do not already name: the commute and the religious observance. */
+    const employment = cats.find(c => c.id === 'employment').moreExamplesTip;
+    assert.equal(employment.length, 2);
+    assert.ok(employment.some(x => /religious observances/.test(x)));
+    assert.ok(employment.some(x => /over 2 hours/.test(x)));
+    assert.ok(!employment.some(x => /death|illness|child care/i.test(x)), 'emergency examples must not be back on employment');
   });
 
   it('buildStatementHTML renders an indented box under each reason without printing the prompt', () => {

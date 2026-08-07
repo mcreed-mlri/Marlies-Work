@@ -462,9 +462,11 @@ Currently attached to the reason **I have a health reason that makes it hard to 
 
 > You may have a good reason for missing hours
 
-> **Question for you:** Both "More examples" changes are in, 2026-08-07: gone from Emergency, and a hover panel rather than a link out on Unreasonable Employment issues, built the same way as the ABAWD definition on the start page.
+> **Question for you:** Applied and settled on 2026-08-07. "More examples" is a hover panel on both Emergency and Unreasonable Employment issues, built the same way as the ABAWD definition on the start page: dotted underline, opens on hover with a mouse and on tap on a phone. There are no "More examples" links out anywhere on this screen now.
 >
-> One thing to check, and it is why this is flagged rather than just done. The three examples you sent for that panel are "A death", "An illness or health emergency", and "A child’s school problem or unavailable child care". Those read as examples of the Emergency category rather than of employment: a death, an illness and a childcare problem are not employment conditions. It matters because the category someone picks here is the one their emailed summary names, so a person who opens that panel after a bereavement, recognises themselves in it, and picks "Unreasonable Employment issues" ends up with the wrong category on their record. If the list was meant for the Emergency option, moving it is one line.
+> The death, illness and childcare examples are on Emergency, which is where they belong. They came through for the employment category first and you moved them the same day. Worth recording why it mattered rather than being tidiness: the category someone picks here is the one their emailed summary names, so a person who opened an employment panel after a bereavement and recognised themselves in it would have carried "Unreasonable Employment issues" on their record.
+>
+> Employment carries the commute and the religious observance, which are the two of your six examples that its four visible lines do not already name, and the two nobody expects to count.
 
 **`goodCauseIntro`**
 
@@ -481,13 +483,16 @@ The categories listed on this screen:
 - **No transportation**  A temporary loss of transportation, like a broken down car or temporary public transportation shutdown.
   No "More examples" on this one.
 - **Emergency**  Any family, personal crisis, or emergency situation, and/or if you need to give care or support to others.
-  No "More examples" on this one.
-- **Unreasonable Employment issues**  Employer or workplace discrimination The work is an unreasonable health and safety risk Job pays less than $15/hour (minimum wage) There is a strike
   "More examples" opens a hover panel here rather than linking out, built like the ABAWD
   definition in the intro. It reads:
     - A death
     - An illness or health emergency
     - A child’s school problem or unavailable child care (if the child is not in the home and is 6 or older).
+- **Unreasonable Employment issues**  Employer or workplace discrimination The work is an unreasonable health and safety risk Job pays less than $15/hour (minimum wage) There is a strike
+  "More examples" opens a hover panel here rather than linking out, built like the ABAWD
+  definition in the intro. It reads:
+    - Work interferes with religious observances or beliefs
+    - Traveling to and from work takes over 2 hours, or, if you walk to work, the round trip commute is over 2 miles
 
 ## 9. Result: you may need to meet the work rules
 

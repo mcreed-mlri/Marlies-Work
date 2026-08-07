@@ -223,9 +223,15 @@
           result: 'Emergency \u2014 any family, personal crisis, or emergency situation, and/or if you need to give care or support to others.',
           title: 'Emergency',
           detail: ['Any family, personal crisis, or emergency situation, and/or if you need to give care or support to others.'],
-          /* `moreExamples: true` was here until 2026-08-07. MLRI asked for this category's link
-           * out; the one detail line above says what the category covers and the link went to a
-           * page section that repeats it. */
+          /* Was a link out to the MassLegalHelp article. A hover panel now, MLRI's request of
+           * 2026-08-07, carrying their examples: the detail line above says the category is "any
+           * family, personal crisis, or emergency situation", which is broad enough that a person
+           * may not recognise their own situation in it. These name three. */
+          moreExamplesTip: [
+            'A death',
+            'An illness or health emergency',
+            'A child’s school problem or unavailable child care (if the child is not in the home and is 6 or older).'
+          ]
         },
         {
           id: 'employment',
@@ -247,21 +253,20 @@
             'Job pays less than $' + MA_MIN_WAGE + '/hour (minimum wage)',
             'There is a strike'
           ],
-          /* "More examples" is a hover panel here rather than a link out, MLRI's request of
-           * 2026-08-07, built the same way as the ABAWD definition in the intro: dotted
-           * underline, opens on hover with a mouse and on tap on a phone. Their three examples,
-           * their wording.
+          /* The two of the six examples in this question's help text that the four detail lines
+           * above do not already name. Those four are the recognisable ones; a commute and a
+           * religious observance are the two nobody expects to count, which is exactly why they
+           * are worth a panel.
            *
-           * Raised with them and not changed, because it is their content: these three read as
-           * examples of the Emergency category rather than of this one. A death, an illness, and
-           * a childcare problem are not employment conditions, and the category a person picks
-           * here is the one their emailed summary names. Someone who opens this panel after a
-           * bereavement and recognises themselves in it will pick "Unreasonable Employment
-           * issues". Moving the list to the emergency option is one line if they meant that. */
+           * These arrived on 2026-08-07 in place of a death, an illness and a childcare problem,
+           * which were sent for this category first and belonged to Emergency. That mattered
+           * rather than being a tidy-up: the category someone picks here is the one their emailed
+           * summary names, so a person who opened this panel after a bereavement, recognised
+           * themselves, and picked "Unreasonable Employment issues" would have carried the wrong
+           * category. They are on the emergency option now. */
           moreExamplesTip: [
-            'A death',
-            'An illness or health emergency',
-            'A child’s school problem or unavailable child care (if the child is not in the home and is 6 or older).'
+            'Work interferes with religious observances or beliefs',
+            'Traveling to and from work takes over 2 hours, or, if you walk to work, the round trip commute is over 2 miles'
           ]
         }
       ]
@@ -1121,10 +1126,13 @@
       id: o.id,
       title: o.title || o.label,
       detail: o.detail || [],
-      moreExamplesUrl: o.moreExamples ? LINKS.goodCause : '',
-      /* The same "More examples" affordance as a hover panel instead of a link out. A category
-       * carries one or the other, never both, so a render site can check either and the copy
-       * documents can print whichever is set. */
+      /* "More examples", as a hover panel. It used to be `moreExamplesUrl`, a link out to the
+       * MassLegalHelp article, and both categories that had one moved to a panel on 2026-08-07.
+       * The url and the `moreExamples` flag behind it went with them rather than being left as a
+       * branch nothing could reach: no variant sets it, including the archived two, so the only
+       * thing keeping it would have been the cost of taking it out.
+       *
+       * LINKS.goodCause stays. The not-exempt screen still links there. */
       moreExamplesTip: o.moreExamplesTip || []
     }));
   }
