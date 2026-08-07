@@ -423,7 +423,7 @@ describe('snap-screening-logic', () => {
 
     it('is gone from the on-screen form', () => {
       const page = fs.readFileSync(
-        path.join(__dirname, '..', 'masslegalhelp', 'tools', 'snap-abawd', 'index.html'), 'utf8');
+        path.join(__dirname, '..', 'masslegalhelp', 'snap-abawd', 'index.html'), 'utf8');
       assert.ok(!/id="f-agency"/.test(page), 'the typed field should not be back');
       assert.ok(/id="f-name"/.test(page), 'the name field stays');
     });
@@ -734,14 +734,14 @@ describe('snap-screening-logic', () => {
     const { subject, body } = buildResultsEmailContent({
       rt: 'exempt',
       rs: [REASON_TEXT_BY_ID.pregnant],
-      toolUrl: 'https://example.org/tools/snap-abawd/'
+      toolUrl: 'https://example.org/snap-abawd/'
     });
     assert.match(subject, /Your SNAP work rules screening/);
     assert.match(body, /may be exempt/);
     assert.match(body, /Reasons that applied:/);
     assert.ok(body.includes(REASON_TEXT_BY_ID.pregnant));
     assert.match(body, /This email is not the letter/);
-    assert.match(body, /https:\/\/example\.org\/tools\/snap-abawd\//);
+    assert.match(body, /https:\/\/example\.org\/snap-abawd\//);
   });
 
   /* ----------------------------------------------------------------------- *

@@ -8,9 +8,9 @@
 <!-- Preloaded, because the two faces are otherwise discovered only after
      fonts/atkinson.css parses, which costs a round trip on the critical path of a
      page whose entire body is script-rendered. -->
-<link rel="preload" href="../../fonts/atkinson-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="../../fonts/atkinson-700.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../../fonts/atkinson.css">
+<link rel="preload" href="../fonts/atkinson-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../fonts/atkinson-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../fonts/atkinson.css">
 <!-- Headings are Atkinson, like everything else. This page carried a --serif token
      reading 'Domine', Georgia, serif, on the theory that Domine was a missing font
      file rather than a decision. In practice domine-700.woff2 never landed, so every
@@ -742,7 +742,7 @@
        sets of work requirements are live and people do conflate them. Raised with MLRI rather
        than changed, since the words are theirs.
 
-       Identical on tools/index.html. A test asserts the two match, because a sentence copied into
+       Identical on index.html, the tools landing page. A test asserts the two match, because a sentence copied into
        two files is how the pair drifts. -->
   <div class="footer-about-inner">
     <p>This tool was developed by the Massachusetts Law Reform Institute to help give you more information about the SNAP work rules. The Department of Transitional Assistance (DTA) runs the SNAP program in Massachusetts. The SNAP ABAWD Work Rules are different from MassHealth work rules.</p>
@@ -786,7 +786,7 @@
   </div>
 </footer>
 
-<script src="../../snap-screening-logic.js"></script>
+<script src="../snap-screening-logic.js"></script>
 <script>
 "use strict";
 
@@ -2250,7 +2250,7 @@ function initReviewHome(){
   if(!slot) return;
   const home = document.createElement('a');
   home.className = 'btn-review';
-  home.href = ['..', '..', '..', 'screener', ''].join('/');
+  home.href = ['..', '..', 'screener', ''].join('/');
   home.textContent = 'Screener home';
   slot.appendChild(home);
   home.style.display = 'inline-flex';

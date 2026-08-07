@@ -6,13 +6,26 @@ to `archive/` on 2026-07-30 and are frozen.
 
 ## Deploy contract
 
-The MassLegalHelp vendor proposed a Cloudflare Worker serving this at a path on
-`masslegalhelp.org`, since that domain already fronts Cloudflare. That works, and this
-build is written for it.
+**It ships at `tools.masslegalhelp.org`, decided 2026-08-07.** The landing page is the root of
+that subdomain and the screener is `/snap-abawd/`.
 
-The contents of this folder are the site root. `tools/index.html` is the tools landing page and
-`tools/snap-abawd/index.html` is the SNAP screener. Both paths are asserted by `scripts/publish-mlh.js`,
+The vendor had proposed a Cloudflare Worker serving this at a path on `masslegalhelp.org`, and
+that still works. It lost on one thing: a Worker at a path sits in the live site's request path
+permanently, and owning it is a cost MLRI would carry rather than the vendor, now that MLRI
+holds the Cloudflare account. A subdomain is one DNS record, needs no Worker, and cannot break
+the site it sits beside. Cookies did not decide it, because MassLegalHelp sets them on
+`.masslegalhelp.org` and they follow the tool either way; see below.
+
+That decision is why this folder has no `tools/` wrapper. It had one while the destination was
+`masslegalhelp.org/tools/snap-abawd/`, where the segment does real work. On a subdomain the
+subdomain is the container, and `tools.masslegalhelp.org/tools/snap-abawd/` said it twice.
+
+The contents of this folder are the site root. `index.html` is the tools landing page and
+`snap-abawd/index.html` is the SNAP screener. Both paths are asserted by `scripts/publish-mlh.js`,
 which refuses to publish without them.
+
+Moving to a path later costs nothing in here. Every reference is relative and the publish guards
+enforce that, so a Worker mapping `/tools/*` to this root would serve it unchanged.
 
 Four things this build depends on:
 
@@ -69,20 +82,16 @@ host matches the review allowlist, so `?sample=` and **Screener home** are live 
 is irrelevant to a copy review and matters only for confirming those are absent in
 production, which needs the real hostname and can wait for it.
 
-**Cloudflare Access on the path is the one to reach for.** A policy scoped to
-`masslegalhelp.org/tools/snap-abawd*` in Zero Trust, allowing named addresses or a one-time
-PIN to an `@mlri.org` address. No code, no environment variable, and turning it off is a
-toggle rather than a deploy. What makes it the right answer rather than merely a working one
-is that the files stay byte-identical to what the public gets, so the pass tests the thing
-that ships.
+**Cloudflare Access is the one to reach for.** An application scoped to
+`tools.masslegalhelp.org` in Zero Trust, allowing named addresses or a one-time PIN to an
+`@mlri.org` address. No code, no environment variable, and turning it off is a toggle rather
+than a deploy. What makes it the right answer rather than merely a working one is that the
+files stay byte-identical to what the public gets, so the pass tests the thing that ships.
 
-Two cautions. Scope the policy to the path and confirm it, because a policy written against
-the apex would gate the whole of MassLegalHelp. And Access is per-person, so it is a better
-fit than a shared password for anything that outlives this week.
-
-**Auth in the Worker also works,** with the password in an encrypted environment variable, on
-the same reasoning: the Worker is infrastructure that sits in front of the files rather than
-part of them, so nothing has to be removed from the build before launch.
+Two cautions. Scope it to the subdomain and re-read the hostname before saving, because an
+application written against `masslegalhelp.org` would put the whole public site behind a login
+immediately. And Access is per-person, so it is a better fit than a shared password for
+anything that outlives a review round.
 
 **What does not work is putting the gate in this folder.** `scripts/publish-mlh.js` refuses
 `SITE_PASSWORD` and `WWW-Authenticate` here, and would refuse a `functions/_middleware.js`
@@ -91,8 +100,8 @@ auth code that has to come out before launch, and that removal is a step someone
 And this folder is produced by `git subtree split`, so anything added to the deploy branch by
 hand is overwritten the next time the script runs.
 
-One thing gating the real path buys that the password-protected preview cannot: it is the
-only environment that tests the production configuration. On `masslegalhelp.org`,
+One thing gating the real hostname buys that the password-protected preview cannot: it is the
+only environment that tests the production configuration. On `tools.masslegalhelp.org`,
 `samplesAllowed()` is false, so `?sample=` does nothing and the review-only **Screener home**
 button is absent. Both are live on a `.pages.dev` preview. The cost is that reaching the
 good-cause result there means answering through all four groups honestly, which is the point.

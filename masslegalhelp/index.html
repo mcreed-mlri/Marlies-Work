@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Interactive Tools | Massachusetts Legal Help</title>
 <meta name="description" content="Interactive tools from Mass Legal Help.">
-<link rel="preload" href="../fonts/atkinson-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="../fonts/atkinson-700.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../fonts/atkinson.css">
+<link rel="preload" href="fonts/atkinson-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/atkinson-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="fonts/atkinson.css">
 <style>
   :root{
     --accent:#0057a2;
@@ -26,7 +26,7 @@
     /* Same gutter, same reason, as the screener. Kept in step by hand because these two pages
      * do not share a stylesheet: this build has no build step, so each page carries its own
      * <style>. If one moves, move the other. The value and the working are recorded once, in
-     * tools/snap-abawd/index.html. */
+     * snap-abawd/index.html. */
     --chrome-gutter:clamp(18px, 5.7vw, 120px);
     --strip:#0c1639;
   }
@@ -224,12 +224,12 @@
 
 <!-- MLRI's paragraph about the SNAP screener is on the screener and not here. This page is the
      index that will list several tools, so a footer describing one of them would go stale the
-     moment a second arrives. See tools/snap-abawd/index.html. -->
+     moment a second arrives. See snap-abawd/index.html. -->
 <footer class="site-footer">
   <div class="footer-legal">
     <div class="footer-legal-inner">
       <div class="footer-legal-links">
-        <!-- Same tab, unlike the two beside it. The reasoning is in tools/snap-abawd/index.html. -->
+        <!-- Same tab, unlike the two beside it. The reasoning is in snap-abawd/index.html. -->
         <a href="https://www.masslegalhelp.org/">MassLegalHelp.org</a>
         <a href="https://www.masslegalhelp.org/terms-use" target="_blank" rel="noopener">Terms of Use</a>
         <a href="https://www.masslegalhelp.org/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a>
@@ -239,7 +239,7 @@
   </div>
 </footer>
 
-<script src="../snap-screening-logic.js"></script>
+<script src="snap-screening-logic.js"></script>
 <script>
   (function(){
     function samplesAllowed(){
@@ -250,7 +250,7 @@
     }
     if(samplesAllowed()){
       var slot = document.getElementById('review-home-slot');
-      var REVIEW_HOME = '../../screener/'; // review-only
+      var REVIEW_HOME = '../screener/'; // review-only
       if(slot){
         var home = document.createElement('a');
         home.className = 'btn-review';

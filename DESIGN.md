@@ -284,7 +284,7 @@ Where a decorative choice and a legibility choice conflicted, legibility won and
 comment in the code says so.
 
 There are two live territories and they do not mix. The screener at
-`masslegalhelp/tools/snap-abawd/index.html` wears MassLegalHelp's chrome: navy header bar, a 9px gold rule
+`masslegalhelp/snap-abawd/index.html` wears MassLegalHelp's chrome: navy header bar, a 9px gold rule
 under it, one brand navy carrying both headings and body copy, and their pale blue
 page-title band with a solid block offset behind it. The chrome tokens are theirs, read
 off masslegalhelp.org and recorded with measured ratios in `MASSLEGALHELP-BRAND.md`, which

@@ -70,7 +70,7 @@ email work.
 
 ## Phase 1: finish the code, before the move
 
-- [ ] Rewrite the modal in `masslegalhelp/tools/snap-abawd/index.html` with progressive disclosure.
+- [ ] Rewrite the modal in `masslegalhelp/snap-abawd/index.html` with progressive disclosure.
       Send and the address field up front. On failure, and when the feature flag is off,
       reveal "Open in my email app instead", and the copy-the-text panel behind that. Three
       peer buttons for one action is what made removing the fallback look attractive.
