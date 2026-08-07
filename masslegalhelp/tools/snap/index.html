@@ -441,6 +441,13 @@
     .topbar-inner{flex-direction:column;align-items:center;gap:12px}
     a.topbar-brand{flex:none;width:100%;justify-content:center}
     .topbar-actions{width:100%;justify-content:center}
+    /* Smaller than the 272px it takes on a desktop. Cropping the viewBox for the mobile file
+       only changed its height, so the wordmark was still being drawn at full desktop width on a
+       phone, where MassLegalHelp draw theirs at roughly 40% of the viewport against our 50%.
+       Their exact figure could not be read off a screenshot, so this is proportional rather than
+       measured: 216px is 80% of the desktop size, which puts a 375px phone at about 58% once the
+       gutter is taken off. max-width:100% still clamps it below that. */
+    .topbar-logo{width:216px}
   }
   @media (max-width:360px){
     /* The same viewport-relative guess as the rule above it, 8px different, and gone for the
