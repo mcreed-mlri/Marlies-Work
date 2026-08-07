@@ -64,6 +64,13 @@
     --prose:#1f2c5c;        /* 13.35:1, matches MLH body copy. Was #3a424e at 10.15:1 */
     --muted:#5b6470;        /* 6:1, captions and quiet controls */
     --panel:#c8d2e0;        /* non-interactive panel border */
+    /* 1.09:1 on the cream page. Grouping only, so a low ratio is the point: it has to separate a
+       block from the prose above it without becoming a second surface competing for attention.
+       Warm, sharing the page's own hue, so it reads as a shade of the page. Deliberately not
+       --field, which is 1.02:1 here and effectively invisible; --field is a control fill and was
+       measured against white. And deliberately not --soft, --warn-bg or --ok-fill, which are the
+       information, caution and result colours and would each say something this does not mean. */
+    --group:#f2efe8;
     --stroke:#767f8c;       /* 4.05:1, input strokes and mark borders */
     --line:#4f6b91;         /* option boundary on the warm page */
     --line-hover:#1f2c5c;   /* option border on hover */
@@ -1231,18 +1238,31 @@ function renderIntro(){
          amber is what the "you may need to meet the work rules" result wears, so a
          sentence saying "this takes two minutes" read as a caveat to clear first. The
          larger bottom margin is the gap before the button. -->
-    <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 26px">This short online form asks a few questions to check if you need to meet the ABAWD work rules or if you are exempt. <strong>It takes less than 2 minutes.</strong></p>
+    <!-- The time estimate and the button in one panel, MLRI's request of 2026-08-07: they belong
+         together and needed separating from the article text above.
 
-    <!-- Centred on a wrapper rather than on the button itself, so the button carries no
-         inline width to outrank the width:100% rule in the narrow media query and it
-         still goes full width on a phone. Everything else about it is in the #start-btn
-         rule; see the note there for why it cannot be inline.
-         No backticks in here: this comment sits inside a JS template literal. -->
-    <div style="text-align:center">
-      <!-- The arrow is aria-hidden so the button's accessible name stays the sentence
-           rather than gaining "right arrow", and it is preceded by a non-breaking space
-           so it can never be left alone on the second line when the label wraps. -->
-      <button type="button" id="start-btn" data-action="start">Click here to check if the ABAWD work rules apply to you<span aria-hidden="true">&nbsp;&rarr;</span></button>
+         Neutral, not amber. This sentence sat in a --warn-bg box with a gold bar until
+         2026-08-06 and came out because amber is the "you may need to meet the work rules"
+         result's colour, so a box saying "this takes two minutes" read as a caveat to clear
+         first. The panel is back; the caution is not. --group is a shade of the cream page at
+         1.09:1, which is enough to separate a block and not enough to become a second surface.
+
+         The 26px bottom margin the paragraph carried is now the panel's padding, so the gap to
+         the button is unchanged. -->
+    <div style="background:var(--group);border-radius:var(--radius);padding:20px 22px;margin:0 0 8px">
+      <p style="font-size:16.5px;line-height:1.6;color:var(--prose);margin:0 0 20px">This short online form asks a few questions to check if you need to meet the ABAWD work rules or if you are exempt. <strong>It takes less than 2 minutes.</strong></p>
+
+      <!-- Centred on a wrapper rather than on the button itself, so the button carries no
+           inline width to outrank the width:100% rule in the narrow media query and it
+           still goes full width on a phone. Everything else about it is in the #start-btn
+           rule; see the note there for why it cannot be inline.
+           No backticks in here: this comment sits inside a JS template literal. -->
+      <div style="text-align:center">
+        <!-- The arrow is aria-hidden so the button's accessible name stays the sentence
+             rather than gaining "right arrow", and it is preceded by a non-breaking space
+             so it can never be left alone on the second line when the label wraps. -->
+        <button type="button" id="start-btn" data-action="start">Click here to check if the ABAWD work rules apply to you<span aria-hidden="true">&nbsp;&rarr;</span></button>
+      </div>
     </div>
     <div style="margin:22px 0 0">${renderPrivacyCallout('0')}</div>
     <p style="font-size:14px;line-height:1.55;color:var(--muted);margin:22px 0 0;padding-top:18px;border-top:1px solid var(--panel)">The Department of Transitional Assistance (DTA) runs the SNAP program in Massachusetts. The SNAP ABAWD Work Rules are different from MassHealth work rules.</p>
