@@ -13,7 +13,7 @@ what you expected, and what happened, and it can be fixed.
 
 **If you are testing before a launch, skip section 5.** It covers the archived
 guided build, which is kept for records and is not what anyone will see, and it is
-47 of the 213 checks here. Everything else is the shipping tool.
+47 of the 225 checks here. Everything else is the shipping tool.
 Section 2 is the heart of it: every exemption, one at a time.
 
 ## Before you start
@@ -549,7 +549,30 @@ which makes it the easiest to lose without noticing.
 - [ ] Leaving the pad empty prints a ruled line to sign by hand. This is the only route for someone who cannot use a pointer, so it must work.
 - [ ] Rotating the phone does not wipe a signature already drawn.
 
-## 7. Privacy and safety
+## 7. The header and the footer
+
+These are on every screen, which is why they get looked at least. Check them once here rather
+than hoping they turn up in another section.
+
+### The header
+
+- [ ] The wordmark goes to masslegalhelp.org. It is the way back to the site for anyone who does not scroll to the footer.
+- [ ] **On a phone,** the masthead stacks: wordmark centred on its own row, **Quick exit** centred underneath. That is what MassLegalHelp do on theirs.
+- [ ] **On a phone,** the wordmark reads **Mass Legal Help** only. "Massachusetts Legal Information" is dropped below 560px, as on their site.
+- [ ] Narrow the browser slowly from wide to about 320px. The buttons **never** touch or overlap the wordmark at any width in between. This broke once and only showed on a phone.
+- [ ] The wordmark is noticeably smaller on a phone than on a desktop, and never wider than the screen.
+
+### The footer
+
+- [ ] The screener's footer carries MLRI's approved paragraph, word for word: "This tool was developed by the Massachusetts Law Reform Institute to help give you more information about the SNAP work rules. The Department of Transitional Assistance (DTA) runs the SNAP program in Massachusetts. The SNAP ABAWD Work Rules are different from MassHealth work rules."
+- [ ] The **tools landing page** footer does **not** carry that paragraph. It describes the SNAP screener, and that page will list several tools.
+- [ ] The darker strip under it has three links and the copyright: **MassLegalHelp.org**, **Terms of Use**, **Privacy Policy**, then ©2026 Massachusetts Legal Assistance Corporation on the right.
+- [ ] All three links go somewhere real. Terms and Privacy open in a new tab; MassLegalHelp.org opens in the same one, because someone using it means to leave.
+- [ ] Coming back with the browser Back button after MassLegalHelp.org still has your answers.
+- [ ] **Tab to each footer link.** A gold focus ring is clearly visible on the dark background. A navy one would be invisible there, which is what it used to be.
+- [ ] On a phone the strip wraps tidily: links on one line, copyright under them, nothing clipped at the edge.
+
+## 8. Privacy and safety
 
 The questions cover pregnancy, disability, substance use treatment, and domestic violence. The
 working assumption is a shared or borrowed phone.
@@ -564,7 +587,7 @@ working assumption is a shared or borrowed phone.
 - [ ] Nothing typed into the name, ID, or explanation fields appears in any URL.
 - [ ] The privacy callout on the start page and on the statement form shows the same wording: **Your information is private.** MLRI will not save any personal information you share on this form.
 
-## 8. Accessibility
+## 9. Accessibility
 
 People using this tool are more likely than average to have a disability. That is what several
 of the exemptions are about.
@@ -595,7 +618,7 @@ of the exemptions are about.
 - [ ] In high contrast mode, the selected answer is still visibly selected.
 - [ ] A selected answer is marked by more than colour alone: there is a filled dot or tick as well as a border.
 
-## 9. Devices and conditions
+## 10. Devices and conditions
 
 - [ ] An older Android phone on a slow connection. Time how long the first screen takes.
 - [ ] An iPhone, in Safari.
@@ -605,14 +628,14 @@ of the exemptions are about.
 - [ ] A tablet in both orientations.
 - [ ] The browser Back button mid-screening. It should not lose answers or land on a broken screen.
 
-## 10. Review-only modes and the archived guided build
+## 11. Review-only modes and the archived guided build
 
 - [ ] The tools landing page shows one SNAP card only.
 - [ ] `?sample=exempt`, `?sample=goodcause`, and `?sample=notexempt` each open the right result on a review host.
 - [ ] Sample mode shows the "Sample result" banner and does not overwrite a real session.
 - [ ] The archived guided build at `archive/snap-guided/` still loads and names itself as archived.
 
-## 11. Things only a person can judge
+## 12. Things only a person can judge
 
 None of this can be automated and all of it matters more than the rest of this document.
 
@@ -627,7 +650,7 @@ None of this can be automated and all of it matters more than the rest of this d
 - [ ] **Quick exit destination.** Currently weather.com. Confirm that is the right neutral site.
 - [ ] **Languages.** English only. MassLegalHelp publishes the ABAWD article in Spanish.
 
-## 12. What is already checked automatically
+## 13. What is already checked automatically
 
 Do not spend manual time on these. They run on every push and fail the build.
 
@@ -654,7 +677,7 @@ python docassemble-snap-abawd/tests/test_good_cause_text.py
 The browser suite cannot run on the authoring machine, so it runs only in CI. If you are
 checking a change locally, the browser paths are the ones your own testing has to cover.
 
-## 13. Reporting what you find
+## 14. Reporting what you find
 
 Useful:
 

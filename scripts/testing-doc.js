@@ -28,6 +28,16 @@ const S = require(path.join(ROOT, 'masslegalhelp', 'snap-screening-logic.js'));
 const A = S.create(VARIANT);
 const C = S.RESULT_COPY;
 
+/* MLRI's footer paragraph, read out of the page rather than retyped here. It is approved copy,
+ * and a checklist that quotes it from a second copy is a checklist that can tell a tester the
+ * page is wrong when it is the document that has fallen behind. */
+const SHIP_HTML = fs.readFileSync(path.join(ROOT, 'masslegalhelp', 'tools', 'snap', 'index.html'), 'utf8');
+const FOOTER_TEXT = (() => {
+  const m = /<div class="footer-about-inner">\s*<p>([\s\S]*?)<\/p>/.exec(SHIP_HTML);
+  if (!m) throw new Error('testing-doc: no footer paragraph in the shipping page.');
+  return m[1].replace(/\s+/g, ' ').trim();
+})();
+
 /* Fixed, for the same reason the walkthrough uses one: the good-cause sentence
  * names months, and against the clock this document would change every month
  * and fail the CI job that regenerates and diffs it. */
@@ -505,7 +515,39 @@ check('A drawn signature appears in the printed letter as a real image, not a fo
 check('Leaving the pad empty prints a ruled line to sign by hand. This is the only route for someone who cannot use a pointer, so it must work.');
 check('Rotating the phone does not wipe a signature already drawn.');
 
-h2('7. Privacy and safety');
+/* Added 2026-08-07. The header and footer were rebuilt over one day: the gutter, the stacked
+ * mobile masthead, the tagline-less wordmark, MLRI's footer text, the legal strip, the
+ * copyright, the way back to the site. None of it had a single check, and chrome is the part a
+ * tester skims past because it looks like furniture. Two of the bugs found in that day were in
+ * it, and both were invisible on a desktop. */
+h2('7. The header and the footer');
+
+w('These are on every screen, which is why they get looked at least. Check them once here rather');
+w('than hoping they turn up in another section.');
+blank();
+h3('The header');
+
+check('The wordmark goes to masslegalhelp.org. It is the way back to the site for anyone who does not scroll to the footer.');
+check('**On a phone,** the masthead stacks: wordmark centred on its own row, **Quick exit** centred underneath. That is what MassLegalHelp do on theirs.');
+check('**On a phone,** the wordmark reads **Mass Legal Help** only. "Massachusetts Legal Information" is dropped below 560px, as on their site.');
+/* The specific regression. It was drawn over the wordmark on a review host and nobody had a
+   check that would have caught it, because it only shows at some widths and never on a laptop. */
+check('Narrow the browser slowly from wide to about 320px. The buttons **never** touch or overlap the wordmark at any width in between. This broke once and only showed on a phone.');
+check('The wordmark is noticeably smaller on a phone than on a desktop, and never wider than the screen.');
+
+h3('The footer');
+
+check('The screener\'s footer carries MLRI\'s approved paragraph, word for word: "' + FOOTER_TEXT + '"');
+check('The **tools landing page** footer does **not** carry that paragraph. It describes the SNAP screener, and that page will list several tools.');
+check('The darker strip under it has three links and the copyright: **MassLegalHelp.org**, **Terms of Use**, **Privacy Policy**, then ©2026 Massachusetts Legal Assistance Corporation on the right.');
+check('All three links go somewhere real. Terms and Privacy open in a new tab; MassLegalHelp.org opens in the same one, because someone using it means to leave.');
+check('Coming back with the browser Back button after MassLegalHelp.org still has your answers.');
+/* The ring was the page default, #1f2c5c, which is 1:1 on the footer band. Nothing revealed it
+   until these links arrived, because a logo is not something people tab to. */
+check('**Tab to each footer link.** A gold focus ring is clearly visible on the dark background. A navy one would be invisible there, which is what it used to be.');
+check('On a phone the strip wraps tidily: links on one line, copyright under them, nothing clipped at the edge.');
+
+h2('8. Privacy and safety');
 
 w('The questions cover pregnancy, disability, substance use treatment, and domestic violence. The');
 w('working assumption is a shared or borrowed phone.');
@@ -521,7 +563,7 @@ check('Nothing typed into the name, ID, or explanation fields appears in any URL
 check('The privacy callout on the start page and on the statement form shows the same wording: **'
   + strip(C.privacyIntroLead) + '** ' + strip(C.privacyIntroBody));
 
-h2('8. Accessibility');
+h2('9. Accessibility');
 
 w('People using this tool are more likely than average to have a disability. That is what several');
 w('of the exemptions are about.');
@@ -553,7 +595,7 @@ check('Turn on the operating system\'s "reduce motion" setting. Screens change w
 check('In high contrast mode, the selected answer is still visibly selected.');
 check('A selected answer is marked by more than colour alone: there is a filled dot or tick as well as a border.');
 
-h2('9. Devices and conditions');
+h2('10. Devices and conditions');
 
 check('An older Android phone on a slow connection. Time how long the first screen takes.');
 check('An iPhone, in Safari.');
@@ -563,14 +605,14 @@ check('Airplane mode partway through: does the tool keep working, given it needs
 check('A tablet in both orientations.');
 check('The browser Back button mid-screening. It should not lose answers or land on a broken screen.');
 
-h2('10. Review-only modes and the archived guided build');
+h2('11. Review-only modes and the archived guided build');
 
 check('The tools landing page shows one SNAP card only.');
 check('`?sample=exempt`, `?sample=goodcause`, and `?sample=notexempt` each open the right result on a review host.');
 check('Sample mode shows the "Sample result" banner and does not overwrite a real session.');
 check('The archived guided build at `archive/snap-guided/` still loads and names itself as archived.');
 
-h2('11. Things only a person can judge');
+h2('12. Things only a person can judge');
 
 w('None of this can be automated and all of it matters more than the rest of this document.');
 blank();
@@ -585,7 +627,7 @@ check('**Terms of Use and Privacy Policy links.** Absent, because the URLs are u
 check('**Quick exit destination.** Currently weather.com. Confirm that is the right neutral site.');
 check('**Languages.** English only. MassLegalHelp publishes the ABAWD article in Spanish.');
 
-h2('12. What is already checked automatically');
+h2('13. What is already checked automatically');
 
 w('Do not spend manual time on these. They run on every push and fail the build.');
 blank();
@@ -612,7 +654,7 @@ blank();
 w('The browser suite cannot run on the authoring machine, so it runs only in CI. If you are');
 w('checking a change locally, the browser paths are the ones your own testing has to cover.');
 
-h2('13. Reporting what you find');
+h2('14. Reporting what you find');
 
 w('Useful:');
 blank();
