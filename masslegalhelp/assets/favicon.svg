@@ -1,0 +1,29 @@
+<!-- The MassLegalHelp header, at 32px.
+
+     The tool had no favicon at all, so browsers asked for /favicon.ico, got a 404, and showed
+     their default. On a subdomain that is the whole identity a tab or a bookmark carries.
+
+     This is their chrome reduced rather than a mark anybody invented: the navy bar, #1e2e5f, and
+     the gold rule under it, #eab736, along the bottom edge in roughly the proportion the real
+     header uses (9px of a 74px bar, so about an eighth). Both values are measured and recorded
+     in MASSLEGALHELP-BRAND.md. Nothing here is a wordmark or a letterform, because drawing one
+     for somebody else's brand is not ours to do.
+
+     The gold bar is clipped to the rounded rectangle. Without the clip its square corners sit
+     outside the navy at the bottom two corners, which is invisible at 16px and obvious at 512.
+
+     A placeholder in the sense that MassLegalHelp's own favicon would be better if MLRI can
+     supply it. It could not be fetched: masslegalhelp.org/favicon.ico is a 404 and the site sits
+     behind a Cloudflare bot challenge, so there was nothing to copy.
+
+     SVG only. It is the one image format the deploy allowlist permits, and it keeps this to a
+     single file at any size. Safari before 17 ignores SVG favicons and falls back to
+     /favicon.ico, which is the 404 that exists today, so this is an improvement everywhere and a
+     regression nowhere. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Mass Legal Help">
+  <clipPath id="r"><rect width="32" height="32" rx="6"/></clipPath>
+  <g clip-path="url(#r)">
+    <rect width="32" height="32" fill="#1e2e5f"/>
+    <rect y="28" width="32" height="4" fill="#eab736"/>
+  </g>
+</svg>
