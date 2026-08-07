@@ -620,9 +620,25 @@ describe('the footer holds together across both shipping pages', () => {
   it('both pages carry the same Terms and Privacy links', () => {
     assert.deepEqual(found[0].legal, found[1].legal, 'the footer links differ between the pages');
     assert.deepEqual(found[0].legal, [
+      'MassLegalHelp.org -> https://www.masslegalhelp.org/',
       'Terms of Use -> https://www.masslegalhelp.org/terms-use',
       'Privacy Policy -> https://www.masslegalhelp.org/privacy-policy'
     ]);
+  });
+
+  /* The way back to the site, in words. The header wordmark links home too, but its only cue at
+     rest is a:hover, which a touch screen never fires, so on a phone the one control in the top
+     bar that looks tappable is Quick exit: it clears the answers and replaces the location with
+     no confirm and no history entry. This link is the route that does not depend on someone
+     thinking to tap a picture, and it is the last one on the page that leads anywhere but out. */
+  it('every page keeps a plain-text way back to MassLegalHelp', () => {
+    for (const p of found) {
+      assert.ok(
+        p.legal.some(l => l === 'MassLegalHelp.org -> https://www.masslegalhelp.org/'),
+        p.label + ': the only way back to the site is now the header wordmark, which on a phone '
+        + 'has no visual cue at all. The one control that looks tappable up there is Quick exit.'
+      );
+    }
   });
 
   /* The footer band is #1f2c5c and the strip under it #0c1639, and the default focus ring is

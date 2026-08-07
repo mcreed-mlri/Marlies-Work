@@ -1231,6 +1231,10 @@ Under the text sits MassLegalHelp's darker sub-strip, carrying the two links you
 2026-08-07. Both open in a new tab, so reading the terms halfway through a screening does not
 navigate away from a half-finished form:
 
+**`footer.homeLink`**
+
+> MassLegalHelp.org
+
 **`footer.termsLink`**
 
 > Terms of Use
@@ -1238,6 +1242,14 @@ navigate away from a half-finished form:
 **`footer.privacyLink`**
 
 > Privacy Policy
+
+The first of those is the way back to the site in words, added 2026-08-07 and not yours, so
+reword it freely. The wordmark in the top bar has always linked home, but its only cue is a
+mouse hover, which a phone never fires; so on a phone the one thing in that bar that looks
+tappable is Quick exit, which clears the answers and leaves for a weather site with no
+warning. The footer wordmark used to be the second way back and came out this morning at your
+request. This is that route in text. It opens in the same tab, unlike the two beside it,
+because someone using it means to leave.
 
 Their own strip carries two more things that are not here. Social icons, which you did not
 ask for. And `©2026 Massachusetts Legal Assistance Corporation`, which came off on 2026-07-30

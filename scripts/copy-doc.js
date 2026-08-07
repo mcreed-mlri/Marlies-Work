@@ -76,6 +76,7 @@ const INLINE = [
      every other string does, with an id to quote back. The identical copy on the tools landing
      page is held in step by a test rather than by this document. */
   { id: 'page.footerAbout', re: /<div class="footer-about-inner">\s*<p>([\s\S]*?)<\/p>/ },
+  { id: 'footer.homeLink', re: /<a href="https:\/\/www\.masslegalhelp\.org\/">([^<]+)</ },
   { id: 'footer.termsLink', re: /<a href="https:\/\/www\.masslegalhelp\.org\/terms-use"[^>]*>([^<]+)</ },
   { id: 'footer.privacyLink', re: /<a href="https:\/\/www\.masslegalhelp\.org\/privacy-policy"[^>]*>([^<]+)</ },
   // Buttons and navigation (skip/startOver/delete still inline in the page)
@@ -755,7 +756,15 @@ w('Under the text sits MassLegalHelp\'s darker sub-strip, carrying the two links
 w('2026-08-07. Both open in a new tab, so reading the terms halfway through a screening does not');
 w('navigate away from a half-finished form:');
 blank();
-['footer.termsLink', 'footer.privacyLink'].forEach(id => item(id, inline[id]));
+['footer.homeLink', 'footer.termsLink', 'footer.privacyLink'].forEach(id => item(id, inline[id]));
+w('The first of those is the way back to the site in words, added 2026-08-07 and not yours, so');
+w('reword it freely. The wordmark in the top bar has always linked home, but its only cue is a');
+w('mouse hover, which a phone never fires; so on a phone the one thing in that bar that looks');
+w('tappable is Quick exit, which clears the answers and leaves for a weather site with no');
+w('warning. The footer wordmark used to be the second way back and came out this morning at your');
+w('request. This is that route in text. It opens in the same tab, unlike the two beside it,');
+w('because someone using it means to leave.');
+blank();
 w('Their own strip carries two more things that are not here. Social icons, which you did not');
 w('ask for. And `©2026 Massachusetts Legal Assistance Corporation`, which came off on 2026-07-30');
 w('along with the "Funded by the Massachusetts Legal Assistance Corporation" credit: both were');
