@@ -198,6 +198,10 @@
    * The anchor is already flex:1 1 auto with min-width:0, so it shrinks; 100% then clamps the
    * image to whatever it was given. No number to keep in step with the buttons. */
   .topbar-logo{display:block;width:272px;max-width:100%;height:auto}
+  /* The <picture> is a flex item of .topbar-brand, so it needs min-width:0 to shrink; without it
+     the img's max-width:100% resolves against a box that will not give ground and the overlap
+     this rule set exists to prevent comes straight back. */
+  .topbar-brand picture{display:block;min-width:0;max-width:100%}
   /* .topbar-title and .topbar-sub were here, styling the wordmark and tagline that used to sit
      in the header. Both became artwork when the header text was replaced by mlh-logo.svg, so the
      rules had nothing wearing them. check-pages.js only catches the opposite case, a class in the
@@ -599,8 +603,21 @@
      that exists for someone who needs to leave this page immediately. -->
 <header class="no-print topbar">
   <div class="topbar-inner">
+    <!-- Two wordmarks, swapped at the same 560px the masthead stacks at. MassLegalHelp drop
+         "Massachusetts Legal Information" from their own mobile masthead, so ours does too.
+
+         <picture> rather than two <img> toggled by CSS, because display:none does not stop a
+         download and the audience for the small one is the phone. The <img> is the fallback and
+         the desktop case both; a browser that ignores <source> still gets a logo.
+
+         mlh-logo-wordmark.svg is derived from mlh-logo.svg, not drawn: the 27 outlined-text paths
+         of the tagline removed and the viewBox cropped 55.721 to 35. The wordmark ends at y 33.90
+         with its descenders, so nothing is clipped. 20.9KB to 12KB. -->
     <a class="topbar-brand" href="https://www.masslegalhelp.org/" aria-label="Mass Legal Help home">
-      <img class="topbar-logo" src="../assets/mlh-logo.svg" alt="">
+      <picture>
+        <source media="(max-width:560px)" srcset="../assets/mlh-logo-wordmark.svg">
+        <img class="topbar-logo" src="../assets/mlh-logo.svg" alt="">
+      </picture>
     </a>
     <div class="topbar-actions">
       <span id="review-home-slot"></span>

@@ -123,14 +123,38 @@ const live = src => src
   .replace(/<!--[\s\S]*?-->/g, '')
   .replace(/\/\*[\s\S]*?\*\//g, '');
 
+/* Every URL an HTML file points at, from src, href and srcset.
+ *
+ * srcset was not scanned until 2026-08-07, when a <picture> arrived in the top bar to swap the
+ * wordmark for a tagline-less one on phones. Both guards below read src and href only, so a
+ * srcset pointing at a file that does not exist, or at a parent path outside the deploy root,
+ * would have passed every check and 404'd in production. That is precisely the failure this
+ * script exists to catch, so the hole was worth closing before using the attribute.
+ *
+ * srcset is a comma-separated list and each entry may carry a descriptor, "logo.svg 2x". The
+ * URL is the first whitespace-delimited token of each entry. */
+function urlsIn(src) {
+  const out = [];
+  for (const m of src.matchAll(/\b(src|srcset|href)="([^"]+)"/g)) {
+    if (m[1] === 'srcset') {
+      for (const entry of m[2].split(',')) {
+        const url = entry.trim().split(/\s+/)[0];
+        if (url) out.push(url);
+      }
+    } else {
+      out.push(m[2]);
+    }
+  }
+  return out;
+}
+
 /* ---- Guard: nothing reaches outside the folder ----
  * At the deploy root there is no parent, so a ../ reference or a rooted path is
  * a 404 in production that works fine in the preview site. This is the failure
  * most likely to survive review. */
 for (const f of textFiles) {
   const src = live(fs.readFileSync(f.abs, 'utf8'));
-  for (const m of src.matchAll(/(?:src|href)="([^"]+)"/g)) {
-    const url = m[1];
+  for (const url of urlsIn(src)) {
     if (url.startsWith('../')) {
       const target = path.normalize(path.join(path.dirname(f.abs), url.split(/[?#]/)[0]));
       if (!(target === DIR || target.startsWith(DIR + path.sep))) {
@@ -198,7 +222,7 @@ if (reviewOnlyPaths.length && !/function samplesAllowed/.test(
 for (const f of textFiles.filter(f => f.rel.endsWith('.html') || f.rel.endsWith('.css'))) {
   const src = live(fs.readFileSync(f.abs, 'utf8'));
   const refs = [
-    ...[...src.matchAll(/(?:src|href)="([^"]+)"/g)].map(m => m[1]),
+    ...urlsIn(src),
     ...[...src.matchAll(/url\(([^)]+)\)/g)].map(m => m[1].replace(/['"]/g, ''))
   ];
   for (const url of refs) {

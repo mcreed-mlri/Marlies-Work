@@ -57,6 +57,7 @@
   .topbar-logo{
     display:block;width:272px;max-width:100%;height:auto;
   }
+  .topbar-brand picture{display:block;min-width:0;max-width:100%}
   .topbar-title{
     font-family:"Libre Baskerville",Georgia,serif;font-size:30px;font-weight:700;
     letter-spacing:-.01em;line-height:1.12;color:#fff;white-space:nowrap;padding-bottom:2px;
@@ -174,7 +175,12 @@
 <header class="topbar">
   <div class="topbar-inner">
     <a class="topbar-brand" href="https://www.masslegalhelp.org/" aria-label="Mass Legal Help home">
-      <img class="topbar-logo" src="assets/mlh-logo.svg" alt="">
+      <!-- Tagline-less wordmark below 560px, matching MassLegalHelp's mobile masthead and the
+           screener, where the derivation is recorded. -->
+      <picture>
+        <source media="(max-width:560px)" srcset="assets/mlh-logo-wordmark.svg">
+        <img class="topbar-logo" src="assets/mlh-logo.svg" alt="">
+      </picture>
     </a>
     <div class="topbar-actions">
       <span id="review-home-slot"></span>
