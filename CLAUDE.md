@@ -111,7 +111,7 @@ already need it.
 
 ## One build
 
-`masslegalhelp/tools/snap/index.html` is the screener. It is what reviewers look at and what
+`masslegalhelp/tools/snap-abawd/index.html` is the screener. It is what reviewers look at and what
 the public gets, and there is exactly one copy of `snap-screening-logic.js`, at
 `masslegalhelp/snap-screening-logic.js`. The tools landing page is
 `masslegalhelp/tools/index.html`. Read `masslegalhelp/README.md` before touching any of it; it

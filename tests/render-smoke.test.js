@@ -22,10 +22,10 @@ const vm = require('node:vm');
 
 const MLH = path.join(__dirname, '..', 'masslegalhelp');
 const LOGIC_FILE = 'snap-screening-logic.js';
-const SHIP = path.join(MLH, 'tools', 'snap', 'index.html');
+const SHIP = path.join(MLH, 'tools', 'snap-abawd', 'index.html');
 
 /* One build. court-forms/ was archived on 2026-07-30 along with the two earlier
- * designs, so masslegalhelp/tools/snap/index.html is both the page reviewers look at and the
+ * designs, so masslegalhelp/tools/snap-abawd/index.html is both the page reviewers look at and the
  * page the public gets. That removes a whole class of risk rather than testing for
  * it: there is no second copy to drift, and no lookalike to approve by mistake.
  *
@@ -36,7 +36,7 @@ const SHIP = path.join(MLH, 'tools', 'snap', 'index.html');
  * PAGES stays a list rather than collapsing to one path, because the loops below
  * read naturally over it and the next screener MLRI adds will slot straight in. */
 const PAGES = [
-  { label: 'masslegalhelp/tools/snap/index.html', dir: path.join(MLH, 'tools', 'snap'), file: 'index.html', guided: false },
+  { label: 'masslegalhelp/tools/snap-abawd/index.html', dir: path.join(MLH, 'tools', 'snap-abawd'), file: 'index.html', guided: false },
   { label: 'archive/snap-guided/index.html', dir: path.join(__dirname, '..', 'archive', 'snap-guided'), file: 'index.html', guided: true }
 ];
 
@@ -254,7 +254,7 @@ function buildContext() {
       removeItem: (k) => { delete store[k]; }
     },
     matchMedia: () => ({ matches: false, addEventListener() {}, removeEventListener() {}, addListener() {} }),
-    location: { href: 'https://example.test/masslegalhelp/tools/snap/', search: '', pathname: '/masslegalhelp/tools/snap/' },
+    location: { href: 'https://example.test/masslegalhelp/tools/snap-abawd/', search: '', pathname: '/masslegalhelp/tools/snap-abawd/' },
     requestAnimationFrame: (fn) => { fn(); return 1; },
     cancelAnimationFrame() {},
     setTimeout: () => 0,
@@ -380,7 +380,7 @@ describe('the optional-questions note appears above group 1 only', () => {
  * well-meaning change back to localStorage would restore the resume-tomorrow
  * behaviour and silently reintroduce the exposure, so it is asserted. */
 describe('the shipping build stores answers per tab only', () => {
-  const src = () => inlineScript(fs.readFileSync(SHIP, 'utf8'), 'masslegalhelp/tools/snap/index.html');
+  const src = () => inlineScript(fs.readFileSync(SHIP, 'utf8'), 'masslegalhelp/tools/snap-abawd/index.html');
 
   it('uses sessionStorage and never localStorage', () => {
     /* Comments stripped first. The block above this storage code explains why it
@@ -393,7 +393,7 @@ describe('the shipping build stores answers per tab only', () => {
 
     assert.doesNotMatch(
       code, /\blocalStorage\b/,
-      'masslegalhelp/tools/snap/index.html touches localStorage, which outlives the tab. Answers ' +
+      'masslegalhelp/tools/snap-abawd/index.html touches localStorage, which outlives the tab. Answers ' +
       'about pregnancy and domestic violence would stay recoverable on a shared phone.'
     );
     assert.match(code, /sessionStorage\.setItem\(STORAGE_KEY/, 'answers are not being stored at all');
@@ -442,7 +442,7 @@ describe('the top-bar Learn More link', () => {
   const S = require(path.join(MLH, LOGIC_FILE));
 
   for (const p of [
-    { label: 'masslegalhelp/tools/snap/index.html', file: SHIP },
+    { label: 'masslegalhelp/tools/snap-abawd/index.html', file: SHIP },
     { label: 'masslegalhelp/tools/index.html', file: path.join(MLH, 'tools', 'index.html') }
   ]) {
     it(p.label, () => {
@@ -525,17 +525,17 @@ describe('screener pages render without throwing', () => {
  * the failure that matters is it saying yes to a host it should not. */
 describe('review-only modes stay off a production host', () => {
   const logic = fs.readFileSync(path.join(MLH, LOGIC_FILE), 'utf8');
-  const src = inlineScript(fs.readFileSync(SHIP, 'utf8'), 'masslegalhelp/tools/snap/index.html');
+  const src = inlineScript(fs.readFileSync(SHIP, 'utf8'), 'masslegalhelp/tools/snap-abawd/index.html');
 
   function on(hostname, search) {
     const { ctx, stage } = buildContext();
     ctx.location = {
-      href: 'https://' + hostname + '/tools/snap/' + (search || ''),
-      hostname, search: search || '', pathname: '/tools/snap/'
+      href: 'https://' + hostname + '/tools/snap-abawd/' + (search || ''),
+      hostname, search: search || '', pathname: '/tools/snap-abawd/'
     };
     vm.createContext(ctx);
     vm.runInContext(logic, ctx, { filename: LOGIC_FILE });
-    vm.runInContext(src, ctx, { filename: 'masslegalhelp/tools/snap/index.html' });
+    vm.runInContext(src, ctx, { filename: 'masslegalhelp/tools/snap-abawd/index.html' });
     return { ctx, stage };
   }
 
@@ -585,7 +585,7 @@ describe('review-only modes stay off a production host', () => {
  * renders, the tests pass, and only a person looking at a phone sees it. */
 describe('the header wordmark is sized by its container, not the viewport', () => {
   for (const p of [
-    { label: 'masslegalhelp/tools/snap/index.html', file: SHIP },
+    { label: 'masslegalhelp/tools/snap-abawd/index.html', file: SHIP },
     { label: 'masslegalhelp/tools/index.html', file: path.join(MLH, 'tools', 'index.html') }
   ]) {
     it(p.label, () => {
@@ -617,7 +617,7 @@ describe('the header wordmark is sized by its container, not the viewport', () =
  * later hand copies it back, this says so rather than the pair silently drifting again. */
 describe('the footer holds together across both shipping pages', () => {
   const PAGES_WITH_FOOTER = [
-    { label: 'masslegalhelp/tools/snap/index.html', file: SHIP },
+    { label: 'masslegalhelp/tools/snap-abawd/index.html', file: SHIP },
     { label: 'masslegalhelp/tools/index.html', file: path.join(MLH, 'tools', 'index.html') }
   ];
 
@@ -715,7 +715,7 @@ describe('the footer holds together across both shipping pages', () => {
  * reached from either. */
 describe('the EAEDC note renders under the health reason', () => {
   const logic = fs.readFileSync(path.join(MLH, LOGIC_FILE), 'utf8');
-  const src = inlineScript(fs.readFileSync(SHIP, 'utf8'), 'masslegalhelp/tools/snap/index.html');
+  const src = inlineScript(fs.readFileSync(SHIP, 'utf8'), 'masslegalhelp/tools/snap-abawd/index.html');
 
   function render(answers) {
     const { ctx, stage } = buildContext();
@@ -723,7 +723,7 @@ describe('the EAEDC note renders under the health reason', () => {
     vm.runInContext(logic, ctx, { filename: LOGIC_FILE });
     vm.runInContext(
       src + '\n;(function(){ state.answers=' + JSON.stringify(answers) + '; state.view="results"; render(); })();',
-      ctx, { filename: 'masslegalhelp/tools/snap/index.html' }
+      ctx, { filename: 'masslegalhelp/tools/snap-abawd/index.html' }
     );
     return stage.innerHTML;
   }

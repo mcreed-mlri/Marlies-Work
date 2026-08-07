@@ -26,7 +26,7 @@ const ROOT = path.join(__dirname, '..');
 const PAGE_GLOBS = [
   'masslegalhelp',
   'masslegalhelp/tools',
-  'masslegalhelp/tools/snap',
+  'masslegalhelp/tools/snap-abawd',
   'screener',
   '.'
 ];

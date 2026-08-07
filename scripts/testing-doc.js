@@ -31,7 +31,7 @@ const C = S.RESULT_COPY;
 /* MLRI's footer paragraph, read out of the page rather than retyped here. It is approved copy,
  * and a checklist that quotes it from a second copy is a checklist that can tell a tester the
  * page is wrong when it is the document that has fallen behind. */
-const SHIP_HTML = fs.readFileSync(path.join(ROOT, 'masslegalhelp', 'tools', 'snap', 'index.html'), 'utf8');
+const SHIP_HTML = fs.readFileSync(path.join(ROOT, 'masslegalhelp', 'tools', 'snap-abawd', 'index.html'), 'utf8');
 const FOOTER_TEXT = (() => {
   const m = /<div class="footer-about-inner">\s*<p>([\s\S]*?)<\/p>/.exec(SHIP_HTML);
   if (!m) throw new Error('testing-doc: no footer paragraph in the shipping page.');
@@ -95,7 +95,7 @@ w('Then open the screener and, if you need the archived guided build, its copy:'
 blank();
 w('| Build | URL |');
 w('| --- | --- |');
-w('| Write-in (shipping) | `http://127.0.0.1:4173/masslegalhelp/tools/snap/` |');
+w('| Write-in (shipping) | `http://127.0.0.1:4173/masslegalhelp/tools/snap-abawd/` |');
 w('| Guided (archived) | `http://127.0.0.1:4173/archive/snap-guided/` |');
 w('| The tools landing page | `http://127.0.0.1:4173/masslegalhelp/tools/` |');
 w('| The explainer | `http://127.0.0.1:4173/screener/how-it-works.html` |');
@@ -109,7 +109,7 @@ h3('Testing it from somewhere other than this machine');
 
 w('The preview site is on Cloudflare Pages, behind the HTTP Basic gate in `functions/_middleware.js`,');
 w('and that gate covers every folder in the repository automatically. So the shipping build is');
-w('already reachable at `/masslegalhelp/tools/snap/` on the preview domain, password-protected,');
+w('already reachable at `/masslegalhelp/tools/snap-abawd/` on the preview domain, password-protected,');
 w('and every push to `main` redeploys it. Nothing has to be set up to share it with a reviewer.');
 blank();
 w('**Two things are true there that will not be true in production,** so a pass done only on the');

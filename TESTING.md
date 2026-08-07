@@ -28,7 +28,7 @@ Then open the screener and, if you need the archived guided build, its copy:
 
 | Build | URL |
 | --- | --- |
-| Write-in (shipping) | `http://127.0.0.1:4173/masslegalhelp/tools/snap/` |
+| Write-in (shipping) | `http://127.0.0.1:4173/masslegalhelp/tools/snap-abawd/` |
 | Guided (archived) | `http://127.0.0.1:4173/archive/snap-guided/` |
 | The tools landing page | `http://127.0.0.1:4173/masslegalhelp/tools/` |
 | The explainer | `http://127.0.0.1:4173/screener/how-it-works.html` |
@@ -41,7 +41,7 @@ itself something to test.
 
 The preview site is on Cloudflare Pages, behind the HTTP Basic gate in `functions/_middleware.js`,
 and that gate covers every folder in the repository automatically. So the shipping build is
-already reachable at `/masslegalhelp/tools/snap/` on the preview domain, password-protected,
+already reachable at `/masslegalhelp/tools/snap-abawd/` on the preview domain, password-protected,
 and every push to `main` redeploys it. Nothing has to be set up to share it with a reviewer.
 
 **Two things are true there that will not be true in production,** so a pass done only on the
