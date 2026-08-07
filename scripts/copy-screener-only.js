@@ -15,7 +15,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
-const HTML = path.join(ROOT, 'masslegalhelp', 'tool', 'snap', 'index.html');
+const HTML = path.join(ROOT, 'masslegalhelp', 'tools', 'snap', 'index.html');
 const OUT = path.join(ROOT, '_local', 'SCREENER-COPY-for-google-docs.md');
 const VARIANT = 'classic2';
 

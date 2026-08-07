@@ -32,7 +32,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
-const HTML = path.join(ROOT, 'masslegalhelp', 'tool', 'snap', 'index.html');
+const HTML = path.join(ROOT, 'masslegalhelp', 'tools', 'snap', 'index.html');
 const VARIANT = 'classic2';
 
 /* ---- --docs: a version that survives being pasted into Google Docs ----

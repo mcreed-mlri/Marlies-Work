@@ -111,10 +111,10 @@ already need it.
 
 ## One build
 
-`masslegalhelp/tool/snap/index.html` is the screener. It is what reviewers look at and what
+`masslegalhelp/tools/snap/index.html` is the screener. It is what reviewers look at and what
 the public gets, and there is exactly one copy of `snap-screening-logic.js`, at
 `masslegalhelp/snap-screening-logic.js`. The tools landing page is
-`masslegalhelp/tool/index.html`. Read `masslegalhelp/README.md` before touching any of it; it
+`masslegalhelp/tools/index.html`. Read `masslegalhelp/README.md` before touching any of it; it
 carries the deploy contract.
 
 `court-forms/` is gone as of 2026-07-30. Court Forms Online requires a Docassemble interview,

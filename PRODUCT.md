@@ -81,7 +81,7 @@ so what a reviewer approves is what the public will see rather than a lookalike.
   four results: exempt, good cause, may need to meet the work rules, or age may not apply.
   Rules and question text live in `masslegalhelp/snap-screening-logic.js`; every outbound URL
   lives in `LINKS` there.
-- One build, `masslegalhelp/tool/snap/index.html`, using the `classic2` copy. It is both the page
+- One build, `masslegalhelp/tools/snap/index.html`, using the `classic2` copy. It is both the page
   reviewers approve and the page the public gets, which removes the risk of approving a
   lookalike rather than testing for it. All three earlier designs and the `court-forms/`
   folder moved to `archive/` on 2026-07-30 and are frozen and untested. Carrying several

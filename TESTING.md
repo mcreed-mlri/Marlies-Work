@@ -28,9 +28,9 @@ Then open the screener and, if you need the archived guided build, its copy:
 
 | Build | URL |
 | --- | --- |
-| Write-in (shipping) | `http://127.0.0.1:4173/masslegalhelp/tool/snap/` |
+| Write-in (shipping) | `http://127.0.0.1:4173/masslegalhelp/tools/snap/` |
 | Guided (archived) | `http://127.0.0.1:4173/archive/snap-guided/` |
-| The tools landing page | `http://127.0.0.1:4173/masslegalhelp/tool/` |
+| The tools landing page | `http://127.0.0.1:4173/masslegalhelp/tools/` |
 | The explainer | `http://127.0.0.1:4173/screener/how-it-works.html` |
 
 `?sample=` only works on a review host (localhost, 127.0.0.1, a `.pages.dev`

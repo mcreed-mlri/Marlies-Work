@@ -380,8 +380,13 @@
   .footer-legal-inner{
     max-width:760px;margin:0 auto;
     padding:0 max(16px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left));
-    display:flex;flex-wrap:wrap;align-items:center;gap:0 28px;
+    display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:0 28px;
   }
+  .footer-legal-links{display:flex;flex-wrap:wrap;align-items:center;gap:0 28px}
+  /* Right of the links, as on their strip. Wraps under them on a narrow screen rather than
+     squeezing, which is why the two are separate flex children and not one row of three.
+     White at 80% is 11.46:1 on the strip. */
+  .footer-copyright{margin:0;padding:10px 0;font-size:12.5px;color:rgba(255,255,255,.8)}
   /* 44px min-height is the WCAG 2.5.5 target floor this build holds everywhere else. Underlined
      because colour alone must not be what says "link", and white is 17.65:1 on the strip. */
   .footer-legal-inner a{
@@ -655,15 +660,25 @@
        sets of work requirements are live and people do conflate them. Raised with MLRI rather
        than changed, since the words are theirs.
 
-       Identical on tool/index.html. A test asserts the two match, because a sentence copied into
+       Identical on tools/index.html. A test asserts the two match, because a sentence copied into
        two files is how the pair drifts. -->
   <div class="footer-about-inner">
     <p>This tool was developed by the Massachusetts Law Reform Institute to help give you more information about the SNAP work rules. The Department of Transitional Assistance (DTA) runs the SNAP program in Massachusetts. The SNAP ABAWD Work Rules are different from MassHealth work rules.</p>
   </div>
   <div class="footer-legal">
     <div class="footer-legal-inner">
-      <a href="https://www.masslegalhelp.org/terms-use" target="_blank" rel="noopener">Terms of Use</a>
-      <a href="https://www.masslegalhelp.org/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a>
+      <div class="footer-legal-links">
+        <a href="https://www.masslegalhelp.org/terms-use" target="_blank" rel="noopener">Terms of Use</a>
+        <a href="https://www.masslegalhelp.org/privacy-policy" target="_blank" rel="noopener">Privacy Policy</a>
+      </div>
+      <!-- Asked for on 2026-08-07, which settles the question raised when the strip went in. It
+           had come off on 2026-07-30 on the grounds that it asserts MLAC owns a page MLRI wrote;
+           MLRI have now asked for it, so it is theirs to assert.
+
+           The year is written out rather than computed. A static page has no build step to stamp
+           it, and setting it from JS would leave it blank for anyone without scripts. It carries a
+           copy id so a stale year surfaces at the next copy review rather than never. -->
+      <p class="footer-copyright">©2026 Massachusetts Legal Assistance Corporation</p>
     </div>
   </div>
 </footer>

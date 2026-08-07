@@ -85,9 +85,9 @@ w('Then open the screener and, if you need the archived guided build, its copy:'
 blank();
 w('| Build | URL |');
 w('| --- | --- |');
-w('| Write-in (shipping) | `http://127.0.0.1:4173/masslegalhelp/tool/snap/` |');
+w('| Write-in (shipping) | `http://127.0.0.1:4173/masslegalhelp/tools/snap/` |');
 w('| Guided (archived) | `http://127.0.0.1:4173/archive/snap-guided/` |');
-w('| The tools landing page | `http://127.0.0.1:4173/masslegalhelp/tool/` |');
+w('| The tools landing page | `http://127.0.0.1:4173/masslegalhelp/tools/` |');
 w('| The explainer | `http://127.0.0.1:4173/screener/how-it-works.html` |');
 blank();
 w('`?sample=` only works on a review host (localhost, 127.0.0.1, a `.pages.dev`');

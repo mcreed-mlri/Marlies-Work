@@ -22,10 +22,10 @@ const vm = require('node:vm');
 
 const MLH = path.join(__dirname, '..', 'masslegalhelp');
 const LOGIC_FILE = 'snap-screening-logic.js';
-const SHIP = path.join(MLH, 'tool', 'snap', 'index.html');
+const SHIP = path.join(MLH, 'tools', 'snap', 'index.html');
 
 /* One build. court-forms/ was archived on 2026-07-30 along with the two earlier
- * designs, so masslegalhelp/tool/snap/index.html is both the page reviewers look at and the
+ * designs, so masslegalhelp/tools/snap/index.html is both the page reviewers look at and the
  * page the public gets. That removes a whole class of risk rather than testing for
  * it: there is no second copy to drift, and no lookalike to approve by mistake.
  *
@@ -36,7 +36,7 @@ const SHIP = path.join(MLH, 'tool', 'snap', 'index.html');
  * PAGES stays a list rather than collapsing to one path, because the loops below
  * read naturally over it and the next screener MLRI adds will slot straight in. */
 const PAGES = [
-  { label: 'masslegalhelp/tool/snap/index.html', dir: path.join(MLH, 'tool', 'snap'), file: 'index.html', guided: false },
+  { label: 'masslegalhelp/tools/snap/index.html', dir: path.join(MLH, 'tools', 'snap'), file: 'index.html', guided: false },
   { label: 'archive/snap-guided/index.html', dir: path.join(__dirname, '..', 'archive', 'snap-guided'), file: 'index.html', guided: true }
 ];
 
@@ -254,7 +254,7 @@ function buildContext() {
       removeItem: (k) => { delete store[k]; }
     },
     matchMedia: () => ({ matches: false, addEventListener() {}, removeEventListener() {}, addListener() {} }),
-    location: { href: 'https://example.test/masslegalhelp/tool/snap/', search: '', pathname: '/masslegalhelp/tool/snap/' },
+    location: { href: 'https://example.test/masslegalhelp/tools/snap/', search: '', pathname: '/masslegalhelp/tools/snap/' },
     requestAnimationFrame: (fn) => { fn(); return 1; },
     cancelAnimationFrame() {},
     setTimeout: () => 0,
@@ -380,7 +380,7 @@ describe('the optional-questions note appears above group 1 only', () => {
  * well-meaning change back to localStorage would restore the resume-tomorrow
  * behaviour and silently reintroduce the exposure, so it is asserted. */
 describe('the shipping build stores answers per tab only', () => {
-  const src = () => inlineScript(fs.readFileSync(SHIP, 'utf8'), 'masslegalhelp/tool/snap/index.html');
+  const src = () => inlineScript(fs.readFileSync(SHIP, 'utf8'), 'masslegalhelp/tools/snap/index.html');
 
   it('uses sessionStorage and never localStorage', () => {
     /* Comments stripped first. The block above this storage code explains why it
@@ -393,7 +393,7 @@ describe('the shipping build stores answers per tab only', () => {
 
     assert.doesNotMatch(
       code, /\blocalStorage\b/,
-      'masslegalhelp/tool/snap/index.html touches localStorage, which outlives the tab. Answers ' +
+      'masslegalhelp/tools/snap/index.html touches localStorage, which outlives the tab. Answers ' +
       'about pregnancy and domestic violence would stay recoverable on a shared phone.'
     );
     assert.match(code, /sessionStorage\.setItem\(STORAGE_KEY/, 'answers are not being stored at all');
@@ -429,8 +429,8 @@ describe('the shipping build stores answers per tab only', () => {
  * away correctly while leaving the answers behind. Only the shipping build has it;
  * the preview builds still use a Back button to the hub. */
 describe('Quick exit clears the stored answers', () => {
-  it('masslegalhelp/tool/snap/index.html', () => {
-    const src = inlineScript(fs.readFileSync(SHIP, 'utf8'), 'masslegalhelp/tool/snap/index.html');
+  it('masslegalhelp/tools/snap/index.html', () => {
+    const src = inlineScript(fs.readFileSync(SHIP, 'utf8'), 'masslegalhelp/tools/snap/index.html');
     const handler = /case 'quick-exit':[\s\S]*?break;/.exec(src);
     assert.ok(handler, 'no quick-exit handler found. The top-bar control is the only way out.');
 
@@ -505,17 +505,17 @@ describe('screener pages render without throwing', () => {
  * the failure that matters is it saying yes to a host it should not. */
 describe('review-only modes stay off a production host', () => {
   const logic = fs.readFileSync(path.join(MLH, LOGIC_FILE), 'utf8');
-  const src = inlineScript(fs.readFileSync(SHIP, 'utf8'), 'masslegalhelp/tool/snap/index.html');
+  const src = inlineScript(fs.readFileSync(SHIP, 'utf8'), 'masslegalhelp/tools/snap/index.html');
 
   function on(hostname, search) {
     const { ctx, stage } = buildContext();
     ctx.location = {
-      href: 'https://' + hostname + '/tool/snap/' + (search || ''),
-      hostname, search: search || '', pathname: '/tool/snap/'
+      href: 'https://' + hostname + '/tools/snap/' + (search || ''),
+      hostname, search: search || '', pathname: '/tools/snap/'
     };
     vm.createContext(ctx);
     vm.runInContext(logic, ctx, { filename: LOGIC_FILE });
-    vm.runInContext(src, ctx, { filename: 'masslegalhelp/tool/snap/index.html' });
+    vm.runInContext(src, ctx, { filename: 'masslegalhelp/tools/snap/index.html' });
     return { ctx, stage };
   }
 
@@ -552,36 +552,56 @@ describe('review-only modes stay off a production host', () => {
   });
 });
 
-/* The approved footer text lives in both shipping pages, because there is no build step and no
- * shared stylesheet or partial to hold it. Two copies of one approved sentence is exactly the
- * shape that drifted twice before, when there were two copies of the logic module: an edit lands
- * on the page someone had open and the other keeps the old wording, and a reader on the landing
- * page sees text nobody approved. Nothing else would catch that. */
-describe('the approved footer text is the same on both shipping pages', () => {
+/* The footer, across both shipping pages.
+ *
+ * The legal strip is on both, in two copies, because there is no build step and no shared
+ * stylesheet or partial to hold it. Two copies of one approved thing is the shape that drifted
+ * twice before, when there were two copies of the logic module: an edit lands on the page
+ * someone had open and the other keeps the old version.
+ *
+ * MLRI's paragraph is a different case. It was on both for a day, and on 2026-08-07 it came off
+ * the landing page, because it describes the SNAP screener and that page is an index that will
+ * list several tools. So it is asserted present on the screener and absent from the index: if a
+ * later hand copies it back, this says so rather than the pair silently drifting again. */
+describe('the footer holds together across both shipping pages', () => {
   const PAGES_WITH_FOOTER = [
-    { label: 'masslegalhelp/tool/snap/index.html', file: SHIP },
-    { label: 'masslegalhelp/tool/index.html', file: path.join(MLH, 'tool', 'index.html') }
+    { label: 'masslegalhelp/tools/snap/index.html', file: SHIP },
+    { label: 'masslegalhelp/tools/index.html', file: path.join(MLH, 'tools', 'index.html') }
   ];
 
   const found = PAGES_WITH_FOOTER.map(p => {
     const html = fs.readFileSync(p.file, 'utf8');
     const m = /<div class="footer-about-inner">\s*<p>([\s\S]*?)<\/p>/.exec(html);
-    assert.ok(m, p.label + ' has no footer text. It is MLRI-approved copy, not decoration.');
     /* Scoped to the strip, not the page. Matching every masslegalhelp.org link in the file swept
        up the landing page's own link to the ABAWD article, so the two pages "differed" on a link
        that has nothing to do with the footer. */
-    const block = /<div class="footer-legal-inner">([\s\S]*?)<\/div>/.exec(html);
+    const block = /<div class="footer-legal-inner">([\s\S]*?)<\/div>\s*<\/div>/.exec(html);
     assert.ok(block, p.label + ' has no Terms and Privacy strip.');
     const legal = [...block[1].matchAll(/<a href="([^"]+)"[^>]*>([^<]+)<\/a>/g)]
       .map(x => x[2].trim() + ' -> ' + x[1]);
-    return { label: p.label, text: m[1].replace(/\s+/g, ' ').trim(), legal };
+    const copyright = /<p class="footer-copyright">([^<]+)</.exec(html);
+    /* Ternaries rather than `m && ...`: exec returns null when it does not match, and under
+       assert/strict null is not undefined, so the absent case failed its own "is it absent" test. */
+    return {
+      label: p.label,
+      text: m ? m[1].replace(/\s+/g, ' ').trim() : undefined,
+      legal,
+      copyright: copyright ? copyright[1].trim() : undefined
+    };
   });
 
-  it('the two pages match word for word', () => {
+  it('MLRI\'s paragraph is on the screener and not on the index', () => {
+    assert.ok(found[0].text, 'the screener has lost MLRI-approved copy');
     assert.equal(
-      found[0].text, found[1].text,
-      'The footer text differs between the two pages. One of them is showing wording nobody approved.'
+      found[1].text, undefined,
+      'The SNAP paragraph is back on the tools index. It describes one tool, on the page that '
+      + 'lists them all, so it goes stale the moment a second tool arrives.'
     );
+  });
+
+  it('both pages carry the same copyright line', () => {
+    assert.equal(found[0].copyright, found[1].copyright);
+    assert.equal(found[0].copyright, '©2026 Massachusetts Legal Assistance Corporation');
   });
 
   it('still carries the three things MLRI asked it to say', () => {
@@ -626,7 +646,7 @@ describe('the approved footer text is the same on both shipping pages', () => {
  * reached from either. */
 describe('the EAEDC note renders under the health reason', () => {
   const logic = fs.readFileSync(path.join(MLH, LOGIC_FILE), 'utf8');
-  const src = inlineScript(fs.readFileSync(SHIP, 'utf8'), 'masslegalhelp/tool/snap/index.html');
+  const src = inlineScript(fs.readFileSync(SHIP, 'utf8'), 'masslegalhelp/tools/snap/index.html');
 
   function render(answers) {
     const { ctx, stage } = buildContext();
@@ -634,7 +654,7 @@ describe('the EAEDC note renders under the health reason', () => {
     vm.runInContext(logic, ctx, { filename: LOGIC_FILE });
     vm.runInContext(
       src + '\n;(function(){ state.answers=' + JSON.stringify(answers) + '; state.view="results"; render(); })();',
-      ctx, { filename: 'masslegalhelp/tool/snap/index.html' }
+      ctx, { filename: 'masslegalhelp/tools/snap/index.html' }
     );
     return stage.innerHTML;
   }

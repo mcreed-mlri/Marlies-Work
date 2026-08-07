@@ -23,7 +23,7 @@ const WORK_RULES_HEADING = asRegex(RESULT_COPY.workRulesHeading);
 
 // One build now. court-forms/ was archived on 2026-07-30, so these drive the page
 // that actually ships rather than a lookalike of it.
-const screenerUrl = '/masslegalhelp/tool/snap/';
+const screenerUrl = '/masslegalhelp/tools/snap/';
 
 /* agreeAndStart and clickYn were removed with the archived builds on 2026-07-30.
  * agreeAndStart clicked `#agree`, the Terms of Use checkbox, which only ever

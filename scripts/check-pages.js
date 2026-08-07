@@ -25,8 +25,8 @@ const vm = require('vm');
 const ROOT = path.join(__dirname, '..');
 const PAGE_GLOBS = [
   'masslegalhelp',
-  'masslegalhelp/tool',
-  'masslegalhelp/tool/snap',
+  'masslegalhelp/tools',
+  'masslegalhelp/tools/snap',
   'screener',
   '.'
 ];

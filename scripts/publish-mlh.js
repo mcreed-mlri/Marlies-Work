@@ -30,8 +30,8 @@ const ROOT = path.join(__dirname, '..');
 const PREFIX = 'masslegalhelp';
 const DIR = path.join(ROOT, PREFIX);
 const LOGIC = 'snap-screening-logic.js';
-const TOOL_INDEX = 'tool/index.html';
-const SHIP_HTML = 'tool/snap/index.html';
+const TOOL_INDEX = 'tools/index.html';
+const SHIP_HTML = 'tools/snap/index.html';
 
 const args = process.argv.slice(2);
 const checkOnly = args.includes('--check');
@@ -90,10 +90,10 @@ for (const f of files) {
 
 /* ---- Guard: the tool entry points exist ---- */
 if (!files.some(f => f.rel === TOOL_INDEX)) {
-  problems.push('No ' + TOOL_INDEX + ' in ' + PREFIX + '/. The public tools index lives at /tool/.');
+  problems.push('No ' + TOOL_INDEX + ' in ' + PREFIX + '/. The public tools index lives at /tools/.');
 }
 if (!files.some(f => f.rel === SHIP_HTML)) {
-  problems.push('No ' + SHIP_HTML + ' in ' + PREFIX + '/. The SNAP screener lives at /tool/snap/.');
+  problems.push('No ' + SHIP_HTML + ' in ' + PREFIX + '/. The SNAP screener lives at /tools/snap/.');
 }
 
 /* ---- Guard: the logic module is present ----
@@ -159,7 +159,7 @@ for (const f of textFiles) {
    * The test applied is the one the attribute scan above already uses: resolve
    * the path, and refuse it only if it lands outside the folder. Until the email
    * endpoint arrived this scan refused every ../ outright, which is stricter than
-   * the failure it exists for. fetch('../../api/email') from tool/snap/ resolves
+   * the failure it exists for. fetch('../../api/email') from tools/snap/ resolves
    * to <root>/api/email, correct at any deploy subpath; the rooted '/api/email'
    * is the one that breaks, and line 116 catches that. Resolving rather than
    * banning also avoids the workaround this comment warns against, since a

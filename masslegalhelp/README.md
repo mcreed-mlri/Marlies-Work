@@ -10,8 +10,8 @@ The MassLegalHelp vendor proposed a Cloudflare Worker serving this at a path on
 `masslegalhelp.org`, since that domain already fronts Cloudflare. That works, and this
 build is written for it.
 
-The contents of this folder are the site root. `tool/index.html` is the tools landing page and
-`tool/snap/index.html` is the SNAP screener. Both paths are asserted by `scripts/publish-mlh.js`,
+The contents of this folder are the site root. `tools/index.html` is the tools landing page and
+`tools/snap/index.html` is the SNAP screener. Both paths are asserted by `scripts/publish-mlh.js`,
 which refuses to publish without them.
 
 Four things this build depends on:
