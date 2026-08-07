@@ -33,9 +33,43 @@ Fonts are self-hosted in `fonts/`. Nothing here makes an external request, so th
 cannot be broken by a third party and sends no data to one.
 
 If the Worker sits on the `masslegalhelp.org` origin, requests to this path will carry
-`masslegalhelp.org` cookies. Confirm with the vendor that the Worker strips them and that
-no request logging retains them. This tool asks about pregnancy, disability, domestic
-violence, and personal safety.
+`masslegalhelp.org` cookies. The Worker must strip them, and request logging must not retain
+them. This tool asks about pregnancy, disability, domestic violence, and personal safety.
+That used to read "confirm with the vendor"; MLRI holds the Cloudflare login for the domain,
+so it is a thing to do rather than a thing to ask.
+
+## Gating it while it is being tested
+
+MLRI has the Cloudflare account for `masslegalhelp.org`, so this does not need the vendor.
+Two routes work and one does not.
+
+**Cloudflare Access on the path is the one to reach for.** A policy scoped to
+`masslegalhelp.org/tools/snap-abawd*` in Zero Trust, allowing named addresses or a one-time
+PIN to an `@mlri.org` address. No code, no environment variable, and turning it off is a
+toggle rather than a deploy. What makes it the right answer rather than merely a working one
+is that the files stay byte-identical to what the public gets, so the pass tests the thing
+that ships.
+
+Two cautions. Scope the policy to the path and confirm it, because a policy written against
+the apex would gate the whole of MassLegalHelp. And Access is per-person, so it is a better
+fit than a shared password for anything that outlives this week.
+
+**Auth in the Worker also works,** with the password in an encrypted environment variable, on
+the same reasoning: the Worker is infrastructure that sits in front of the files rather than
+part of them, so nothing has to be removed from the build before launch.
+
+**What does not work is putting the gate in this folder.** `scripts/publish-mlh.js` refuses
+`SITE_PASSWORD` and `WWW-Authenticate` here, and would refuse a `functions/_middleware.js`
+copied in from the repo root. Two reasons beyond the guard. The build under test would carry
+auth code that has to come out before launch, and that removal is a step someone can forget.
+And this folder is produced by `git subtree split`, so anything added to the deploy branch by
+hand is overwritten the next time the script runs.
+
+One thing gating the real path buys that the password-protected preview cannot: it is the
+only environment that tests the production configuration. On `masslegalhelp.org`,
+`samplesAllowed()` is false, so `?sample=` does nothing and the review-only **Screener home**
+button is absent. Both are live on a `.pages.dev` preview. The cost is that reaching the
+good-cause result there means answering through all four groups honestly, which is the point.
 
 ## Decisions worth knowing
 
@@ -99,7 +133,7 @@ checked. If a second live build ever appears, restore the drift guard before the
 
 Three groups, because reading this on launch day and having to work out which items still
 need somebody is how one of them gets missed. Nothing in the first group is a code problem;
-each is waiting on a decision or on the vendor.
+each is waiting on a decision, and the hosting ones are MLRI's own to make.
 
 ### Still open, and each one blocks launch
 
@@ -124,10 +158,11 @@ each is waiting on a decision or on the vendor.
   build has no Terms of Use checkbox, unlike the retired variants. Linking the terms is not
   the same as asking someone to accept them, so whether the tool inherits the host site's
   terms or needs its own gate is still a decision.
-- **Two vendor items, both in the deploy contract above.** It needs its own Pages project or
-  repo, because a project containing `functions/` puts the public tool behind the preview
-  site's password. And confirm the Worker strips `masslegalhelp.org` cookies and retains
-  none in its logs.
+- **Two hosting items, both in the deploy contract above, and both MLRI's own to do rather
+  than the vendor's, since MLRI holds the Cloudflare login for the domain.** It needs its own
+  Pages project or repo, because a project containing `functions/` puts the public tool behind
+  the preview site's password. And the Worker has to strip `masslegalhelp.org` cookies and
+  retain none in its logs, on a tool that asks about pregnancy and domestic violence.
 - **Author copy edits.** Several are applied; several are waiting on the author. See
   `SCREENER-COPY.md` in the MLRI source repository, which lists every string and prints each
   open question beside the text it is about.
