@@ -491,6 +491,41 @@ describe('screener pages render without throwing', () => {
   }
 });
 
+/* The approved footer text lives in both shipping pages, because there is no build step and no
+ * shared stylesheet or partial to hold it. Two copies of one approved sentence is exactly the
+ * shape that drifted twice before, when there were two copies of the logic module: an edit lands
+ * on the page someone had open and the other keeps the old wording, and a reader on the landing
+ * page sees text nobody approved. Nothing else would catch that. */
+describe('the approved footer text is the same on both shipping pages', () => {
+  const PAGES_WITH_FOOTER = [
+    { label: 'masslegalhelp/tool/snap/index.html', file: SHIP },
+    { label: 'masslegalhelp/tool/index.html', file: path.join(MLH, 'tool', 'index.html') }
+  ];
+
+  const found = PAGES_WITH_FOOTER.map(p => {
+    const html = fs.readFileSync(p.file, 'utf8');
+    const m = /<div class="footer-about-inner">\s*<p>([\s\S]*?)<\/p>/.exec(html);
+    assert.ok(m, p.label + ' has no footer text. It is MLRI-approved copy, not decoration.');
+    return { label: p.label, text: m[1].replace(/\s+/g, ' ').trim() };
+  });
+
+  it('the two pages match word for word', () => {
+    assert.equal(
+      found[0].text, found[1].text,
+      'The footer text differs between the two pages. One of them is showing wording nobody approved.'
+    );
+  });
+
+  it('still carries the three things MLRI asked it to say', () => {
+    /* Their sentences, not a paraphrase: if MLRI rewrites this, the test should fail and be
+       updated deliberately rather than quietly pass on text that lost half its meaning. */
+    const t = found[0].text;
+    assert.match(t, /developed by the Massachusetts Law Reform Institute/);
+    assert.match(t, /Department of Transitional Assistance \(DTA\) runs the SNAP program/);
+    assert.match(t, /different from MassHealth work rules/);
+  });
+});
+
 /* Pat's EAEDC note, 2026-08-07. The logic test asserts it stays off the letter; this asserts it
  * actually reaches the screen, which is the half that a rendering change breaks silently. The
  * exempt card and the housing-review card share one item builder, so a note added to a reason is

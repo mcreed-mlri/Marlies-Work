@@ -1180,12 +1180,8 @@ exempt. Confirmed August 2026 by MLRI. The same three figures appear in MLRI’s
 Everything above came from you or from the earlier MLRI draft. The strings in this
 section did not. They were written to fill gaps while building the MassLegalHelp version,
 and they are on the page right now, so they need your review the same as anything else.
-The footer disclaimer used to head this list, and it is gone as of 2026-07-30, pending a
-legal footer. It read: "This screening is part of masslegalhelp.org. It gives you
-information about the SNAP work rules. It is not legal advice, it does not tell DTA
-anything, and it does not change your SNAP case." It made a claim about what this tool is
-and is not, which was never a developer's call to make. The tool now says none of that
-anywhere, so whatever replaces it still owes a reader those three facts.
+The footer disclaimer used to head this list. It is yours now, approved 2026-08-07, so it
+has moved out of this section and into the footer section below.
 
 **`chrome.tabTitle`**  **[written by the developer, not you]**
 
@@ -1205,16 +1201,35 @@ anywhere, so whatever replaces it still owes a reader those three facts.
 
 > **Question for you:** Added 2026-07-30, and not yours, so overwrite it freely. The signature pad only works with a finger or a mouse, so someone using a keyboard, a switch, or a screen reader cannot sign in the browser at all. The printed statement already leaves a ruled line when the pad is empty, so that route worked; nothing on the page said so. This sentence says it. If you would rather fold it into the line above, that is one sentence instead of two and we will make the swap.
 
-The footer has no copy left in it. It is the gold rule, the navy band, and the wordmark,
-and its whole job is telling a reader whose site this is. It used to carry three links
-out, to the ABAWD article, Legal Topics, and Contact Us; those went on 2026-07-30 because
-someone mid-screening is not browsing. The disclaimer went the same day, quoted above.
+### The footer
 
-**Still missing, and still blocking launch:** Terms of Use and Privacy Policy links,
-because their URLs were never supplied and a Terms link that goes nowhere on a public
-benefits page is worse than no link. This version also has no Terms of Use checkbox at
-all, which earlier versions did. And with the disclaimer gone the tool no longer says
-anywhere that it is not legal advice.
+The gold rule, the navy band, the wordmark, and your text. It used to carry three links out,
+to the ABAWD article, Legal Topics, and Contact Us; those went on 2026-07-30, because someone
+mid-screening is not browsing. "Interactive tools" went on 2026-08-07: it was the label on
+the block that held the old one-liner, and once your text moved to its own row underneath it
+was a heading with nothing under it.
+
+**`page.footerAbout`**
+
+> This tool was developed by the Massachusetts Law Reform Institute to help give you more information about the SNAP work rules. The Department of Transitional Assistance (DTA) runs the SNAP program in Massachusetts. The SNAP ABAWD Work Rules are different from MassHealth work rules.
+
+The same text is on the tools landing page, word for word. A test holds the two in step, so
+an edit to one cannot leave the other showing wording nobody approved.
+
+**Worth a second look, and the reason this is flagged rather than closed.** The sentence that
+came out on 2026-07-30 carried three facts: that the tool is not legal advice, that it sends
+nothing to DTA, and that using it does not change a SNAP case. Yours carries none of the
+three. It says who wrote the tool, who runs SNAP, and that these rules are not the MassHealth
+ones, which are all useful and none of which are those. That may well be deliberate, and if
+the host site's terms are meant to cover it then nothing needs doing. It is here because it
+would be worse to leave it unsaid.
+
+The MassHealth sentence is a good catch that nobody here had thought of. Two sets of work
+requirements are live at once and people do conflate them.
+
+**Still missing:** Terms of Use and Privacy Policy links, because their URLs were never
+supplied and a Terms link that goes nowhere on a public benefits page is worse than no link.
+This version also has no Terms of Use checkbox at all, which earlier versions did.
 
 ## 16. Everything else
 

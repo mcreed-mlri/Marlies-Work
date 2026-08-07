@@ -94,13 +94,14 @@ each is waiting on a decision or on the vendor.
 
 ### Still open, and each one blocks launch
 
-- **The legal footer. The largest gap.** The disclaimer came out on 2026-07-30 pending
-  proper wording, so the tool says nowhere that it is not legal advice, that it sends
-  nothing to DTA, or that it does not change a SNAP case. All three are true and all three
-  are worth telling a reader. This needs an approval rather than a draft: the removed
-  sentence is quoted verbatim in the footer comment in `tool/snap/index.html` and in
-  `SCREENER-COPY.md`, and it came out because nobody with the standing to approve it had
-  seen it, not because it was wrong. The footer slot it goes back into is empty and marked.
+- **The footer disclaimer, in MLRI's words, is in as of 2026-08-07, but read the next
+  sentence before ticking this off.** The text approved says who developed the tool, that
+  DTA runs SNAP, and that the ABAWD work rules are not the MassHealth work rules. The
+  sentence it replaced carried three different facts: that the tool is not legal advice,
+  that it sends nothing to DTA, and that using it does not change a SNAP case. None of the
+  three is on the page now. That may be deliberate, and the host site's terms may be meant
+  to cover it. It is raised in `SCREENER-COPY.md` under `page.footerAbout` and has not been
+  changed, because the words are MLRI's.
 - **Quick exit destination.** Currently `weather.com`, set in `PRODUCTION_QUICK_EXIT_URL`
   in the logic module. Confirm that is the right neutral site.
 - **Terms of Use and Privacy Policy.** The footer has no links to either, because they are

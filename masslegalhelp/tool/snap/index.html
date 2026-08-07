@@ -332,9 +332,26 @@
     display:flex;align-items:center;justify-content:space-between;gap:24px;
   }
   .footer-logo{display:block;width:210px;max-width:100%;height:auto}
-  .footer-meta{text-align:right;color:rgba(255,255,255,.86)}
-  .footer-kicker{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
-  .footer-note{font-size:13px;line-height:1.45;margin-top:6px}
+  /* .footer-meta and .footer-kicker were here, the right-aligned block holding "Interactive
+     tools" over the old one-liner. Both went on 2026-08-07 with the label itself: once MLRI's
+     text moved to its own row below, the kicker was a heading with nothing under it, set hard
+     right against empty space. The logo is now the only thing in the top row. */
+  /* The approved footer text, 2026-08-07, gets its own row under the logo rather than the slot
+     inside .footer-meta that the old one-liner used. That slot is right-aligned, and three
+     sentences of ragged-left body text is hard work to read. This is the one paragraph in the
+     footer anyone is meant to actually read, so it is left-aligned, on the same gutter as the
+     logo above it, and capped for measure so the lines do not run the width of a large monitor.
+
+     .footer-note went with the old one-liner. Nothing wore it, which is the state the retired
+     .topbar-title and .topbar-sub rules sat in unnoticed for a fortnight.
+
+     White at 92% over the footer navy is 11.51:1, so the smaller size is not buying trouble. */
+  .footer-about{border-top:1px solid rgba(255,255,255,.22)}
+  .footer-about-inner{
+    max-width:1100px;
+    padding:18px max(var(--chrome-gutter), env(safe-area-inset-right)) 26px max(var(--chrome-gutter), env(safe-area-inset-left));
+  }
+  .footer-about p{margin:0;font-size:13.5px;line-height:1.65;color:rgba(255,255,255,.92)}
   @media (max-width:640px){
     .topbar-inner{min-height:62px;padding:9px max(12px, env(safe-area-inset-right)) 9px max(12px, env(safe-area-inset-left));gap:10px}
     .btn-exit{font-size:13px;padding:9px 12px}
@@ -352,7 +369,6 @@
     .q-nav > [data-action="back"]{flex:0 0 36%}
     .site-footer-inner{padding:24px max(14px, env(safe-area-inset-right)) 26px max(14px, env(safe-area-inset-left));align-items:flex-start}
     .footer-logo{width:185px}
-    .footer-meta{text-align:left}
     #start-btn{width:100%}
   }
   @media (max-width:520px){
@@ -593,15 +609,23 @@
     <a href="https://www.masslegalhelp.org/" aria-label="Mass Legal Help home">
       <img class="footer-logo" src="../assets/mlh-logo.svg" alt="">
     </a>
-    <div class="footer-meta">
-      <div class="footer-kicker">Interactive tools</div>
-      <!-- "A testing preview from Mass Legal Help." was here until 2026-08-07. It described the
-           review site and became untrue the moment this shipped, and "testing preview" on a
-           benefits tool tells a reader their result may not count.
+  </div>
+  <!-- Approved by MLRI on 2026-08-07, and their wording, not ours. It replaces "A testing
+       preview from Mass Legal Help.", which described the review site.
 
-           This slot is where the legal footer goes. The sentence to put back, once someone with
-           the standing to approve it has, is quoted verbatim in the comment above this footer.
-           One line, no layout change. -->
+       Worth knowing what this text does and does not do, because the README called the missing
+       footer a launch blocker on the strength of three facts, and this carries none of them: it
+       does not say the tool is not legal advice, that nothing is sent to DTA, or that using it
+       does not change a SNAP case. It says who wrote it, who runs SNAP, and that these rules are
+       not the MassHealth ones. That last sentence is a good catch nobody here thought of; two
+       sets of work requirements are live and people do conflate them. Raised with MLRI rather
+       than changed, since the words are theirs.
+
+       Identical on tool/index.html. A test asserts the two match, because a sentence copied into
+       two files is how the pair drifts. -->
+  <div class="footer-about">
+    <div class="footer-about-inner">
+      <p>This tool was developed by the Massachusetts Law Reform Institute to help give you more information about the SNAP work rules. The Department of Transitional Assistance (DTA) runs the SNAP program in Massachusetts. The SNAP ABAWD Work Rules are different from MassHealth work rules.</p>
     </div>
   </div>
 </footer>

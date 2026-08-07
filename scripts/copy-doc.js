@@ -71,6 +71,11 @@ const INLINE = [
      beside it, page.scopeReminder, which the author asked back out the same day. */
   { id: 'page.answerAny', re: /<p [^>]*>(Answer any that apply to you\.[\s\S]*?)<\/p>/ },
   { id: 'page.sigAlt', re: /<p id="sig-alt"[^>]*>([^<]+)<\/p>/ },
+  /* The footer text. Approved 2026-08-07 and already live, so unlike most entries here this one
+     is not asking a question; it is here so a later edit to it reaches the author the same way
+     every other string does, with an id to quote back. The identical copy on the tools landing
+     page is held in step by a test rather than by this document. */
+  { id: 'page.footerAbout', re: /<div class="footer-about-inner">\s*<p>([\s\S]*?)<\/p>/ },
   // Buttons and navigation (skip/startOver/delete still inline in the page)
   { id: 'btn.skipToResults', re: />(Skip to results)</ },
   { id: 'btn.startOver', re: />([^<]{0,4}Start over)</ },
@@ -715,26 +720,38 @@ section('Copy the developer wrote, which needs your approval');
 w('Everything above came from you or from the earlier MLRI draft. The strings in this');
 w('section did not. They were written to fill gaps while building the MassLegalHelp version,');
 w('and they are on the page right now, so they need your review the same as anything else.');
-w('The footer disclaimer used to head this list, and it is gone as of 2026-07-30, pending a');
-w('legal footer. It read: "This screening is part of masslegalhelp.org. It gives you');
-w('information about the SNAP work rules. It is not legal advice, it does not tell DTA');
-w('anything, and it does not change your SNAP case." It made a claim about what this tool is');
-w('and is not, which was never a developer\'s call to make. The tool now says none of that');
-w('anywhere, so whatever replaces it still owes a reader those three facts.');
+w('The footer disclaimer used to head this list. It is yours now, approved 2026-08-07, so it');
+w('has moved out of this section and into the footer section below.');
 blank();
 ['chrome.tabTitle', 'chrome.brandLabel', 'chrome.quickExit',
   'page.sigAlt'].forEach(id => item(id, inline[id]));
 
-w('The footer has no copy left in it. It is the gold rule, the navy band, and the wordmark,');
-w('and its whole job is telling a reader whose site this is. It used to carry three links');
-w('out, to the ABAWD article, Legal Topics, and Contact Us; those went on 2026-07-30 because');
-w('someone mid-screening is not browsing. The disclaimer went the same day, quoted above.');
+sub('The footer');
+
+w('The gold rule, the navy band, the wordmark, and your text. It used to carry three links out,');
+w('to the ABAWD article, Legal Topics, and Contact Us; those went on 2026-07-30, because someone');
+w('mid-screening is not browsing. "Interactive tools" went on 2026-08-07: it was the label on');
+w('the block that held the old one-liner, and once your text moved to its own row underneath it');
+w('was a heading with nothing under it.');
 blank();
-w('**Still missing, and still blocking launch:** Terms of Use and Privacy Policy links,');
-w('because their URLs were never supplied and a Terms link that goes nowhere on a public');
-w('benefits page is worse than no link. This version also has no Terms of Use checkbox at');
-w('all, which earlier versions did. And with the disclaimer gone the tool no longer says');
-w('anywhere that it is not legal advice.');
+item('page.footerAbout', inline['page.footerAbout']);
+w('The same text is on the tools landing page, word for word. A test holds the two in step, so');
+w('an edit to one cannot leave the other showing wording nobody approved.');
+blank();
+w('**Worth a second look, and the reason this is flagged rather than closed.** The sentence that');
+w('came out on 2026-07-30 carried three facts: that the tool is not legal advice, that it sends');
+w('nothing to DTA, and that using it does not change a SNAP case. Yours carries none of the');
+w('three. It says who wrote the tool, who runs SNAP, and that these rules are not the MassHealth');
+w('ones, which are all useful and none of which are those. That may well be deliberate, and if');
+w('the host site\'s terms are meant to cover it then nothing needs doing. It is here because it');
+w('would be worse to leave it unsaid.');
+blank();
+w('The MassHealth sentence is a good catch that nobody here had thought of. Two sets of work');
+w('requirements are live at once and people do conflate them.');
+blank();
+w('**Still missing:** Terms of Use and Privacy Policy links, because their URLs were never');
+w('supplied and a Terms link that goes nowhere on a public benefits page is worse than no link.');
+w('This version also has no Terms of Use checkbox at all, which earlier versions did.');
 blank();
 
 /* ---- Leftovers, so nothing can go missing ---- */

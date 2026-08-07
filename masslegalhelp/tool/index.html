@@ -114,9 +114,15 @@
     display:flex;align-items:center;justify-content:space-between;gap:24px;
   }
   .footer-logo{display:block;width:210px;max-width:100%;height:auto}
-  .footer-meta{text-align:right;color:rgba(255,255,255,.86)}
-  .footer-kicker{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
-  .footer-note{font-size:13px;line-height:1.45;margin-top:6px}
+  /* Matches the screener; the reasoning is recorded there. .footer-note went with the one-liner
+     this replaced, and .footer-meta and .footer-kicker went with "Interactive tools", since
+     nothing wore any of the three any more. */
+  .footer-about{border-top:1px solid rgba(255,255,255,.22)}
+  .footer-about-inner{
+    max-width:1100px;
+    padding:18px max(var(--chrome-gutter), env(safe-area-inset-right)) 26px max(var(--chrome-gutter), env(safe-area-inset-left));
+  }
+  .footer-about p{margin:0;font-size:13.5px;line-height:1.65;color:rgba(255,255,255,.92)}
   @media (max-width:760px){
     .topbar-inner{min-height:62px;padding:9px max(12px, env(safe-area-inset-right)) 9px max(12px, env(safe-area-inset-left));gap:10px}
     .btn-exit{font-size:13px;padding:9px 12px}
@@ -136,7 +142,6 @@
     .info-panel{margin-top:28px}
     .site-footer-inner{padding:24px max(16px, env(safe-area-inset-right)) 26px max(16px, env(safe-area-inset-left));align-items:flex-start}
     .footer-logo{width:185px}
-    .footer-meta{text-align:left}
   }
   @media (max-width:520px){
     .site-footer-inner{flex-direction:column;gap:18px}
@@ -192,14 +197,13 @@
     <a href="https://www.masslegalhelp.org/" aria-label="Mass Legal Help home">
       <img class="footer-logo" src="assets/mlh-logo.svg" alt="">
     </a>
-    <div class="footer-meta">
-      <div class="footer-kicker">Interactive tools</div>
-      <!-- "A testing preview from Mass Legal Help." was here until 2026-08-07, removed with the
-           matching line on the screener. It described the review site, not this one, and on a
-           benefits tool it tells a reader their result may not count.
-
-           The legal footer goes here when it is approved. The wording and the reason it came out
-           are recorded in the footer comment in tool/snap/index.html. -->
+  </div>
+  <!-- MLRI's approved wording, 2026-08-07. Identical to the screener's, and a test asserts they
+       match. What it deliberately does not carry, and why that was raised rather than changed,
+       is recorded in the matching comment in tool/snap/index.html. -->
+  <div class="footer-about">
+    <div class="footer-about-inner">
+      <p>This tool was developed by the Massachusetts Law Reform Institute to help give you more information about the SNAP work rules. The Department of Transitional Assistance (DTA) runs the SNAP program in Massachusetts. The SNAP ABAWD Work Rules are different from MassHealth work rules.</p>
     </div>
   </div>
 </footer>
