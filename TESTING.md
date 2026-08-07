@@ -13,7 +13,7 @@ what you expected, and what happened, and it can be fixed.
 
 **If you are testing before a launch, skip section 5.** It covers the archived
 guided build, which is kept for records and is not what anyone will see, and it is
-47 of the 225 checks here. Everything else is the shipping tool.
+47 of the 226 checks here. Everything else is the shipping tool.
 Section 2 is the heart of it: every exemption, one at a time.
 
 ## Before you start
@@ -505,6 +505,7 @@ The exempt result tells someone what proof to send, one line per kind of exempti
 the author’s wording, added 2026-08-06. One note appears however many boxes were
 ticked: someone who selects three agencies should be told to send a letter once.
 
+- [ ] The notes sit together in a pale blue panel headed "What to send DTA", not as loose paragraphs. It is blue rather than amber or red: amber is what the "may need to meet the work rules" result wears, and red would read as something being wrong with the exemption.
 - [ ] Earning enough, or 30+ hours below minimum wage: Send DTA proof of your work income and hours, such as pay stubs or a letter. If you are having a hard time getting these proofs, tell DTA.
 - [ ] Any disability benefit, including Other: Send DTA proof of your disability benefits, such as pay stubs or a letter. If you are having a hard time getting these proofs, tell DTA.
 - [ ] Any state agency: Send DTA proof that you are getting services from a state agency, such as a letter from the agency. If you are having a hard time getting these proofs, tell DTA.

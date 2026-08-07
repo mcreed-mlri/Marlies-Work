@@ -466,6 +466,7 @@ w('The exempt result tells someone what proof to send, one line per kind of exem
 w('the author’s wording, added 2026-08-06. One note appears however many boxes were');
 w('ticked: someone who selects three agencies should be told to send a letter once.');
 blank();
+check('The notes sit together in a pale blue panel headed "' + strip(C.exemptProofHeading) + '", not as loose paragraphs. It is blue rather than amber or red: amber is what the "may need to meet the work rules" result wears, and red would read as something being wrong with the exemption.');
 check('Earning enough, or 30+ hours below minimum wage: ' + strip(C.exemptProofWork));
 check('Any disability benefit, including Other: ' + strip(C.exemptProofDisability));
 check('Any state agency: ' + strip(C.exemptProofStateAgency));

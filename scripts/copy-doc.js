@@ -117,7 +117,7 @@ const INLINE = [
  * these were written to fill a gap, not handed over for review. */
 const DEVELOPER_WRITTEN = new Set([
   'chrome.tabTitle', 'chrome.brandLabel', 'chrome.quickExit',
-  'page.sigAlt'
+  'page.sigAlt', 'exemptProofHeading', 'footer.homeLink'
 ]);
 
 const html = fs.readFileSync(HTML, 'utf8');
@@ -404,7 +404,13 @@ section('6. Result: you may be exempt');
 w('Under the heading, the screener lists the reasons the answers point to. Each reason');
 w('phrase comes from the question that produced it. Then, when relevant, one of these:');
 blank();
-['exemptProofWork', 'exemptProofHousing', 'exemptProofDisability', 'exemptProofStateAgency']
+w('These sit together in a pale blue panel under the reasons, added 2026-08-07, with the heading');
+w('below. They used to be loose paragraphs between the ticked reasons and a link, which made the');
+w('one thing someone has to go and do the quietest thing on the screen. The panel is blue and not');
+w('red or amber on purpose: red is this page\'s error colour and would suggest something is wrong');
+w('with the exemption, and amber is what the "you may need to meet the work rules" result wears.');
+blank();
+['exemptProofHeading', 'exemptProofWork', 'exemptProofHousing', 'exemptProofDisability', 'exemptProofStateAgency']
   .forEach(k => item(k, C[k]));
 
 w('Pat\'s EAEDC suggestion is in. It shows as an indented sub-bullet under one reason, and');

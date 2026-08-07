@@ -1622,6 +1622,11 @@
      * reason itself, "I get another disability benefit or payment DTA should review", so
      * keeping a second note that said it again would have said it twice for that one option
      * and nothing at all for the other six. */
+    /* The label on the panel these notes now sit in. Developer wording, 2026-08-07, and flagged
+     * as such in SCREENER-COPY.md: the notes were plain paragraphs between the reasons list and
+     * a link, which made the one thing the person has to go and do the least prominent thing on
+     * the screen. */
+    exemptProofHeading: 'What to send DTA',
     exemptProofWork: 'Send DTA proof of your work income and hours, such as pay stubs or a letter. ' + PROOF_HELP,
     /* Emptied 2026-08-06 at the author's request, along with the disability note that read the
      * same way. Both told someone to give DTA details so DTA could review the exemption, which

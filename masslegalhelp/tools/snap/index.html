@@ -919,6 +919,38 @@ function optNum(n){
   return `<span aria-hidden="true" style="width:26px;height:26px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none">${n}</span>`;
 }
 
+/* What to send DTA, as one panel rather than loose paragraphs.
+ *
+ * These notes are the only thing on an exempt result the person has to go and do, and they were
+ * set as plain prose between the ticked reasons and a "learn more" link, which made them the
+ * quietest thing on a screen full of headings and ticks.
+ *
+ * Blue, not red or amber, and the colour is the whole argument. Red is this page's error
+ * vocabulary and would tell someone reading "You may be exempt" that something is wrong with
+ * their claim. Amber is worse: it is what the "you may need to meet the work rules" result card
+ * wears, so an amber box on the exempt screen echoes the result nobody wants, and a callout was
+ * taken off the intro on 2026-08-06 for spending that vocabulary on a reassurance. Blue is what
+ * this page already uses for "read this", which is what these are.
+ *
+ * Same shape as the privacy callout for that reason, with a heading, which the privacy one does
+ * not have, to tell the two apart and to say what the panel is for.
+ *
+ * One panel however many notes apply. Someone exempt on work income, a disability benefit and a
+ * state agency gets three sentences, and three separate boxes would be worse than the prose. */
+function renderProofCallout(reasons){
+  const notes = exemptProofNotes(reasons);
+  if(!notes.length) return '';
+  return `<div style="display:flex;align-items:flex-start;gap:12px;background:var(--soft);border-radius:var(--radius);padding:15px 17px;margin:0 0 16px">
+    <span aria-hidden="true" style="width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;margin-top:1px">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v5h5"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
+    </span>
+    <div>
+      <p style="font-size:15px;font-weight:700;color:var(--ink);margin:0 0 6px">${esc(RESULT_COPY.exemptProofHeading)}</p>
+      ${notes.map(n => `<p style="font-size:14.5px;line-height:1.6;color:var(--prose);margin:0 0 8px">${esc(n)}</p>`).join('')}
+    </div>
+  </div>`;
+}
+
 function renderPrivacyCallout(marginBottom){
   const C = RESULT_COPY;
   const mb = marginBottom != null ? marginBottom : '22px';
@@ -1395,7 +1427,7 @@ function renderResults(){
       </div>
       <div style="padding:20px 22px;background:#fff">
         <ul role="list" style="list-style:none;padding:0;margin:0 0 16px">${items}</ul>
-        ${exemptProofNotes(rs).map(n => `<p style="font-size:15.5px;line-height:1.6;color:var(--prose);margin:0 0 14px">${esc(n)}</p>`).join('')}
+        ${renderProofCallout(rs)}
         ${learnMore}
       </div></div>`;
   } else if(rt === 'ageexempt'){
@@ -1424,7 +1456,7 @@ function renderResults(){
       <div style="padding:20px 22px;background:#fff">
         ${C.exemptReasonsIntro ? `<p style="font-size:16px;line-height:1.6;color:var(--prose);margin:0 0 14px">${esc(C.exemptReasonsIntro)}</p>` : ''}
         <ul role="list" style="list-style:none;padding:0;margin:0 0 16px">${items}</ul>
-        ${exemptProofNotes(rs).map(n => `<p style="font-size:15.5px;line-height:1.6;color:var(--prose);margin:0 0 14px">${esc(n)}</p>`).join('')}
+        ${renderProofCallout(rs)}
         ${learnMore}
       </div></div>`;
   } else if(rt === 'goodcause'){

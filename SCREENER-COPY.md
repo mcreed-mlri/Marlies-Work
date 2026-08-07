@@ -409,6 +409,16 @@ how the other result screens are built. The emphasis on *still* is yours.
 Under the heading, the screener lists the reasons the answers point to. Each reason
 phrase comes from the question that produced it. Then, when relevant, one of these:
 
+These sit together in a pale blue panel under the reasons, added 2026-08-07, with the heading
+below. They used to be loose paragraphs between the ticked reasons and a link, which made the
+one thing someone has to go and do the quietest thing on the screen. The panel is blue and not
+red or amber on purpose: red is this page's error colour and would suggest something is wrong
+with the exemption, and amber is what the "you may need to meet the work rules" result wears.
+
+**`exemptProofHeading`**  **[written by the developer, not you]**
+
+> What to send DTA
+
 **`exemptProofWork`**
 
 > Send DTA proof of your work income and hours, such as pay stubs or a letter. If you are having a hard time getting these proofs, tell DTA.
@@ -1231,7 +1241,7 @@ Under the text sits MassLegalHelp's darker sub-strip, carrying the two links you
 2026-08-07. Both open in a new tab, so reading the terms halfway through a screening does not
 navigate away from a half-finished form:
 
-**`footer.homeLink`**
+**`footer.homeLink`**  **[written by the developer, not you]**
 
 > MassLegalHelp.org
 
