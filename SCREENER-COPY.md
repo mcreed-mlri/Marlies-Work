@@ -462,6 +462,10 @@ Currently attached to the reason **I have a health reason that makes it hard to 
 
 > You may have a good reason for missing hours
 
+> **Question for you:** Both "More examples" changes are in, 2026-08-07: gone from Emergency, and a hover panel rather than a link out on Unreasonable Employment issues, built the same way as the ABAWD definition on the start page.
+>
+> One thing to check, and it is why this is flagged rather than just done. The three examples you sent for that panel are "A death", "An illness or health emergency", and "A child’s school problem or unavailable child care". Those read as examples of the Emergency category rather than of employment: a death, an illness and a childcare problem are not employment conditions. It matters because the category someone picks here is the one their emailed summary names, so a person who opens that panel after a bereavement, recognises themselves in it, and picks "Unreasonable Employment issues" ends up with the wrong category on their record. If the list was meant for the Emergency option, moving it is one line.
+
 **`goodCauseIntro`**
 
 > This includes missing work, school, or volunteer hours before or after your start date.
@@ -475,11 +479,15 @@ Currently attached to the reason **I have a health reason that makes it hard to 
 The categories listed on this screen:
 
 - **No transportation**  A temporary loss of transportation, like a broken down car or temporary public transportation shutdown.
-  More examples link: **none set.** The link is missing for this category and currently has nowhere to go.
+  No "More examples" on this one.
 - **Emergency**  Any family, personal crisis, or emergency situation, and/or if you need to give care or support to others.
-  More examples link: https://www.masslegalhelp.org/public-benefits-ssi/snap-food-benefits/snap-3-month-time-limit-abawd-work-rules#:~:text=What%20if%20I%20had%20a%20good%20reason%20for%20not%20meeting%20the%20Work%20Rules%3F
+  No "More examples" on this one.
 - **Unreasonable Employment issues**  Employer or workplace discrimination The work is an unreasonable health and safety risk Job pays less than $15/hour (minimum wage) There is a strike
-  More examples link: https://www.masslegalhelp.org/public-benefits-ssi/snap-food-benefits/snap-3-month-time-limit-abawd-work-rules#:~:text=What%20if%20I%20had%20a%20good%20reason%20for%20not%20meeting%20the%20Work%20Rules%3F
+  "More examples" opens a hover panel here rather than linking out, built like the ABAWD
+  definition in the intro. It reads:
+    - A death
+    - An illness or health emergency
+    - A child’s school problem or unavailable child care (if the child is not in the home and is 6 or older).
 
 ## 9. Result: you may need to meet the work rules
 

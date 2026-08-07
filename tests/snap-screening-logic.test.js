@@ -677,8 +677,16 @@ describe('snap-screening-logic', () => {
     assert.equal(cats.find(c => c.id === 'employment').detail.length, 4);
     assert.ok(cats.find(c => c.id === 'employment').detail.some(d => /strike/.test(d)));
     assert.ok(cats.every(c => c.detail.length > 0));
-    assert.equal(cats.filter(c => c.moreExamplesUrl).length, 2);
     assert.equal(goodCauseCategories('classic2').length, 3);
+
+    /* "More examples" as of 2026-08-07, at MLRI's direction: gone from Emergency, and a hover
+       panel rather than a link out on Employment. No category carries both, because the render
+       site picks one and a category holding both would silently show only the panel. */
+    assert.equal(cats.find(c => c.id === 'emergency').moreExamplesUrl, '');
+    assert.deepEqual(cats.find(c => c.id === 'emergency').moreExamplesTip, []);
+    assert.equal(cats.find(c => c.id === 'employment').moreExamplesUrl, '');
+    assert.equal(cats.find(c => c.id === 'employment').moreExamplesTip.length, 3);
+    assert.ok(cats.every(c => !(c.moreExamplesUrl && c.moreExamplesTip.length)));
   });
 
   it('buildStatementHTML renders an indented box under each reason without printing the prompt', () => {

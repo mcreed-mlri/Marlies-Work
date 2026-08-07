@@ -375,7 +375,12 @@ function emitGoodCauseCard() {
   A.GOODCAUSE_CATEGORIES.forEach(cat => {
     w('**' + plain(cat.title) + '**');
     cat.detail.forEach(d => w('- ' + plain(d)));
-    if (cat.moreExamplesUrl) w('- [More examples](' + cat.moreExamplesUrl + ')');
+    if (cat.moreExamplesTip.length) {
+      w('- More examples (opens on hover, does not link out):');
+      cat.moreExamplesTip.forEach(x => w('  - ' + plain(x)));
+    } else if (cat.moreExamplesUrl) {
+      w('- [More examples](' + cat.moreExamplesUrl + ')');
+    }
     blank();
   });
   emitLearnMore();

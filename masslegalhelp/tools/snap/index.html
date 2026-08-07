@@ -1468,8 +1468,17 @@ function renderResults(){
   } else if(rt === 'goodcause'){
     const cats = GOODCAUSE_CATEGORIES.map(c => {
       const detail = c.detail.map(d => `<li>${esc(d)}</li>`).join('');
-      const more = c.moreExamplesUrl
-        ? `<li><a href="${c.moreExamplesUrl}" target="_blank" rel="noopener">More examples</a></li>` : '';
+      /* "More examples" is a hover panel where MLRI asked for one and a link where they did not.
+         Built with hintTerm, the same thing the ABAWD definition in the intro uses: dotted
+         underline, opens on hover with a mouse and on tap on a phone, closes on Escape. The
+         accessible name says what it opens, since "More examples" alone does not say of what. */
+      let more = '';
+      if(c.moreExamplesTip.length){
+        const body = `<ul style="margin:0;padding-left:18px">${c.moreExamplesTip.map(x => `<li style="margin:0 0 4px">${esc(x)}</li>`).join('')}</ul>`;
+        more = `<li>${hintTerm('gc-more-' + c.id, 'More examples', body, 'More examples of ' + c.title)}</li>`;
+      } else if(c.moreExamplesUrl){
+        more = `<li><a href="${c.moreExamplesUrl}" target="_blank" rel="noopener">More examples</a></li>`;
+      }
       return `<li style="margin:0 0 14px">
         <div style="font-size:16px;font-weight:700;color:var(--ink)">${esc(c.title)}</div>
         <ul style="margin:5px 0 0;padding-left:22px;font-size:15.5px;line-height:1.6;color:var(--prose)">${detail}${more}</ul>

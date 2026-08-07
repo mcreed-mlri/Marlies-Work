@@ -223,7 +223,9 @@
           result: 'Emergency \u2014 any family, personal crisis, or emergency situation, and/or if you need to give care or support to others.',
           title: 'Emergency',
           detail: ['Any family, personal crisis, or emergency situation, and/or if you need to give care or support to others.'],
-          moreExamples: true
+          /* `moreExamples: true` was here until 2026-08-07. MLRI asked for this category's link
+           * out; the one detail line above says what the category covers and the link went to a
+           * page section that repeats it. */
         },
         {
           id: 'employment',
@@ -245,7 +247,22 @@
             'Job pays less than $' + MA_MIN_WAGE + '/hour (minimum wage)',
             'There is a strike'
           ],
-          moreExamples: true
+          /* "More examples" is a hover panel here rather than a link out, MLRI's request of
+           * 2026-08-07, built the same way as the ABAWD definition in the intro: dotted
+           * underline, opens on hover with a mouse and on tap on a phone. Their three examples,
+           * their wording.
+           *
+           * Raised with them and not changed, because it is their content: these three read as
+           * examples of the Emergency category rather than of this one. A death, an illness, and
+           * a childcare problem are not employment conditions, and the category a person picks
+           * here is the one their emailed summary names. Someone who opens this panel after a
+           * bereavement and recognises themselves in it will pick "Unreasonable Employment
+           * issues". Moving the list to the emergency option is one line if they meant that. */
+          moreExamplesTip: [
+            'A death',
+            'An illness or health emergency',
+            'A child’s school problem or unavailable child care (if the child is not in the home and is 6 or older).'
+          ]
         }
       ]
     }
@@ -1104,7 +1121,11 @@
       id: o.id,
       title: o.title || o.label,
       detail: o.detail || [],
-      moreExamplesUrl: o.moreExamples ? LINKS.goodCause : ''
+      moreExamplesUrl: o.moreExamples ? LINKS.goodCause : '',
+      /* The same "More examples" affordance as a hover panel instead of a link out. A category
+       * carries one or the other, never both, so a render site can check either and the copy
+       * documents can print whichever is set. */
+      moreExamplesTip: o.moreExamplesTip || []
     }));
   }
 
