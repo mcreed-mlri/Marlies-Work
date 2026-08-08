@@ -135,8 +135,17 @@ plan is needed**. The whole feature is $0.
       you can read the authentication results, then tighten to `p=reject`, which is safe here
       because nothing legitimate has ever sent from this name.
 - [ ] Confirm with whoever monitors `info@masslegalservices.org` that public replies are
-      expected there. It is the Reply-To, and the tool already gives that address to readers
-      for this exact topic in `RESULT_COPY.lostSnapIntro`.
+      expected there. **This blocks nothing.** Reply-To is set inside the Function, which does
+      not exist yet, so none of the DNS work above waits on it.
+
+      It is also a narrower question than it first reads. The tool already gives that address to
+      readers for this exact topic on three result screens, in `lostSnapIntro`,
+      `notExemptEmail` with its suffix, and `ageExemptNoticeEnd`. So they already receive ABAWD
+      replies; what a Reply-To header changes is that replying becomes one tap instead of a
+      copy and paste, which is a question about volume rather than about consent.
+
+      What not to do while waiting is ship with no Reply-To, or with the noreply address in it.
+      A reply to `noreply@notify.masslegalhelp.org` is silence for somebody asking for help.
 - [ ] Ask Resend whether they retain message bodies and for how long. The body carries a
       reason such as "Domestic violence, stalking, sexual harassment...", so the answer matters
       and is not in their public documentation.
