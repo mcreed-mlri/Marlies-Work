@@ -3,6 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- The colour iOS Safari and Chrome for Android tint their own chrome with, which is what
+     puts the header navy behind the clock and the battery instead of leaving that strip the
+     page background. Without it iOS falls back to --bg, the cream, and the top of the screen
+     reads as a white band above a navy header. #1e2e5f is --navy, the header bar itself; the
+     token cannot be referenced from a meta tag, so this is the one place the value is repeated
+     and a test holds the two equal. -->
+<meta name="theme-color" content="#1e2e5f">
 <title>SNAP ABAWD Work Rules Screening | Massachusetts Legal Help</title>
 <meta name="description" content="A short, private screening to check if you need to meet the SNAP ABAWD work rules or if you are exempt.">
 <!-- Preloaded, because the two faces are otherwise discovered only after

@@ -572,6 +572,33 @@ describe('review-only modes stay off a production host', () => {
   });
 });
 
+/* The iOS status bar takes its colour from theme-color, and there is no way to point a meta tag
+ * at a CSS custom property, so #1e2e5f is written out in the markup as well as declared as
+ * --navy. Two copies of one colour, which is the shape that drifts.
+ *
+ * The symptom of drift is specific and easy to miss on a desktop: the strip behind the clock and
+ * the battery stops matching the header underneath it, and only on a phone. */
+describe('the iOS status bar colour matches the header', () => {
+  for (const p of [
+    { label: 'masslegalhelp/snap-abawd/index.html', file: SHIP },
+    { label: 'masslegalhelp/index.html', file: path.join(MLH, 'index.html') }
+  ]) {
+    it(p.label, () => {
+      const html = fs.readFileSync(p.file, 'utf8');
+      const meta = /<meta name="theme-color" content="(#[0-9a-fA-F]{6})">/.exec(html);
+      assert.ok(meta, p.label + ': no theme-color, so iOS tints the status bar with the page '
+        + 'background and it reads as a white band above a navy header.');
+      const navy = /--navy:\s*(#[0-9a-fA-F]{6})/.exec(html);
+      assert.ok(navy, p.label + ': no --navy token to compare against.');
+      assert.equal(
+        meta[1].toLowerCase(), navy[1].toLowerCase(),
+        p.label + ': theme-color and --navy have drifted apart, so the strip behind the clock no '
+        + 'longer matches the header bar under it.'
+      );
+    });
+  }
+});
+
 /* The header wordmark must not be sized against the viewport.
  *
  * It was `max-width:calc(100vw - 150px)`, a guess at how much room the top-bar buttons take,
