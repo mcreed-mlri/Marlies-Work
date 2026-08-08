@@ -455,9 +455,15 @@ describe('the top-bar Learn More link', () => {
         p.label + ': the top-bar link and LINKS.abawd have drifted apart, so the header sends '
         + 'people somewhere the rest of the tool does not.'
       );
-      assert.match(html, /<a class="btn-topbar"[^>]*target="_blank"[^>]*rel="noopener"/,
-        p.label + ': the link should open in a new tab, or reading the article loses a '
-        + 'half-answered screening.');
+      /* Same tab. This asserted target="_blank" until 2026-08-08, on the grounds that a new tab
+         kept a half-answered screening safe. It does not need keeping safe: persist() saves
+         view, step, gc and answers and loadPersisted() restores all four, so Back returns
+         someone to the exact question they were on. With that gone, a new tab is only a cost,
+         and most of it lands on a phone, where Back does not return you at all. */
+      assert.doesNotMatch(html, /<a class="btn-topbar"[^>]*target="_blank"/,
+        p.label + ': the top-bar link opens a new tab again. It goes to the same organisation\'s '
+        + 'own site, and Back restores the screening exactly, so the new tab buys nothing and '
+        + 'costs a phone user the way back.');
     });
   }
 

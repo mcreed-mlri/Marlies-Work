@@ -679,9 +679,20 @@
     <div class="topbar-actions">
       <span id="review-home-slot"></span>
       <!-- Learn More, MLRI's decision of 2026-08-07, in place of Quick exit.
-           New tab, like every other outbound link here, so reading the article does not lose a
-           half-answered screening. The URL is LINKS.abawd, the same one the intro and the result
-           screens point at, rather than a second copy of it in the markup.
+
+           Same tab, changed 2026-08-08. It opened a new one at first, justified as keeping a
+           half-answered screening safe, and that justification was wrong: persist() saves view,
+           step, gc and answers, and loadPersisted() restores all four, so Back returns someone
+           to the exact question they were on rather than to the start.
+
+           With that gone the argument is one-sided. This is the same organisation's site, and
+           sites do not normally open their own pages in a new tab. A new tab is a worse place to
+           be on a phone, where Back does not return you and you have to find the tab switcher,
+           which is a real cost for someone anxious on a borrowed handset. And WCAG 3.2.5 asks
+           that a new window be announced, which this never did.
+
+           The URL is LINKS.abawd, the same one the intro and the result screens point at, rather
+           than a second copy of it in the markup.
 
            What went with Quick exit is worth knowing, and is raised in masslegalhelp/README.md.
            It was the only control that erased the answers and left no history entry, and the only
@@ -693,7 +704,7 @@
            works with no JavaScript, and a ${} here would have rendered as those four characters.
            A test holds it equal to LINKS.abawd, which is the same URL the intro and the result
            screens use, so the two copies cannot drift. -->
-      <a class="btn-topbar" href="https://www.masslegalhelp.org/public-benefits-ssi/snap-food-benefits/snap-3-month-time-limit-abawd-work-rules" target="_blank" rel="noopener">Learn More</a>
+      <a class="btn-topbar" href="https://www.masslegalhelp.org/public-benefits-ssi/snap-food-benefits/snap-3-month-time-limit-abawd-work-rules">Learn More</a>
     </div>
   </div>
 </header>
