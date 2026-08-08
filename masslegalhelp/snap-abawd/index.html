@@ -141,7 +141,15 @@
     --strip:#0c1639;
   }
   *{box-sizing:border-box}
-  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  /* The canvas is the header navy, not the page cream.
+     iOS draws the strip behind the clock and the battery from the page rather than from thin
+     air, and with no background on html the canvas takes body's --bg, which is the cream. So
+     that strip came out pale even with theme-color set. Painting html navy makes the area
+     outside the body box, which is what iOS samples and what rubber-band scrolling exposes,
+     match the bar at the top of the page.
+     body keeps --bg, so the reading surface is unchanged: body has min-height:100vh, so it
+     covers the viewport and the navy shows only where the page itself does not reach. */
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%;background:var(--navy)}
   html,body{margin:0}
   body{
     font-family:'Atkinson Hyperlegible',system-ui,-apple-system,sans-serif;
