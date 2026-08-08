@@ -183,9 +183,16 @@ for (const f of textFiles) {
    * The test applied is the one the attribute scan above already uses: resolve
    * the path, and refuse it only if it lands outside the folder. Until the email
    * endpoint arrived this scan refused every ../ outright, which is stricter than
-   * the failure it exists for. fetch('../../api/email') from snap-abawd/ resolves
-   * to <root>/api/email, correct at any deploy subpath; the rooted '/api/email'
-   * is the one that breaks, and line 116 catches that. Resolving rather than
+   * the failure it exists for. fetch('../api/email') from snap-abawd/ resolves to
+   * <root>/api/email, correct at any deploy subpath; the rooted '/api/email'
+   * is the one that breaks, and line 116 catches that.
+   *
+   * It read '../../api/email' until 2026-08-08, which was right while the screener
+   * sat at tools/snap-abawd/ and wrong the moment the tools/ wrapper came off. The
+   * rename sweep that day rewrote the directory name in this sentence and left the
+   * ../ count beside it, so the comment described a path that resolves above the
+   * deploy root. The guard would have refused it, correctly, while this text told
+   * somebody to write it. Resolving rather than
    * banning also avoids the workaround this comment warns against, since a
    * computed endpoint URL would pass a literal-only scan and read as evasion.
    *
