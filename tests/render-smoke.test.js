@@ -441,9 +441,20 @@ describe('the shipping build stores answers per tab only', () => {
 describe('the top-bar Learn More link', () => {
   const S = require(path.join(MLH, LOGIC_FILE));
 
+  /* The screener only. It was on both pages until 2026-08-08, when it came off the tools index:
+     the link goes to the ABAWD article, which is one tool's subject, and that page will list
+     several. Asserted absent there rather than merely not asserted present, so putting it back
+     is a decision somebody makes rather than a copy-paste nobody notices. */
+  it('is not on the tools landing page', () => {
+    const html = fs.readFileSync(path.join(MLH, 'index.html'), 'utf8')
+      .replace(/<!--[\s\S]*?-->/g, '');
+    assert.doesNotMatch(html, /class="btn-topbar"/,
+      'The tools index has a Learn More link again. It points at the ABAWD article, which is one '
+      + 'tool among the several this page will list.');
+  });
+
   for (const p of [
-    { label: 'masslegalhelp/snap-abawd/index.html', file: SHIP },
-    { label: 'masslegalhelp/index.html', file: path.join(MLH, 'index.html') }
+    { label: 'masslegalhelp/snap-abawd/index.html', file: SHIP }
   ]) {
     it(p.label, () => {
       const html = fs.readFileSync(p.file, 'utf8');

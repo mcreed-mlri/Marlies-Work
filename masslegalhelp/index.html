@@ -84,14 +84,9 @@
     text-rendering:optimizeLegibility;font-synthesis:none;
   }
   .topbar-sub{font-size:14px;font-weight:600;opacity:1;line-height:1.14;color:#fff;margin-top:2px}
-  /* An <a> now, not a <button>, so it needs the display and the text-decoration. Matches the
-     screener, where the reasoning is recorded. */
-  .btn-topbar{
-    flex:none;display:inline-flex;align-items:center;justify-content:center;
-    font-size:14px;font-weight:700;color:var(--navy);background:#fff;
-    border:none;border-radius:6px;padding:10px 16px;min-height:44px;text-decoration:none;
-  }
-  .btn-topbar:hover{color:var(--navy);background:#f0f3f9}
+  /* .btn-topbar and its hover were here, along with its 760px size and its 360px padding below.
+     All four dressed the Learn More link, which came off this page on 2026-08-08, and nothing
+     else here wears them. The screener keeps all four, because the link is still in its header. */
   .topbar-actions{flex:none;display:flex;align-items:center;gap:10px}
   .btn-review{
     display:none;align-items:center;justify-content:center;min-height:44px;
@@ -164,7 +159,6 @@
   .site-footer :focus-visible{outline-color:var(--yellow)}
   @media (max-width:760px){
     .topbar-inner{min-height:62px;padding:9px max(12px, env(safe-area-inset-right)) 9px max(12px, env(safe-area-inset-left));gap:10px}
-    .btn-topbar{font-size:13px;padding:9px 12px}
     .btn-review{font-size:13px;padding:8px 10px}
     main{padding-top:18px}
     .hero{margin-bottom:20px}
@@ -192,8 +186,7 @@
   @media (max-width:360px){
     /* The second copy of the viewport-relative guess was here, 8px different. Gone with it. */
     .topbar-actions{flex-direction:column;align-items:stretch;gap:6px}
-    .btn-review,.btn-topbar{min-height:44px}
-    .btn-topbar{padding:8px 10px}
+    .btn-review{min-height:44px}
   }
 </style>
 </head>
@@ -208,11 +201,14 @@
         <img class="topbar-logo" src="assets/mlh-logo.svg" alt="">
       </picture>
     </a>
+    <!-- No Learn More here, removed 2026-08-08. It points at the ABAWD article, which is one
+         tool's subject, and this is the page that will list several. It belongs on the screener
+         and is there.
+
+         The slot stays: it is where the review-only Screener home button is injected on a review
+         host, and it is empty in production. -->
     <div class="topbar-actions">
       <span id="review-home-slot"></span>
-      <!-- Learn More, matching the screener, where the reasoning and what went with Quick exit
-           are recorded. Held equal to LINKS.abawd by a test. -->
-      <a class="btn-topbar" href="https://www.masslegalhelp.org/public-benefits-ssi/snap-food-benefits/snap-3-month-time-limit-abawd-work-rules">Learn More</a>
     </div>
   </div>
 </header>
