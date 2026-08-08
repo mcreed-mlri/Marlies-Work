@@ -10,6 +10,10 @@
      token cannot be referenced from a meta tag, so this is the one place the value is repeated
      and a test holds the two equal. -->
 <meta name="theme-color" content="#1e2e5f">
+<!-- No viewport-fit=cover here either, so the env(safe-area-inset-*) values below are inert on
+     iOS and their max() fallbacks do the work. That is deliberate and harmless; the reasoning is
+     recorded once, on snap-abawd/index.html. Do not delete the env() calls as dead code. -->
+
 <title>Interactive Tools | Massachusetts Legal Help</title>
 <meta name="description" content="Interactive tools from Mass Legal Help.">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">

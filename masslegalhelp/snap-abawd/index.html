@@ -10,6 +10,26 @@
      token cannot be referenced from a meta tag, so this is the one place the value is repeated
      and a test holds the two equal. -->
 <meta name="theme-color" content="#1e2e5f">
+<!-- No viewport-fit=cover, deliberately, and this is the note for whoever notices that the
+     env(safe-area-inset-*) values in the CSS below therefore resolve to zero on iOS.
+
+     They do, and nothing is wrong. Without the flag iOS insets the viewport itself, so content
+     never lands under the notch or the home indicator; the browser is being conservative rather
+     than the page being careless. max(16px, 0) is 16px, which is the padding the layout wants
+     anyway, so the fallbacks are doing the work.
+
+     Twenty-six of the twenty-seven uses are -left and -right, and those are zero in portrait on
+     every iPhone. They only become non-zero in landscape, where the notch and the rounded
+     corners eat into the sides. This is a tool people hold upright.
+
+     So the flag buys one cosmetic thing: in landscape the navy header would paint into the side
+     bars instead of stopping short of them. It costs a re-check of every element whose padding
+     is not safe-area-aware, on a real notched handset in landscape, because with the flag on
+     content does go edge to edge. Worth doing with a phone in hand, not as a guess.
+
+     Do not delete the env() calls as dead code. They are correct and inert, and turning the flag
+     on is what wakes them. -->
+
 <title>SNAP ABAWD Work Rules Screening | Massachusetts Legal Help</title>
 <meta name="description" content="A short, private screening to check if you need to meet the SNAP ABAWD work rules or if you are exempt.">
 <!-- Preloaded, because the two faces are otherwise discovered only after
