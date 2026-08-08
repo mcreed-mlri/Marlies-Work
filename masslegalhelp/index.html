@@ -2,17 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- The colour iOS Safari and Chrome for Android tint their own chrome with, which is what
-     puts the header navy behind the clock and the battery instead of leaving that strip the
-     page background. Without it iOS falls back to --bg, the cream, and the top of the screen
-     reads as a white band above a navy header. #1e2e5f is --navy, the header bar itself; the
-     token cannot be referenced from a meta tag, so this is the one place the value is repeated
-     and a test holds the two equal. -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- A fallback browser-chrome hint for Safari and Chrome. The status area in a normal iOS
+     Safari tab is not reliably driven by this tag alone, so the page also uses
+     viewport-fit=cover and lets the navy topbar paint into env(safe-area-inset-top).
+     #1e2e5f is --navy; the token cannot be referenced from a meta tag, so this is the
+     one place the value is repeated and a test holds the two equal. -->
 <meta name="theme-color" content="#1e2e5f">
-<!-- No viewport-fit=cover here either, so the env(safe-area-inset-*) values below are inert on
-     iOS and their max() fallbacks do the work. That is deliberate and harmless; the reasoning is
-     recorded once, on snap-abawd/index.html. Do not delete the env() calls as dead code. -->
 
 <title>Interactive Tools | Massachusetts Legal Help</title>
 <meta name="description" content="Interactive tools from Mass Legal Help.">
@@ -64,7 +60,7 @@
   button{font-family:inherit;touch-action:manipulation}
   :focus-visible{outline:3px solid var(--ink);outline-offset:2px;border-radius:4px}
   .topbar :focus-visible{outline-color:var(--yellow)}
-  .topbar{background:var(--navy);color:#fff;border-bottom:9px solid var(--gold)}
+  .topbar{background:var(--navy);color:#fff;border-bottom:9px solid var(--gold);padding-top:env(safe-area-inset-top)}
   .topbar-inner{
     min-height:74px;width:100%;
     display:flex;align-items:center;justify-content:space-between;gap:16px;
