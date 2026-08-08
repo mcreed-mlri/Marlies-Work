@@ -134,18 +134,27 @@ plan is needed**. The whole feature is $0.
       inherits the root policy unless it has one. Start at `p=none` with a reporting address so
       you can read the authentication results, then tighten to `p=reject`, which is safe here
       because nothing legitimate has ever sent from this name.
-- [ ] Confirm with whoever monitors `info@masslegalservices.org` that public replies are
-      expected there. **This blocks nothing.** Reply-To is set inside the Function, which does
-      not exist yet, so none of the DNS work above waits on it.
+Reply-To, settled 2026-08-08: **there is none.** Replies go to
+`noreply@notify.masslegalhelp.org`.
 
-      It is also a narrower question than it first reads. The tool already gives that address to
-      readers for this exact topic on three result screens, in `lostSnapIntro`,
-      `notExemptEmail` with its suffix, and `ageExemptNoticeEnd`. So they already receive ABAWD
-      replies; what a Reply-To header changes is that replying becomes one tap instead of a
-      copy and paste, which is a question about volume rather than about consent.
+This document said to point Reply-To at `info@masslegalservices.org` and to confirm with
+whoever monitors it. MLRI pushed back and were right. The email is transactional, somebody
+sending themselves a receipt, not correspondence inviting a conversation. A Reply-To routes
+every stray reply to that inbox, including from people who did not register that they emailed
+themselves, which is volume with no intent behind it landing on a small team. Reply-To is also
+optional and has no bearing on deliverability, which comes from SPF, DKIM and DMARC alignment
+on the From domain.
 
-      What not to do while waiting is ship with no Reply-To, or with the noreply address in it.
-      A reply to `noreply@notify.masslegalhelp.org` is silence for somebody asking for help.
+- [ ] Put the help address in the **body** instead, which is where the argument for it actually
+      holds. The body carries none today: it is the result, the reasons, a line saying this is
+      not the letter, and a link back. Somebody who reads it and needs help has nothing to act
+      on. Reuse the sentence the tool already shows on three result screens, `lostSnapIntro`
+      with `LINKS.advocacyEmail`, so the wording is already approved. Accidental replies then
+      bounce, people who want help have the address a tap away, and the filter on volume is
+      intent rather than reflex.
+- [ ] Configure `noreply@notify.masslegalhelp.org` to **bounce** rather than to accept and
+      discard. A bounce tells somebody their message went nowhere. A silent discard is the one
+      outcome worth avoiding, and it is what "noreply" usually means in practice.
 - [ ] Ask Resend whether they retain message bodies and for how long. The body carries a
       reason such as "Domestic violence, stalking, sexual harassment...", so the answer matters
       and is not in their public documentation.
